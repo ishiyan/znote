@@ -1,0 +1,49 @@
+Created by Starlight (extesy@yandex.ru). Compiled into dll by _landy
+
+  Перед началом работы dll необходимо зарегистрировать в системе командой:
+  regsvr32 jurik.dll
+  Если этого не сделать, будет выдаваться сообщение об ошибке "Invalid class string"
+
+  jurik.dll экспортирует следующий интерфейс:
+
+type
+  TIndicator = class(TAutoObject, IIndicator)
+  protected
+    procedure JJMA(ADestSeries, ASourceSeries, ALength, APhase: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+    procedure JCFB(ADestSeries, ASourceSeries, AFractalType, ASmooth: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+    procedure JCCX(ADestSeries, ASourceSeries, ALength: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+    procedure JARSX(ADestSeries, ASourceSeries, ALoLen, AHiLen,
+      ASensitivity: Integer; const AWL: IWealthLabAddOn3); safecall;
+    procedure JTPO(ADestSeries, ASourceSeries, ALength: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+    procedure JRSX(ADestSeries, ASourceSeries, ALength: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+    procedure JDMX(ADestSeries, ASourceSeries, ALen: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+    procedure JDMXM(ADestSeries, ASourceSeries, ALen: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+    procedure JDMXP(ADestSeries, ASourceSeries, ALen: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+    procedure JAVEL(ADestSeries, ASourceSeries, ALoLen, AHiLen, ASensitivity,
+      APeriod: Integer; const AWL: IWealthLabAddOn3); safecall;
+    procedure JVEL(ADestSeries, ASourceSeries, ADepth: Integer;
+      const AWL: IWealthLabAddOn3); safecall;
+  end;
+
+  Пример использования в скрипте:
+
+var lib: ComVariant;
+var hhPanel: Integer;
+
+begin
+  lib := CreateOleObject('Jurik.Indicator');   // Создаем OLE-объект Jurik.Indicator
+
+   // Строим индикатор JAVEL на панели внизу графика котировок
+  hPanel := CreatePane (60, false, true);                 // Создаем панель
+  h2 := CreateSeries;                                     // Пустая серия для значений индикатора
+  lib.JAVEL (h2, #Close, 14, 14, 2, 2, IWealthLabAuto);   // Вычисляем
+  PlotSeriesLabel (h2, hPanel, #Blue, #Thin, 'JAVEL');    // Рисуем
+end;

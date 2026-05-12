@@ -1,0 +1,134 @@
+IMPORTANT INFORMATION 
+        for 
+UPGRADING JURIK TOOLS
+______________________________________________
+
+
+
+==> This document uses the following abbreviations:
+
+TS/SC4: Omega Research TradeStation ® / SuperCharts ®  v 4
+
+TS/PS2000: Omega Research TradeStation ® / ProSuite ®  v 2000i
+
+
+
+==> READING INSTRUCTIONS:
+
+Read item #1      (This is for everybody)
+Read items #2-#5  (When upgrading from TS/SC4 to TS/PS2000)
+
+
+1.  SOME TOOLS RENAMED
+2.  NEW INSTALLATION REQUIRED
+3.  NEW PASSWORD REQUIRED  
+4.  NEW TOOL NAMES 
+5.  DELETE OLD TOOL NAMES
+
+
+__________________________________________________
+1.  SOME TOOLS RENAMED
+__________________________________________________
+
+To maintain a uniform naming convention across all Jurik 
+tools, some functions and indicators were renamed as 
+shown in the table below. Consequently, after installing 
+Jurik tools, you will need to modify relevant custom 
+built indicators, functions and systems to reflect 
+the changed names.
+
+
+
+OLD NAME		NEW NAME
+-----------------------------------------------------------
+(Indicators)
+AMA2			JRC AMA
+JRC RSI			JRC RSX
+
+(Functions)         
+JRC_AMA_SCALAR		JRC.AMA.flex
+AMAFUNC2		JRC.AMA
+JRC.RSI			JRC.RSX
+JRC.RSI.flex		JRC.RSX.flex
+
+(Systems)
+JRC REVERSE RSI		JRC REVERSE RSX
+JRC THRESH RSI		JRC THRESH RSX
+
+
+_________________________________________________
+2.  NEW PASSWORD REQUIRED
+_________________________________________________
+
+If you are upgrading from TS/SC4 to TS2000, then BEFORE 
+you can install Jurik's tools, you will need to get a 
+new password from us. Any password you received from 
+Jurik Research for TS4 will not work for TS2000.  To 
+acquire a new password, contact us at 323-258-4860  
+(fax 323-258-0598) or send email to sales@nfsmith.net
+
+
+__________________________________________________
+3.  NEW INSTALLATION REQUIRED
+__________________________________________________
+
+If you are upgrading from TS/SC4 to TS/PS2000, Jurik 
+tools might be automatically transferred from TS/SC4 
+to TS/PS2000.  Unfortunately, Jurik tools designed for 
+TS4/SC4 will not work in TS/PS2000.  This is 
+because our tools for TS/SC4 use 16 bit code and 
+our tools for TS/PS2000 use 32 bit code, and 
+the two are not compatible.
+
+To get the correct version of Jurik's tools for 
+TS/PS2000, a new installation is required.  
+Read the installation file INSTALL.TXT 
+for details.
+
+__________________________________________________
+4.  NEW TOOL NAMES
+__________________________________________________
+
+If you are upgrading from TS/SC4 to TS/PS2000, 
+it is very likely your own studies will be transferred 
+over to TS/PS2000.  However, you must note that 
+**ALL** Jurik indicators, systems and functions 
+for TS/PS2000 have a suffix attached to their name.  
+The suffix is ".2k".  For example, the TS/SC4 
+function "JRC.JMA" is called "JRC.JMA.2k" 
+in TS/PS2000.
+
+Because all Jurik tools have modified names in 
+TS/PS2000, you will need to modify all your 
+own studies that use Jurik tools to include
+this name change.  You can simply do this by 
+appending ".2k" to all calls to Jurik's functions. 
+The following is an example of how to 
+add the ".2k" to the function JRC.JMA ....
+
+    Change this:      Value1 = JRC.JMA(close,10,0) ;
+    
+    To this:          Value1 = JRC.JMA.2k(close,10,0) ;
+
+
+__________________________________________________
+5.  DELETE OLD TOOLS
+__________________________________________________
+
+If you are upgrading from TS/SC4 to TS/PS2000, it is 
+very likely all the Jurik tools from your copy of 
+TS/SC4 were transferred too. We strongly recommend 
+you delete from TS/PS2000 all Jurik indicators, 
+functions and systems that do not contain the "2k" 
+suffix, simply because they will not run.  Any attempt 
+to run TS/SC4 versions of Jurik tools in TS/PS2000 
+will produce an error message.  
+
+At any time in the future, avoid transferring Jurik 
+tools from TS/SC4 to TS/PS2000.  This saves 
+you from the task of scanning your Easy Language 
+studies for another round of deletions.
+
+
+
+--- END ---

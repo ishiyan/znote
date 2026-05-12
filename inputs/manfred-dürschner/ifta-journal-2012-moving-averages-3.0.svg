@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 600" fill="none">
+  <!-- Transparent background, light/dark proof: green replaces black -->
+  <defs>
+    <marker id="arrow-darkred-end" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#991b1b"/>
+    </marker>
+    <marker id="arrow-darkred-start" markerWidth="12" markerHeight="8" refX="1" refY="4" orient="auto">
+      <polygon points="12 0, 0 4, 12 8" fill="#991b1b"/>
+    </marker>
+  </defs>
+
+  <!-- Curve x (price) - green (was black) - steep arc from lower-left to upper-right -->
+  <path d="M 80 550 C 90 450, 110 350, 160 270 C 210 190, 290 130, 420 80 C 480 60, 530 48, 580 40"
+        stroke="#22c55e" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Curve MA₁(x,ℓ₁) - red - lagging behind x, similar shape shifted right/down -->
+  <path d="M 60 600 C 70 520, 100 420, 160 340 C 220 260, 310 195, 440 145 C 510 120, 570 105, 640 90"
+        stroke="#dc2626" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Curve MA₂(MA₁(x,ℓ₁),ℓ₂) - blue - lagging even more -->
+  <path d="M 110 600 C 130 530, 160 450, 230 370 C 300 295, 380 240, 490 200 C 550 180, 610 165, 670 155"
+        stroke="#2563eb" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Vertical measurement line: single vertical from x curve down through MA₁ to MA₂ -->
+  <!-- At x=370: x curve ≈ y=115, MA₁ ≈ y=195, MA₂ ≈ y=278 -->
+
+  <!-- D₁ segment: from x curve to MA₁ curve (dark red, bidirectional) -->
+  <line x1="370" y1="118" x2="370" y2="192" stroke="#991b1b" stroke-width="3.5"
+        marker-start="url(#arrow-darkred-start)" marker-end="url(#arrow-darkred-end)"/>
+
+  <!-- D₂ segment: from MA₁ curve to MA₂ curve (dark red, bidirectional) -->
+  <line x1="370" y1="198" x2="370" y2="275" stroke="#991b1b" stroke-width="3.5"
+        marker-start="url(#arrow-darkred-start)" marker-end="url(#arrow-darkred-end)"/>
+
+  <!-- Tangent line at intersection on x curve (thin green, extends left) -->
+  <line x1="240" y1="195" x2="420" y2="95" stroke="#22c55e" stroke-width="1.2" stroke-dasharray="none" opacity="0.5"/>
+
+  <!-- Tangent line at intersection on MA₁ curve (thin red, extends left) -->
+  <line x1="240" y1="270" x2="430" y2="170" stroke="#dc2626" stroke-width="1.2" opacity="0.5"/>
+
+  <!-- L₁: thick red bidirectional arrow, y=195 from x=155 to x=370 -->
+  <rect x="168" y="190" width="189" height="10" fill="#dc2626"/>
+  <polygon points="155,195 175,185 175,205" fill="#dc2626"/>
+  <polygon points="370,195 350,185 350,205" fill="#dc2626"/>
+
+  <!-- L₂: thick blue bidirectional arrow, y=278 from x=235 to x=370 -->
+  <rect x="248" y="273" width="109" height="10" fill="#2563eb"/>
+  <polygon points="235,278 255,268 255,288" fill="#2563eb"/>
+  <polygon points="370,278 350,268 350,288" fill="#2563eb"/>
+
+  <!-- φ₁ arc: angle between horizontal and tangent at x-curve intersection -->
+  <path d="M 310 195 A 55 55 0 0 0 335 172" stroke="#dc2626" stroke-width="1.8" fill="none"/>
+
+  <!-- φ₂ arc: angle between horizontal and tangent at MA₁ intersection -->
+  <path d="M 320 278 A 45 45 0 0 0 340 260" stroke="#2563eb" stroke-width="1.8" fill="none"/>
+
+  <!-- Labels -->
+  <!-- x label (top of curve) -->
+  <text x="540" y="35" font-family="serif" font-size="30" font-weight="bold" fill="#22c55e">x</text>
+
+  <!-- MA₁(x,ℓ₁) label -->
+  <text x="540" y="88" font-family="serif" font-size="24" fill="#dc2626">MA</text>
+  <text x="585" y="95" font-family="serif" font-size="16" fill="#dc2626">1</text>
+  <text x="597" y="88" font-family="serif" font-size="24" fill="#dc2626">(x,</text>
+  <text x="632" y="88" font-family="serif" font-size="24" font-style="italic" fill="#dc2626">&#x2113;</text>
+  <text x="644" y="95" font-family="serif" font-size="16" fill="#dc2626">1</text>
+  <text x="654" y="88" font-family="serif" font-size="24" fill="#dc2626">)</text>
+
+  <!-- D₁ label (right of vertical segment) -->
+  <text x="380" y="162" font-family="serif" font-size="22" font-weight="bold" fill="#991b1b">D</text>
+  <text x="398" y="169" font-family="serif" font-size="14" fill="#991b1b">1</text>
+
+  <!-- D₂ label (right of vertical segment) -->
+  <text x="380" y="248" font-family="serif" font-size="22" font-weight="bold" fill="#991b1b">D</text>
+  <text x="398" y="255" font-family="serif" font-size="14" fill="#991b1b">2</text>
+
+  <!-- φ₁ label (above L₁, near the arc) -->
+  <text x="270" y="185" font-family="serif" font-size="22" font-style="italic" fill="#dc2626">&#x03C6;</text>
+  <text x="288" y="192" font-family="serif" font-size="14" fill="#dc2626">1</text>
+
+  <!-- L₁ label (below L₁ arrow) -->
+  <text x="240" y="225" font-family="serif" font-size="22" font-weight="bold" fill="#dc2626">L</text>
+  <text x="256" y="232" font-family="serif" font-size="14" fill="#dc2626">1</text>
+
+  <!-- φ₂ label (above L₂, near the arc) -->
+  <text x="285" y="268" font-family="serif" font-size="22" font-style="italic" fill="#2563eb">&#x03C6;</text>
+  <text x="303" y="275" font-family="serif" font-size="14" fill="#2563eb">2</text>
+
+  <!-- L₂ label (below L₂ arrow) -->
+  <text x="285" y="308" font-family="serif" font-size="22" font-weight="bold" fill="#2563eb">L</text>
+  <text x="301" y="315" font-family="serif" font-size="14" fill="#2563eb">2</text>
+
+  <!-- MA₂ label (bottom area) -->
+  <text x="280" y="530" font-family="serif" font-size="24" fill="#2563eb">MA</text>
+  <text x="325" y="537" font-family="serif" font-size="16" fill="#2563eb">2</text>
+  <text x="338" y="530" font-family="serif" font-size="24" fill="#2563eb">( MA</text>
+  <text x="401" y="537" font-family="serif" font-size="16" fill="#2563eb">1</text>
+  <text x="412" y="530" font-family="serif" font-size="24" fill="#2563eb">(x,</text>
+  <text x="448" y="530" font-family="serif" font-size="24" font-style="italic" fill="#2563eb">&#x2113;</text>
+  <text x="460" y="537" font-family="serif" font-size="16" fill="#2563eb">1</text>
+  <text x="470" y="530" font-family="serif" font-size="24" fill="#2563eb">),</text>
+  <text x="490" y="530" font-family="serif" font-size="24" font-style="italic" fill="#2563eb">&#x2113;</text>
+  <text x="502" y="537" font-family="serif" font-size="16" fill="#2563eb">2</text>
+  <text x="512" y="530" font-family="serif" font-size="24" fill="#2563eb">)</text>
+</svg>
