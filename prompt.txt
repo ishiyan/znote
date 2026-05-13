@@ -1,0 +1,1083 @@
+The following are the series of experiments in "mardownification".
+
+Create Python virtual environment in this repo.
+
+In the ./extraction-skills/ directory I downloaded skills to extract/convert markdown from various data files.
+Install packeges required by these downloaded skills in the virtual environment in this repo.
+
+Evaluate if they are useful by executing "markdownization" for the following sets of test data in the ./extraction-testdata/ folder:
+- frama.component.html
+  This is a source HTML file from Angulat website, the same page is deployad at https://ishiyan.github.io/notes/13
+  This file uses <mb-ki>{{...}}</mb-ki> tags for inline and <mb-kd>{{...}}</mb-kd> tags for display (on separate lines) Katex TeX formulas and equations.
+  Inside <mb-kd> tags, there can be `\\tag*{}` which means no equation number, and `\\tag*{(123)}` which means no equation number `(123)`.
+  Assets mentioned in this offline HTML file are located in ./extraction-testdata/assets/ folder and its subfolders.
+  The <figure>...</figure> tags contain illustrations. When converting, we should try to preserve text layout, for instance illustrations and charts on the left, on the right, etc.
+  If there are <mb-ohlcv-chart>...</mb-ohlcv-chart>, just convert them as text saying "ohlcv chart".
+  If there are <mb-frequency-response-chart>...</mb-frequency-response-chart>, just convert them as text saying "frequency response chart".
+  Yo may ignore all other <mat-*> Angular Material Design components tags.
+  - Convert the frama.component.html file to markdown into the ./testdata-converted/frama/offline/ folder.
+    Put related assets into ./testdata-converted/frama/offline/assets/ folder (or its sub-folders).
+  - Convert the online Angular page https://ishiyan.github.io/notes/13 to markdown into the ./testdata-converted/frama/online/ folder.
+    Try to extract Katex formulas, illustrations, and charts placeholders from this URL.
+    Put related assets into ./testdata-converted/frama/online/assets/ folder (or its sub-folders).
+  - Compare converted variants. write comparison results into ./testdata-converted/frama-comparison.md
+  - Evaluate your experience (mention which of the skills in ./extraction-skills/ were useful and which are not and give your reccomendation) and write it into ./testdata-converted/frama-evaluation.md
+  - Based on this experience, write the skill to do such conversion into ./testdata-converted/frama/frama-skill.md
+- ch16.pdf
+  This is a chapter from a book.
+  - Convert it to markdown into ./testdata-converted/ch16/ch16.md
+    Try to extract EasyLanguage code listings to `*.easylanguage` files and put them into ./testdata-converted/ch16/ folder.
+    Try to extract illustrations to `*.png` files and put them into ./testdata-converted/ch16/ folder.
+  - Make a very short (10-50 lines) summarry of what this chapter is about and write it into ./testdata-converted/ch16/ch16-summary.md
+  - Evaluate your experience (mention which of the skills in ./extraction-skills/ were useful and which are not and give your reccomendation) and write it into ./testdata-converted/ch16/ch16-evaluation.md
+  - Based on this experience, write the skill to do such conversion into ./testdata-converted/ch16/ch16-skill.md
+- tasc.pdf and tasc.mhtml
+  The PDF is an journal article from Technical Analysis of Stocks and Commodities magazine conatining dascription of the technical analysis indicator.
+  The MHTML is the accompanying web page conatining source listings for this indicator implemented by different charting platforms.
+  - Convert PDF to markdown into ./testdata-converted/tasc/art/tasc.md
+    Try to extract code listings to `*.listing` files and put them into ./testdata-converted/tasc/art/ folder.
+    Try to extract illustrations to `*.png` files and put them into ./testdata-converted/tasc/art/ folder.
+    The converted tasc.md file should use these illustrations.
+  - Convert PDF to markdown into ./testdata-converted/tasc/tips/tips.md
+    Try to extract code listings to `<provider>-<number>.code` files and put them into ./testdata-converted/tasc/tips/ folder.
+    Here <provider> means the name of the platform providing the code, <number> means the ordinary number of the listsing (starting with 1) for that provider.
+    Try to extract illustrations to `<provider>-<number>.png` files and put them into ./testdata-converted/tasc/tips/ folder.
+    The converted tips.md file should use these illustrations.
+  - Make a very short (10-50 lines) summarry of what this tips.md is about and write it into ./testdata-converted/tasc/tips/tips-summary.md
+  - Evaluate your experience (mention which of the skills in ./extraction-skills/ were useful and which are not and give your reccomendation) and write it into ./testdata-converted/tasc/tasc-evaluation.md
+  - Based on this experience, write the skill to do such conversion into ./testdata-converted/tasc/tasc-skill.md
+- SwamiCharts.ppt
+  This is a PowerPoint presentation about technical analysis indicators.
+  - Convert it to markdown into ./testdata-converted/swami/swami.md
+    Try to extract code listings to `*.code` files and put them into ./testdata-converted/swami/ folder.
+    Try to extract illustrations to `*.png` files and put them into ./testdata-converted/swami/ folder.
+  - Make a very short (10-50 lines) summarry of what this chapter is about and write it into ./testdata-converted/swami/swami-summary.md
+  - Evaluate your experience (mention which of the skills in ./extraction-skills/ were useful and which are not and give your reccomendation) and write it into ./testdata-converted/swami/swami-evaluation.md
+  - Based on this experience, write the skill to do such conversion into ./testdata-converted/swami/swami-skill.md
+
+Write your total evaluation in the ./testdata-converted/swami/evaluation.md
+Answer the following questions in the evaluation:
+- Which of the 3 skills were useful in total?
+- How can we improve or rewrite these skills if we want to use them?
+- Maybe you come with your own suggestions of skills to use.
+--------------------------
+Here are the online links to the same articles we converted offline:
+- fama: https://ishiyan.github.io/notes/13
+- mama: https://ishiyan.github.io/notes/12
+- htce: https://ishiyan.github.io/notes/14
+- jma: https://ishiyan.github.io/notes/11
+- kama: https://ishiyan.github.io/notes/10
+- t3: https://ishiyan.github.io/notes/9
+- t2: https://ishiyan.github.io/notes/8
+- tema: https://ishiyan.github.io/notes/7
+- dema: https://ishiyan.github.io/notes/6
+- ema: https://ishiyan.github.io/notes/3
+- trima: https://ishiyan.github.io/notes/5
+- wma: https://ishiyan.github.io/notes/4
+- sma: https://ishiyan.github.io/notes/2
+- freq-resp: https://ishiyan.github.io/notes/1
+- visualize: https://ishiyan.github.io/notes/0
+Convert them into sibfolders inside mb-notes-online/converted/
+Extract snapshoots of charts and save them under assets/ as well
+Use the .opencode/skills/extract.md skill and follow its instructions
+Evaluate your experience of following the .opencode/skills/extract.md skill and give suggestions how to improve the skill.
+Write your evaluation into mb-notes-online/evaluation.md
+
+I tried to do the same "online extraction" with a different model, "Big Pickle" from "OpenCode Zen".
+It wasn't a big success - it constantly wanted to install another tools like playwright and failed to make screenshots form charts.
+Its resulta are in mb-notes-online-big-pickle/ and its subfolders.
+Maybe this will also help us to improve our skill.
+---------------
+In wrighting-skills/ folder I have downloaded various skills for good "human" writing style.
+Some of them should be authoritive, like writing-clearly-and-concisely/ , some not.
+Assess:
+- how they overlap
+- which ones look most authoritive
+- which ones are not needed
+Give suggestions to how make a single "hierarchical" skill combining info from these individual ones.
+The combined skill may jave an inner folder structure if needed.
+
+In the verifying-skills/ folder I have downloaded various skills for verification and checking of documents before they considered ready for publication.
+Assess:
+- how they overlap
+- which ones look most authoritive
+- which ones are not needed
+Give suggestions to how make a single "hierarchical" skill combining info from these individual ones.
+The combined skill may jave an inner folder structure if needed.
+
+Given two sets of skills, advice if it is better to have them separately (two separate combined skills) or to combine both in the single one.
+-------------------
+Let's move to bibliography and citation.
+In bibliography-skills/ folder I have downloaded various skills for citation managemen, bibliography and literature overview.
+Apart of this functionality, I want to add the ability to:
+- access all URLs in literature references, and automaticcaly put "last accessed: YYYY-MM-DD"
+- use APA 6 style, but have also a URL to the Google Books if this URL is available. Is this common or useful?
+- make use of bib-tex file if user says it is available.
+  For example, I have one in bibliography-testdata/bibliography.bib
+Assess downloaded skills:
+- how they overlap
+- which ones look most authoritive
+- which ones are not needed
+Give suggestions to how make a single "hierarchical" skill combining info from these individual ones.
+The combined skill may jave an inner folder structure if needed.
+----------------------
+In blogging-skills/ folder I have downloaded various skills related to blogging.
+The goal is to be able to:
+- write a blog article given a subject
+- "blogerize" existing text (markdown document), for instance blogging-testdata/jme/content-revision.md
+- create posts for popular social networks (linked-in, twitter (X), medium, substack, etc.)
+- write both technical, scientifical and "normal" blog articles
+- plan to schedule a series of blog articles covering a subject
+Assess downloaded skills:
+- how they overlap
+- which ones look most authoritive
+- which ones are not needed
+Give suggestions to how make a single "hierarchical" skill combining info from these individual ones.
+The combined skill may have an inner folder structure if needed.
+------------------------
+In illustrations-skills/ folder I have downloaded various skills related to creating illustrations for publications.
+This is not related to photos, pictures.
+The goal is to be able to:
+- given an image of a diagram, as in illustration-testdata/f02001.jpg , create an SVG version of this diagram and write it to an SVG file
+- given an image of a diagram, as in illustration-testdata/f02001.jpg , create a Mermaid markdown and write it to an MD file
+- create SVG files from a textual description
+- create Mermaid diagrams from a textual description
+- create (Marp) slides (scientific and general) from a given textual document
+Assess downloaded skills:
+- how they overlap
+- which ones look most authoritive
+- which ones are not needed
+- which ones require API key, we don't want these apart of free API keys
+Give suggestions to how make a single "hierarchical" skill combining info from these individual ones.
+The combined skill may have an inner folder structure if needed.
+What is a good name for this skill? It's not exactly illustration/diagram/slide
+-------------------------
+In document-to-markdown/ skill we used the following passage:
+
+**SVG color compatibility** — SVGs from web apps often rely on CSS-inherited colors. When copying SVGs, inject a `<style>` block with `prefers-color-scheme` media queries:
+   ```xml
+   <style>
+     svg { stroke: black; fill: black; }
+     @media (prefers-color-scheme: dark) {
+       svg { stroke: white; fill: white; }
+     }
+   </style>
+   ```
+   Skip if the SVG already has explicit color attributes.
+
+Can we do the same when we save SVG in visual-authoring/ skill?
+------------------------
+In researching-skills/ folder I have downloaded various skills related to searching for publications.
+The goal is to be able to:
+- given an exact DOI or arXive article numbers, being able to find the artice and download it's PDF, abstract info and bibtex files
+- given a search phrase, being able to search multiple sources for a literature review, articles, preprints, documentations, etc.:
+  - academic papers, scientific search engines
+  - "ordinary" websites
+  - blogs (e.g. Medium, Substack etc.)
+  - GitHub repos
+  - social netword discussions (e.g. LinkedIn, Twitter(X), etc.)
+  The results should be multi-source validated, with complete citation links and bibtex data.
+  Should prefere un-biased non-sponsored results verified for information quality.
+- given a title of the book or the article title and metadata, search for bibtex info and download it
+- when we search for trading indicators, we also should scan trading forums and websites, e.g:
+  - https://www.mql5.com/en/code
+  - https://www.mql5.com/en/articles
+  - https://www.mql5.com/en/forum
+  This list will grow, I don't want to put dozens of forum links now.
+- For every result we deliver (be it a website page, forum entry, book, downloadable PDF, etc., we should generate bibtex entry together with resukts
+Assess downloaded skills:
+- how they overlap
+- which ones look most authoritive
+- which ones are not needed
+- which ones require API key, we don't want these apart of free API keys
+Give suggestions to how make a single "hierarchical" skill combining info from these individual ones.
+The combined skill may have an inner folder structure if needed.
+This list above will grow in time, so the skill structure should be prepared for it
+What is a good name for this skill? It's not exactly searching/researching/literature-overview
+Also, some aspects of this skill overlap with the bibliography/ and document-to-markdown/ skills we already have
+How to make them cooperating?
+-------------------------------
+In go/indicators/markjurik/jurikmovingaverage/ I have a Go implementation of jurik-moving-average indicator.
+In create-indicator/mark-jurik/jurik-moving-average/ folder I have reference implementation files from which the implementation of go/indicators/markjurik/jurikmovingaverage/ was made.
+In this folder:
+- jma.go : the reference implementation ported from decompiled Delphi sources
+  At the end of this file, there is a "func testInput() TSeries {" array with test input data.
+- jma.output.txt : the reference test output produced by original implementation on Windows 98 virtual machine.
+  Running it produced this test output file with reference output data for various values of indicator parameters.
+  Each combination of parameters starts with
+  ```
+  //////////////////////////////////////////////////
+  // JJMASeries(test_input, ALength=20, APhase=-100)
+  ```
+  followed by array of output data.
+- JMA.PDF : contains original documentation downloaded from the Jurik's website
+
+Recreate the logic used to create the go/indicators/markjurik/jurikmovingaverage/ from this reference one:
+- how reference code which gets an array of input data was transformed into a streaming variant in our implementation
+- how unit tests were made using data from the jma.output.txt
+Document this logic and transformation steps in the create-indicator/mark-jurik/jma-creation-logic.md
+
+When done, start with creating Go version of "our-style" "streaming" indicators from the reference implementation folders below.
+All these folders have the same set of files:
+- create-indicator/mark-jurik/jurik-omposite-fractal-behavior-index/ (CFB)
+  place the new indicator in go/indicators/markjurik/jurikompositefractalbehaviorindex/ (JCFB)
+- jurik-relative-trend-strength-index/ (RSX)
+  place the new indicator in go/indicators/markjurik/jurikrelativetrendstrengthindex/ (JRSX)
+- jurik-zero-lag-velocity/ (VEL)
+  place the new indicator in go/indicators/markjurik/jurikzerolagvelocity/ (JVEL)
+- jurik-directional-movement-index/ (DMX)
+  place the new indicator in go/indicators/markjurik/jurik-directional-movement-index/ (JDMX)
+
+The new implementations should pass unit tests with original reference output data.
+Use indicator-architecture/ and indicator-conversion/ skills
+-------------------------
+	math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(),
+	math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(),
+	math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(),
+	math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(),
+	math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(),
+	math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(),
+ math.NaN(), math.NaN(), math.NaN(), math.NaN(), math.NaN(), 0.000000001997561,
+ 0.000000000000000, 0.000000000000000, 0.000000000000000, 0.000000000000000, 0.000000000000000, 64.338235288210129,
+ 16.795366800983896, 0.000000002956948, 72.999999990938804, 98.828124998297426, 49.400000002847044, 35.400516799935339,
+ 72.451790629164918, 0.000000005778811, 0.000000000000000, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 7.599999999252638, 60.333333323445906, 0.000000002934075, 0.000000000000000, 36.522753790112446, 0.000000006123915,
+ 0.000000000000000, 55.999999995127951, 27.586206900685291, 36.959999999314995, 68.833333329598105, 44.225721786956747,
+ 73.575757572707744, 15.703703711661147, 0.000000001766666, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 0.000000000000000, 58.823529406509522, 1.079136700578833, 0.000000000089286, 0.000000000000000, 0.000000000000000,
+ 78.420038527996013, 0.000000007631248, 0.000000000000000, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 0.000000000000000, -0.000000000000000, 52.424639572873204, 0.000000012396704, 69.244288219986345, 14.432989699764532,
+ 78.997613358429092, 83.221476509844408, 15.000000013722751, 0.000000000546470, 0.000000000000000, 0.000000000000000,
+ 62.370062366327915, 33.783783786769988, 0.000000005249998, 0.000000000000000, 0.000000000000000, 32.432432427756538,
+ 0.000000003758695, 88.075880747234251, 19.035533002198072, 0.000000004218748, 0.000000000000000, 0.000000000000000,
+ 0.000000000000000, 0.000000000000000, 0.000000000000000, -0.000000000000000, 51.229508185501793, 0.000000004882810,
+ 0.000000000000000, 37.199999994660210, 0.000000003804546, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 0.000000000000000, 6.271777002729805, 0.000000000600889, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 0.000000000000000, 46.556473825868082, 0.000000008968162, 32.562620422395696, 89.031505247027937, 0.000000029804702,
+ 61.272727269117830, 31.205673765462318, 0.000000004177218, 0.000000000000000, 0.000000000000000, 31.648936167485584,
+ 10.775862072771288, 61.097852025505084, 73.427991885230810, 3.412073501005816, 0.000000000227096, 0.000000000000000,
+ 0.000000000000000, 61.235955049755312, 0.000000005523644, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 0.000000000000000, 49.918433929652338, 62.154696130265542, 5.740181275823135, 0.000000000685096, 38.081395344951666,
+ 0.000000004619909, 0.000000000000000, 0.000000000000000, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 41.666666660510415, 0.000000003624354, 0.000000000000000, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 66.853932577276581, 3.703703719315971, 0.000000000220588, 84.397163110264671, 75.552665800104833, 0.000000011862530,
+ 0.000000000000000, 65.277777767884061, 45.996860283555343, 21.929824565185747, 0.000000002068016, 0.000000000000000,
+ 48.285714280964974, 14.448669206586676, 74.100719421286115, 0.000000014261542, 0.000000000000000, 0.000000000000000,
+ 96.852300232395805, 75.329566856873797, 0.000000012605052, 64.065708413607751, 85.178875636870899, 12.109375018849018,
+ 0.000000000697500, 0.000000000000000, 0.000000000000000, 0.000000000000000, 99.999999996212509, 0.000000055939263,
+ 0.000000000000000, 0.000000000000000, 65.818181812446753, 0.000000008814926, 0.000000000000000, 0.000000000000000,
+ 85.897435889878665, 7.786885257137945, 78.828828824436755, 0.000000014318175, 0.000000000000000, 0.000000000000000,
+ 0.000000000000000, 0.000000000000000, 57.538461533223469, 0.000000008414997, 43.499999993883044, 16.888888891549797,
+ 0.000000000911514, 0.000000000000000, 0.000000000000000, 0.000000000000000, 98.588235284018111, 0.000000025073118,
+ 46.012269932680127, 52.521008402859962, 0.000000006421230, 0.000000000000000, 0.000000000000000, 0.000000000000000,
+ 0.000000000000000, -0.000000000000000, 32.928064840894187, 80.722891557130708, 16.155088859806654, 0.000000003388557,
+ 49.894736838182048, 0.000000006767137, 0.000000000000000, 32.342007431644106, 0.000000004751213, 0.000000000000000,
+ 0.000000000000000, 3.723404254775139, 0.000000000465976, 17.714285712361313, 9.793814433793370, 67.361111106748609,
+---------------------
+when using "source finding" skill in trading domain, can we add the search sources from traders.com which provides the "Technical Analysis of Stocks and Commodities" magazine.
+Although article content is obly by subscription, they have the following free searches/retrievals:
+- Free archove of teble of contents for all issues of the magazine since 1982.
+  https://traders.com/Mobile/Archive/JAN2022.XML -- TOC of an January 2022 issue in XML.
+  The example XML is
+  ```
+  <?xml
+  version="1.0" encoding="ISO-8859-1"?>
+  <?xml-stylesheet
+  type="text/xsl" href="wayne1.xsl"?>
+  <Archive>
+      <Article>
+        <Name>Trading A Moving Average System: Important Choices</Name>
+        <Author>Perry J. Kaufman</Author>
+        <Year>2022</Year>
+        <Month></Month>
+        <Subject>Trading Systems</Subject>
+        <To>https://technical.traders.com/archive/article.asp?file=\V40\C01\353KAUF.pdf</To>
+        <info></info>
+        <charmonth>JAN</charmonth>
+        <storeTo></storeTo>
+        <More>Most traders have used moving average-based trading systems to derive trading signals. But how you define the signal can greatly affect the outcome. Here &apos;s a study to help determine the best ways to apply a moving average system...</More>
+      </Article>
+      ...
+      <Article>
+        <Name>Futures Liquidity</Name>
+        <Author>Technical Analysis, Inc.</Author>
+        <Year>2022</Year>
+        <Month></Month>
+        <Subject>Futures</Subject>
+        <To>https://technical.traders.com/archive/article.asp?file=\V40\C01\366LIQU.pdf</To>
+        <info></info>
+        <charmonth>JAN</charmonth>
+        <storeTo></storeTo>
+        <More>Trading liquidity is often overlooked as a key technical measurement in the analysis and selection of commodity futures. The following explains how to read the futures liquidity chart published by Technical Analysis of STOCKS &amp;COMMODITIES every month...</More>
+      </Article>
+  </Archive>
+  ```
+  Some notes on this:
+  - Note <To> element -- it shows URL to retrieve an article PDF if you have the sebscription.
+    We need the "\V40\C01\353KAUF.pdf" part to search this PDF on internet, sometimes it is freely downloadable.
+  - Most browsers fail to display it because it references not-existent XSL inside the XML.
+  - There is a 13th "bonus" issue every year, it has 3-letter abbreviation "BON": 
+    https://traders.com/Mobile/Archive/BON2022.XML
+- Free archive of magazine covers since 1982 in full-resolution version and mini-cover version.
+  Download both of them and provide URL references to them.
+  Full resolution:
+  https://technical.traders.com/images/New-2014/1000px-png/2503.png
+  The "2503" part has format "YYMM", so for January 2001 it will be "0101", for January 2000 -- "0001", for January 1999 -- "9901", and for October 1982 -- "8210".
+  For "bonus" issues use "13" as a month: https://technical.traders.com/images/New-2014/1000px-png/2513.png
+  Note the "New-2014" part is constant and does not rellate to the year.
+  Mini-cover:
+  https://technical.traders.com/images/New-2014/2025/2503_Minicover.png
+  The "2025" refers to the year (YYYY), the "2503" refers to March 2025 (YYMM)
+  For October 1982 the URL will be
+  https://technical.traders.com/images/New-2014/1982/8210_Minicover.png
+  Note the "New-2014" part is constant and does not rellate to the year.
+- There is a free article search, for instance to get articles for "John F. Ehlers" use 
+  http://technical.traders.com/archive/combo/display5.asp?author=John%20F%20Ehlers
+  It has elements like this:
+  ```
+  <div class="link"><a href="https://technical.traders.com/archive/article.asp?file=\V42\C04\778EHLE.pdf"><img src="http://technical.traders.com/images/PDF.png" alt="Download PDF">Download<br>Article</a></div>
+  <ul><li class="more"><h3 class="articleTitle">The Ultimate Smoother</h3><p class="caption"><span class="captHead">ARTICLE SYNOPSIS ...</span>First, we introduced you to a super smoother. Here, we introduce an ultimate smoother. It's an advancement you won't want to miss...</p>
+  </li></ul><p class="byline"><span class="attribute first">AUTHOR:</span>?John F. Ehlers<span class="attribute">DATE:</span>?<span class="monthText">APR</span>?2024<span class="attribute">SUBJECT:?</span>Digital Signal Processing</p>
+  </div>
+  ```
+- Complete Author Archive
+  https://technical.traders.com/archive/combo/authorlist.asp
+- Complete Alphabetical Archive
+  https://technical.traders.com/archive/combo/title/titlelist.asp?word=atitlelist
+
+Can we update the skill with this info?
+-------------------
+In inputs/mark-jurik/starlight/ there are decompiled sources in WealthScript.
+Per indicator, take both XXXX.WS and aXXXX.ws and:
+- deeply understand the implementation and write the following in the inputs/mark-jurik/starlight/py-XXXX/XXXX.md
+  - explain the principles on which it works
+  - explain how it is calculated using formulas in KaTeX ($...$, $$...$$)
+  - explain the algorithm
+  - make a Mermaid flow diagram for the algorithm
+  - present the algoritm in Python-sh pseudocode (doesn't have to compile or run) explaining what it does
+  - come with the mapping table from original names of the variables in WealthScript code to the understandabme names in Python-is pseudocode
+- convert the combined code to very well commented Python code and write it to the inputs/mark-jurik/starlight/py-XXXX/XXXX.py
+
+Do this for the following XXXs:
+- JJMA: files JJMA.WS, aJJMA.ws
+- JRSX: files JRSX.WS, aJRSX.ws
+- JVEL: files JVEL.WS, aJVEL.ws
+- JCFB: files JCFB.WS, aJCFB.ws
+- JDMX: files JDMX.WS, aJDMX.ws
+- JCCX: files JCCX.WS, aJCCX.ws
+- JTPO: files JTPO.WS, aJTPO.ws
+- JVELCFB: files JVELCFB.WS, aJVELCFB.ws (what's the difference with JVEL and JCFB?)
+- JARSX: files JARSX.WS, aJARSX.ws (what's the difference with JRSX?)
+- JAVEL: files JAVEL.WS, aJAVEL.ws (what's the difference with JVEL?)
+- JXRSX: files JXRSX.WS, aJXRSX.ws (what's the difference with JRSX?)
+- JXVEL: files JXVEL.WS, aJXVEL.ws (what's the difference with JVEL?)
+------------------------
+convert to markdown: inputs/mark-jurik/jrs-dll-distribution/jma/JMA_DLL.pdf
+This document is from old distribution, I don't have URL reference to it.
+Save it to the inputs/mark-jurik/jrs-dll-distribution/jma/ folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+convert to markdown: inputs/mark-jurik/jrs-dll-distribution/cfb/CFB_DLL.pdf
+This document is from old distribution, I don't have URL reference to it.
+Save it to the inputs/mark-jurik/jrs-dll-distribution/cfb/ folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+convert to markdown: inputs/mark-jurik/jrs-dll-distribution/ddr/DDR_DLL.pdf
+This document is from old distribution, I don't have URL reference to it.
+Save it to the inputs/mark-jurik/jrs-dll-distribution/ddr/ folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+convert to markdown: inputs/mark-jurik/jrs-dll-distribution/dmx/DMX_DLL.pdf
+This document is from old distribution, I don't have URL reference to it.
+Save it to the inputs/mark-jurik/jrs-dll-distribution/dmx/ folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+convert to markdown: inputs/mark-jurik/jrs-dll-distribution/rsx/RSX_DLL.pdf
+This document is from old distribution, I don't have URL reference to it.
+Save it to the inputs/mark-jurik/jrs-dll-distribution/rsx/ folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+convert to markdown: inputs/mark-jurik/jrs-dll-distribution/vel/VEL_DLL.pdf
+This document is from old distribution, I don't have URL reference to it.
+Save it to the inputs/mark-jurik/jrs-dll-distribution/vel/ folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+convert to markdown: inputs/mark-jurik/jrs-dll-distribution/wav/WAV_DLL.pdf
+This document is from old distribution, I don't have URL reference to it.
+Save it to the inputs/mark-jurik/jrs-dll-distribution/wav/ folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+
+- Deeply understand the implementation of both article and MQL and write the following in the inputs/manfred-dürschner/new-moving-average.md
+  - explain the principles on which it works
+  - explain how it is calculated using formulas in KaTeX ($...$, $$...$$)
+  - explain the algorithm
+  - make a Mermaid flow diagram for the algorithm
+  - present the algoritm in Python-sh pseudocode (doesn't have to compile or run) explaining what it does
+  - come with the mapping table from original names of the variables in MQL code to the understandabme names in Python-is pseudocode
+- Convert the MQL code to very well commented Python code and write it to the inputs/manfred-dürschner/nyquist-shannon-moving-average.py
+- Search om MQL website the URL for this MQL implementation and use it in reference secrion of markdown.
+- In MQL files I see another reference to
+  http://www.vtad.de/sites/files/forschung/M_Duerschner_Gleitende_Durchschnnitte_3.pdf
+  but it seems to be unreachable.
+  Investigate should we find this file and use it as a reference as well
+
+
+
+Moving Averages 3.0 by Manfred G. Dürschner..
+
+On approximately 01:00 of the video of his presentation slides, in the link below, there is a small photo of Dürschner:
+https://www.vtad.de/vvideo/digitale-indikatoren-i/
+I took a screenshot of the whole slide and put into inputs/manfred-dürschner/dürschner-full-slide.png, and also cropped the photo and put it into inputs/manfred-dürschner/dürschner.png
+The same slide is also on the approximately 01:00 in the video of another presentation:
+https://www.vtad.de/vvideo/viccao-ein-profitables-handelssystem/
+extend existing deep research on manfred-dürschner topic with this information
+
+
+convert to markdown: inputs/john-ehlers/rocket-science-made-easy/Rocket-Science-Made-Easy.pdf
+This document is from old presentation slides in PDF, I don't have URL reference to it.
+Save markdown to the same folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+convert to markdown: inputs/john-ehlers/cybernetic-analysis-for-stocks-and-futures/*.pdf
+This document has scanned pages, two "real pages" per page, layed out horizontally.
+Save markdowns to the same folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+Code listings may span across several pages.
+
+convert to markdown: inputs/john-ehlers/rocket-science-for-traders/Rocket-Science-for-Traders.pdf
+Save markdown to the same folder.
+Don't forget to extract images (illustrations)
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+
+--------------------------
+missing inline math and equations in KaTeX:
+```
+by multiplying it by a periodic impulse train. The sampling sig-
+nal can be expressed in the time domain as
+s(t) = 1 6(t - kT)
+where 6 = the impulse function
+T = period between impulses
+Using Fourier theory, multiplication in the frequency domain is
+```
+Also , figure 1.1 shows black image with white text on it, the above equation is in this text.
+It should be "Sampled data in frequency domain".
+
+After the text
+```
+When the market is in a Cycle Mode, it is more important to
+think in terms of the phase shift an SMA will induce rather than
+in terms of the number of bars of lag that it will cause. For exam-
+ple, a 2-bar lag is almost inconsequential for a 40-bar
+I: I
+L
+-1
+I
+cycle.
+```
+with non-KaTeX math, all further tex geus inside one big listing, which continues to the end of the book
+--------------------
+Enhance/extend deep research in topic "john ehlers" with the following:
+in "TASC Publications (Complete List, 1985-2026)" we have two columns, Month and Title. We want to:
+- append the "Description" column containing description from the "More" XML element, and
+- append the "Article" column, each row comtaining URL in form "[\V40\C01\366LIQU](https://technical.traders.com/archive/article.asp?file=\V40\C01\366LIQU.pdf)", which you can derive from "To" XML element
+---------------------
+convert to markdown: inputs/john-ehlers/rocket-science-for-traders/*.pdf
+Save markdowns to the same folder.
+Don't forget to extract images (illustrations).
+Don't forget to convert inline math. formulae and equations into KaTeX representation ($...$, $$...$$).
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+Code listings may span across several pages.
+---------------------
+from ch*.pdf, make individual page images: assets/page-X.Y.png whrer X is the chapter number (chX.pdf) and Y is the ordinal page number in that chapter (1,2,3...)
+crop margin in page images as you did for figures
+---------------------
+create a pages.md file containing links to individual page images: assets/page-X.Y.png
+Each chapter should have a "## ...." heading followed by sequential page images for that chapter.
+---------------------
+can you proofread the ch*.md
+we also had some known limitations:
+- OCR artifacts in text (e.g., "l" vs "1", "Z" vs "2", spaces inserted mid-word) — these come from the scanned source
+- Some code blocks include a few trailing prose lines from the same page (page-level classification trade-off)
+- Chapter title on line 1 is duplicated (as H1 heading and raw text) — the raw text from the first page includes the title
+---------------------
+In inputs/john-ehlers/mesa-and-trading-market-cycles/*.pdf I have book chapters with "two-sided" scanned pages.
+Extract individual pages as PNG images and put them into assets/page-X.Y.png where X is the chapter number (chX.pdf) and Y is the ordinal page number (1,2,3...)
+Remember that PDF is "two-sided", so every PDF page conatins two pages which should go into separate images.
+If the first page (the left-side image in first PDF page) of the chapter is empty, skip it. 
+If the last page (the right-side image in last PDF page) of the chapter is a beginning of the next chapter, skip it (it will come in next PDF again).
+After yoy wrote all images, crop their margins.
+---------------------
+I thought it be more easy to "markdownize" extracted pages than "two-sided" PDFs.
+Now convert to markdown images you just created (assets/page-X.Y.png) into chX.md files.
+Don't forget to extract images (illustrations), placing them into assets/figure-X.Z.png where Z is the figure number.
+Don't forget to convert inline math. formulae and equations into KaTeX representation ($...$, $$...$$).
+Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
+Code listings may span across several pages.
+---------------------
+Each of the inputs/mark-jurik/starlight/py-*/ folders has *.md with a description of an algo and *.py with a Python implementation.
+Combine py-JARSX/ and py-JXRSX/ together in inputs/mark-jurik/prepared-for-conversion/jurik-adaptive-relative-trend-strength-index/ folder, containing:
+- jurik-adaptive-relative-trend-strength-index.md : "merged" "optimized" description from both source folders
+- jurik-adaptive-relative-trend-strength-index.py : "merged" "optimized" implementation from both source folders
+
+In its __main__, the code should read the 252 INPUT_CLOSE values from test_data.py located in the same folder.
+You better just embed this array into the __main__.
+Then, the __main__ should generate reference outputs for following combination of parameters:
+
+#	LoLen	HiLen	Sensitivity	What it tests
+1	5	30	1.0	Default/baseline
+2	2	30	1.0	Fast floor, default otherwise
+3	10	30	1.0	High floor, default otherwise
+4	5	15	1.0	Narrow adaptive range
+5	5	60	1.0	Wide adaptive range
+6	5	30	0.5	Sluggish adaptation
+7	5	30	2.5	Aggressive adaptation
+8	2	60	2.5	Maximum dynamic range + aggressive
+9	10	15	0.5	Near-constant length (almost no adaptation)
+10	2	15	1.0	Short lengths only
+
+All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_data.py) to the test_data.py file.
+The names of the arrays should be EXPECTED_LO_x_HI_y_SENS_z, where x,y,z are values of parameters from the table above.
+In "z" values, use "_" instead of ".".
+Before each array put a comment with text in "What it tests" column of the table above.
+On the next comment line put the parameter names and their values.
+In data arrays, use NaN if indidicator is not primed yet.
+
+From the code, here are the defaults and practical ranges:
+Parameter	Default	Range	Notes
+LoLen	5	2–20	Minimum RSX length; lower = faster response in volatile regimes
+HiLen	30	20–100	Maximum RSX length; higher = more smoothing in calm regimes
+Sensitivity	1.0	0.1–5.0	Scales the log-ratio; higher = more aggressive length adaptation
+
+The source code doesn't explicitly declare valid ranges, but these are implied by the algorithm:
+- LoLen must be >= 2 (minimum meaningful RSX period)
+- HiLen must be > LoLen
+- Sensitivity at 0 would disable adaptation (length stays at midpoint); values > ~5 would make it essentially binary (always at LoLen or HiLen)
+---------------------
+Do the same for JAVEL and JXVEL using the name "jurik-adatpive-zero-lag-velocity".
+If sensitivity parameter is also not used, you may delete it.
+
+- JMA : "jurik-moving-average"
+- JCFB : "jurik-composite-fractal-behavior-index"
+- JRSX : "jurik-relative-trend-strength-index"
+- JDMI : "jurik-directional-movement-index"
+- JARSX : "jurik-adaptive-relative-trend-strength-index"
+- JAVEL : "jurik-adaptive-zero-lag-velocity"
+
+JTPO	jurik-turning-point-oscillator	Direct name — it's a Spearman rank correlation oscillator measuring trend monotonicity
+JCCX	jurik-commodity-channel-index	It's a JMA-enhanced CCI replacement; the "extended" part is implied by being Jurik's version
+JVELCFB	jurik-fractal-adaptive-zero-lag-velocity	It's VEL with CFB-driven depth — "fractal-adaptive" distinguishes it from "adaptive" (volatility-regime-based JAVEL)
+
+----------------------------
+Deep research in topic "Donald Lambert" thoroughy:
+I only know him as an inventor of the Commodity Channel Index indicator. Did he invented other indicators?
+Research his biography, photos, videos, interviews, books, articles, TASC, technical indicators he invented, reference or community implementations of these indicators.
+
+Donald Lambert remains one of the most impactful yet personally obscure figures in the history of technical analysis. He contributed one indicator via one article and left a disproportionately large legacy with virtually zero public biographical footprint.
+----------------------------
+
+In prepared-for-conversion/ folder I have several indicators ready to covert into our indicator architecture:
+- jurik-adaptive-relative-trend-strength-index/
+- jurik-adaptive-zero-lag-velocity/
+- jurik-commodity-channel-index/
+- jurik-fractal-adaptive-zero-lag-velocity/
+- jurik-turning-point-oscillator/
+- jurik-wavelet-sampler/
+
+Every XXX/ folder has 3 files:
+- XXX.md : description of the indicator's algo and implementation.
+- XXX.py : reference implementation in Python.
+- test_data.py : reference implementation test data: INPUT_CLOSE is an input, follwed by a number of EXPECTED_* arrays per combination of indicator parameters.
+
+All these indicators have the "non-streaming" implementation, i.e. they ahe an array of prices as an input.
+You should convert them to our "new architecture" streaming Python implementatio.
+Make "our-style" unit tests, copy test_data.py as test_testdata.py to target directory and use its arrays in our unit tests.
+The converted directories layouts should be inline with existing directories in mark-jurik/
+Place all indicators umder py/indicators/mark-jurik/
+Read indicator-architecture/ and indicator-conversion/ skills before conversion.
+Don't forget to register them in factory/ and add them to the cmd/icalc/settings.json so the icalc app can excersise them.
+-----------------------------
+convert these indicators, located in py/indicators/mark-jurik/, from Python to Go:
+- jurik_adaptive_relative_trend_strength_index/
+- jurik_adaptive_zero_lag_velocity/
+- jurik_commodity_channel_index/
+- jurik_fractal_adaptive_zero_lag_velocity/
+- jurik_turning_point_oscillator/
+
+Read indicator-architecture/ and indicator-conversion/ skills.
+Follow the conversion procedure.
+Converted Go versions should match layout and style of exisying Go indicators in go/indicators/markjurik/
+Use separate unit test data in testdata_test.go, as in existing Go indicators.
+After adding new indicators to cmd/icalc/settings.json, run icalc app to ensure it works.
+-----------------------------
+Now convert the Go implementation of the following Go indicators (in go/indicators/markjurik/) to TypsScript, Zig and Rust:
+- jurikwaveletsampler/
+- jurikadaptiverelativetrendstrengthindex/
+- jurikadaptivezerolagvelocity/
+- jurikcommoditychannelindex/
+- jurikfractaladaptivezerolagvelocity/
+- jurikturningpointoscillator/
+- jurikwaveletsampler/
+-------------------------------------
+In TS versions, no testdata.ts in all new indicator folders
+-------------------------------------
+In py/indicators/mark_jurik/jurik_commodity_channel_index/
+we made internal private class of JMA instead of using existing one in jurik_moving_average/, like in jurik_directional_movement_index/
+and then this was propagated to all languages: Go, TS, Zig, Rust
+Correct this in all languages, we should instantiate existing JMA instance, not invent a private clone.
+-------------------------------------
+Existing mark_jurik/ indicator implementations use inconsistent mnemonics:
+- jurik_adaptive_relative_trend_strength_index/ : jarsx, JARSX
+- jurik_adaptive_zero_lag_velocity/ : javel, JAVEL
+- jurik_commodity_channel_index/ : jccx, JCCI
+- jurik_composite_fractal_behavior_index/ : cfb, CFB
+- jurik_directional_movement_index/ : dmx, DMX
+- jurik_fractal_adaptive_zero_lag_velocity/ : jvelcfb, JVELCFB
+- jurik_moving_average/ : jma, JMA
+- jurik_relative_trend_strength_index/ : rsx, RSX
+- jurik_turning_point_oscillator/ : jtpo, JTPO
+- jurik_wavelet_sampler/ : wav, WAV
+- jurik_zero_lag_velocity/ : vel, VEL
+
+To harmonize mnemonic naming, we should rename
+- JCCI -> JCCX
+- cfb, CFB -> jcfb, JCFB
+- dmx, DMX -> jdmx, JDMX
+- rsx, RSX -> jrsx, JRSX
+- wav, WAV -> jwav, JWAV
+- vel, VEL -> jvel, JVEL
+
+Do it for all languages: Go, TypeScript, Python, Zig, Rust
+---------------------------------------
+Do a deep research flow (include trading domain) in topic "Patrick Mulloy".
+//Not needed: Research his biography, photos, videos, interviews, books, articles, TASC, technical indicators he invented, reference or community implementations of these indicators.
+
+----------------------------
+extend the deep research flow in following topics to include updated deep-research/ and source-finder/ skill steps:
+- "Arnaud Legoux"
+- "Donald Lambert"
+- "Gene Quong"
+- "George Lane"
+- "Gerald Appel"
+- "Igor Livshin"
+- "Jack Hutson"
+- "John Bollinger"
+- "John Ehlers"
+- "Joseph Granville"
+- "Larry Williams"
+- "Manfred Durschner"
+- "Marc Chaikin"
+- "Mark Jurik"
+- "Patrick Mulloy"
+- "Perry Kaufman"
+- ""
+- "Tim Tillson"
+- "Tushar Chande"
+- "Vladimir Kravchuk"
+- "Welles Wilder"
+
+When I asked you to "do a deep research flow (include trading domain)" you stopped creating a plan,
+This triggers a question: do you follow the deep research skill flow or you do it ad-hoc?
+
+In many outputs I see mentioned existing photos, bu to links to those photos.
+The same for videos.
+Can we update related skill (trading.md ?) to always do that?
+Then I can download photos and have a bibtex reference for them.
+
+Some trading forums are not followed.
+For instance, for "Arnaud Legoux" there is a long dedicated discussion on
+https://www.forexfactory.com/thread/1081292-6-less-lagging-moving-averages-2-new
+which is totally missed. How can we audit the list of forums that will be searched?
+
+In "Marc Chaikin" output I see a list of external books without references, links and bibtex.
+----------------------------
+load the following files:
+- outputs/arnaud-legoux.md
+- inputs/arnoud-legoux/arnaud-legoux-moving-average/ALMA-Arnaud-Legoux-Moving-Average/content.md
+- inputs/arnoud-legoux/arnaud-legoux-moving-average/alma-ninja-reference-implementation.cs
+- inputs/arnoud-legoux/arnaud-legoux-moving-average/alma_pandas_ta.py
+- inputs/arnoud-legoux/arnaud-legoux-moving-average/alma.go
+Verify that all these implementations adhere the description of the algo in content.md
+
+Write the thorow "merged" "optimized" description of the ALMA to the inputs/arnoud-legou/prepared-for-conversion/arnaud-legoux-moving-average/arnaud-legoux-moving-average.md:
+- describe calculation using inline math and equations in KaTeX
+- describe algo steps
+- make a Mermaid flowchart with the algo
+
+Convert alma-ninja-reference-implementation.cs to Python and write it into inputs/arnoud-legoux/prepared-for-conversion/arnaud-legoux-moving-average/arnaud-legoux-moving-average.py
+This will be the reference implementation.
+In its __main__, the code should read the 252 INPUT_CLOSE values from test_testdata.py located in the same folder.
+You better just embed this array into the __main__.
+Then, the __main__ should generate reference outputs for following combination of parameters:
+
+Each of the inputs/mark-jurik/starlight/py-*/ folders has *.md with a description of an algo and *.py with a Python implementation.
+Combine py-JARSX/ and py-JXRSX/ together in inputs/mark-jurik/prepared-for-conversion/jurik-adaptive-relative-trend-strength-index/ folder, containing:
+- jurik-adaptive-relative-trend-strength-index.md : "merged" "optimized" description from both source folders
+- jurik-adaptive-relative-trend-strength-index.py : "merged" "optimized" implementation from both source folders
+
+In its __main__, the alma.py should read the 252 INPUT_CLOSE values from test_testdata.py located in the same folder.
+You better just embed this array into the __main__.
+Then, the __main__ should generate reference outputs for combinations of parameters you proposed above:
+All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_testdata.py) to the test_testdata.py file.
+The names of the arrays should be EXPECTED_XX_x_YY_y_YY_z, where x,y,z are values of parameters and X,Y,Z are name shortcuts.
+For fl;oating point values, use "_" instead of ".".
+Before each array put a comment with text in "What it tests" column of the table above.
+On the next comment line put the parameter names and their values.
+In data arrays, use NaN if indidicator is not primed yet.
+
+From the code, here are the defaults and practical ranges:
+Parameter	Default	Range	Notes
+LoLen	5	2–20	Minimum RSX length; lower = faster response in volatile regimes
+HiLen	30	20–100	Maximum RSX length; higher = more smoothing in calm regimes
+Sensitivity	1.0	0.1–5.0	Scales the log-ratio; higher = more aggressive length adaptation
+
+The source code doesn't explicitly declare valid ranges, but these are implied by the algorithm:
+- LoLen must be >= 2 (minimum meaningful RSX period)
+- HiLen must be > LoLen
+- Sensitivity at 0 would disable adaptation (length stays at midpoint); values > ~5 would make it essentially binary (always at LoLen or HiLen)
+=====================================
+  Session   Jurik indicators streaming conversion
+  Continue  opencode -s ses_201406899ffe529YX6kzYUIwMR
+=====================================
+In to-convert/ folder I have an indicator ready to covert into our indicator architecture:
+arnaud-legoux/arnaud-legoux-moving-average/
+The files are:
+- description.md : description how indicator works
+- arnaud_legoux_moving_average.py : reference implementation from the original NinjaTrader code released by the author himself
+- test_testdata.py : input and expected test data ready to use in our new Python implementation
+- testdata_test.go : input and expected test data ready to use in our new Go implementation
+- testdata.ts : input and expected test data ready to use in our new TypeScript implementation
+- testdata.zig : input and expected test data ready to use in our new Zig implementation
+- testdata.rs : input and expected test data ready to use in our new Rust implementation
+
+This indicator is "non-streaming", i.e. it expects an array of prices as an input.
+You should convert it to our "new architecture" streaming Python implementatio.
+From Python implementation, you should convert to Go.
+From Go you should convert to TypeScript, Zig and Rust.
+
+The mnemonique is "alma", the abbreviation is "ALMA"
+Create a new author/indicator directory per language
+- Python: arnaud_legoux/arnaud_legoux_moving_average/
+- Go: arnaudlegoux/arnaudlegouxmovingaverage/
+- TypeScript: arnaud-legoux/arnaud-legoux-moving-average/
+- Zig: arnaud_legoux/arnaud_legoux_moving_average/
+- Rust: arnaud_legoux/arnaud_legoux_moving_average/
+The converted directories layouts should be inline with existing directories, e.g. in mark-jurik/
+
+When creating "our-style" tests, just copy pre-created testdata file for your language to your directory from the
+"to-convert/arnaud-legoux/arnaud-legoux-moving-average/"
+directory, do not convert or modify pre-created test data.
+Pre-created test data files have: <INPUT_CLOSE> is an input, follwed by a number of <EXPECTED_*> arrays per combination of indicator parameters.
+Reference the pre-created testdata file and use its arrays in our tests.
+
+(Re)load indicator-architecture/ and indicator-conversion/ skills before you start.
+===============================================
+In to-convert/ folder I have an indicator ready to covert into our indicator architecture:
+manfred-dürschner/new-moving-average/
+The files are:
+- description.md : description how indicator works
+- new-moving-average.py : reference implementation from the original NinjaTrader code released by the author himself
+- test_testdata.py : input and expected test data ready to use in our new Python implementation
+- testdata_test.go : input and expected test data ready to use in our new Go implementation
+- testdata.ts : input and expected test data ready to use in our new TypeScript implementation
+- testdata.zig : input and expected test data ready to use in our new Zig implementation
+- testdata.rs : input and expected test data ready to use in our new Rust implementation
+
+This indicator is "non-streaming", i.e. it expects an array of prices as an input.
+You should convert it to our "new architecture" streaming Python implementatio.
+From Python implementation, you should convert to Go.
+From Go you should convert to TypeScript, Zig and Rust.
+
+The mnemonique is "nma", the abbreviation is "NMA"
+Create a new author/indicator directory per language
+- Python: manfred_dürschner/new_moving_average/
+- Go: manfreddürschner/newmovingaverage/
+- TypeScript: manfred-dürschner/new-moving-average/
+- Zig: manfred_dürschner/new_moving_average/
+- Rust: manfred_dürschner/new_moving_average/
+The converted directories layouts should be inline with existing directories, e.g. in mark-jurik/
+
+When creating "our-style" tests, just copy pre-created testdata file for your language to your directory from the
+"manfred-dürschner/new-moving-average/"
+directory, do not convert or modify pre-created test data.
+Pre-created test data files have: <INPUT_CLOSE> is an input, follwed by a number of <EXPECTED_*> arrays per combination of indicator parameters.
+Reference the pre-created testdata file and use its arrays in our tests.
+
+(Re)load indicator-architecture/ and indicator-conversion/ skills before you start.
+===============================================
+This also require rework change in indicators/core/identifier_test.go which is not updated every time we add a new indicator.
+===========================
+
+  Session   ALMA streaming Python then Go/TS/Zig/Rust ports
+  Continue  opencode -s ses_1f8843519ffepV8AQu11Gvv8Lk
+  zpano testdata harmonization
+
+  Session   Load deep-research/source-finder required skills
+  Continue  opencode -s ses_1fe77b84affe5roGox46xfDSh6
+  zspills
+===========================
+New triggers:
+- trading research author John Ehlers (replaces deep research (include trading domain) on topic John Ehlers)
+- trading research topic zig-zag indicators (new capability)
+===========================
+Go:
+- homodynediscriminatorestimatortestdata_test.go
+- homodynediscriminatorestimatorunrolledtestdata_test.go
+- dualdifferentiatorestimatortestdata_test.go
+- phasediscriminatorestimatortestdata_test.go
+Python:
+- homodyne_discriminator_estimator_testdata_test.py
+- homodyne_discriminator_estimator_unrolled_testdata_test.py
+- dual_differentiator_estimator_testdata_test.py
+- phase_discriminator_estimator_testdata_test.py
+TypeScript:
+- homodyne-discriminator-estimator-testdata.ts
+- homodyne-discriminator-estimator-unrolled-testdata.ts
+- dual-differentiator-estimator-testdata.ts
+- phase-discriminator-estimator-testdata.ts
+Zig:
+- homodyne_discriminator_estimator_testdata.zig
+- homodyne_discriminator_estimator_unrolled_testdata.zig
+- dual_differentiator_testdata.zig
+- phase_discriminator_testdata.zig
+Rust:
+- homodyne_discriminator_estimator_testdata.rs
+- homodyne_discriminator_estimator_unrolled_testdata.rs
+- dual_differentiator_testdata.rs
+- phase_discriminator_testdata.rs
+==================================================
+i need a light-weight library without fuzzy search, but only suited for embedded tasks like: "if number A is close enough to number B" or "if time series A crosses time series B up/down" or "if timeseries A touches horizontal line B" or "the mean of time series A is larger then B". I need to ask all this with an alpha parameter in [0,1]. If alpha = 1 then crisp logic, if alpha=0.95 then statement is valid with 95%.
+
+Based on your requirements for a lightweight, embedded C++ library to perform fuzzy numerical comparisons (e.g., "close enough," "crosses," "mean is larger") with an alpha parameter for confidence, the best available free option is:
+
+eFLL (Embedded Fuzzy Logic Library)
+Description: A lightweight, MIT-licensed C++ library specifically designed for embedded systems like Arduino. It is portable, uses minimal resources, and has no external dependencies. 
+Relevance to Your Needs:
+Alpha Parameter: The core concept of fuzzy logic is the membership function, which outputs a value in [0,1].  This value is your alpha. A membership of 1.0 means "crisp true" (e.g., A == B), while a membership of 0.95 means "95% true" (e.g., A is very close to B).
+Numerical Comparisons: You can model your conditions using fuzzy sets:
+"A is close to B": Define a FuzzySet with a triangular or trapezoidal shape centered at B.
+"A crosses B up": Define rules based on the sign change of (A - B) and its derivative.
+"Mean of A is larger than B": Calculate the mean and use a "large" or "very large" fuzzy set for comparison.
+Embedded Ready: Written in C++/C with only stdlib.h, it is explicitly designed for microcontrollers with limited memory and processing power. 
+To implement your logic, you would define FuzzyInput variables (e.g., difference, slope, mean_value), create FuzzySets for conditions like "close," "positive," "large," and then use the library's inference engine to get a crisp output or the membership (alpha) value for your condition. 
+
+https://github.com/alvesoaj/eFLL
+
+fuzzylite
+Description: A highly efficient, multi-platform C++ library for fuzzy logic control, also available for Python and Java. It is dual-licensed (GPL 3.0 or commercial). 
+Relevance: The GPL 3.0 version is free for open-source projects. It is explicitly noted as "lightweight and efficient" for embedded systems and robotics. Its core engine can be used to implement your numerical conditions, with the membership grade serving as alpha. 
+
+https://github.com/nicopauss/LFLL
+
+simpful is a lightweight Python library for fuzzy logic.  While it supports rules, its core FuzzySet objects can be used to calculate membership grades (your alpha value) for conditions like "A is close to B" by checking the membership of (A - B) in a "zero" set.
+
+https://github.com/aresio/simpful
+
+
+Both eFLL and fuzzylite support a programmatic approach and are not limited to textual expressions. 
+
+eFLL: Uses a programmatic API where rules are built using objects like FuzzyRuleAntecedent and FuzzyRuleConsequent. For example, you create a rule by joining fuzzy sets with joinSingle() or joinWithAND(), which is code-based, not text-based. 
+fuzzylite: Offers both approaches. You can define rules programmatically in C++/Python/Java using the API, or you can parse textual rules (e.g., "if obstacle is left then mSteer is right") using the Rule::parse() method and the FuzzyLite Language (FLL) format. 
+Therefore, while both allow for programmatic construction (which fits your need for embedded systems), fuzzylite also provides the flexibility of textual rule definition.
+========================================================
+On https://www.ifta.org/journal there is a list of last IFTA Journal issues downloadable as PDFs.
+The journal has 1 issue per year, individual PDFs can be downloaded via URLs which are different per year:
+- 2026 : https://www.ifta.org/assets/docs/Journal26_IFTA.pdf
+- 2025 : https://www.ifta.org/assets/docs/Journal25_IFTA.pdf
+- 2024 : https://www.ifta.org/assets/docs/Journal24_IFTA.pdf
+- 2023 : https://www.ifta.org/assets/docs/journal_23.pdf
+- 2022 : https://www.ifta.org/assets/docs/d_ifta_journal_22.pdf
+- 2021 : https://www.ifta.org/assets/docs/ifta_journal_2021.pdf
+- 2020 : https://www.ifta.org/assets/docs/d_ifta_journal_20.pdf
+- 2019 : https://www.ifta.org/assets/docs/d_ifta_journal_19.pdf
+- 2018 : https://www.ifta.org/assets/docs/d_ifta_journal_18.pdf
+- 2017 : https://www.ifta.org/assets/docs/d_ifta_journal_17.pdf
+- 2016 : https://www.ifta.org/assets/docs/d_ifta_journal_16.pdf
+- 2015 : https://www.ifta.org/assets/docs/d_ifta_journal_15.pdf
+- 2014 : not available, I have it downloaded long time ago
+- 2013 : https://www.ifta.org/assets/docs/d_ifta_journal_13.pdf
+- 2012 : https://www.ifta.org/assets/docs/d_ifta_journal_12.pdf
+- 2011 : https://www.ifta.org/assets/docs/d_ifta_journal_11.pdf
+- 2010 : https://www.ifta.org/assets/docs/d_ifta_journal_10.pdf
+- 2009 : https://www.ifta.org/assets/docs/d_ifta_journal_09.pdf
+- 2008 : https://www.ifta.org/assets/docs/d_ifta_journal_08.pdf
+- 2007 : not available
+- 2006 : not available
+- 2005 : not available, I have it downloaded long time ago
+- 2004 : https://www.ifta.org/assets/docs/d_ifta_journal_04.pdf
+- 2003 : not available
+- 2002 : https://www.ifta.org/assets/docs/d_ifta_journal_16.pdf
+- 2001 : not available
+- 2000 : https://www.ifta.org/assets/docs/d_ifta_journal_00.pdf
+
+I want thij journal also be searcheable for our "trading research".
+But there is no index or list of articles per issue available.
+What is the best way to index this journal for our research?
+Download every issue and extract list of articlaes with annotations, authors, bibtex, etc?
+Since these are historical issues, they won't change, so we can store that index in the relevant skill diractory.
+What do you suggest
+================================================================
+https://successfulportfolios.com/wp-content/uploads/2010/06/JournalTechnicalAnalysis.pdf
+
+https://cmtassociation.org/wp-content/uploads/2020/03/JOTA-2020-Web-Version.pdf
+
+- 2022
+- 2021 Fall, issue 71 : https://cmtassociation.org/wp-content/uploads/2021/11/JoTA-Issue-71.pdf
+- 2020 Spring, issue 70 : https://cmtassociation.org/wp-content/uploads/2020/03/JOTA-2020-Web-Version.pdf
+================================================================
+In to-convert/candlestick-formations/ I have two implementations of Japanese candlestick patterns (formations).
+- In talib/ : the original latest TaLib implementation github.com/Ta-Lib/ta-lib,
+- In my/ : my old C# implementation.
+Analyze both folders and compare if my functionality misses something compared to talib, or diverges from talib.
+Also, is "candlestick formations" better name than "candlestick patterns"?
+What name do you suggest?
+=================================================================
+ Session   Load deep-research/source-finder required skills
+ Continue  opencode -s ses_1fe77b84affe5roGox46xfDSh6
+=================================================================
+Now I'm thinking how can we test converted code against talib implementation.
+
+In indicators, given an input array, we usually created expected arrays in "reference" code and used it in out unit tests.
+Can we use the same approach here?
+
+I have a large amount of CSV files with daily OHLCV prices.
+Can we write a Python test data generation program which goes through all patterns.
+For every pattern, it scans CSV files in the folder, taking a window of samples and executing TALIB implementation of the same pattern on the window.
+If pattern match is found, it writes out the window into a OHLC array as an input test data for our implementation.
+Create this Python code in py/candlestick-patterns/test_data_preparation/
+
+The files are located in csv_a/
+Every file has the name "MIC_MNRMONIC_ISIN_adjusted_20260508.csv", where MIC is MiC of an exchange, MNEMONIC is mnenonic and ISIN is the ISIN of the instrument.
+When writing test data, put them in comments like "<mnemonic>@<mic> (<isin>), YYYY-MM-DD till YYYY-MM-DD", where YYYY-MM-DD are datestamps of first and last OHLC in the window you are writing.
+
+The CSV files have the following format:
+```csv
+"Historical Data"
+"From 2000-01-01 to 2034-12-31"
+QS0011017801
+Date;Open;High;Low;Last;Close;"Number of Shares";"Number of Trades";Turnover
+08/05/2026;1393.09;1393.09;1371.15;1377.96;1377.96;0;0;0;
+07/05/2026;1399.41;1408.94;1391.63;1393.10;1393.10;0;0;621221739;
+....
+```
+here you can skip 4 first lines, and form subsequent lines extract the following fields:
+1 - date format is DD/MM/YYY, make datestamp as YYYY-MM-DD
+2 - open price
+3 - high price
+4 - low price
+6 - closing price
+You may skip all other fields.
+
+Make single test data file per pattern, e.g. "test_data_long_legged_doji.py", prefixing pattern name with "test_data_".
+Write these files in the same folder where the Puthon program is, we will move them later.
+
+The windowsize is 20, as defined in candlestick_patterns.py
+===========================================================================
+All 61 test data files generated. Results:
+- 59 patterns have matches (1-20 cases each)
+- 2 patterns had no matches: mat_hold and three_stars_in_the_south (rare patterns, even across 196 instruments)
+- Both bullish and bearish cases captured where applicable
+===========================================================================
+Ok. Let's try it again with different data.
+I moved all waht we just did to the folder euronext/
+
+In the test_data_preparations/ folder you see the nasqaq/ folder, the CSV files are located there.
+Every file has the name "MNEMONIC.us.txt".
+When writing test data, put them in comments like "<mnemonic>@nasdaq, YYYY-MM-DD till YYYY-MM-DD", where YYYY-MM-DD are datestamps of first and last OHLC in the window you are writing.
+
+The CSV files have the following format:
+```csv
+<TICKER>,<PER>,<DATE>,<TIME>,<OPEN>,<HIGH>,<LOW>,<CLOSE>,<VOL>,<OPENINT>
+AACB.US,D,20250407,000000,10.1,10.1,9.88,9.88,8365,0
+AACB.US,D,20250408,000000,9.95,9.95,9.95,9.95,144,0
+AACB.US,D,20250409,000000,9.9,9.9,9.9,9.9,125094,0
+...
+```
+The records are sorted on time ascending
+
+Here you can skip the first line, and from subsequent lines extract the following fields:
+1 - mnemonic
+3 - date format is YYYYMMDD, make datestamp as YYYY-MM-DD
+5 - open price
+6 - high price
+7 - low price
+8 - closing price
+You may skip all other fields.
+
+Now write the same Python program as you did, and run testdata extraction on all files inside nasdaq/
+======================================
+   if not (real_body(o1, c1) > self._avg(self._long_body, 3) and
+            real_body(o2, c2) <= self._avg(self._doji_body, 2) and
+            real_body(o3, c3) > self._avg(self._short_body, 1)):
+        return 0
+
+    penetration = ABANDONED_BABY_PENETRATION_FACTOR
+
+    # Bearish: white-doji-black, gap up then gap down
+    if (is_white(o1, c1) and is_black(o3, c3) and
+            c3 < c1 - real_body(o1, c1) * penetration and
+            is_high_low_gap_up(h1, l2) and
+            is_high_low_gap_down(l2, h3)):
+        return -100
+
+    # Bullish: black-doji-white, gap down then gap up
+    if (is_black(o1, c1) and is_white(o3, c3) and
+            c3 > c1 + real_body(o1, c1) * penetration and
+            is_high_low_gap_down(l1, h2) and
+            is_high_low_gap_up(h2, l3)):
+        return 100
+
+    return 0
+=======================================================
+-----------------
+In py/candlestick_patterns/ we had core/ and patterns/ subfolders. In zig/src/candlestick_patterns/ everything is in the same folder. Can we also split code into core/ and patterns/ her
+-----------------
+Now we have all patterns inside the top-level candlestick_patterns.zig
+In Python, we have them in the patterns/ folder and splitted one pattern per file.
+Can we do this here as well, and also move testdata_<pattern>.zig there as well, so we have the scaffolding resembing the Python's on
+-----------------
+In all testdata/testdata_*.zig files we miss comments in front of each test data case, specifying from which instrument@market (with optional ISIN) and date range the tst data was taken.
+This is iomportant to trace back to the source of the test data.
+Can we copy those comments from Python implementation?
+------------------
+In all patterns/*.zig files we miss nice comments which are in Python, and also some comments in code. Can we restore them in Zig implementation? For instance, in abandoned_baby we had:
+    """Abandoned Baby: a three-candle reversal pattern.
+
+    Must have:
+    - first candle: long real body,
+    - second candle: doji,
+    - third candle: real body longer than short, opposite color to 1st,
+      closes well within 1st body,
+    - upside/downside gap between 1st and doji (shadows don't touch),
+    - downside/upside gap between doji and 3rd (shadows don't touch).
+
+    Category C: both branches evaluated, return stronger signal.
+
+    Returns:
+        Continuous float in [-100, +100].
+    """
+------------------
+In core/*zig files there are some missing comments in comparison with Python variant
+------------------
+In all testdata/testdata_*.rs files we miss comments in front of each test data case, specifying from which instrument@market (with optional ISIN) and date range the tst data was taken.
+This is iomportant to trace back to the source of the test data.
+Can we copy those comments from Python implementation?
+------------------
+In all patterns/*.rs files we miss nice comments which are in Python, and also some comments in code. Can we restore them in Rust implementation
+------------------
+In all patterns/testdata_*_test.go files we miss nice comments which are in Python, and also some comments in code. Can we restore them in Go implementation
+In all patterns/testdata-*.ts files we miss nice comments which are in Python, and also some comments in code. Can we restore them in TypeScript implementation
+In all patterns/*.ts files (not testdata-*.ts ones) we miss nice package/class/functioncomments which are in Python, and also inline comments in code. Can we restore them in TypeScript implementation?
+
+
+=====================================================
+
