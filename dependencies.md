@@ -2,6 +2,44 @@
 
 All packages required by the skills in this repository. Install in the order shown.
 
+Install required Python version using `pyenv install 3.14.3`.
+If you get installation errors, try to install support packages:
+
+```bash
+sudo apt install zlib1g-dev libssl-dev libbz2-dev liblzma-dev libreadline-dev libsqlite3-dev libffi-dev
+```
+
+To managing multiple versions:
+
+```bash
+# List all installed versions
+pyenv versions
+
+# Set global default
+pyenv global 3.14.3
+
+# Set version for a specific project directory
+cd /path/to/project
+pyenv local 3.13.12    # creates a .python-version file
+
+# Use a version only in the current shell
+pyenv shell 3.13.12
+```
+
+Priority order: `shell` > `local` > `global` > system.
+
+Create a virtual environment:
+
+```bash
+pyenv versions
+python --version
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Do subsequent installations into this venv.
+
 ## 1. System packages (requires sudo)
 
 ```bash
@@ -32,7 +70,7 @@ Required by: `visual-authoring/d2`
 ### Mermaid CLI
 
 ```bash
-npm install -g @mermaid-js/mermaid-cli
+sudo npm install -g @mermaid-js/mermaid-cli
 ```
 
 Required by: `visual-authoring/mermaid` — renders `.mmd` files to SVG/PNG via `mmdc`

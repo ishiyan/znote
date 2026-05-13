@@ -1,11 +1,11 @@
 ---
 name: trading-research
-description: Research trading authors or trading topics across TASC archive, MQL5, trading forums, academic papers, and the web. Two modes — "trading research author {name}" produces a full author profile (TASC articles, indicators, books, biography, photos, academic papers, forum threads, MQL5 implementations, BibTeX). "trading research topic {topic}" produces topic-centric research (same sources, no biography/photos). Use when the user says "trading research author" or "trading research topic".
+description: Research trading authors or trading topics across TASC archive, Trader's World, MQL5, trading forums, academic papers, and the web. Two modes — "trading research author {name}" produces a full author profile (TASC articles, indicators, books, biography, photos, academic papers, forum threads, MQL5 implementations, BibTeX). "trading research topic {topic}" produces topic-centric research (same sources, no biography/photos). Use when the user says "trading research author" or "trading research topic".
 ---
 
 # Trading Research
 
-Comprehensive research on trading authors or trading topics. Searches TASC archive, MQL5, 10 mandatory trading forums, academic databases, and the web. Produces a structured markdown output with BibTeX citations for every source.
+Comprehensive research on trading authors or trading topics. Searches TASC archive, Trader's World, MQL5, 10 mandatory trading forums, academic databases, and the web. Produces a structured markdown output with BibTeX citations for every source.
 
 ## Modes
 
@@ -334,6 +334,34 @@ The IFTA Journal (ISSN 2409-0271) is a key source for technical analysis researc
 5. Add a `@article` BibTeX entry with `journal = {IFTA Journal}` and the ISSN
 
 **Rate limiting:** IFTA PDFs are served via Cloudflare. Wait 20 seconds between downloads.
+
+#### Journal of Technical Analysis (JoTA)
+
+The Journal of Technical Analysis (JoTA) is published by the CMT Association (formerly Market Technicians Association). A complete article index is available at `.opencode/skills/trading-research/jota-journal-index.md` covering all 69 issues from 1978–2024 (Issues 1–74).
+
+**Search procedure:**
+1. Read the JoTA index file (`jota-journal-index.md`)
+2. Search for the author name or topic keywords in the index
+3. If a match is found, note the issue number, year, title, and author(s)
+4. The PDF files are available locally in `external/jota/` — the filename is listed in the index
+5. Use the BibTeX entry from `.opencode/skills/trading-research/jota-article-index.bib` (448 entries, keyed as `jota_{year}_{issue}_{title_slug}`)
+
+**Online access:** Issues are available (login required) at `https://cmtassociation.org/journal_ta/issue-{N}-{season}-{year}/`
+
+#### Trader's World Magazine
+
+Trader's World Magazine (ISSN 1045-7690) is published by Halliker's, Inc., edited by Larry Jacobs. A complete article index is available at `.opencode/skills/trading-research/tw-magazine-index.md` covering 59 issues (Issues 17–100) with 495 articles. Topics include W.D. Gann methods, astro-trading, Elliott Wave, cycles, and trading psychology.
+
+**Search procedure:**
+1. Read the TW index file (`tw-magazine-index.md`)
+2. Search for the author name or topic keywords in the index
+3. If a match is found, note the issue number, year, title, and author(s)
+4. The PDF files are available locally in `external/tradersworld/` — filenames follow the pattern `Trader's World Magazine - {YYYY} - issue {N}.pdf`
+5. Use the BibTeX entry from `.opencode/skills/trading-research/tw-article-index.bib` (495 entries, keyed as `tw{NNN}_{author}_{title_word}`)
+
+**Online access:** Issues are downloadable at `https://tradersworld.com/issue{N}.pdf`
+
+**Notes:** Early issues (17–25) are scanned with limited OCR quality. Issues 33–41 have doubled-character OCR artifacts. Some entries from cover-only extraction lack author names (listed as "Unknown").
 
 ### 5. GitHub Repositories
 

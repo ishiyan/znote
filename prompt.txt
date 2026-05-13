@@ -154,7 +154,7 @@ What is a good name for this skill? It's not exactly illustration/diagram/slide
 -------------------------
 In document-to-markdown/ skill we used the following passage:
 
-**SVG color compatibility** — SVGs from web apps often rely on CSS-inherited colors. When copying SVGs, inject a `<style>` block with `prefers-color-scheme` media queries:
+**SVG color compatibility** ï¿½ SVGs from web apps often rely on CSS-inherited colors. When copying SVGs, inject a `<style>` block with `prefers-color-scheme` media queries:
    ```xml
    <style>
      svg { stroke: black; fill: black; }
@@ -415,14 +415,14 @@ Don't forget to extract images (illustrations)
 Don't forget to extract code listings which are present there, or put them iside appropriate "```"s.
 
 
-- Deeply understand the implementation of both article and MQL and write the following in the inputs/manfred-dürschner/new-moving-average.md
+- Deeply understand the implementation of both article and MQL and write the following in the inputs/manfred-dï¿½rschner/new-moving-average.md
   - explain the principles on which it works
   - explain how it is calculated using formulas in KaTeX ($...$, $$...$$)
   - explain the algorithm
   - make a Mermaid flow diagram for the algorithm
   - present the algoritm in Python-sh pseudocode (doesn't have to compile or run) explaining what it does
   - come with the mapping table from original names of the variables in MQL code to the understandabme names in Python-is pseudocode
-- Convert the MQL code to very well commented Python code and write it to the inputs/manfred-dürschner/nyquist-shannon-moving-average.py
+- Convert the MQL code to very well commented Python code and write it to the inputs/manfred-dï¿½rschner/nyquist-shannon-moving-average.py
 - Search om MQL website the URL for this MQL implementation and use it in reference secrion of markdown.
 - In MQL files I see another reference to
   http://www.vtad.de/sites/files/forschung/M_Duerschner_Gleitende_Durchschnnitte_3.pdf
@@ -431,14 +431,14 @@ Don't forget to extract code listings which are present there, or put them iside
 
 
 
-Moving Averages 3.0 by Manfred G. Dürschner..
+Moving Averages 3.0 by Manfred G. Dï¿½rschner..
 
-On approximately 01:00 of the video of his presentation slides, in the link below, there is a small photo of Dürschner:
+On approximately 01:00 of the video of his presentation slides, in the link below, there is a small photo of Dï¿½rschner:
 https://www.vtad.de/vvideo/digitale-indikatoren-i/
-I took a screenshot of the whole slide and put into inputs/manfred-dürschner/dürschner-full-slide.png, and also cropped the photo and put it into inputs/manfred-dürschner/dürschner.png
+I took a screenshot of the whole slide and put into inputs/manfred-dï¿½rschner/dï¿½rschner-full-slide.png, and also cropped the photo and put it into inputs/manfred-dï¿½rschner/dï¿½rschner.png
 The same slide is also on the approximately 01:00 in the video of another presentation:
 https://www.vtad.de/vvideo/viccao-ein-profitables-handelssystem/
-extend existing deep research on manfred-dürschner topic with this information
+extend existing deep research on manfred-dï¿½rschner topic with this information
 
 
 convert to markdown: inputs/john-ehlers/rocket-science-made-easy/Rocket-Science-Made-Easy.pdf
@@ -506,9 +506,9 @@ Each chapter should have a "## ...." heading followed by sequential page images 
 ---------------------
 can you proofread the ch*.md
 we also had some known limitations:
-- OCR artifacts in text (e.g., "l" vs "1", "Z" vs "2", spaces inserted mid-word) — these come from the scanned source
+- OCR artifacts in text (e.g., "l" vs "1", "Z" vs "2", spaces inserted mid-word) ï¿½ these come from the scanned source
 - Some code blocks include a few trailing prose lines from the same page (page-level classification trade-off)
-- Chapter title on line 1 is duplicated (as H1 heading and raw text) — the raw text from the first page includes the title
+- Chapter title on line 1 is duplicated (as H1 heading and raw text) ï¿½ the raw text from the first page includes the title
 ---------------------
 In inputs/john-ehlers/mesa-and-trading-market-cycles/*.pdf I have book chapters with "two-sided" scanned pages.
 Extract individual pages as PNG images and put them into assets/page-X.Y.png where X is the chapter number (chX.pdf) and Y is the ordinal page number (1,2,3...)
@@ -554,9 +554,9 @@ In data arrays, use NaN if indidicator is not primed yet.
 
 From the code, here are the defaults and practical ranges:
 Parameter	Default	Range	Notes
-LoLen	5	2–20	Minimum RSX length; lower = faster response in volatile regimes
-HiLen	30	20–100	Maximum RSX length; higher = more smoothing in calm regimes
-Sensitivity	1.0	0.1–5.0	Scales the log-ratio; higher = more aggressive length adaptation
+LoLen	5	2ï¿½20	Minimum RSX length; lower = faster response in volatile regimes
+HiLen	30	20ï¿½100	Maximum RSX length; higher = more smoothing in calm regimes
+Sensitivity	1.0	0.1ï¿½5.0	Scales the log-ratio; higher = more aggressive length adaptation
 
 The source code doesn't explicitly declare valid ranges, but these are implied by the algorithm:
 - LoLen must be >= 2 (minimum meaningful RSX period)
@@ -573,9 +573,9 @@ If sensitivity parameter is also not used, you may delete it.
 - JARSX : "jurik-adaptive-relative-trend-strength-index"
 - JAVEL : "jurik-adaptive-zero-lag-velocity"
 
-JTPO	jurik-turning-point-oscillator	Direct name — it's a Spearman rank correlation oscillator measuring trend monotonicity
+JTPO	jurik-turning-point-oscillator	Direct name ï¿½ it's a Spearman rank correlation oscillator measuring trend monotonicity
 JCCX	jurik-commodity-channel-index	It's a JMA-enhanced CCI replacement; the "extended" part is implied by being Jurik's version
-JVELCFB	jurik-fractal-adaptive-zero-lag-velocity	It's VEL with CFB-driven depth — "fractal-adaptive" distinguishes it from "adaptive" (volatility-regime-based JAVEL)
+JVELCFB	jurik-fractal-adaptive-zero-lag-velocity	It's VEL with CFB-driven depth ï¿½ "fractal-adaptive" distinguishes it from "adaptive" (volatility-regime-based JAVEL)
 
 ----------------------------
 Deep research in topic "Donald Lambert" thoroughy:
@@ -736,9 +736,9 @@ In data arrays, use NaN if indidicator is not primed yet.
 
 From the code, here are the defaults and practical ranges:
 Parameter	Default	Range	Notes
-LoLen	5	2–20	Minimum RSX length; lower = faster response in volatile regimes
-HiLen	30	20–100	Maximum RSX length; higher = more smoothing in calm regimes
-Sensitivity	1.0	0.1–5.0	Scales the log-ratio; higher = more aggressive length adaptation
+LoLen	5	2ï¿½20	Minimum RSX length; lower = faster response in volatile regimes
+HiLen	30	20ï¿½100	Maximum RSX length; higher = more smoothing in calm regimes
+Sensitivity	1.0	0.1ï¿½5.0	Scales the log-ratio; higher = more aggressive length adaptation
 
 The source code doesn't explicitly declare valid ranges, but these are implied by the algorithm:
 - LoLen must be >= 2 (minimum meaningful RSX period)
@@ -782,7 +782,7 @@ Reference the pre-created testdata file and use its arrays in our tests.
 (Re)load indicator-architecture/ and indicator-conversion/ skills before you start.
 ===============================================
 In to-convert/ folder I have an indicator ready to covert into our indicator architecture:
-manfred-dürschner/new-moving-average/
+manfred-dï¿½rschner/new-moving-average/
 The files are:
 - description.md : description how indicator works
 - new-moving-average.py : reference implementation from the original NinjaTrader code released by the author himself
@@ -799,15 +799,15 @@ From Go you should convert to TypeScript, Zig and Rust.
 
 The mnemonique is "nma", the abbreviation is "NMA"
 Create a new author/indicator directory per language
-- Python: manfred_dürschner/new_moving_average/
-- Go: manfreddürschner/newmovingaverage/
-- TypeScript: manfred-dürschner/new-moving-average/
-- Zig: manfred_dürschner/new_moving_average/
-- Rust: manfred_dürschner/new_moving_average/
+- Python: manfred_dï¿½rschner/new_moving_average/
+- Go: manfreddï¿½rschner/newmovingaverage/
+- TypeScript: manfred-dï¿½rschner/new-moving-average/
+- Zig: manfred_dï¿½rschner/new_moving_average/
+- Rust: manfred_dï¿½rschner/new_moving_average/
 The converted directories layouts should be inline with existing directories, e.g. in mark-jurik/
 
 When creating "our-style" tests, just copy pre-created testdata file for your language to your directory from the
-"manfred-dürschner/new-moving-average/"
+"manfred-dï¿½rschner/new-moving-average/"
 directory, do not convert or modify pre-created test data.
 Pre-created test data files have: <INPUT_CLOSE> is an input, follwed by a number of <EXPECTED_*> arrays per combination of indicator parameters.
 Reference the pre-created testdata file and use its arrays in our tests.
@@ -919,12 +919,44 @@ The journal has 1 issue per year, individual PDFs can be downloaded via URLs whi
 - 2001 : not available
 - 2000 : https://www.ifta.org/assets/docs/d_ifta_journal_00.pdf
 
-I want thij journal also be searcheable for our "trading research".
+I want this journal also be searcheable for our "trading research".
 But there is no index or list of articles per issue available.
 What is the best way to index this journal for our research?
 Download every issue and extract list of articlaes with annotations, authors, bibtex, etc?
 Since these are historical issues, they won't change, so we can store that index in the relevant skill diractory.
 What do you suggest
+--------------------
+On the
+https://cmtassociation.org/education/publications/journal-of-technical-analysis/
+website one can access individual issues of Journal of Technical Analysis (JoTA)  using URL
+https://cmtassociation.org/journal_ta/issue-75-fall-2025/
+for year 2025 and issue 75.
+One need to login toviw these issues.
+
+In the external/jota/ folder, I have a collection of JoTA issues in PDF forat, *.pdf
+The have different names, but most of the names reflect the year and the issue.
+
+I want this journal also be searcheable for our "trading research".
+Can you read every PDF in this folder, parse it for a table of the contents (with authors, article names an if possible with short annotation) and make a searcheable index in the trading-Å•esearch/ skill folder as we did for IFTA and TASC.
+Read the trading-Å•esearch/ skill first to undertnd its context.
+
+We are on new Ubuntu now, if you cannot found a package or a tool, please give me sudo command line to install.
+We are in activated .venv, so if you istal a new Python package dont forget to add it to the dependencies.md in the root of the repo.
+--------------------
+On the
+https://tradersworld.com/
+website one can access individual issues of TraderÂ´s World Magazine using URL
+https://tradersworld.com/issue100.pdf
+for issue 100.
+
+In the external/tradersworld/ folder, I have a collection of the issues in PDF forat, *.pdf
+The have different names, but most of the names reflect the issue.
+If some isues are missing you can try to get them using URL above.
+
+I want this journal also be searcheable for our "trading research".
+Can you read every PDF in this folder, parse it for a table of the contents (with authors, article names an if possible with short annotation) and make a searcheable index in the trading-Å•esearch/ skill folder as we did for IFTA, TASC and JoTA.
+------------
+
 ================================================================
 https://successfulportfolios.com/wp-content/uploads/2010/06/JournalTechnicalAnalysis.pdf
 
