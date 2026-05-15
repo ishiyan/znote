@@ -1147,4 +1147,40 @@ Use the following rules:
 - look at https://fractalfinance.blogspot.com/, maybe you can find another interesting articles.
   In this case, ask me, I'll save MHTML and download artifacts if any
 ==============================================================
+In inputs/jean-philippe-poton/ I have these folders for implementation of Python Poton indicators.
+
+In every <foldername>/ folder there is a reference <foldername>.mq4 file copied from the relevant folders in fractal-finance/downloaded/
+
+In every folder
+- create description.md with
+  - thorough explanation of how it works
+  - math formulas (in KaTeX, inline $...$, display $...$)
+  - configuration parameters description, valid ranges, default values
+  - algoritm flow
+  - Mermaid flowchart
+  - descriptiopn of name of the variables
+  - give references to sources
+- create a Python implementation <foldername>.py, put comments in code,
+  show example usage in __main__
+
+The list of folders is below. In some cases you will see additional comments for some folders.
+For every folder, the " : <MNEMONIC>" specifies mnemonic.
+
+- fractal_bands/ : fban
+- fractal_bands_hybride_adaptive/ : fbanha
+- fractal_dimension/ : fdi
+- fractal_dispersion/ : fdisp
+  in the folder you see FGDI.mq4
+  compare it with fractal_graph_dimension_indicator/fractal_graph_dimension_indicator.mq4
+  if they are the same, maybe we can instaniate the instance of fractal_graph_dimension_indicator.py instead of embedding FGDI.mq4 into fractal_dispersion.py
+- fractal_graph_dimension_indicator/ : fgdi
+- fractal_adamtive_simple_moving_average/ : frasma
+  in the folder you see fractal_dimension.mq4
+  compare it with fractal_dimension/fractal_dimension.mq4
+  if they are the same, maybe we can instaniate the instance of fractal_dimension.py instead of embedding fractal_dimension.mq4 into fractal_adamtive_simple_moving_average.py  
+- fractal_adamtive_simple_moving_average_2/ : frasma2
+- fractional_bands/ : fctban
+- hurst_difference/ : hurdif
+- rescaled_fractal_adamtive_simple_moving_average/ : rsfrasma
+================================================================
 
