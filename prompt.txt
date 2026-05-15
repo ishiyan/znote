@@ -1112,4 +1112,39 @@ In all patterns/*.ts files (not testdata-*.ts ones) we miss nice package/class/f
 
 
 =====================================================
+In trading-research/jean-philippe-poton.md
+there is a list of his core indicators "### Core Indicators"
+and a selected list of his articles on https://fractalfinance.blogspot.com
+
+In the inputs/jean-philippe-poton/fractal-finance/downloads/ folder
+I collected a *.mhtml filse of most interesting arcticles and original Poton's
+posts on MQL5.com with downloaded artifacts.
+
+Read index.txt in this downloads/ folder.
+Ecery entry is delimited by "---" line.
+Each entry contains:
+- YYY-MM-DD : NAME-OF-THE-ARTICLE
+- MHTML file name
+- originnal URL to fractal finance blog or MQL5
+- optional list of downloaded artifacts mentioning relative (to downloads/) folder where they are
+- optional list of references to another articles, most of them should be included in this list
+
+When read all this info, create a fractal-finance.md markdown file combining text from all the articles.
+Use the following rules:
+- place this file in inputs/jean-philippe-poton/fractal-finance/ folder
+- the title is "Fractal Finance : Fractals, Technical Analysis and other things"
+- extract all chart images and put them into inputs/jean-philippe-poton/fractal-finance/images/ folder
+- link to these images from markdown
+- link to downloaded files in downloads/<snip>/ folders.
+- try arrange articles by date, but almost all of them have very close dates.
+  In this case, arrange by logical topic.
+  In any case, MQL5 articles to which Poton refers should be close to the referring articles
+  It is difficult, make suggestions how to arrange,
+- extract math from infile images and convert to KaTeX (inline $...$, display $$...$)
+- make a table of contents in the top
+- make a bibtex file for all references and write it together with fractal-finance.md
+- Look ath downloaded *mq4 code, use comments from them to enhance descriptions of indicators
+- look at https://fractalfinance.blogspot.com/, maybe you can find another interesting articles.
+  In this case, ask me, I'll save MHTML and download artifacts if any
+==============================================================
 

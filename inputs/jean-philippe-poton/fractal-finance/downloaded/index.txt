@@ -1,0 +1,223 @@
+---
+2009-10-16 : Rescaled Range Analysis
+rescaled-range-analysis.mhtml
+http://fractalfinance.blogspot.com/2009/10/rescaled-range-analysis.html
+This article refers to
+- http://codebase.mql4.com/6082 (which opens https://www.mql5.com/ru/code/9272 listed as article here)
+---
+2009-10-14 : R/s Analysis to estimate the Hurst exponent
+rs-analysis-to-estimate-the-hurst-exponent.mhtml
+https://stochasticfractals.wordpress.com/2009/10/14/rs-analysis-to-estimate-the-hurst-exponent/
+It has links to downloadable codes which are in the rs-analysis-to-estimate-the-hurst-exponent/ subfolder:
+- http://www.the-nucleus.org/document/ServeFile.cfm?ID=2146&DocID=5 (link not found)
+- http://www.eecis.udel.edu/~mills/fractal/tr137.pdf (saved as tr137.pdf)
+- http://bearcave.com/misl/misl_tech/wavelets/hurst/index.html#RSEstimation (saved as bear-cave-estimating-the-hurst-exponent.mhtml)
+- http://fractalfinance.blogspot.com/2009/10/rescaled-range-analysis.html (another article in this list)
+Please combime Bear cave's article with this one.
+Both articles use math as images, convert them to KaTeX (inline $...$, display $$...$$)
+---
+2009-10-21 : RS_FRASMA - индикатор для MetaTrader 4
+rs-frasma.mht
+https://www.mql5.com/ru/code/9272
+It has links to downloadable codes which are in the rs-frama/ subfolder:
+- 9272.zip
+- RS_FRASMA.mq4 (the same as in 9272.zip)
+This article refers to
+-  http://fractalfinance.blogspot.com/2009/10/rescaled-range-analysis.html (separate article here)
+-  http://codebase.mql4.com/_my/5308 (which doesn't exist but without "_my/" part opens https://www.mql5.com/en/code/8718)
+---
+2011-05-22 : The Art of Speculation
+art-of-speculation.mhtml
+http://fractalfinance.blogspot.com/2011/05/art-of-speculation.html
+This article refers to
+- http://baudelaire.litteratura.com/?rub=oeuvre&srub=cri&id=4&s=1 (doesn't open, but not related to trading)
+- http://baudelaire.litteratura.com/?rub=oeuvre&srub=cri&id=473 (doesn't open, but not related to trading)
+- https://www.amazon.com/Arcades-Project-Walter-Benjamin/dp/0674008022 (link to Amazon book, but not related to trading)
+- http://fractalfinance.blogspot.com/2011/03/logic-of-place.html (his article not included here, not related to trading)
+---
+2012-04-16 : The absent signal
+the-absent-signal.mhtml
+http://fractalfinance.blogspot.com/2012/04/absent-signal.html
+---
+2010-04-15 : Self-similarity and a measure of it
+self-similarity-and-measure-of-it.mhtml
+http://fractalfinance.blogspot.com/2010/03/self-similarity-and-measure-of-it.html
+This article refers to
+- http://codebase.mql4.com/6593 (which opens https://www.mql5.com/en/code/9604 also present here)
+---
+2010-04-05 : A measure of fractal self-similarity - indicator for MetaTrader 4
+a-measure-of-fractal-self-similarity.mhtml
+https://www.mql5.com/en/code/9604
+It has links to downloadable codes which are in the a-measure-of-fractal-self-similarity/ subfolder:
+- 9604.zip
+- FGDI.mq4 (the same as in 9604.zip)
+- MTF_FractalDispersion11.mq4 (the same as in 9604.zip)
+This article refers to
+- https://www.mql5.com/go?link=http://fractalfinance.blogspot.com/2010/03/self-similarity-and-measure-of-it.html (separate article here)
+- htps://www.mql5.com/en/code/8844 (which also present here)
+---
+2009-04-21 : Fractal Graph Dimension Indicator (FGDI) - indicator for MetaTrader 4
+fractal-graph-dimension-indicator-fgdi.mhtml
+https://www.mql5.com/en/code/8844
+It has links to downloadable codes which are in the fractal-graph-dimension-indicator-fgdi/ subfolder:
+- 8844.zip
+- FGDI.mq4 (the same as in 8844.zip)
+This article refers to
+https://www.mql5.com/en/code/7758
+which is from another author.
+Since this article is very small, youu may inline it in the body of this one.
+Here goes this article:
+2008-01-23 : Fractal Dimension - indicator for MetaTrader 4
+fractal-dimension.mhtml
+https://www.mql5.com/en/code/7758
+It has links to downloadable codes which are in the fractal-dimension/ subfolder:
+- 7758.zip
+- fractal-dimension.mq4 (the same as in 7758.zip)
+Ther is a small explanation in comments and explanation in the beginning of the fractal-dimension.mq4
+Please inline them in the body.
+---
+2011-04-18 : The possibility of cognition
+possibility-of-cognition.mhtml
+http://fractalfinance.blogspot.com/2011/04/possibility-of-cognition.html
+This article refers to
+- http://www.ito33.com/sites/default/files/articles/1007_ayache.pdf (doesn't open, but not related to trading)
+- http://www.amazon.com/Nishida-Western-Philosophy-Robert-Wilkinson/dp/0754657035 (link to Amazon book, but not related to trading)
+- http://en.wikipedia.org/wiki/Cantor_set
+- http://www.amazon.com/Course-p-adic-Analysis-Graduate-Mathematics/dp/0387986693 (link to a book, but not related to trading)
+---
+2009-03-26 : FX Scaling Laws
+fx-scaling-laws.mhtml
+http://fractalfinance.blogspot.com/2009/03/fx-scaling-laws.html
+This article refers to
+- http://www.olsen.ch/fileadmin/Publications/Working_Papers/sl-1.pdf (doesn't open)
+---
+2009-04-16 : Fractal dimensions...And a Fractal Graph Dimension Indicator
+fractal-dimensions-snd-a-fractal-graph-dimension-indicator.mhtml
+http://fractalfinance.blogspot.com/2009/04/fractal-dimensionsand-fractal-graph.html
+This article refers to an article from another author
+- http://codebase.mql4.com/2275, which opens https://www.mql5.com/en/code/7758 from the same author
+  and is inculed in another article here, fractal-dimension.mhtml. Two downloaded artifacts are in fractal-dimension/ folder
+- https://www.mql5.com/en/code/8844 which is included in the list of articles here
+---
+2010-05-16 : Variation of the Hurst Exponent
+variation-of-hurst-exponent.mhtml
+http://fractalfinance.blogspot.com/2010/05/variation-of-hurst-exponent.html
+This article refers to
+- http://fractalfinance.blogspot.com/2009/05/from-bollinger-to-fractal-bands.html which is included here
+- http://codebase.mql4.com/6700 which opens https://www.mql5.com/en/code/9676 which is also included here
+---
+2010-05-17 : Variations of the Hurst Exponent over time - indicator for MetaTrader 4
+variations-of-the-hurst-exponent-over-time.mhtml
+https://www.mql5.com/en/code/9676
+It has links to downloadable codes which are in the variations-of-the-hurst-exponent-over-time/ subfolder:
+- 9676.zip
+- Hurst_Difference.mq4 (the same as in 9676.zip)
+This article refers to
+- https://www.mql5.com/en/code/8844 which is present here
+- http://fractalfinance.blogspot.com/2010/05/variation-of-hurst-exponent.html which is present here
+---
+2009-05-06 : From Bollinger to Fractal Bands
+from-bollinger-to-fractal-bands.mhtml
+http://fractalfinance.blogspot.com/2009/05/from-bollinger-to-fractal-bands.html
+This article refers to
+- http://stochasticfractals.wordpress.com/2009/05/04/maximum-of-wiener-brownian-motion/ which is already here
+- http://codebase.mql4.com/5590 which opens https://www.mql5.com/en/code/8895 which is included here
+---
+2009-05-04 : Maximum of Wiener Brownian Motion
+maximum-of-wiener-brownian-motion.mhtml
+https://stochasticfractals.wordpress.com/2009/05/04/maximum-of-wiener-brownian-motion/
+---
+2009-05-06 : Fractal Bands - indicator for MetaTrader 4
+fractal-bands.mhtml
+https://www.mql5.com/en/code/8895
+It has links to downloadable codes which are in the variations-of-the-hurst-exponent-over-time/ subfolder:
+- 8895.zip
+- fractal_bands.mq4 (the same as in 8895.zip)
+This article refers to
+- http://fractalfinance.blogspot.com/2009/05/from-bollinger-to-fractal-bands.html which is present here
+- https://www.mql5.com/en/code/8844 which is present here
+- https://www.mql5.com/en/code/8866 which is present here
+---
+2009-04-26 : FRASMAv2 - indicator for MetaTrader 4
+frasma2.mhtml
+https://www.mql5.com/en/code/8866
+It has links to downloadable codes which are in the frasma2/ subfolder:
+- 8866.zip
+- FRASMA_v2.mq4 (the same as in 8866.zip)
+This article refers to
+- https://www.mql5.com/en/code/8718 which is present here
+- https://www.mql5.com/en/code/8844 which is present here
+---
+2009-02-18 : FRASMA: Fractally Modified Simple Moving Average - indicator for MetaTrader 4
+frasma-fractally-modified-simple-moving-average.mhtml
+https://www.mql5.com/en/code/8718
+It has links to downloadable codes which are in the frasma2/ subfolder:
+- 8718.zip
+- fractal_dimension.mq4 (the same as in 8718.zip)
+- FRASMA.mq4 (the same as in 8718.zip)
+In this article he refers to "ilico" (arcsin5@netscape.net) which is probably the author of "article of another author" we mentioned here.
+---
+2009-04-26 : FRASMAv2
+frasmav2.mhtml
+http://fractalfinance.blogspot.com/2009/04/frasmav2.html
+This article refers to
+- http://codebase.mql4.com/5551 which opens https://www.mql5.com/en/code/8866 which is already here
+---
+2009-01-23 : The speed of the FRAMA (Part 1)
+the-speed-of-the-frama-1.mhtml
+http://fractalfinance.blogspot.com/2009/01/speed-of-frama-1.html
+This article mentions
+- http://fractalfinance.blogspot.com/2008/07/comments-on-some-existing-fractal.html#c1007468848157610456
+  please include it inline here
+---
+2009-02-15 : The speed of the FRAMA (Part 2): The FRASMA
+the-speed-of-the-frama-2-the-frasma.mhtml
+http://fractalfinance.blogspot.com/2009/02/speed-of-frama-part-2-frasma.html
+This article refers to
+- http://codebase.mql4.com/5308 which opens https://www.mql5.com/en/code/8718 which is already here
+---
+2008-07-08 : Comments on some existing fractal-related tools
+comments-on-some-existing-fractal-tools.mhtml
+http://fractalfinance.blogspot.com/2008/07/comments-on-some-existing-fractal.html
+This article refers to
+- http://trading-stocks.netfirms.com/fractals.htm (not fopund)
+- http://www.mesasoftware.com/technicalpapers.htm which is dissapeared form Ehler's website
+---
+2009-07-22 : Some general updates and a comment on FRASMA
+some-general-updates-and-comment-on-frasma.mhtml
+http://fractalfinance.blogspot.com/2009/07/some-general-updates-and-comment-on.html
+This article refers to
+- http://codebase.mql4.com/5308 which opens https://www.mql5.com/en/code/8718 which is already here
+---
+2009-05-07 : Fractional Bands
+fractional-bands.mhtml
+http://fractalfinance.blogspot.com/2009/05/fractional-bands.html
+This article refers to
+- http://codebase.mql4.com/5595 which opems https://www.mql5.com/en/code/8900 which is here
+---
+2009-05-07 : Fractional Bands - indicator for MetaTrader 4
+fractional-bands-mq4.mhtml
+https://www.mql5.com/en/code/8900
+It has links to downloadable codes which are in the frasma2/ subfolder:
+- 8900.zip
+- fractional_bands.mq4 (the same as in 8900.zip)
+This article refers to
+- http://fractalfinance.blogspot.com/2009/05/fractional-bands.html which is already here
+- https://www.mql5.com/en/code/8895 which is already Here
+- https://www.mql5.com/en/code/8866 which is already here
+---
+2009-05-04 : Standard Deviation of Fractional Brownian Motion and Maximum of Wiener Brownian Motion
+math.mhtml
+https://stochasticfractals.wordpress.com/2009/05/
+This article refers to
+http://www.stat.purdue.edu/research/technical_reports/pdfs/1988/tr88-40.pdf
+which doesn't open.
+---
+In fractal-bands-hybride-adaptive/ folder there is a Fractal_Bands_hybride_adaptive.mql4
+The souce code attributes this to Poton, but I couldn't find the article on the http://fractalfinance.blogspot.com/
+---
+2011-03-05 : The Logic of Place
+the-logic-of-place.mhtml
+https://fractalfinance.blogspot.com/2011/03/logic-of-place.html
+It refers to a lot of links but they don't relate to trading.
+---
