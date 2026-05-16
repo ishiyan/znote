@@ -1183,4 +1183,120 @@ For every folder, the " : <MNEMONIC>" specifies mnemonic.
 - hurst_difference/ : hurdif
 - rescaled_fractal_adamtive_simple_moving_average/ : rsfrasma
 ================================================================
+In inputs/jean-philippe-poton/prepared-for-conversion/ I have these f<foldername>/ folders where we reconstructed .mq4 Poton indicators in Python.
+For the rest of this procedure, stay inside this inputs/jean-philippe-poton/prepared-for-conversion/ folder, all folders mentioned below eill be relative to it
+For every <foldername>/ folder, the " : <MNEMONIC>" specifies mnemonic.
+The next lines show list of parameters (except price array which is always present) with value range and default value extracted from <foldername>/ <foldername>.py 
+Some parameters have unknown range, in this case consult original <foldername>/<foldername>.mq4 or <foldername>/description.md
+Some parameter lines may contain suggestions for the work we will do.
 
+- fractal_dimension/ : fdi
+  - period, >=2, default 30
+  - random_line, ???, default 1.5
+- fractal_adamtive_simple_moving_average/ : frasma
+  - period, >=2, default 30
+  - normal_speed, >=1, default 20
+- fractal_graph_dimension_indicator/ : fgdi
+  - period, >=2, default 30
+  - random_line, ???, default 1.5
+- fractal_adamtive_simple_moving_average_2/ : frasma2
+  - period, >=2, default 30
+  - normal_speed, >=1, default 20
+  - shift -- ignore this parameter (assume it is always 0) and exclude it
+- fractal_bands/ : fban
+  - period, ???, default 30
+  - normal_speed, ???, default 30
+  - alpha, ???, default 2.0
+- fractional_bands/ : fctban
+  - period, ???, default 30
+  - normal_speed, ???, default 30
+  - pip_convertor, ???, default 10000
+    This parameter is problematic. We will be using this indicator for "normal stocks" where you don't have the notion of "pip".
+    We should come with reasonable rename/explanation or exclude this parameter.
+- rescaled_fractal_adamtive_simple_moving_average/ : rsfrasma
+  - period, >=4 must be a power of 2, default 64
+  - normal_speed, >=1, default 30
+  - pip_convertor, ???, default 10000
+    This parameter is problematic. We will be using this indicator for "normal stocks" where you don't have the notion of "pip".
+    We should come with reasonable rename/explanation or exclude this parameter.
+- hurst_difference/ : hurdif
+  - period, >=2, default 30
+- fractal_bands_hybride_adaptive/ : fbanha
+  - period, ???, default 30
+  - normal_speed_fallback, ???, default 30
+  - alpha, ???, default 2.0
+  - nyquist, ???, default 0.5
+  - alpha_hp, ???, default 0.07
+
+Having collected all this info, we'll start with preparing these indicators for conversion/adaptation for another repo.
+Per <foldername>/ folder from the list above, do the following.
+
+- check if <foldername>/ folder alreqdy exist, ask me if not
+  for the rest of this checklist steps stay in the <foldername>/, all filenames will be relative to it
+- check that there are following files:
+  - test_testdata.py
+  - testdata_test.go
+  - testdata.ts
+  - testdata.rs
+  - testdata.zig
+  - description.md
+  - <foldername>.py
+  - <foldername>.mq4
+  Ask me if they are not.
+- modify <foldername>.py so that:
+  - It reflects our findings and suggestions about this indicator parameters, among other things:
+    - has a thorow description
+    - has default value
+    - has an explicit range of valid values
+  - Use numpy package only if it is necessary, prefer standard Python functionality.
+    This is because in another repo this code will be ported to Go, Rust, Zig and TypeScript and each language should use only "standard library" withoutt external packages.
+    So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
+  - use descriptive names
+  - provide extensive comments in the code
+  - In its __main__, the code should read the 252 INPUT_CLOSE values from test_testdata.py
+    You better just embed this array into the __main__
+  - Propose the reasonable combination of parameters for generation of reference output data.
+    The number of combinations should be limited to 64.
+    Ask me to confirm the oroposal.
+  - Then, the __main__ should generate reference outputs for combination of parameters you propsed above.
+  - Use 15-digit precision in generated output floating-point data.
+  - All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_testdata.py) to the test_testdata.py file.
+  - The names of the arrays should be EXPECTED_XX_x_YY_y_YY_z, where x,y,z are values of parameters and X,Y,Z are name shortcuts.
+  - For fl;oating point values, use "_" instead of ".".
+  - Before each array put a comment with text in "What it tests" column of the table above.
+  - On the next comment line put the parameter names and their values.
+  - In data arrays, use NaN if indidicator is not primed yet.
+- modify description.md to reflect the updated <foldername>.py
+  This will be the "master reference implementation" documentation, please make it as thorough and comprehencive as possible.
+  You can also consult original Poton's implementation in <foldername>.mq4
+- Verify that <foldername>.py adheres the description in updated description.md
+- Verify that test_testdata.py contains output expected reference data
+- Append expected reference output data arrays from test_testdata.py to the individual test data files for other languages.
+  They already contain the input data arrays. Per language:
+  - testdata_test.go
+    - Update package xxxx with <foldername> with stripped underscores, following Go idiomatic naming.
+    - import "math" and use math.Nan() for NaNs
+    - you can use Go names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "var expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+  - testdata.ts
+    - use TypeScript-specific array as in "export const test_input() number[] = ["
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "export const expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use NaN for NaNs
+  - testdata.rs
+    - use Rust-specific array as in "pub fn test_input() -> Vec<f64>"
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and lowercase param shortcuts.
+      For example, "pub fn expected_w9_s6_o0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+      Note the underscore between "expected" and "w9_..."
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use f64:NAN for NaNs
+  - testdata.zig
+    - ensure there are "const math = @import("std").math;" and "const nan = math.nan(f64);" at the top of the file
+    - use nan for NaNs
+    - use Zig-specific array as in "pub fn testInput() [252]f64" with "return" statement
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "pub fn expectedW9_S6_O0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+----------------------------
