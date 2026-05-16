@@ -1,0 +1,20 @@
+{
+  "source": "inputs/jean-philippe-poton/fractal-finance/downloaded/rs-analysis-to-estimate-the-hurst-exponent/bear-cave-estimating-the-hurst-exponent.mhtml",
+  "format": "mhtml",
+  "extracted_at": "2026-05-15T18:43:00Z",
+  "assets_count": 20,
+  "code_listings_count": 0,
+  "assets": [
+    "rs_wave_moving_hurst.jpg",
+    "daub_log_spectrum.jpg", "daub4d_power.jpg",
+    "moving_stddev.jpg", "30day_return_pdf.jpg", "4day_return_pdf.jpg",
+    "moving_hurst.jpg",
+    "aa_autocorr.jpg", "aa_close.jpg", "fgn72_autocorr.jpg",
+    "hurst_lr.jpg", "RSCalc.gif",
+    "reservoir.jpg",
+    "range.jpg",
+    "ibm_5day_return.jpg", "hurst_fbm.jpg",
+    "rand_walk.jpg", "selfsimilar_traffic.jpg", "sierthum.jpg"
+  ],
+  "notes": "Original article by Ian Kaplan, bearcave.com, May 2003 (revised May 2013). 20 of 40 original images remain (figures/charts/icons). 20 equation images replaced with KaTeX inline/display math."
+}

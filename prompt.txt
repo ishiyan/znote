@@ -1184,7 +1184,7 @@ For every folder, the " : <MNEMONIC>" specifies mnemonic.
 - rescaled_fractal_adamtive_simple_moving_average/ : rsfrasma
 ================================================================
 In inputs/jean-philippe-poton/prepared-for-conversion/ I have these f<foldername>/ folders where we reconstructed .mq4 Poton indicators in Python.
-For the rest of this procedure, stay inside this inputs/jean-philippe-poton/prepared-for-conversion/ folder, all folders mentioned below eill be relative to it
+For the rest of this procedure, stay inside this inputs/jean-philippe-poton/prepared-for-conversion/ folder, all folders mentioned below will be relative to it
 For every <foldername>/ folder, the " : <MNEMONIC>" specifies mnemonic.
 The next lines show list of parameters (except price array which is always present) with value range and default value extracted from <foldername>/ <foldername>.py 
 Some parameters have unknown range, in this case consult original <foldername>/<foldername>.mq4 or <foldername>/description.md
