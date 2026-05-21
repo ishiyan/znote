@@ -1,0 +1,47 @@
+//  TASC Issue: April 2025
+//     Article: Less Lag In Momentum Indicators
+//              The Ultimate Oscillator
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script® v6
+// Provided By: PineCoders, for TradingView.com
+
+//version=6
+title ='TASC 2025.04 Less Lag In Momentum Indicators' +
+ ' The Ultimate Oscillator'
+stitle = 'UO'
+indicator(title, stitle, false)
+
+// import library for RMS function
+import TradingView/ta/9 as ta
+
+// function High Pass Filter.
+HP (float src, int Period) =>
+    float a0 = math.pi * math.sqrt(2.0) / Period
+    float a1 = math.exp(-a0)
+    float c2 = 2.0 * a1 * math.cos(a0)
+    float c3 = -a1 * a1
+    float c1 = (1.0 + c2 - c3) * 0.25
+    float hp = 0.0
+    if bar_index >= 4
+        hp := c1 * (src - 2.0 * src[1] + src[2]) + 
+              c2 * nz(hp[1]) + c3 * nz(hp[2])
+    hp
+
+UO (float src, int Bandwidth=2, int BandEdge=20) =>
+    float HP1 = HP(src, Bandwidth * BandEdge)
+    float HP2 = HP(src, BandEdge)
+    float Signal = HP1 - HP2
+
+    float RMS = ta.rms(Signal, 100)
+    float UO = RMS == 0 ? 0 : Signal / RMS
+    UO
+
+float src = input.source(close, 'Source:')
+int Bandwidth = input.int(2, 'Bandwidth:')
+int BandEdge = input.int(20, 'BandEdge:')
+
+UO = UO (src, Bandwidth, BandEdge)
+
+plot(UO , 'Ultimate Oscillator', color.red, 2)
+
+hline(0)

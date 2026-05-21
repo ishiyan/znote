@@ -1,0 +1,90 @@
+Indicator: Griffiths Predictor 
+{
+	TASC JAN 2025
+	Griffiths Predictor Indicator
+	(C) 2024 John F. Ehlers
+	From "Rapid Measurement of Digital Instantaneous 
+	Frequency", IEEE Transactions ASSP-23
+}
+inputs:
+	LowerBound( 18 ),
+	UpperBound( 40 ),
+	Length( 18 ),
+	BarsFwd( 2 );
+
+variables:
+	Mu( 0 ),
+	HP( 0 ),
+	LP( 0 ),
+	HH( 0 ),
+	LL( 0 ),
+	Signal( 0 ),
+	Peak( .1 ),
+	XBar( 0 ),
+	count( 0 ),
+	XPred( 0 ),
+	Advance( 0 );
+
+arrays:
+	XX[200](0),
+	Coef[200](0),
+	Pwr[200,2](0);
+	
+Mu = 1 / Length;
+HP = $HighPass(Close, UpperBound);
+LP = $SuperSmoother(HP, LowerBound);
+Peak = .991 * Peak[1];
+
+if AbsValue(LP) > Peak then 
+	Peak = AbsValue(LP);
+
+if Peak <> 0 then 
+	Signal = LP / Peak;
+	
+//Perfect cycle test signal
+//Signal = Sine(360*currentbar / 30);
+
+for Count = 1 to Length 
+begin
+	XX[count] = Signal[Length - count];
+end;
+
+XBar = 0;
+
+for Count = 1 to Length 
+begin
+	XBar = XBar + XX[Length - count] * Coef[count];
+end;
+
+for count = 1 to Length
+begin
+	coef[count] = coef[count] + Mu*(XX[Length] 
+	 - XBar)*XX[Length - count];
+end;
+
+//Prediction
+for Advance = 1 to BarsFwd 
+begin
+	XPred = 0;
+
+	for count = 1 to Length 
+	begin
+		XPred = XPred + XX[Length + 1 - count]*coef[count];
+	end;
+	
+	for count = advance to Length - advance 
+	begin
+		XX[count] = XX[count + 1];
+	end;
+	
+	for count = 1 to Length - 1 
+	begin
+		XX[count] = XX[count + 1];
+	end;
+	
+	XX[Length] = XPred;
+end;
+
+Plot1( Signal, "Signal" );
+Plot2( 0, "Zero Line" );
+Plot3( XPred, "XPred" );

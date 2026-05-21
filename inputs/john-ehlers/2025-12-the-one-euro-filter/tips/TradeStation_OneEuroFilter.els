@@ -1,0 +1,45 @@
+Indicator: One Euro Filter
+{
+	TASC DEC 2025
+	One Euro Filter Indicator
+	From "1€ Filter: A Simple Speed-Based Low-Pass Filter
+	For Noisy Input In Interactive Systems" (CHI 2012)
+	By Georges Casiez, Nicolas Roussel, and Daniel Vogel
+	(C) 2025 John F. Ehlers
+}
+
+inputs:
+	PeriodMin( 10 ), // Minimum cutoff frequency
+	BetaVal( 0.2 ); // Responsiveness factor
+
+variables:
+	Price( 0 ),
+	PeriodDX( 10 ),
+	AlphaDX( 0 ),
+	SmoothedDX( 0 ),
+	Cutoff( 0 ),
+	Alpha3( 0 ),
+	Smoothed( 0 );
+
+Price = Close;
+AlphaDX = 2 * 3.14159 / (4 * 3.14159 + PeriodDX);
+
+// Initialize
+if CurrentBar = 1 then 
+begin
+	SmoothedDX = 0;
+	Smoothed = Price;
+end;
+
+// EMA the Delta Price
+SmoothedDX = AlphaDX * (Price - Price[1]) + (1 -
+ AlphaDX) * SmoothedDX[1];
+// Adjust cutoff period based on fraction of the rate of 
+// change
+Cutoff = PeriodMin + BetaVal * AbsValue(SmoothedDX);
+// Compute adaptive alpha
+Alpha3 = 2*3.14159 / (4 * 3.14159 + Cutoff);
+//Adaptive smoothing
+Smoothed = Alpha3 * Price + (1 - Alpha3) * Smoothed[1];
+//Plot
+Plot1( Smoothed );

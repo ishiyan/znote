@@ -1,0 +1,55 @@
+//  TASC Issue: January 2026
+//     Article: Identifying Peaks And Valleys In Ranging Markets
+//              The Reversion Index
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script® v6
+// Provided By: PineCoders, for tradingview.com
+
+//@version=6
+indicator('TASC 2026.01 The Reversion Index', 'RI', overlay = false)
+
+//#region Inputs
+
+int length = input.int(20)
+
+//#endregion
+
+//#region Functions
+
+//===== Super Smoother Filter =====//
+superSmoother(float Series, float Period) =>
+    var float ALPHA =  math.pi * math.sqrt(2.0) / Period
+    var float BETA  =  math.exp(-ALPHA )
+    var float COEF2 = -math.pow(BETA, 2)
+    var float COEF1 =  math.cos( ALPHA ) * 2.0 * BETA
+    var float COEF0 =  1.0 - COEF1 - COEF2
+    float sma2   = math.avg(Series, nz(Series[1], Series))
+    float smooth = na, smooth := COEF0 *      sma2      +
+                                 COEF1 *  nz(smooth[1]) +
+                                 COEF2 *  nz(smooth[2])
+
+reversionIndex (int length) =>
+    float d = close - close[1]
+    float ds = math.sum(d, length)
+    float ads = math.sum(math.abs(d), length)
+    float ratio = ads != 0.0 ? ds / ads : 0.0
+    ratio
+
+//#endregion
+
+//#region Calculations
+
+float ri = reversionIndex(length)
+float sm = superSmoother(ri, 8)
+float tr = superSmoother(ri, 4)
+
+//#endregion
+
+//#region Display
+
+hline(0)
+plot(ri, 'RI', color.gray)
+plot(sm, 'Smooth', color.blue)
+plot(tr, 'Trigger', color.red)
+
+//#endregion

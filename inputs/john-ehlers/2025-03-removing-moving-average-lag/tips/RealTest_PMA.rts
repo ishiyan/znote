@@ -1,0 +1,33 @@
+Notes:
+	Projected Moving Average
+	TASC Trader's Tips for March 2025 article by John Ehlers
+
+Import:
+	DataSource:	Norgate
+	IncludeList:	&ES
+	StartDate:	1/1/20
+	EndDate:	Latest
+	SaveAs:	es.rtd
+	
+Settings:
+	DataFile:	es.rtd
+	StartDate:	Earliest
+	EndDate:	Latest
+	BarSize:	Daily
+
+Parameters:
+	len:	20
+
+Data:
+	smaN:	avg(c, len)
+	slopeN:	slope(c, len)
+	pmaN:	smaN + slopeN * len / 2
+	pmaPredict:	pmaN + 0.5 * (slopeN - slopeN[2]) * len
+	slopePredict:	1.5*slopeN-0.5*slopeN[4]
+	
+Charts:
+	smaN:	smaN
+	pmaN:	pmaN
+	pmaPredict:	pmaPredict
+	slopeN:	slopeN {|}
+	slopePredict:	slopePredict {|}

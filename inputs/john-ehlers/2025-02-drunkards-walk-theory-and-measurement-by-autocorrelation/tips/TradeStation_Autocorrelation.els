@@ -1,0 +1,274 @@
+Indicator: Autocorrelation 
+{
+	TASC FEB 2025
+	AutoCorrelation Indicator
+	(C) 2024 John F. Ehlers
+}
+
+inputs:
+	Length( 20 );
+
+variables:
+	Filt( 0 ),
+	Lag( 0 ),
+	J( 0 ),
+	Sx( 0 ),
+	Sy( 0 ),
+	Sxx( 0 ),
+	Sxy( 0 ),
+	Syy( 0 ),
+	X( 0 ),
+	Y( 0 ),
+	Color1( 0 ), 
+	Color2( 0 );
+
+arrays:
+	Corr[100]( 0 );
+	
+Filt = $UltimateSmoother( Close, 20 );
+
+// Cycle test waveform
+// Filt = Sine(360*CurrentBar / 20);
+
+// >>>>>>>>> Correlation >>>>>>>>>>>>
+for Lag = 0 to 99 
+begin
+	Sx = 0;
+	Sy = 0;
+	Sxx = 0;
+	Sxy = 0;
+	Syy = 0;
+	for J = 0 to Length - 1 
+	begin
+		X = Filt[J];
+		Y = Filt[Lag + J];
+		Sx = Sx + X;
+		Sy = Sy + Y;
+		Sxx = Sxx + X*X;
+		Sxy = Sxy + X*Y;
+		Syy = Syy + Y*Y;
+	end;
+	
+	If (Length*Sxx - Sx*Sx > 0) and (Length*Syy - Sy*Sy > 0) Then
+	Corr[Lag + 1] = (Length*Sxy - Sx*Sy) / SquareRoot((Length*Sxx -
+	Sx*Sx)*(Length*Syy - Sy*Sy));
+end;
+
+//Plot the AutoCorrelation as a Heatmap
+for Lag = 1 to 99 
+begin
+	//Convert Power to RGB Color for Display
+	if Corr[Lag + 1] >= 0 Then 
+	begin
+		Color2 = 255;
+		Color1 = 255*(1 - Corr[Lag + 1]);
+	end;
+
+	if Corr[Lag + 1] < 0 then 
+	begin
+		Color2 = 255*(1 + Corr[Lag + 1]);
+		Color1 = 255;
+	end;
+
+	switch( Lag )
+	begin
+		case 0:
+			Plot1(0, "S0", RGB(Color1, Color2, 0), 0, 4);
+		case 1:
+			Plot2(1, "S1", RGB(Color1, Color2, 0), 0, 4);
+		case 2:
+			Plot3(2, "S2", RGB(Color1, Color2, 0), 0, 4);
+		case 3:
+			Plot4(3, "S3", RGB(Color1, Color2, 0), 0, 4);
+		case 4:
+			Plot5(4, "S4", RGB(Color1, Color2, 0), 0, 4);
+		case 5:
+			Plot6(5, "S5", RGB(Color1, Color2, 0), 0, 4);
+		case 6:
+			Plot7(6, "S6", RGB(Color1, Color2, 0), 0, 4);
+		case 7:
+			Plot8(7, "S7", RGB(Color1, Color2, 0), 0, 4);
+		case 8:
+			Plot9(8, "S8", RGB(Color1, Color2, 0), 0, 4);
+		case 9:
+			Plot10(9, "S9", RGB(Color1, Color2, 0), 0, 4);
+		case 10:
+			Plot11(10, "S10", RGB(Color1, Color2, 0), 0, 4);
+		case 11:
+			Plot12(11, "S11", RGB(Color1, Color2, 0), 0, 4);
+		case 12:
+			Plot13(12, "S12", RGB(Color1, Color2, 0), 0, 4);
+		case 13:
+			Plot14(13, "S13", RGB(Color1, Color2, 0), 0, 4);
+		case 14:
+			Plot15(14, "S14", RGB(Color1, Color2, 0), 0, 4);
+		case 15:
+			Plot16(15, "S15", RGB(Color1, Color2, 0), 0, 4);
+		case 16:
+			Plot17(16, "S16", RGB(Color1, Color2, 0), 0, 4);
+		case 17:
+			Plot18(17, "S17", RGB(Color1, Color2, 0), 0, 4);
+		case 18:
+			Plot19(18, "S18", RGB(Color1, Color2, 0), 0, 4);
+		case 19:
+			Plot20(19, "S19", RGB(Color1, Color2, 0), 0, 4);
+		case 20:
+			Plot21(20, "S20", RGB(Color1, Color2, 0), 0, 4);
+		case 21:
+			Plot22(21, "S21", RGB(Color1, Color2, 0), 0, 4);
+		case 22:
+			Plot23(22, "S22", RGB(Color1, Color2, 0), 0, 4);
+		case 23:
+			Plot24(23, "S23", RGB(Color1, Color2, 0), 0, 4);
+		case 24:
+			Plot25(24, "S24", RGB(Color1, Color2, 0), 0, 4);
+		case 25:
+			Plot26(25, "S25", RGB(Color1, Color2, 0), 0, 4);
+		case 26:
+			Plot27(26, "S26", RGB(Color1, Color2, 0), 0, 4);
+		case 27:
+			Plot28(27, "S27", RGB(Color1, Color2, 0), 0, 4);
+		case 28:
+			Plot29(28, "S28", RGB(Color1, Color2, 0), 0, 4);
+		case 29:
+			Plot30(29, "S29", RGB(Color1, Color2, 0), 0, 4);
+		case 30:
+			Plot31(30, "S30", RGB(Color1, Color2, 0), 0, 4);
+		case 31:
+			Plot32(31, "S31", RGB(Color1, Color2, 0), 0, 4);
+		case 32:
+			Plot33(32, "S32", RGB(Color1, Color2, 0), 0, 4);
+		case 33:
+			Plot34(33, "S33", RGB(Color1, Color2, 0), 0, 4);
+		case 34:
+			Plot35(34, "S34", RGB(Color1, Color2, 0), 0, 4);
+		case 35:
+			Plot36(35, "S35", RGB(Color1, Color2, 0), 0, 4);
+		case 36:
+			Plot37(36, "S36", RGB(Color1, Color2, 0), 0, 4);
+		case 37:
+			Plot38(37, "S37", RGB(Color1, Color2, 0), 0, 4);
+		case 38:
+			Plot39(38, "S38", RGB(Color1, Color2, 0), 0, 4);
+		case 39:
+			Plot40(39, "S39", RGB(Color1, Color2, 0), 0, 4);
+		case 40:
+			Plot41(40, "S40", RGB(Color1, Color2, 0), 0, 4);
+		case 41:
+			Plot42(41, "S41", RGB(Color1, Color2, 0), 0, 4);
+		case 42:
+			Plot43(42, "S42", RGB(Color1, Color2, 0), 0, 4);
+		case 43:
+			Plot44(43, "S43", RGB(Color1, Color2, 0), 0, 4);
+		case 44:
+			Plot45(44, "S44", RGB(Color1, Color2, 0), 0, 4);
+		case 45:
+			Plot46(45, "S45", RGB(Color1, Color2, 0), 0, 4);
+		case 46:
+			Plot47(46, "S46", RGB(Color1, Color2, 0), 0, 4);
+		case 47:
+			Plot48(47, "S47", RGB(Color1, Color2, 0), 0, 4);
+		case 48:
+			Plot49(48, "S48", RGB(Color1, Color2, 0), 0, 4);
+		case 49:
+			Plot50(49, "S49", RGB(Color1, Color2, 0), 0, 4);
+		case 50:
+			Plot51(50, "S50", RGB(Color1, Color2, 0), 0, 4);
+		case 51:
+			Plot52(51, "S51", RGB(Color1, Color2, 0), 0, 4);
+		case 52:
+			Plot53(52, "S52", RGB(Color1, Color2, 0), 0, 4);
+		case 53:
+			Plot54(53, "S53", RGB(Color1, Color2, 0), 0, 4);
+		case 54:
+			Plot55(54, "S54", RGB(Color1, Color2, 0), 0, 4);
+		case 55:
+			Plot56(55, "S55", RGB(Color1, Color2, 0), 0, 4);
+		case 56:
+			Plot57(56, "S56", RGB(Color1, Color2, 0), 0, 4);
+		case 57:
+			Plot58(57, "S57", RGB(Color1, Color2, 0), 0, 4);
+		case 58:
+			Plot59(58, "S58", RGB(Color1, Color2, 0), 0, 4);
+		case 59:
+			Plot60(59, "S59", RGB(Color1, Color2, 0), 0, 4);
+		case 60:
+			Plot61(60, "S60", RGB(Color1, Color2, 0), 0, 4);
+		case 61:
+			Plot62(61, "S61", RGB(Color1, Color2, 0), 0, 4);
+		case 62:
+			Plot63(62, "S62", RGB(Color1, Color2, 0), 0, 4);
+		case 63:
+			Plot64(63, "S63", RGB(Color1, Color2, 0), 0, 4);
+		case 64:
+			Plot65(64, "S64", RGB(Color1, Color2, 0), 0, 4);
+		case 65:
+			Plot66(65, "S65", RGB(Color1, Color2, 0), 0, 4);
+		case 66:
+			Plot67(66, "S66", RGB(Color1, Color2, 0), 0, 4);
+		case 67:
+			Plot68(67, "S67", RGB(Color1, Color2, 0), 0, 4);
+		case 68:
+			Plot69(68, "S68", RGB(Color1, Color2, 0), 0, 4);
+		case 69:
+			Plot70(69, "S69", RGB(Color1, Color2, 0), 0, 4);
+		case 70:
+			Plot71(70, "S70", RGB(Color1, Color2, 0), 0, 4);
+		case 71:
+			Plot72(71, "S71", RGB(Color1, Color2, 0), 0, 4);
+		case 72:
+			Plot73(72, "S72", RGB(Color1, Color2, 0), 0, 4);
+		case 73:
+			Plot74(73, "S73", RGB(Color1, Color2, 0), 0, 4);
+		case 74:
+			Plot75(74, "S74", RGB(Color1, Color2, 0), 0, 4);
+		case 75:
+			Plot76(75, "S75", RGB(Color1, Color2, 0), 0, 4);
+		case 76:
+			Plot77(76, "S76", RGB(Color1, Color2, 0), 0, 4);
+		case 77:
+			Plot78(77, "S77", RGB(Color1, Color2, 0), 0, 4);
+		case 78:
+			Plot79(78, "S78", RGB(Color1, Color2, 0), 0, 4);
+		case 79:
+			Plot80(79, "S79", RGB(Color1, Color2, 0), 0, 4);
+		case 80:
+			Plot81(80, "S80", RGB(Color1, Color2, 0), 0, 4);
+		case 81:
+			Plot82(81, "S81", RGB(Color1, Color2, 0), 0, 4);
+		case 82:
+			Plot83(82, "S82", RGB(Color1, Color2, 0), 0, 4);
+		case 83:
+			Plot84(83, "S83", RGB(Color1, Color2, 0), 0, 4);
+		case 84:
+			Plot85(84, "S84", RGB(Color1, Color2, 0), 0, 4);
+		case 85:
+			Plot86(85, "S85", RGB(Color1, Color2, 0), 0, 4);
+		case 86:
+			Plot87(86, "S86", RGB(Color1, Color2, 0), 0, 4);
+		case 87:
+			Plot88(87, "S87", RGB(Color1, Color2, 0), 0, 4);
+		case 88:
+			Plot89(88, "S88", RGB(Color1, Color2, 0), 0, 4);
+		case 89:
+			Plot90(89, "S89", RGB(Color1, Color2, 0), 0, 4);
+		case 90:
+			Plot91(90, "S90", RGB(Color1, Color2, 0), 0, 4);
+		case 91:
+			Plot92(91, "S91", RGB(Color1, Color2, 0), 0, 4);
+		case 92:
+			Plot93(92, "S92", RGB(Color1, Color2, 0), 0, 4);
+		case 93:
+			Plot94(93, "S93", RGB(Color1, Color2, 0), 0, 4);
+		case 94:
+			Plot95(94, "S94", RGB(Color1, Color2, 0), 0, 4);
+		case 95:
+			Plot96(95, "S95", RGB(Color1, Color2, 0), 0, 4);
+		case 96:
+			Plot97(96, "S96", RGB(Color1, Color2, 0), 0, 4);
+		case 97:
+			Plot98(97, "S97", RGB(Color1, Color2, 0), 0, 4);
+		case 98:
+			Plot99(98, "S98", RGB(Color1, Color2, 0), 0, 4);
+	end;
+end;

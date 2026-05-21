@@ -1,0 +1,98 @@
+//  TASC Issue: December 2025
+//     Article: Low-Latency Smoothing
+//              The One Euro Filter
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script® v6
+// Provided By: PineCoders, for tradingview.com
+
+//@version=6
+indicator("", "TASC", false)
+
+//#region Constants
+
+const float PI = math.pi
+
+//#endregion
+
+//#region Inputs
+
+enum OM
+    HP = "High Pass Filter"
+    RSI = "Relative Strength Index"
+    BBW = "Bollingers Band Width %"
+    CCI = "Commodity Channel Index"
+    ST = "Stochastic"
+    CMO = "Chande Momentum Oscillator"
+    ATR = "Average True Range"
+    MFI = "Money Flow Index"
+    MOM = "Momentum"
+
+float src = input.source(close, "Source:")
+int period = input.int(10, "Period:")
+int minPeriod = input.int(10, "Min. Period:")
+float beta = input.float(0.2, "Beta:")
+OM oscMethod = input.enum(OM.HP, "Osc. Method:", inline = "osc")
+int oscPeriod = input.int(20, "Osc. Period:")
+
+//#endregion
+
+
+//#region Functions
+
+// @function High Pass Filter.
+HP (float Source, int Period) =>
+    float a0 = PI * math.sqrt(2.0) / Period
+    float a1 = math.exp(-a0)
+    float c2 = 2.0 * a1 * math.cos(a0)
+    float c3 = -a1 * a1
+    float c1 = (1.0 + c2 - c3) * 0.25
+    float hp = 0.0
+    if bar_index >= 4
+        hp := c1 * (Source - 2.0 * Source[1] + Source[2]) + 
+              c2 * nz(hp[1]) + c3 * nz(hp[2])
+    hp
+
+// @function One Euro Filter.
+one_euro (float src=close,
+ int period=10, int minPeriod=10, float beta=0.2) =>
+    float _a = 2.0 * PI / (4.0 * PI + period)
+    float _sm = src , float _sdx = 0.0
+    _sdx := _a * (src - src[1]) + (1.0 - _a) * nz(_sdx[1])
+    // Adjust cutoff period based on fraction of the ROC.
+    float _cutoff = minPeriod + beta * math.abs(_sdx)
+    // Compute adaptive alpha
+    float _a3 = 2.0 * PI / (4.0 * PI + _cutoff)
+    // Adaptive smoothing
+    _sm := _a3 * src + (1.0 - _a3) * nz(_sm[1])
+    _sm
+
+//#endregion
+
+//#region Calculations
+
+float oeFilter = one_euro(src, period, minPeriod, beta)
+
+float osc = switch oscMethod
+    OM.HP => HP(src, oscPeriod)
+    OM.RSI => ta.rsi(src, oscPeriod)
+    OM.BBW => ta.bbw(src, oscPeriod, 2.0)
+    OM.CCI => ta.cci(src, oscPeriod)
+    OM.ST => ta.stoch(src, src, src, oscPeriod)
+    OM.CMO => ta.cmo(src, oscPeriod)
+    OM.ATR => ta.atr(oscPeriod)
+    OM.MFI => ta.mfi(src, oscPeriod)
+    OM.MOM => ta.mom(src, oscPeriod)
+    => 0.0
+
+float oscFilter = one_euro(osc, period, minPeriod, beta)
+
+//#endregion
+
+//#region Display
+
+plot(oeFilter, force_overlay=true)
+
+plot(osc)
+plot(oscFilter, "", color.red)
+
+//#endregion

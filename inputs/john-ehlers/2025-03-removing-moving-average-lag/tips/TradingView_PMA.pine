@@ -1,0 +1,68 @@
+//  TASC Issue: March 2025
+//     Article: A New Solution
+//              Removing Moving Average Lag
+//  Article By: John F. Elhers
+//    Language: TradingView's Pine Script® v6
+// Provided By: PineCoders, for tradingview.com
+
+//@version=6
+title ='TASC 2025.03 A New Solution'+
+     ' Removing Moving Average Lag'
+stitle = 'TASC'
+indicator(title, stitle, false)
+
+// @function Projected Moving Average.
+// @param src Source series.
+// @param length Length.
+// @returns
+// - `PMA` Projected Moving Average.
+// - `SMA` Simple Moving Average.
+// - `Slope` Calculated Slope.
+pma (float src, int length) =>
+    float Sx = 0.0 , float Sy = 0.0
+    float Sxx = 0.0 , float Syy = 0.0 , float Sxy = 0.0
+    for count = 1 to length
+        float src1 = src[count - 1]
+        Sx += count
+        Sy += src[count - 1]
+        Sxx += count * count
+        Syy += src1 * src1
+        Sxy += count * src1
+    float Slope = -(length*Sxy-Sx*Sy) / (length*Sxx-Sx*Sx)
+    float SMA = Sy / length
+    float PMA = SMA + Slope * length / 2
+    [PMA, SMA, Slope]
+
+//#endregion
+
+// @enum Display mode fields:
+// @field MA Display moving averages.
+// @field SP Display Slope and Prediction.
+enum DISP
+    MA = 'Moving Averages'
+    SP = 'Slope And Prediction'
+
+DISP disp = input.enum(DISP.MA, 'Display Mode:')
+float src = input.source(close, 'Source:')
+int length = input.int(30, 'Length:')
+
+bool is_disp_ma = disp == DISP.MA
+bool is_disp_sp = disp == DISP.SP
+
+[pma, sma, slope] = pma(src, length)
+float predict = switch
+    is_disp_ma => pma + .5 * (slope - slope[2]) * length
+    is_disp_sp => 1.5 * slope - 0.5 * slope[4]
+    => float(na)
+
+show_ma = is_disp_ma ? display.all : display.none
+show_sp = is_disp_sp ? display.all : display.none
+
+plot(src, 'SRC', color.blue, display=show_ma)
+plot(pma, 'PMA', color.green, display=show_ma)
+plot(predict, 'Predict', color.lime, display=show_ma)
+plot(sma, 'SMA', color.red, display=show_ma)
+
+plot(slope, 'Slope', color.blue, display=show_sp)
+plot(0, '0', color.silver, display=show_sp)
+plot(predict, 'Predict', color.lime, display=show_sp)

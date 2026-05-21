@@ -1,0 +1,111 @@
+Indicator: Continuation Index
+{
+ 	TASC SEPTEMBER 2025
+	Continuation Index
+	(C) 2025 John F. Ehlers
+}
+inputs:
+	Gama( .8 ),
+	Order( 8 ),
+	Length( 40 );
+
+variables:
+	US( 0 ),
+	LG( 0 ),
+	Ref( 0 ),
+	Variance( 0 ),
+	CI( 0 );
+
+//Ultimate Smoother
+US = $UltimateSmoother(Close, Length / 2);
+//Laguerre Filter
+LG = $Laguerre(Close, Gama, Order, Length);
+//Average the filter difference
+Variance = Average(AbsValue(US - LG), Length);
+//Double the normalized variance
+if Variance <> 0 then 
+	Ref = 2*(US - LG) / Variance;
+//Compress using an Inverse Fisher Transform
+CI = ( ExpValue(2 * Ref) - 1) / (ExpValue(2 * Ref) + 1);
+
+plot1( CI );
+Plot2( 0 );
+
+Function: $Laguerre
+{
+ Laguerre Filter Function
+ (C) 2005-2022 John F. Ehlers
+
+ Usage: $Laguerre(Price, gama, Order, Length);
+ ` gama must be less than 1 and equal to or greater
+ than zero order must be an integer, 10 or less
+}
+inputs:
+	Price( numericseries ),
+	Gama( numericsimple ),
+	Order( numericsimple ),
+	Length( numericsimple );
+	
+variables:
+	Count( 0 ),
+	FIR( 0 );
+
+arrays:
+	LG[10, 2]( 0 );
+	
+//load the current values of the arrays to be the values 
+// one bar ago
+for count = 1 to order 
+begin
+	LG[count, 2] = LG[count, 1];
+end;
+
+//compute the Laguerre components for the current bar
+for count = 2 to order
+begin
+	LG[count, 1] = -gama*LG[count - 1, 2] + LG[count - 1, 2]
+	 + gama*LG[count, 2];
+End;
+
+LG[1, 1] = $UltimateSmoother(Price, Length);
+//sum the Laguerre components
+FIR = 0;
+for count = 1 to order 
+begin
+	FIR = FIR + LG[count, 1];
+end;
+
+$Laguerre = FIR / order;
+
+Function: $UltimateSmoother
+{
+	UltimateSmoother Function
+	(C) 2004-2025 John F. Ehlers
+}
+
+inputs:
+	Price( numericseries ),
+	Period( numericsimple );
+	
+variables:
+	a1( 0 ),
+	b1( 0 ),
+	c1( 0 ),
+	c2( 0 ),
+	c3( 0 ),
+	US( 0 );
+	
+a1 = ExpValue(-1.414*3.14159 / Period);
+b1 = 2 * a1 * Cosine(1.414*180 / Period);
+c2 = b1;
+c3 = -a1 * a1;
+c1 = (1 + c2 - c3) / 4;
+
+if CurrentBar >= 4 then 
+ US = (1 - c1)*Price + (2 * c1 - c2) * Price[1] 
+ - (c1 + c3) * Price[2] + c2*US[1] + c3 * US[2];
+ 
+if CurrentBar < 4 then 
+	US = Price;
+
+$UltimateSmoother = US;

@@ -1,0 +1,222 @@
+
+In inputs/john-ehlers/2025-01-linear-predictive-filters-and-instantaneous-frequency/ folder there is the
+tasc_v43_2025_01_pp8-18_John_Ehlers-Linear_Predictive_Filters_And_Instantaneous_Frequency.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V43\C01\898EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2025/01/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+figure-1-measured-spectrum.png should show the chart, but shows an illustration that is not visible in PDF.
+This illustration was on the previous page in the full journal.
+This pdf was extracted from the full journal and probably the big illustration leaked into it.
+Strange that I don't see it.
+
+figure-2-predictions.png and figure-3-dominant-cycle.png should also show charts, but show background of the code listing.
+---
+figure-1-measured-spectrum.png is good
+
+figure-2-predictions.png and figure-3-dominant-cycle.png have some text above and the bottom part of both harts are cropped.
+--- 
+In inputs/john-ehlers/2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation/ folder there is the
+tasc_v43_2025_02_pp8-15_John_Ehlers-Drunkards_Walk_Theory_And_Measurement_By_Autocorrelation.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V43\C02\910EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2025/02/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+figure-1-random-walk-simulations.png and figure-2-periodogram-20bar.png have some text above and the bottom part of both harts are cropped.
+
+figure-5-autocorrelation-2bar.png has a cropped top
+
+the rest of figures are good
+---
+In inputs/john-ehlers/2025-03-removing-moving-average-lag/ folder there is the
+tasc_v43_2025_03_pp8-12_John_Ehlers-Removing_Moving_Average_Lag.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V43\C03\923EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2025/03/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+Now in figure 1 right side is cropped, figure 2 has cropped top, figure 5 fas cropped left and cropped top.
+Can you give them more margins, so I can do the final crop manully.
+---
+figure 5 still has cropped top and cropped left
+---
+In inputs/john-ehlers/2025-03-removing-moving-average-lag/ folder there is the
+tasc_v43_2025_03_pp8-12_John_Ehlers-Removing_Moving_Average_Lag.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V43\C03\923EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2025/03/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+figure 1,figure 2, figure 4 have a cropped left
+figure 3 has a cropped top
+---
+figure 1 has a cropped left and bottom
+figure 3 has a cropped top
+---
+In inputs/john-ehlers/2025-04-the-ultimate-oscillator/ folder there is the
+tasc_v43_2025_04_pp8-13_John_Ehlers-The_Ultimate_Oscillator.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V43\C04\945EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2025/04/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+In inputs/john-ehlers/2025-07-laguerre-filters/ folder there is the
+tasc_v43_2025_07_pp9-12_John_Ehlers-Laguerre_Filters.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V43\C07\984EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2025/07/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+all 3 figures have cropped bottom
+---
+In "Laguerre Background" header after "For a discrete system, the nth coefficient of the polynomial is:" the equation is missing
+---
+In inputs/john-ehlers/2025-09-the-continuation-index/ folder there is the
+tasc_v43_2025_09_pp9-12_John_Ehlers-The-Continuation_Index.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V43\C09\012EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2025/09/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+figure 2 has a cropped bottom
+---
+In inputs/john-ehlers/2025-12-the-one-euro-filter/ folder there is the
+tasc_v43_2025_12_pp20-22_John_Ehlers-One_Euro_Filter.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V43\C12\054EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2025/12/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+In inputs/john-ehlers/2026-01-the-reversion-index/ folder there is the
+tasc_v44_2026_01_pp16-18_John_Ehlers-The_Reversion_Index.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V44\C01\066EHLE.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2026/01/TradersTips.html
+- Add bibtex for both article and traders' tips.
+---
+
+
+
+In inputs/john-ehlers/2025-01-linear-predictive-filters-and-instantaneous-frequency/tips/ folder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+The .mhtml file has whitespaces in the filename.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+---
+In inputs/john-ehlers/2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation/tips/ folder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+The .mhtml file has whitespaces in the filename.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+---
+In inputs/john-ehlers/2025-03-removing-moving-average-lag/tips/ folder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+The .mhtml file has whitespaces in the filename.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+---
+In inputs/john-ehlers/2025-04-the-ultimate-oscillator/tips/ folder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+The .mhtml file has whitespaces in the filename.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+---
+In inputs/john-ehlers/2025-07-laguerre-filters/tips/ folder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+The .mhtml file has whitespaces in the filename.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+---
+In inputs/john-ehlers/2025-09-the-continuation-index/tips/ folder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+The .mhtml file has whitespaces in the filename.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+---
+In inputs/john-ehlers/2025-12-the-one-euro-filter/tips/ folder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+The .mhtml file has whitespaces in the filename.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+---
+In inputs/john-ehlers/2026-01-the-reversion-index/tips/ folder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+The .mhtml file has whitespaces in the filename.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+
+
+
+
+
+
+
+2025-01-linear-predictive-filters-and-instantaneous-frequency
+2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
+2025-03-removing-moving-average-lag
+2025-04-the-ultimate-oscillator
+2025-07-laguerre-filters
+2025-09-the-continuation-index
+2025-12-the-one-euro-filter
+2026-01-the-reversion-index

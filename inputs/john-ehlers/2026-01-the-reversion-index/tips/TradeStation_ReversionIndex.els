@@ -1,0 +1,68 @@
+Indicator: Reversion Index
+
+{
+	TASC APR 2026
+	Reversion Index
+	(C) 2005 John F. Ehlers
+}
+
+inputs:
+	Length( 20 );
+	
+variables:
+	DeltaSum( 0 ),
+	AbsDeltaSum( 0 ),
+	Count( 0 ),
+	Ratio( 0 ),
+	Smooth( 0 ),
+	Trigger( 0 );
+
+DeltaSum = 0;
+AbsDeltaSum = 0;
+
+for Count = 0 to Length - 1 
+begin
+	DeltaSum = DeltaSum + Close[Count] - Close[Count + 1];
+	AbsDeltaSum = AbsDeltaSum + AbsValue( Close[Count] 
+	 - Close[Count + 1] );
+end;
+
+if AbsDeltaSum <> 0 then 
+	Ratio = DeltaSum / AbsDeltaSum;
+
+Smooth = $SuperSmoother( Ratio, 8 );
+Trigger = $SuperSmoother( Ratio, 4 );
+
+Plot1( Smooth, "Smooth" );
+Plot2( 0, "Zero" );
+Plot3( Trigger, "Triger" );
+
+Function: $SuperSmoother
+
+{
+	SuperSmoother Function
+ 	(C) 2025 John F. Ehlers
+}
+
+inputs:
+	Price(numericseries),
+	Period(numericsimple);
+
+variables:
+	a1( 0 ),
+	b1( 0 ),
+	c1( 0 ),
+	c2( 0 ),
+	c3( 0 );
+
+a1 = ExpValue(-1.414 * 3.14159 / Period);
+b1 = 2 * a1 * Cosine(1.414 * 180 / Period);
+c2 = b1;
+c3 = -a1 * a1;
+c1 = 1 - c2 - c3;
+
+if CurrentBar >= 4 then 
+	$SuperSmoother = c1*(Price + Price[1]) / 2 
+	 + c2 * $SuperSmoother[1] + c3 * $SuperSmoother[2];
+if CurrentBar < 4 then 
+	$SuperSmoother = Price;

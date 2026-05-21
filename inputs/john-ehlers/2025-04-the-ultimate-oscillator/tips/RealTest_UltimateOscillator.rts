@@ -1,0 +1,60 @@
+Notes:
+	John Ehlers "Ultimate Oscillator", TASC, April 2025
+	Implements and plots the indicators as in the article
+	
+Import:
+	DataSource:	Norgate
+	IncludeList:	&ES
+	StartDate:	2022-01-01
+	EndDate:	2024-12-17
+	SaveAs:	es.rtd
+	
+Settings:
+	DataFile:	es.rtd
+	BarSize:	Daily
+
+Parameters:
+	BandEdge:	30 // note author's code says 20 but chart in article shows 30
+	BandWidth:	2
+	RMSlen:	100
+
+Data:
+	// Common constants
+	decay_factor:	-1.414 * 3.14159
+	phase_angle:	1.414 * 180
+	
+	// Lengths
+	length1:	BandWidth * BandEdge
+	length2:	BandEdge
+	
+	// Price Value
+	price:	Close
+
+	// Highpass Filter Length1
+	hp1a1:	exp(decay_factor / Length1)
+	hp1b1:	2 * hp1a1 * Cosine(phase_angle / Length1)
+	hp1c2:	hp1b1
+	hp1c3:	-hp1a1 * hp1a1
+	hp1c1:	(1 + hp1c2 - hp1c3) / 4
+	HP1:	if(BarNum >= 4, hp1c1 * (price - 2 * price[1] + price[2]) + hp1c2 * HP1[1] + hp1c3 * HP1[2], 0)
+
+	// Highpass Filter Length2
+	hp2a1:	exp(decay_factor / Length2)
+	hp2b1:	2 * hp2a1 * Cosine(phase_angle / Length2)
+	hp2c2:	hp2b1
+	hp2c3:	-hp2a1 * hp2a1
+	hp2c1:	(1 + hp2c2 - hp2c3) / 4
+	HP2:	if(BarNum >= 4, hp2c1 * (price - 2 * price[1] + price[2]) + hp2c2 * HP2[1] + hp2c3 * HP2[2], 0)
+	
+	// Signal
+	Signal:	HP1 - HP2
+	
+	// Root Mean Square of Signal
+	RMS:	Sqr(SumSQ(Signal, RMSlen) / RMSlen)
+	
+	// Ultimate Oscillator
+	UltimateOsc:	Signal / RMS
+	
+Charts:
+	UltimateOsc:	UltimateOsc {|}
+	Zero:	0 {|}

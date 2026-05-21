@@ -1,0 +1,58 @@
+Notes:
+	John Ehlers "Laguerre Filters", TASC July 2025.
+	Implements and plots the indicators as in the article.
+	
+Import:
+	DataSource:	Norgate
+	IncludeList:	&ES
+	StartDate:	2023-02-01
+	EndDate:	Latest
+	SaveAs:	es.rtd
+	
+Settings:
+	DataFile:	es.rtd
+	BarSize:	Daily
+
+Parameters:
+	gama:	0.8 
+	len:	20
+	RMSlen:	100
+	
+Data:
+	
+// Common constants
+	
+	decay_factor:	-1.414 * 3.14159
+	phase_angle:	1.414 * 180
+	two_pi:	6.28
+	
+	// Ultimate Smoother of Close
+	
+	a1:	exp(decay_factor / len)
+	b1:	2 * a1 * Cosine(phase_angle / len)
+	c2:	b1
+	c3:	-a1 * a1
+	c1:	(1 + c2 - c3) / 4
+	USC:	if(BarNum >= 4, (1 - c1) * Close + (2 * c1 - c2) * Close[1] - (c1 + c3) * Close[2] + c2 * USC[1] + c3 * USC[2], Close)
+	
+	// Laguerre Filter of USC
+	
+	L1:	-gama * USC[1] + USC[1] + gama*nonan(L1[1])
+	L2:	-gama * L1[1] + L1[1] + gama*nonan(L2[1])
+	L3:	-gama * L2[1] + L2[1] + gama*nonan(L3[1])
+	L4:	-gama * L3[1] + L3[1] + gama*nonan(L4[1])
+	Laguerre:	(USC + 4 * L1 + 6 * L2 + 4 * L3 + L4) / 16
+	
+	// Laguerre Oscillator
+	
+	LUSC:	-gama * USC + USC[1] + gama * nonan(LUSC[1])
+	RMS:	Sqr(SumSQ(USC - LUSC, RMSlen) / RMSlen)
+	LaguerreOsc:	(USC - LUSC) / RMS
+	
+
+Charts:
+
+//	USC:	USC 
+
+//	Laguerre:	Laguerre 
+	LaguerreOsc:	LaguerreOsc {|}

@@ -1,0 +1,55 @@
+THE LAGUERRE FILTER
+
+{Laguerre Filter}
+{by John Ehlers}
+gama:= 0.8;
+len:= 40;
+
+{Ultimate Smoother}
+a1:= exp(-1.414*3.14159 / len);
+b1:= 2*a1*Cos(1.414*180 / len);{c2}
+c1:= -a1*a1; {c3}
+x1:= (1 + b1 - c1) / 4; {c1}
+L0:= (1-x1)*Close + (2*x1-b1)*Ref(Close,-1) -
+ (x1+c1)*Ref(Close,-2) + b1*Prev + c1*Ref(prev,-1);
+
+{Laguerre calculation}
+L1:= -gama*Ref(L0,-1) + Ref(L0,-1) + gama*Prev;
+L2:= -gama*Ref(L1,-1) + Ref(L1,-1) + gama*Prev;
+L3:= -gama*Ref(L2,-1) + Ref(L2,-1) + gama*Prev;
+L4:= -gama*Ref(L3,-1) + Ref(L3,-1) + gama*Prev;
+ 
+Laguerre:= (L0 + 4*L1 + 6*L2 + 4*L3 + L4)/16;
+ 
+if(BarsSince(cum(1)>=len+5)=0, Laguerre, C);
+if(BarsSince(cum(1)>=len+5)=0, L0, C)
+ 
+
+
+THE LAGUERRE OSCILLATOR
+
+{Laguerre Oscillator}
+{by John Ehlers}
+gama:= 0.5;
+len:= 30;
+ 
+{Ultimate Smoother}
+a1:= exp(-1.414*3.14159 / len);
+b1:= 2*a1*Cos(1.414*180 / len);{c2}
+c1:= -a1*a1; {c3}
+x1:= (1 + b1 - c1) / 4; {c1}
+L0:= (1-x1)*Close + (2*x1-b1)*Ref(Close,-1) -
+ (x1+c1)*Ref(Close,-2) + b1*Prev + c1*Ref(prev,-1);
+ 
+L1:= -gama* Ref(L0,-1) + Ref(L0,-1) + gama*Prev;
+diff:= L0 - L1;
+ 
+{RMS of diff}
+RMS:= SQRT(Sum(diff * diff, 100) / 100);
+ 
+{divide by zero trap}
+denom:= if(RMS = 0, -1, RMS);
+LaguerreOsc:= If(denom = -1, 0, diff/denom);
+ 
+LaguerreOsc;
+0

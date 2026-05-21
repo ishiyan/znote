@@ -1,0 +1,107 @@
+//  TASC Issue: July 2025
+//     Article: A Tool For Trend Trading
+//              Laguerre Filters
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script® v6
+// Provided By: PineCoders, for tradingview.com
+
+//@version=6
+indicator("TASC 2025.07 Laguerre Filters", "", false)
+
+//#region  Inputs:
+
+// @variable The Source series to process. 
+float src = input.source(close, 'Source:')
+// @variable Weigth - Gamma. 
+float gamma = input.float(0.5, 'Gamma:')
+// @variable The UltimateSmoother filter period. 
+int length1 = input.int(30, 'L1:')
+// @variable The number of bars in the RMS calculation.
+int length2 = input.int(100, 'L2:')
+
+//#endregion
+//#region  Functions:
+
+//  from:
+//  TASC Issue: April 2024, Article: The Ultimate Smoother
+//
+// @function       The UltimateSmoother is a filter created
+//                 by subtracting the response of a high-pass 
+//                 filter from that of an all-pass filter.
+// @param src      Source series.
+// @param period   The length of the filter's critical period.
+// @returns        Smoothed series.
+UltimateSmoother (float src, int period) =>
+    float a1 = math.exp(-1.414 * math.pi / period)
+    float c2 = 2.0 * a1 * math.cos(1.414 * math.pi / period)
+    float c3 = -a1 * a1
+    float c1 = (1.0 + c2 - c3) / 4.0
+    float us = src
+    if bar_index >= 4
+        us := (1.0 - c1) * src + 
+              (2.0 * c1 - c2) * src[1] - 
+              (c1 + c3) * src[2] + 
+              c2 * nz(us[1]) + c3 * nz(us[2])
+    us
+
+// @function Laguerre Filter
+// @param src      Source series, default=`close`.
+// @param gamma    Weigth used in LF calculation, default=0.8.
+// @param length   Period used in UltimateSmoother, default=40.
+// @returns        Laguerre Filter used on chart.
+LF (float src=close, float gamma=0.8, int length=40) =>
+    float L0 = UltimateSmoother(src, length)
+    float L1 = 0.0 , float L2 = 0.0 , float L3 = 0.0
+    float L4 = 0.0 , float L5 = 0.0
+    L1 := -gamma * nz(L0[1]) + nz(L0[1]) + gamma * nz(L1[1]) 
+    L2 := -gamma * nz(L1[1]) + nz(L1[1]) + gamma * nz(L2[1]) 
+    L3 := -gamma * nz(L2[1]) + nz(L2[1]) + gamma * nz(L3[1]) 
+    L4 := -gamma * nz(L3[1]) + nz(L3[1]) + gamma * nz(L4[1]) 
+    L5 := -gamma * nz(L4[1]) + nz(L4[1]) + gamma * nz(L5[1])
+    float LF = nz(L0 + 4 * L1 + 6 * L2 + 4 * L3 + L5) / 16
+
+// @function         Calculates the root mean square (RMS) of a series.
+// @param Source     The series of values to process.
+// @param Length     The number of bars in the calculation.
+// @returns          The RMS of the `Source` values over `Length` bars.
+RMS (float Source, int Length) =>
+    math.sqrt(ta.sma(Source * Source, Length))
+
+// @function Laguerre Oscillator
+// @param src      Source series, default=`close`.
+// @param gamma    Weigth used in LO calculation, default=0.5.
+// @param length1  Period used in UltimateSmoother, default=30.
+// @param length2  Period used in RMS, default=100.
+// @returns        Laguerre Oscillator used on a separate pane.
+LO (float src=close
+  , float gamma=0.5
+  , int length1=30
+  , int length2=100) =>
+    float L0 = UltimateSmoother(src, length1)
+    float L1 = 0.0
+    L1 := -gamma * L0 + nz(L0[1]) + gamma * nz(L1[1])
+    float RMS = RMS(L0 - L1, length2)
+    float LO = na
+    if RMS != 0
+        LO := (L0 - L1) / RMS
+    LO
+
+//#endregion
+//#region  Laguerre Filter/Oscillator:
+
+float lf = LF(src, gamma, length1)
+float lo = LO(src, gamma, length1, length2)
+
+plot(lf
+  , 'Laguerre Filter'
+  , force_overlay=true
+  , linewidth=2)
+plot(lo
+  , 'Laguerre Oscillator'
+  , color=#f23645
+  , linewidth=2)
+hline(0
+  , "Zero-line"
+  , chart.fg_color)
+
+//#endregion

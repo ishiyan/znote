@@ -55,7 +55,7 @@ Extract structured content (markdown text, images, code listings) from any suppo
    ```
    Skip if the SVG already has both `stroke` and `fill` color attributes explicitly defined.
 
-3. **Math vs. code** — The `code/` directory is for actual source code listings only. Mathematical equations (LaTeX, KaTeX, MathJax) should remain inline in `content.md` using standard LaTeX notation (`$$...$$` for display, `$...$` for inline).
+3. **Math vs. code** — The `code/` directory is for actual source code listings only. Mathematical equations (LaTeX, KaTeX, MathJax) should remain inline in `content.md` using standard LaTeX notation (`$$...$$` for display, `$...$` for inline). **Important:** `pdftotext` cannot extract equations rendered as vector graphics — they appear as blank lines or garbled symbols. Always visually inspect rendered page images for equations and transcribe them manually into LaTeX. Common in technical/academic PDFs.
 
 4. **Document what's lost** — If content cannot be extracted (interactive charts, video, canvas elements), note it in `manifest.json` under `"notes"` and add a placeholder comment in `content.md`:
    ```markdown
@@ -85,7 +85,7 @@ First determine the source type, then apply the matching extraction strategy:
 |--------|----------|---------|
 | URL (static HTML) | Fetch + strip boilerplate | See "Web page specifics" below |
 | URL (SPA) | Extract what's available | Document limitations in manifest |
-| PDF (selectable text) | markitdown + pdfplumber | Text + images |
+| PDF (selectable text) | markitdown + pdfplumber | Text + images (see "PDF Figure Extraction" below) |
 | PDF (scanned) | pdftoppm → tesseract → crop | OCR pipeline |
 | EPUB | Unzip → OPF spine → html2text | See "EPUB specifics" below |
 | PPTX | markitdown + python-pptx | Text + images |
@@ -94,6 +94,62 @@ First determine the source type, then apply the matching extraction strategy:
 | XLSX/XLSM | openpyxl (data_only=True) | See "Excel specifics" below |
 | HTML file | markitdown or beautifulsoup | Strip boilerplate |
 | MHTML | Parse MIME parts | Extract HTML + embedded images |
+
+### MHTML Traders' Tips specifics
+
+MHTML files from TASC (Technical Analysis of Stocks & Commodities) Traders' Tips follow a consistent structure. Use this pipeline:
+
+#### Parsing
+
+```python
+import email, glob, os
+
+mhtml_files = glob.glob(os.path.join(tips_dir, "*.mhtml"))  # handles whitespace filenames
+with open(mhtml_files[0], 'rb') as f:
+    msg = email.message_from_bytes(f.read())
+
+for part in msg.walk():
+    ct = part.get_content_type()
+    loc = part.get("Content-Location", "")
+    if ct == "text/html":
+        html = part.get_payload(decode=True).decode('utf-8', errors='replace')
+    elif ct.startswith("image/"):
+        fname = os.path.basename(loc)
+        # Skip vendor logos and static images
+        if "vendor_logos" not in loc and "static_images" not in loc:
+            payload = part.get_payload(decode=True)
+            # Save to assets/
+```
+
+#### Key conventions
+
+1. **Traders' Tips URL** — Found in `Content-Location` header of the HTML part (part index 1). Always include in the output markdown header and in BibTeX.
+
+2. **Asset filtering** — MHTML contains vendor logos (`vendor_logos/`) and static site images (`static_images/bookArrow.gif`). Skip these; only extract `images/TT-*.gif` chart figures and the article thumbnail.
+
+3. **Output structure** — Place in same directory as source MHTML:
+   ```
+   tips/
+     tips.md              # Main markdown
+     assets/              # Chart GIFs (TT-*.gif)
+     TradeStation_*.els   # External code files
+     MetaStock_*.txt
+     WealthLab_*.cs
+     RealTest_*.rts
+     TradingView_*.pine
+     Zorro_*.c
+     Python_*.py
+   ```
+
+4. **Code extraction** — Each `<pre>` block in the HTML contains code for one platform. Extract both as embedded fenced code blocks in `tips.md` AND as standalone external files. Use language hints: `easylanguage`, `metastock`, `csharp`, `realtest`, `pine`, `c`, `python`.
+
+5. **HTML entity decoding** — Code in `<pre>` blocks uses HTML entities (`&lt;` `&gt;` `&amp;`). Decode these when writing external files. Also watch for `&nbsp;` (non-breaking spaces) in TradingView code — replace with regular spaces.
+
+6. **Platforms without code** — Some platforms (NinjaTrader, Wealth-Lab, NeuroShell Trader) only provide download links or GUI instructions. Include their prose and chart figures but no external code file.
+
+7. **BibTeX** — Always add a `@article{}` entry at the end of `tips.md` with the Traders' Tips URL, author (John F. Ehlers for the underlying article), journal (Technical Analysis of Stocks & Commodities), year, month.
+
+8. **Figure numbering** — Figures are numbered sequentially across all platforms (FIGURE 1, 2, 3...). Preserve original numbering and captions.
 
 ### Web page specifics
 
@@ -212,6 +268,76 @@ If LibreOffice is available, render to PNG: `libreoffice --headless --convert-to
 
 Produce a single `content.md` with `## Sheet: Name` sections. Each sheet gets its own heading. The CSV exports in `assets/` provide the full data.
 
+
+### PDF Figure Extraction (selectable-text PDFs)
+
+`pdfimages` extracts embedded raster images from the PDF stream, but these are often **not** the visible figures/charts. Common problems:
+
+1. **Vector charts** — Most charts in technical journals are vector graphics (paths, lines, text). `pdfimages` cannot extract these at all since they aren't raster images.
+2. **Leaked images** — PDFs extracted from larger journals may contain embedded raster images from adjacent pages (e.g., stock photos, illustrations from the previous article) that are invisible in the rendered PDF but stored in its stream.
+3. **Background textures** — Colored backgrounds behind code listings or sidebars are extracted as images, not the actual figures.
+
+**Correct approach: render pages then crop figures**
+
+```bash
+# 1. Render all pages at 300 DPI
+pdftoppm -png -r 300 input.pdf /tmp/pages/page
+
+# 2. Visually inspect rendered pages to locate figures
+# 3. Crop figure regions using PIL
+```
+
+```python
+from PIL import Image
+
+img = Image.open('/tmp/pages/page-01.png')
+w, h = img.size
+# Crop figure region (percentages determined by visual inspection)
+figure = img.crop((0, int(h * 0.37), w, int(h * 0.88)))
+figure.save('assets/figure-1.png')
+```
+
+**Crop tuning workflow:**
+1. Render all pages with `pdftoppm`
+2. Open rendered page images to identify figure boundaries (use Read tool to view)
+3. Estimate crop coordinates for each figure (prefer absolute pixel values over percentages for precision)
+4. Crop and verify — if text leaks in above, increase top; if chart bottom is cut, increase bottom
+5. Iterate until the crop captures only the chart + its axis labels (exclude captions — those go in markdown)
+
+**Common crop issues:**
+- Text from article body appearing above the chart → increase top coordinate
+- Bottom axis labels cut off → increase bottom coordinate. **This is the most frequent mistake** — the bottom x-axis date labels and tick marks are easily cut off. Always add at least 150px extra below what appears to be the chart border bottom edge. For figures with captions below, add 250–300px.
+- For charts that span most of the page width, use full width (`0` to `w`) and only crop vertically
+- Right side of chart cropped → increase right coordinate (don't assume column width matches chart width)
+- Left side cropped (especially captions starting with "FIGURE") → decrease left coordinate
+- **Include the caption in the crop** — contrary to earlier advice about excluding captions, in practice it's better to include the figure caption text in the image (it provides useful context and avoids ambiguity about whether the full figure was captured). The caption should also appear in the markdown text.
+
+**Multi-column PDF layouts (magazines, journals):**
+
+Technical journals like TASC render with two or three text columns but charts that span partial or full page width. When cropping figures from multi-column PDFs:
+
+1. **Use the chart's border line as the crop guide** — Most TradeStation/charting-platform charts have a visible blue, black, or olive/gold rectangular border. Align the left crop edge to this border. For a typical 2-column TASC layout at 300 DPI (3050×4033 px): charts confined to the right column start at x≈660-780 (varies by article — some have the border at x≈780), while full-width charts spanning both columns start at x≈140.
+
+2. **Adjacent column text bleeds in** — The most common issue is body text from the left column appearing at the left edge of the crop. Fix by moving the left crop coordinate rightward to the chart border's left edge.
+
+3. **Top/bottom text bleed** — Article text or figure captions from above/below the chart leak in. Fix by tightening the top/bottom coordinates to the chart border edges.
+
+4. **Use absolute pixel coordinates** — For rendered pages at known DPI (e.g., 3050×4033 at 300 DPI), absolute pixel coordinates are more reliable than percentages. Document the render dimensions so coordinates can be reproduced.
+
+5. **Include captions in the crop** — Crop the chart including its internal header bar, axis labels, AND the figure caption text below. Also put the caption in the markdown text. This ensures the image is self-contained and visually complete, while the markdown caption remains searchable/editable.
+
+6. **Iterative visual verification is mandatory** — Always use the Read tool to view cropped PNGs after each adjustment. Expect 2-4 iterations per figure to eliminate all text bleed artifacts.
+
+7. **Two charts on the same page** — When a page has two charts stacked vertically (e.g., Figure 2 at top and Figure 3 below), crop each independently. The gap between them is typically 50–100px. Be careful not to let the bottom of Figure N's crop eat into the top border of Figure N+1, and vice versa. Verify each figure separately with the Read tool.
+
+**Best practice: crop generously, let user do final trim.**
+When iterating on crops is slow or the user will review the output, always err on the side of including MORE surrounding area (generous margins of 5-10% extra on each side). It is far easier for the user to do a final manual crop than to repeatedly ask for re-crops. Only crop tightly when the figure boundaries are unambiguous (e.g., scanned books with clear border lines detected programmatically).
+
+**Articles with only one figure:** Many TASC articles (especially shorter 2–3 page ones) have a single chart. Don't skip the crop step — still extract it to `assets/figure-01.png` and reference it from the markdown. The chart typically occupies the right column or spans both columns on page 2.
+
+**Charts with two stacked panels (price + oscillator):** Some figures have a price chart panel on top and an indicator/oscillator panel below, all within a single blue border. Treat the entire multi-panel area as one figure — crop from the top of the upper panel border to the bottom of the lower panel border (including axis labels), then include the caption below. Do not split them into separate figures unless they have separate figure numbers.
+
+**"DIGITAL SIGNAL PROCESSING" header bar:** Many Ehlers articles have a section header bar ("DIGITAL SIGNAL PROCESSING") above the chart on page 2. Exclude this from figure crops — start the crop below it (typically y≈200 on a 300 DPI render).
 
 ### Format-specific extraction
 

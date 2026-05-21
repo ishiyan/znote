@@ -1,0 +1,93 @@
+Function: $PMA
+{
+	TASC MAR 2025
+	Projected Moving Average ($PMA) Function
+	(C) 2024 John F. Ehlers
+}
+
+inputs:
+	Price( numericseries ),
+	Length( numericsimple ),
+	PMA( numericref ),
+	Slope( numericref ),
+	SMA( numericref );
+
+variables:
+	Count( 0 ),
+	Sx( 0 ),
+	Sy( 0 ),
+	Sxx( 0 ),
+	Syy( 0 ),
+	Sxy( 0 );
+
+Sx = 0;
+Sy = 0;
+Sxx = 0;
+Syy = 0;
+Sxy = 0;
+
+for Count = 1 to Length
+begin
+	Sx = Sx + Count;
+	Sy = Sy + Price[Count - 1];
+	Sxx = Sxx + Count * Count;
+	Syy = Syy + Price[Count - 1] * Price[Count - 1];
+	Sxy = Sxy + count*Price[Count - 1];
+end;
+
+Slope = -(Length * Sxy - Sx * Sy) / (Length * Sxx - Sx * Sx);
+SMA = Sy / Length;
+PMA = SMA + Slope * Length / 2;
+
+//Function Return Value
+$PMA = 1;
+
+
+Indicator: Projected Moving Average (PMA)
+{
+	TASC MAR 2025
+	Projected Moving Average (PMA)
+	(C) 2024 John F. Ehlers
+}
+
+inputs:
+	Length( 20 );
+
+variables:
+	ReturnValue( 0 ),
+	PMA( 0 ),
+	Slope( 0 ),
+	SMA( 0 ),
+	Predict( 0 );
+	
+ReturnValue = $PMA(Close, Length, PMA, Slope, SMA);
+Predict = PMA + .5 * (Slope - Slope[2])*Length;
+
+Plot1( PMA, "PMA" );
+Plot2( Predict, "Predict" );
+//Plot3( SMA, "SMA" )
+
+
+Indicator: PMA Slope and Prediction
+{
+	TASC MAR 2025
+	PMA Slope and Its Prediction
+	(C) 2024 John F. Ehlers
+}
+
+inputs:
+	Length( 20 );
+
+variables:
+	ReturnValue( 0 ),
+	PMA( 0 ),
+	Slope( 0 ),
+	SMA( 0 ),
+	Predict( 0 );
+
+ReturnValue = $PMA(Close, Length, PMA, Slope, SMA);
+Predict = 1.5 * Slope - .5 * Slope[4];
+
+Plot1( Slope, "Slope" );
+Plot2( 0, "Zero Line" );
+Plot3( Predict, "Predict" );

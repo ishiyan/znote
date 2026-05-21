@@ -1,0 +1,18 @@
+{Ultimate Oscillator Indicator}
+Len:= 20;
+Bandwidth:= 2;
+a1:= exp(-1.414*3.14159 / (Len*Bandwidth));
+b1:= 2*a1*Cos(1.414*180 / (Len*Bandwidth));
+c1:= -a1*a1;
+x1:= (1 + b1 - c1) / 4;
+HP1:= x1*(C - Ref(2*C,-1) + Ref(C, -2)) + b1*Prev + c1*Ref(Prev, -1);
+
+a2:= exp(-1.414*3.14159 / Len);
+b2:= 2*a2*Cos(1.414*180 / Len);
+c2:= -a2*a2;
+x2:= (1 + b2 - c2) / 4;
+HP2:= x2*(C - Ref(2*C,-1) + Ref(C, -2)) + b2*Prev + c2*Ref(Prev, -1);
+
+sig:= HP1 - HP2;
+RMS:= sqrt( Sum( C * C, 100)/ 100 );
+sig / RMS

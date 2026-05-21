@@ -1,0 +1,115 @@
+Function: Laguerre Filter
+{
+	TASC JUL 2025
+	Laguerre Filter
+	(C) 2002-2025 John F. Ehlers
+}
+
+inputs:
+	Gama( .8 ),
+	Length( 40 );
+
+variables:
+	L0( 0 ),
+	L1( 0 ),
+	L2( 0 ),
+	L3( 0 ),
+	L4( 0 ),
+	Laguerre( 0 );
+	
+L0 = $UltimateSmoother(Close, Length);
+L1 = -Gama * L0[1] + L0[1] + Gama * L1[1];
+L2 = -Gama * L1[1] + L1[1] + Gama * L2[1];
+L3 = -Gama * L2[1] + L2[1] + Gama * L3[1];
+L4 = -Gama * L3[1] + L3[1] + Gama * L4[1];
+
+Laguerre = (L0 + 4*L1 + 6*L2 + 4*L3 + L4) / 16;
+
+
+Plot1( Laguerre );
+Plot2( L0 );
+
+
+Indicator: Laguerre Oscillator
+{
+	TASC JUL 2025
+	Laguerre Oscillator
+	(C) 2002-2025 John F. Ehlers
+}
+
+inputs:
+	Gama( .5 ),
+	Length( 30 );
+
+variables:
+	L0( 0 ),
+	L1( 0 ),
+	RMS( 0 ),
+	LaguerreOsc( 0 );
+
+L0 = $UltimateSmoother(Close, Length);
+L1 = -Gama * L0 + L0[1] + Gama * L1[1];
+RMS = $RMS(L0 - L1, 100);
+
+if RMS <> 0 then 
+	LaguerreOsc = (L0 - L1) / RMS;
+	
+Plot1( LaguerreOsc, "Laguerre Osc" );
+Plot2( 0, "Zero Line" );
+
+Function: $RMS
+{
+	RMS Function
+	(C) 2015-2025 John F. Ehlers
+}
+
+inputs:
+	Price( numericseries ),
+	Length( numericsimple );
+
+variables:
+	SumSq( 0 ),
+	count( 0 );
+
+SumSq = 0;
+
+for count = 0 to Length - 1 
+begin
+	SumSq = SumSq + Price[count] * Price[count];
+end;
+
+If SumSq <> 0 then 
+	$RMS = SquareRoot(SumSq / Length);
+
+Function: $UltimateSmoother
+{
+	UltimateSmoother Function
+	(C) 2004-2025 John F. Ehlers
+}
+
+inputs:
+	Price( numericseries ),
+	Period( numericsimple );
+	
+variables:
+	a1( 0 ),
+	b1( 0 ),
+	c1( 0 ),
+	c2( 0 ),
+	c3( 0 ),
+	US( 0 );
+	
+a1 = ExpValue(-1.414*3.14159 / Period);
+b1 = 2 * a1 * Cosine(1.414*180 / Period);
+c2 = b1;
+c3 = -a1 * a1;
+c1 = (1 + c2 - c3) / 4;
+
+if CurrentBar >= 4 then 
+ US = (1 - c1)*Price + (2 * c1 - c2) * Price[1] 
+ - (c1 + c3) * Price[2] + c2*US[1] + c3 * US[2];
+ 
+if CurrentBar < 4 then 
+	US = Price;
+
+$UltimateSmoother = US;

@@ -1,0 +1,214 @@
+Indicator: Griffiths Spectrum
+{
+	TASC JAN 2025
+	Griffiths Spectrum Indicator
+	(C) 2024 John F. Ehlers
+	From "Rapid Measurement of Digitial Instantaneous 
+	Frequency", IEEE Transactions ASSP-23
+}
+
+inputs:
+	LowerBound( 10 ),
+	UpperBound( 40 ),
+	Length( 40 );
+
+variables:
+	Mu( 0 ) ,
+	HP( 0 ),
+	LP( 0 ),
+	HH( 0 ),
+	LL( 0 ),
+	Signal( 0 ),
+	Peak( .1 ),
+	XBar( 0 ),
+	Count( 0 ),
+	advance( 0 ),
+	Period( 0 ),
+	Real( 0 ),
+	Imag( 0 ),
+	Denom( 0 ),
+	MaxPwr( 0 ),
+	Color1( 0 ),
+	Color2( 0 ),
+	PlotColor( 0 );
+
+arrays:
+	XX[100]( 0 ),
+	coef[100]( 0 ),
+	Pwr[100, 2]( 0 );
+
+Mu = 1 / Length;
+HP = $HighPass(Close, UpperBound);
+LP = $SuperSmoother(HP, LowerBound);
+Peak = .991 * Peak[1];
+
+if AbsValue(LP) > Peak then 
+	Peak = AbsValue(LP);
+
+if Peak <> 0 then 
+	Signal = LP / Peak;
+
+for count = 1 to Length 
+begin
+	XX[count] = Signal[Length - count];
+end;
+
+XBar = 0;
+
+for count = 1 to Length 
+begin
+	XBar = XBar + XX[Length - count]*coef[count];
+end;
+
+for count = 1 to Length 
+begin
+	coef[count] = coef[count] + Mu*(XX[Length] -
+	 XBar)*XX[Length - count];
+end;
+
+//Instantaneous Frequency
+For Period = LowerBound to UpperBound 
+begin
+	Pwr[Period, 2] = Pwr[Period, 1];
+	Real = 0;
+	Imag = 0;
+	for count = 1 to Length 
+	begin
+		Real = Real + coef[count] 
+		 * Cosine(360 * Count / Period);
+		Imag = Imag + coef[count] 
+		 * Sine(360 * Count / Period);
+	end;
+	Denom = (1 - Real)*(1 - Real) + Imag*Imag;
+	Pwr[Period, 1] = .1 / Denom + .9*Pwr[Period, 2];
+end;
+
+MaxPwr = 0;
+
+For Period = LowerBound to UpperBound 
+begin
+	if Pwr[Period, 1] > MaxPwr then 
+		MaxPwr = Pwr[Period, 1];
+end;
+
+for Period = LowerBound to UpperBound 
+begin
+	if MaxPwr <> 0 then 
+		Pwr[Period, 1] = Pwr[Period, 1] / MaxPwr;
+end;
+
+//Plot the Spectrum as a Heatmap
+for Period = LowerBound to UpperBound 
+begin
+	//Convert Power to RGB Color for Display
+	if Pwr[Period, 1] >= .5 then 
+	begin
+		Color1 = 255;
+		Color2 = 255*(2*Pwr[Period, 1] - 1);
+	end
+	else 
+	begin
+		Color1 = 255*2*Pwr[Period, 1];
+		Color2 = 0;
+	End;
+	
+	PlotColor = RGB(Color1, Color2, 0);
+
+	if period = 3 then Plot3(3, "S5", PlotColor, 0, 4);
+	if period = 4 then Plot4(4, "S4", PlotColor, 0, 4);
+	if period = 5 then Plot5(5, "S5", PlotColor, 0, 4);
+	if period = 6 then Plot6(6, "S6", PlotColor, 0, 4);
+	if period = 7 then Plot7(7, "S7", PlotColor, 0, 4);
+	if period = 8 then Plot8(8, "S8", PlotColor, 0, 4);
+	if period = 9 then Plot9(9, "S9", PlotColor, 0, 4);
+	if period = 10 then Plot10(10, "S10", PlotColor, 0, 4);
+	if period = 11 then Plot11(11, "S11", PlotColor, 0, 4);
+	if period = 12 then Plot12(12, "S12", PlotColor, 0, 4);
+	if period = 13 then Plot13(13, "S13", PlotColor, 0, 4);
+	if period = 14 then Plot14(14, "S14", PlotColor, 0, 4);
+	if period = 15 then Plot15(15, "S15", PlotColor, 0, 4);
+	if period = 16 then Plot16(16, "S16", PlotColor, 0, 4);
+	if period = 17 then Plot17(17, "S17", PlotColor, 0, 4);
+	if period = 18 then Plot18(18, "S18", PlotColor, 0, 4);
+	if period = 19 then Plot19(19, "S19", PlotColor, 0, 4);
+	if period = 20 then Plot20(20, "S20", PlotColor, 0, 4);
+	if period = 21 then Plot21(21, "S21", PlotColor, 0, 4);
+	if period = 22 then Plot22(22, "S22", PlotColor, 0, 4);
+	if period = 23 then Plot23(23, "S23", PlotColor, 0, 4);
+	if period = 24 then Plot24(24, "S24", PlotColor, 0, 4);
+	if period = 25 then Plot25(25, "S25", PlotColor, 0, 4);
+	if period = 26 then Plot26(26, "S26", PlotColor, 0, 4);
+	if period = 27 then Plot27(27, "S27", PlotColor, 0, 4);
+	if period = 28 then Plot28(28, "S28", PlotColor, 0, 4);
+	if period = 29 then Plot29(29, "S29", PlotColor, 0, 4);
+	if period = 30 then Plot30(30, "S30", PlotColor, 0, 4);
+	if period = 31 then Plot31(31, "S31", PlotColor, 0, 4);
+	if period = 32 then Plot32(32, "S32", PlotColor, 0, 4);
+	if period = 33 then Plot33(33, "S33", PlotColor, 0, 4);
+	if period = 34 then Plot34(34, "S34", PlotColor, 0, 4);
+	if period = 35 then Plot35(35, "S35", PlotColor, 0, 4);
+	if period = 36 then Plot36(36, "S36", PlotColor, 0, 4);
+	if period = 37 then Plot37(37, "S37", PlotColor, 0, 4);
+	if period = 38 then Plot38(38, "S38", PlotColor, 0, 4);
+	if period = 39 then Plot39(39, "S39", PlotColor, 0, 4);
+	if period = 40 then Plot40(40, "S40", PlotColor, 0, 4);
+	if period = 41 then Plot41(41, "S41", PlotColor, 0, 4);
+	if period = 42 then Plot42(42, "S42", PlotColor, 0, 4);
+	if period = 43 then Plot43(43, "S43", PlotColor, 0, 4);
+	if period = 44 then Plot44(44, "S44", PlotColor, 0, 4);
+	if period = 45 then Plot45(45, "S45", PlotColor, 0, 4);
+	if period = 46 then Plot46(46, "S46", PlotColor, 0, 4);
+	if period = 47 then Plot47(47, "S47", PlotColor, 0, 4);
+	if period = 48 then Plot48(48, "S48", PlotColor, 0, 4);
+	if period = 49 then Plot49(49, "S49", PlotColor, 0, 4);
+	if period = 50 then Plot50(50, "S50", PlotColor, 0, 4);
+	if period = 51 then Plot51(51, "S51", PlotColor, 0, 4);
+	if period = 52 then Plot52(52, "S52", PlotColor, 0, 4);
+	if period = 53 then Plot53(53, "S53", PlotColor, 0, 4);
+	if period = 54 then Plot54(54, "S54", PlotColor, 0, 4);
+	if period = 55 then Plot55(55, "S55", PlotColor, 0, 4);
+	if period = 56 then Plot56(56, "S56", PlotColor, 0, 4);
+	if period = 57 then Plot57(57, "S57", PlotColor, 0, 4);
+	if period = 58 then Plot58(58, "S58", PlotColor, 0, 4);
+	if period = 59 then Plot59(59, "S59", PlotColor, 0, 4);
+	if period = 60 then Plot60(60, "S60", PlotColor, 0, 4);
+	if period = 61 then Plot61(61, "S61", PlotColor, 0, 4);
+	if period = 62 then Plot62(62, "S62", PlotColor, 0, 4);
+	if period = 63 then Plot63(63, "S63", PlotColor, 0, 4);
+	if period = 64 then Plot64(64, "S64", PlotColor, 0, 4);
+	if period = 65 then Plot65(65, "S65", PlotColor, 0, 4);
+	if period = 66 then Plot66(66, "S66", PlotColor, 0, 4);
+	if period = 67 then Plot67(67, "S67", PlotColor, 0, 4);
+	if period = 68 then Plot68(68, "S68", PlotColor, 0, 4);
+	if period = 69 then Plot69(69, "S69", PlotColor, 0, 4);
+	if period = 70 then Plot70(70, "S70", PlotColor, 0, 4);
+	if period = 71 then Plot71(71, "S71", PlotColor, 0, 4);
+	if period = 72 then Plot72(72, "S72", PlotColor, 0, 4);
+	if period = 73 then Plot73(73, "S73", PlotColor, 0, 4);
+	if period = 74 then Plot74(74, "S74", PlotColor, 0, 4);
+	if period = 75 then Plot75(75, "S75", PlotColor, 0, 4);
+	if period = 76 then Plot76(76, "S76", PlotColor, 0, 4);
+	if period = 77 then Plot77(77, "S77", PlotColor, 0, 4);
+	if period = 78 then Plot78(78, "S78", PlotColor, 0, 4);
+	if period = 79 then Plot79(79, "S79", PlotColor, 0, 4);
+	if period = 80 then Plot80(80, "S80", PlotColor, 0, 4);
+	if period = 81 then Plot81(81, "S81", PlotColor, 0, 4);
+	if period = 82 then Plot82(82, "S82", PlotColor, 0, 4);
+	if period = 83 then Plot83(83, "S83", PlotColor, 0, 4);
+	if period = 84 then Plot84(84, "S84", PlotColor, 0, 4);
+	if period = 85 then Plot85(85, "S85", PlotColor, 0, 4);
+	if period = 86 then Plot86(86, "S86", PlotColor, 0, 4);
+	if period = 87 then Plot87(87, "S87", PlotColor, 0, 4);
+	if period = 88 then Plot88(88, "S88", PlotColor, 0, 4);
+	if period = 89 then Plot89(89, "S89", PlotColor, 0, 4);
+	if period = 90 then Plot90(90, "S90", PlotColor, 0, 4);
+	if period = 91 then Plot91(91, "S91", PlotColor, 0, 4);
+	if period = 92 then Plot92(92, "S92", PlotColor, 0, 4);
+	if period = 93 then Plot93(93, "S93", PlotColor, 0, 4);
+	if period = 94 then Plot94(94, "S94", PlotColor, 0, 4);
+	if period = 95 then Plot95(95, "S95", PlotColor, 0, 4);
+	if period = 96 then Plot96(96, "S96", PlotColor, 0, 4);
+	if period = 97 then Plot97(97, "S97", PlotColor, 0, 4);
+	if period = 98 then Plot98(98, "S98", PlotColor, 0, 4);
+	if period = 99 then Plot99(99, "S99", PlotColor, 0, 4);
+end; 

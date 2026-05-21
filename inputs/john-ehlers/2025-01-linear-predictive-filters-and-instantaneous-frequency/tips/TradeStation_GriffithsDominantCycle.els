@@ -1,0 +1,102 @@
+Indicator: Griffiths Dominant Cycle
+{
+	TASC JAN 2025
+	Griffiths Dominant Cycle Indicator
+	(C) 2024 John F. Ehlers
+	from "Rapid Measurement of Digital Instantaneous 
+	Frequency", IEEE Transactions ASSP-23
+}
+
+inputs:
+	LowerBound( 18 ),
+	UpperBound( 40 ),
+	Length( 40 );
+	
+variables:
+	Mu( 0 ),
+	HP( 0 ),
+	LP( 0 ),
+	HH( 0 ),
+	LL( 0 ),
+	Signal( 0 ),
+	Peak( .1 ),
+	XBar( 0 ),
+	Count( 0 ),
+	Advance( 0 ),
+	Period( 0 ),
+	Real( 0 ),
+	Imag( 0 ),
+	Denom( 0 ),
+	MaxPwr( 0 ),
+	Cycle( 0 );
+	
+arrays:
+	XX[200]( 0 ),
+	coef[200]( 0 ),
+	Pwr[200,2]( 0 );
+	
+Mu = 1 / Length;
+HP = $HighPass(Close, UpperBound);
+LP = $SuperSmoother(HP, LowerBound);
+Peak = .991*Peak[1];
+
+if AbsValue(LP) > Peak then 
+	Peak = AbsValue(LP);
+	
+if Peak <> 0 then 
+	Signal = LP / Peak;
+
+//Signal = Sine(360*currentbar / 30);
+for Count = 1 to Length 
+begin
+	XX[count] = Signal[Length - count];
+end;
+
+XBar = 0;
+
+for Count = 1 to Length 
+begin
+	XBar = XBar + XX[Length - Count] * coef[count];
+end;
+
+For count = 1 to Length
+begin
+	coef[count] = coef[count] + Mu*(XX[Length] 
+	 - XBar) * XX[Length - count];
+end;
+
+//Instantaneous Frequency
+for Period = LowerBound to UpperBound 
+begin
+	Real = 0;
+	Imag = 0;
+
+	for count = 1 to Length 
+	begin
+		Real = Real + coef[count] 
+		 * Cosine(360*count / Period);
+		Imag = Imag + coef[count] 
+		 * Sine(360*count / Period);
+	end;
+	
+	Denom = (1 - Real)*(1 - Real) + Imag*Imag;
+	Pwr[Period, 1] = .1 / Denom;
+end;
+
+MaxPwr = 0;
+
+for Period = LowerBound to UpperBound 
+begin
+	If Pwr[Period, 1] > MaxPwr then 
+	begin
+		MaxPwr = Pwr[Period, 1];
+		Cycle = Period;
+	end;
+end;
+
+if Cycle > Cycle[1] + 2 then 
+	Cycle = Cycle[1] + 2;
+if Cycle < Cycle[1] - 2 then 
+	Cycle = Cycle[1] - 2;
+	
+Plot1(Cycle, "Cycle" ); 

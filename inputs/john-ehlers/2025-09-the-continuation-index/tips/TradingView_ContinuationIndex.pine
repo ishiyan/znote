@@ -1,0 +1,99 @@
+//  TASC Issue: September 2025
+//     Article: Trend Onset And Trend Exhaustion
+//              The Continuation Index
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script® v6
+// Provided By: PineCoders, for tradingview.com
+
+//@version=6
+indicator("TASC 2025.09 The Continuation Index", "CI", false)
+
+//#region Inputs:
+
+float src = input.source(close, "Data Source:")
+float gamma = input.float(0.8, "Gamma:", minval=0.0, maxval=1.0)
+int order = input.int(8, "Order:", minval=1, maxval=10)
+int length = input.int(40, "Length:")
+
+//#endregion
+
+
+//#region   Functions:
+
+//  from: TASC 2025.07
+// @function      The UltimateSmoother is a filter created
+//                by subtracting the response of a high-pass 
+//                filter from that of an all-pass filter.
+// @param src     Source series.
+// @param period  Critical period.
+// @returns       Smoothed series.
+UltimateSmoother (float src, int period) =>
+    float a1 = math.exp(-1.414 * math.pi / period)
+    float c2 = 2.0 * a1 * math.cos(1.414 * math.pi / period)
+    float c3 = -a1 * a1
+    float c1 = (1.0 + c2 - c3) / 4.0
+    float us = src
+    if bar_index >= 4
+        us := (1.0 - c1) * src + 
+              (2.0 * c1 - c2) * src[1] - 
+              (c1 + c3) * src[2] + 
+              c2 * nz(us[1]) + c3 * nz(us[2])
+    us
+
+// @function Laguerre Filter.
+// @param src Data source.
+// @param gama Gamma value controls the the filter response, range: `[0, 1]`.
+// @param order Order of the laguerre filter lag, range: `[1, 10]`.
+// @param length Length of the smoothness effect.
+// @returns Laguerre filtered value.
+LF (float src=close, float gama=0.8, float order=8, int length=40) =>
+    var matrix<float> LG = matrix.new<float>(10, 2, 0.0)
+    // load the current values of the arrays to be the values one bar ago.
+    for i = 0 to order - 1
+        LG.set(i, 1, LG.get(i, 0))
+    // compute the laguerre components for the current bar.
+    for i = 1 to order - 1
+        LG.set(i, 0, 
+         -gama * LG.get(i-1, 1) + LG.get(i-1, 1) + gama * LG.get(i, 1))
+    LG.set(0, 0, UltimateSmoother(src, length))
+    // sum the laguerre components
+    float FIR = 0.0
+    for i = 0 to order - 1
+        FIR += LG.get(i, 0)
+    FIR / order
+
+// @function Continuation Index.
+// @param src Data source.
+// @param gama Gamma value controls the the filter response, range: `[0, 1]`.
+// @param order Order of the laguerre filter lag, range: `[1, 10]`.
+// @param length Length of the smoothness effect.
+// @returns Continuation index value.
+CI (
+ float src=close, 
+ float gamma=0.8, 
+ int order=8, 
+ int length=40
+ ) =>
+    float US = UltimateSmoother(src, int(length / 2))
+    float LG = LF(src, gamma, order, length)
+    float Variance = ta.sma(math.abs(US - LG), length)
+    float Ref = Variance != 0.0 ? 2.0 * (US - LG) / Variance : 0.0
+    (math.exp(2.0 * Ref) - 1.0) / (math.exp(2.0 * Ref) + 1.0)
+
+
+//#endregion
+
+
+//#region Display:
+
+float CI = CI(src, gamma, order, length)
+
+color ci_col = switch 
+    CI >  0.5 => color.from_gradient(CI,  0.5,  1.0, color.gray, color.green)
+    CI < -0.5 => color.from_gradient(CI, -0.5, -1.0, color.red, color.gray)
+    => color.gray
+
+plot(CI, "Continuation index", ci_col)
+barcolor(ci_col)
+
+//#endregion

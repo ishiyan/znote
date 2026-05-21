@@ -1,0 +1,82 @@
+Function: $RMS
+{
+	RMS Function
+	(C) 2015-2022 John F. Ehlers
+}
+
+inputs:
+	Price( numericseries ),
+	Length( numericsimple );
+
+variables:
+	SumSq( 0 ),
+	count( 0 );
+
+SumSq = 0;
+
+for count = 0 to Length - 1 
+begin
+	SumSq = SumSq + Price[count] * Price[count];
+end;
+
+If SumSq <> 0 then 
+	$RMS = SquareRoot(SumSq / Length);
+
+Function: $HighPass
+{
+	$HighPass Function
+ 	(C) 2004-2024 John F. Ehlers
+}
+
+inputs:
+	Price(numericseries),
+	Period(numericsimple);
+	
+variables:
+	a1( 0 ),
+	b1( 0 ),
+	c1( 0 ),
+	c2( 0 ),
+	c3( 0 );
+
+a1 = ExpValue(-1.414 * 3.14159 / Period);
+b1 = 2 * a1 * Cosine(1.414 * 180 / Period);
+c2 = b1;
+c3 = -a1 * a1;
+c1 = (1 + c2 - c3) / 4;
+
+if CurrentBar >= 4 then 
+ 	$HighPass = c1*(Price - 2 * Price[1] + Price[2]) +
+	 c2 * $HighPass[1] + c3 * $HighPass[2];
+if Currentbar < 4 then 
+	$HighPass = 0;
+
+Indicator: Ultimate Oscillator
+{
+	TASC APR 2025
+	Ultimate Oscillator Indicator
+	(C) 2024 John F. Ehlers
+}
+
+inputs:
+	BandEdge( 20 ),
+	Bandwidth( 2 );
+
+variables:
+	HP1( 0 ),
+	HP2( 0 ),
+	Signal( 0 ),
+	RMS( 0 ),
+	UltimateOsc( 0 );
+	
+HP1 = $HighPass(Close, Bandwidth*BandEdge);
+HP2 = $HighPass(Close, BandEdge);
+
+Signal = HP1 - HP2;
+RMS = $RMS(Signal, 100);
+
+if RMS <> 0 then 
+	UltimateOsc = Signal / RMS;
+
+Plot1( UltimateOsc, "Ultimate OSC" );
+Plot2( 0, "Zero Line" );
