@@ -1,0 +1,84 @@
+//  TASC Issue: June 2025
+//     Article: The Cybernetic Oscillator For More Flexibility
+//              Making A Better Oscillator
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script® v6
+// Provided By: PineCoders, for tradingview.com
+
+
+//@version=6
+title ='TASC 2025.06 Making A Better Oscillator'
+stitle = 'Making A Better Oscillator'
+indicator(title, stitle, false) 
+
+
+//Inputs:
+
+
+float src = input.source(close, 'Source Series:')
+int HPLength = input.int(30, 'High Pass Length:')
+int LPLength = input.int(20, 'Low Pass Length:')
+int RMSLength = input.int(100, 'RMS Length:')
+
+
+//Functions:
+
+
+// @function High Pass Filter.
+HP (float Source, int Period) =>    
+    var float hp = 0.0
+    var float a0 = math.pi * 1.414 / Period
+    var float a1 = math.exp(-a0)
+    var float c2 = 2.0 * a1 * math.cos(a0)
+    var float c3 = -a1 * a1
+    var float c1 = (1.0 + c2 - c3) * 0.25
+    if bar_index >= 4
+        hp := c1 * (Source - 2.0 * Source[1] + Source[2]) + 
+              c2 * nz(hp[1]) + 
+              c3 * nz(hp[2])
+    hp
+
+
+// @function Super Smoother.
+SS (float Source, int Period) =>    
+    var float ss = Source
+    var float a0 = math.pi *  1.414 / Period
+    var float a1 = math.exp(-a0)
+    var float c2 = 2.0 * a1 * math.cos(a0)
+    var float c3 = -a1 * a1
+    var float c1 = 1.0 - c2 - c3
+    if bar_index >= 4
+        ss := c1 * ((Source + Source[1]) / 2.0) + 
+              c2 * nz(ss[1]) + 
+              c3 * nz(ss[2])
+    ss
+
+
+// @function Root Mean Square.
+RMS (float Source, int Length) =>
+    var float rms = 0
+    float s2 = math.sum(Source * Source, Length)
+    if s2 != 0
+        rms := math.sqrt(s2 / Length)
+    rms
+
+
+// @function Cybernetic Oscillator.
+CO (float Source, int HPLength=30, int LPLength=20, 
+ int RMSLength=100) =>
+    var float co = 0
+    float HP = HP(Source, HPLength)
+    float LP = SS(HP, LPLength)
+    float RMS = RMS(LP, RMSLength)
+    if RMS != 0
+        co := LP / RMS
+    co
+
+
+//Calculations:
+float CO = CO(src, HPLength, LPLength, RMSLength)
+
+
+//Plot + Zero Line:
+plot(CO, 'Cybernetic Oscillator', color.blue)
+hline(0)

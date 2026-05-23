@@ -1,0 +1,68 @@
+//  TASC Issue: November 2024
+//     Article: Ultimate Strength Index (USI)
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script™ v5
+// Provided By: PineCoders, for tradingview.com
+
+
+//@version=5
+title ='TASC 2024.11 Ultimate Strength Index'
+stitle = 'USI'
+indicator(title, stitle, false)
+
+
+int length1 = input.int(28, 'USI Length:', minval = 1)
+float   src = input.source(close, "Source")
+
+
+// --- Functions ---
+// @function      The UltimateSmoother is a filter created
+//                by subtracting the response of a high-pass 
+//                filter from that of an all-pass filter.
+// @param src     Source series.
+// @param period  Critical period.
+// @returns       Smoothed series.
+UltimateSmoother (float src, int period) =>
+    float a1 = math.exp(-1.414 * math.pi / period)
+    float c2 = 2.0 * a1 * math.cos(1.414 * math.pi / period)
+    float c3 = -a1 * a1
+    float c1 = (1.0 + c2 - c3) / 4.0
+    float us = src
+    if bar_index >= 4
+        us := (1.0 - c1) * src + 
+              (2.0 * c1 - c2) * src[1] - 
+              (c1 + c3) * src[2] + 
+              c2 * nz(us[1]) + c3 * nz(us[2])
+    us
+
+
+// @function Ultimate Strength Index is a new version of 
+// the RSI calculation that has a small ammount of lag.
+// @param   src Source Series.
+// @param   l1  Length of Ultimate smoother function.
+// @param   l2  Length of the short period smoothing.
+// @returns USI value.
+UltimateStrengthIndex (float src, int l1=14, int l2=4) =>
+    float eps = syminfo.mintick
+    float diff = src - src[1]
+    float SU = diff > 0.0 ?  diff : 0.0
+    float SD = diff < 0.0 ? -diff : 0.0
+    USU = UltimateSmoother(ta.sma(SU, l2), l1)
+    USD = UltimateSmoother(ta.sma(SD, l2), l1)
+    USI = 0.0
+    USI := nz(USI[1])
+    if USU + USD != 0 and USU > eps and USD > eps
+        USI := (USU - USD) / (USU + USD)
+    USI
+
+
+// --- Calculations ---
+float usi = UltimateStrengthIndex(src, length1)
+usiLine   = plot(usi, 'USI', #377eb8)
+midLine   = plot(0, 'Zero Line', color.silver)
+
+
+fill(usiLine, midLine, 1, 0, 
+     color.new(#4daf4a, 50), color.new(#4daf4a, 100))
+fill(usiLine, midLine, 0,-1, 
+     color.new(#e41a1c, 100), color.new(#e41a1c, 50))

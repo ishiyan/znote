@@ -1,0 +1,3 @@
+USU:	UltimateSmoother(Avg(IfThenElse(A>B(Close,Lag(Close,1)),Sub(Close,Lag(Close,1)),0),4),14)
+USD:	UltimateSmoother(Avg(IfThenElse(A<B(Close,Lag(Close,1)),Sub(Lag(Close,1),Close),0),4),14)
+USI:	Divide ( Subtract( USU, USD ), Add2( USU, USD ) )

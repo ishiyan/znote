@@ -1,0 +1,57 @@
+Notes:
+	John Ehlers "Simple ROC Strategy", TASC, June 2025
+	
+Import:
+	DataSource:	Norgate
+	IncludeList:	&ES
+	StartDate:	2009-01-01
+	EndDate:	2025-01-01
+	SaveAs:	es.rtd
+	
+Settings:
+	DataFile:	es.rtd
+	BarSize:	Daily
+	StartDate:	2010-01-01
+	EndDate:	Latest
+
+Parameters:
+	SSLength:	20
+	FastHPLength:	55
+	SlowHPLength:	156
+
+Data:
+	// Common constants
+	decay_factor:	-1.414 * 3.14159
+	phase_angle:	1.414 * 180
+	
+	// SuperSmoother of Close
+	ss_a1:	exp(decay_factor / SSLength)
+	ss_b1:	2 * ss_a1 * Cosine(phase_angle / SSLength)
+	ss_c2:	ss_b1
+	ss_c3:	-ss_a1 * ss_a1
+	ss_c1:	(1 - ss_c2 - ss_c3)
+	SSC:	if(BarNum >= 4, ss_c1 * (Close[1] + Close[2]) / 2 + ss_c2 * SSC[1] + ss_c3 * SSC[2], Close)
+
+	// Fast Highpass Filter of SSC
+	fhp_a1:	exp(decay_factor / FastHPLength)
+	fhp_b1:	2 * fhp_a1 * Cosine(phase_angle / FastHPLength)
+	fhp_c2:	fhp_b1
+	fhp_c3:	-fhp_a1 * fhp_a1
+	fhp_c1:	(1 + fhp_c2 - fhp_c3) / 4
+	FHPSS:	if(BarNum >= 4, fhp_c1 * (SSC - 2 * SSC[1] + SSC[2]) + fhp_c2 * FHPSS[1] + fhp_c3 * FHPSS[2], 0)
+	ROC1:	FHPSS - FHPSS[2]
+	
+	// Slow Highpass Filter of SSC
+	shp_a1:	exp(decay_factor / SlowHPLength)
+	shp_b1:	2 * shp_a1 * Cosine(phase_angle / SlowHPLength)
+	shp_c2:	shp_b1
+	shp_c3:	-shp_a1 * shp_a1
+	shp_c1:	(1 + shp_c2 - shp_c3) / 4
+	SHPSS:	if(BarNum >= 4, shp_c1 * (SSC - 2 * SSC[1] + SSC[2]) + shp_c2 * SHPSS[1] + shp_c3 * SHPSS[2], 0)
+	ROC2:	SHPSS - SHPSS[2]
+	
+Strategy: Dual_ROC
+	Side:	Long
+	Quantity:	1
+	EntrySetup:	ROC1 > 0 and ROC2 > 0
+	ExitRule:	ROC1 < 0 or ROC2 < 0

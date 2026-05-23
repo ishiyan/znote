@@ -1,0 +1,67 @@
+// TASC Issue: March 2023 - Vol. 41, Issue 3
+// Article: Every Little Bit Helps
+// Article By: John F. Ehlers
+// Language: TradingView's Pine Script™ v5
+// Provided By: PineCoders, for tradingview.com
+ 
+//@version=5
+indicator("TASC 2023.03 Every Little Bit Helps", "ELBH",
+    explicit_plot_zorder = true)
+ 
+// External libraries:
+import kaigouthro/hsvColor/15 as h
+ 
+// Constant variables:
+color NTRL = #888888
+ 
+// Input panel groups, titles and inline references:
+string g0  = 'RSI Options:'
+string g1  = 'Color and Gradient Options:'
+string it0 = 'RSI Length'
+string it1 = 'Hue High'
+string it2 = 'Hue Low'
+string it3 = 'Background Opacity'
+string it4 = 'RSI Threshold Value'
+string t0  = 'Hue varies from 0 to 360, with red at 0 '+
+            'and 360, green at 120, blue at 240.'
+string t1  = 'Specifies the sensitivity of the gradient '+
+            'to the RSI value.'
+ 
+// Input options:
+int len  = input.int(14, it0,1,1000,1,'','',g0)
+int hue1 = input.int(150,it1,0,360, 15,t0,'',g1)
+int hue2 = input.int(0 , it2,0,360, 15,'','',g1)
+int op   = input.int(90, it3,0,100, 1, '','',g1)
+int hbot = input.int(10, it4,5,40,  1, t1,'',g1)
+ 
+// Indicators:
+float rsiC  =  ta.rsi(close,  len)
+float oc2   =  math.avg(open, close)
+float rsiOC =  ta.rsi(oc2,    len)
+ 
+// Color and gradient related calculations:
+int   htop = 100 - hbot
+int   span = htop - hbot
+float smR  = (rsiOC/100) * span
+float pt1  = smR + hbot
+float pt2  = (pt1+100)/3
+float br   = h.bright(chart.bg_color) < .7 ?.9:.5
+float ez   = h.easeOut(math.abs((rsiOC-pt2)/span-1))
+float fh   = math.max(rsiOC, rsiC, hbot)
+float fl   = math.min(rsiOC, rsiC, htop)
+o(col, o)  => color.new(col, o)
+color c1   = h.hsv(h.stepHue(-smR, hue2, 1/ez,2),1,br, 1)
+color c2   = h.hsv(h.stepHue( smR, hue1, 1/ez,2),1,br, 1)
+color fade = h.hsv_gradient (rsiOC,  hbot, htop,  c1, c2)
+color hc   = h.stepGradient (rsiOC, -pt1, br, fade, c1)
+color lc   = h.stepGradient (rsiOC,  pt1, br, c2,  fade)
+ 
+// Plots:
+p0   = plot(rsiOC, 'rsi(OC)', o(fade,10), 1 )
+p1   = plot(rsiC,  'rsi(C)',  na)
+mid  = plot(50,    '50',   o(NTRL, 90), 2)
+zero = plot(0,     '0',    o(c1, op), 1)
+hund = plot(100,   '100',  o(c2, op), 1)
+fill(p1, hund, rsiC, 150 , o(fade,op), o(hc,br*90))
+fill(p0, zero, rsiC, -50 , o(fade,op), o(lc,br*90))
+fill(p0, p1, fh,fl, o(fade, 60), o(fade,70))

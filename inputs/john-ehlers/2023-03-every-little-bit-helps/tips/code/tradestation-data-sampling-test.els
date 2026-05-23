@@ -1,0 +1,13 @@
+// TASC MAR 2023
+// Data Sampling Test
+// (C) John F. Ehlers
+
+variables:
+	CTest( 0 ),
+	OCTest( 0 );
+
+CTest = RSI(Close, 14);
+OCTest = RSI((Open + Close) / 2, 14);
+
+Plot1(CTest, "W/O Sampling");
+Plot2(OCTest, "W/ Sampling");

@@ -1,0 +1,23 @@
+Ultimate Strength Index (USI):
+
+len:= Input("Length", 4, 150, 14);
+
+a1:= exp(-1.414*3.14159 / len);
+b1:= 2*a1*Cos(1.414*180 / len);
+c1:= -a1*a1;
+x:= (1 + b1 - c1) / 4;
+
+SU:= if(C > Ref(C, -1), C - Ref(C, -1), 0);
+avSU:= Mov(SU, 4, S);
+SD:= if(C < Ref(C, -1), Ref(C, -1) - C, 0);
+avSD:= Mov(SD, 4, S);
+
+{calculate ultimate smoother values of SU and SD}
+USU:= if(cum(1) < 8, avSU,
+(1-x)*avSU + (2*x - b1)*Ref(avSU, -1) - (x + c1)*Ref(avSU, -2) + b1*Prev + c1*Ref(Prev, -1));
+
+USD:= if(cum(1) < 8, avSD,
+(1-x)*avSD + (2*x - b1)*Ref(avSD, -1) - (x + c1)*Ref(avSD, -2) + b1*Prev + c1*Ref(Prev, -1));
+
+denom:= if( (USU + USD <> 0), USU + USD, -1);
+if(denom = -1, 0, (USU-USD) / denom)

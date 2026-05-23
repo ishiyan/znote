@@ -1,0 +1,47 @@
+Import:
+	DataSource:	Norgate
+	IncludeList:	&ES_CCB
+	StartDate:	2/1/23
+	EndDate:	2/1/24
+	SaveAs:	es.rtd
+
+Settings:
+	DataFile:	es.rtd
+	BarSize:	Daily
+
+Parameters:
+	Len:	20
+	NumSTRs:	1
+	NumSDs:	1
+
+Data:
+	// General calculations (independent of item being smoothed)
+	a1:	exp(-1.414*3.14159 / Len)
+	b1:	2 * a1 * Cosine(1.414*180 / Len)
+	c2:	b1
+	c3:	-a1 * a1
+	c1:	1 - c2 - c3
+	c4:	(1 + c2 - c3) / 4
+
+	// UltimateSmoother of Close
+	ult_sm_close:	if(BarNum >= 4, (1 - c4) * Close + (2 * c4 - c2) * Close[1] - (c4 + c3) * Close[2] + c2 * ult_sm_close[1] + c3 * ult_sm_close[2], Close)
+
+	// UltimateSmoother of True Range
+	ult_sm_tr:	if(BarNum >= 4, (1 - c4) * TR + (2 * c4 - c2) * TR[1] - (c4 + c3) * TR[2] + c2 * ult_sm_tr[1] + c3 * ult_sm_tr[2], TR)
+
+	// Ultimate Channel (pseudo Keltner channel)
+	ult_kc_upper:	ult_sm_close + NumSTRs * ult_sm_tr
+	ult_kc_lower:	ult_sm_close - NumSTRs * ult_sm_tr
+
+	// Ultimate Band (pseudo Bollinger bands)
+	ult_bb_upper:	ult_sm_close + NumSDs * StdDev(ult_sm_close, Len)
+	ult_bb_lower:	ult_sm_close - NumSDs * StdDev(ult_sm_close, Len)
+
+Charts:
+	// Ultimate Channel
+	ult_kc_upper:	ult_kc_upper
+	ult_kc_lower:	ult_kc_lower
+
+	// Ultimate Band
+	ult_bb_upper:	ult_bb_upper
+	ult_bb_lower:	ult_bb_lower

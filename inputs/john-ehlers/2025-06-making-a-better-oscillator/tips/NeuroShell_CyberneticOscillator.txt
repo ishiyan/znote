@@ -1,0 +1,6 @@
+BUY LONG CONDITIONS: [All of which must be true]
+     A>B(Momentum(High Pass Filter(Super Smoother(Close,20),55),2),0)
+     A>B(Momentum(High Pass Filter(Close,156),2),0)
+SELL LONG CONDITIONS: [1 of which must be true]
+     A<B(Momentum(High Pass Filter(Super Smoother(Close,20),55),2),0)
+     A<B(Momentum(High Pass Filter(Close,156),2),0)

@@ -1,0 +1,15 @@
+{
+	TASC APR 2024
+	UltimateSmoother
+	(C) 2004-2024 John F. Ehlers
+}
+
+inputs:
+	Period( 20 ),
+	Price( Close );
+
+variables:
+	US( 0 );
+
+US = $UltimateSmoother(Price, Period);
+Plot1(US, "US");

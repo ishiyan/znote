@@ -1,0 +1,35 @@
+{
+	TASC MAY 2024
+	Ultimate Bands
+	(c) 2024 John F. Ehlers
+}
+
+inputs:
+	Length( 20 ),
+	NumSDs( 1 );
+	
+variables:
+	Smooth( 0 ),
+	Sum( 0 ),
+	Count( 0 ),
+	SD( 0 ),
+	UpperBand( 0 ),
+	LowerBand( 0 );
+	
+Smooth = $UltimateSmoother(Close, Length);
+Sum = 0;
+	
+for Count = 0 to Length - 1 
+begin
+	Sum = Sum + (Close[Count] 
+	 - Smooth[Count]) * (Close[Count] - Smooth[Count]);
+end;
+
+if Sum <> 0 then 
+	SD = SquareRoot(Sum / Length);
+
+UpperBand = Smooth + NumSDs * SD;
+LowerBand = Smooth - NumSDs * SD;
+
+Plot1(UpperBand, "Upper Band");
+Plot2(LowerBand, "Lower Band");

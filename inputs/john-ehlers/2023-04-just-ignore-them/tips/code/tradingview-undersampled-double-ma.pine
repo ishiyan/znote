@@ -1,0 +1,59 @@
+//  TASC Issue: April 2023 - Vol. 41, Issue 5
+//     Article: Undersampling The Data As A Smoothing Technique.
+//              Just Ignore Them.
+//  Article By: John Ehlers
+//    Language: TradingView's Pine Script™ v5
+// Provided By: PineCoders, for tradingview.com
+
+//@version=5
+string title  = 'TASC 2023.04 Undersampled Double MA'
+string stitle = 'UDMA'
+indicator(title, stitle, true)
+
+// @function Samples a source every period of bars.
+// @param period int   . Period of sampling.
+// @param source float . Data source.
+// @returns float.
+sampledSource (int period = 5, float source = close) =>
+   var float sample = source
+   // sample every period:
+   if bar_index % period == 0
+       sample := source
+   sample
+
+// @function Hann Windowed Lowpass FIR Filter.
+// @param source float . Data source.
+// @param length int   . Length period.
+// @returns float.
+hann (float source, int length) =>
+   float PIx2 = math.pi * 2.0, filt = 0.0, coef = 0.0
+   for count = 1 to length
+       float w = 1.0-math.cos(PIx2*count / (length + 1.0))
+       filt += w * nz(source[count - 1])
+       coef += w
+   float hann = coef != 0.0 ? filt / coef : na
+   hann
+
+// @function Undersampled Double Moving Average.
+// @param length       int   . Length period.
+// @param samplePeriod int   . Sampling period.
+// @param source       float . Data source.
+// @returns float.
+udma (int length      =     6,
+int      samplePeriod =     5,
+float    source       = close
+) =>
+   float sample = sampledSource(samplePeriod, source)
+   //find average using Hann FIR filter:
+   float result = hann(sample, length)
+   result
+
+int samplePeriod = input.int( 5, 'Sampling period:', 1)
+int fastLength   = input.int( 6, 'Fast period:', 1)
+int slowLength   = input.int(12, 'Slow period:', 1)
+
+float fast = udma(fastLength, samplePeriod)
+float slow = udma(slowLength, samplePeriod)
+
+plot(fast, 'Fast UDMA', color.red, 4)
+plot(slow, 'Slow UDMA', color.navy, 4)

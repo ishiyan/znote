@@ -1,0 +1,26 @@
+// TASC APR 2023
+// Function: Hann Windowed Lowpass FIR Filter
+// (c) 2021-2022 John F. Ehlers
+
+inputs:
+	Price( numericseries ),
+	Length( numericsimple );
+	
+variables:
+	Count( 0 ),
+	Coef( 0 ),
+	Filt( 0 );
+	
+Filt = 0;
+Coef = 0;
+
+for Count = 1 to Length 
+begin
+	Filt = Filt + (1 - Cosine(360 * Count / (Length + 
+	 1))) * Price[Count - 1];
+	Coef = Coef + 
+	 (1 - Cosine(360 * Count / (Length + 1)));
+end;
+
+if Coef <> 0 Then 
+	$Hann = Filt / Coef;

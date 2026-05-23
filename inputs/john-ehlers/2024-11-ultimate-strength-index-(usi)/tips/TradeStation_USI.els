@@ -1,0 +1,71 @@
+Function: $UltimateSmoother
+
+{
+	UltimateSmoother Function
+	(C) 2004-2024 John F. Ehlers
+}
+
+inputs:
+	Price( numericseries ),
+	Period( numericsimple );
+	
+variables:
+	a1( 0 ),
+	b1( 0 ),
+	c1( 0 ),
+	c2( 0 ),
+	c3( 0 ),
+	US( 0 );
+	
+a1 = ExpValue(-1.414*3.14159 / Period);
+b1 = 2 * a1 * Cosine(1.414*180 / Period);
+c2 = b1;
+c3 = -a1 * a1;
+c1 = (1 + c2 - c3) / 4;
+
+if CurrentBar >= 4 then 
+ US = (1 - c1)*Price + (2 * c1 - c2) * Price[1] 
+ - (c1 + c3) * Price[2] + c2*US[1] + c3 * US[2];
+ 
+if CurrentBar < 4 then 
+	US = Price;
+
+$UltimateSmoother = US;
+
+Indicator: Ultimate Strength Index (USI) 
+
+{
+	TASC NOVEMBER 2024
+	Ultimate Strength Index (USI)
+	(C) 2024 John F. Ehlers
+}
+
+inputs:
+	Length( 14 );
+
+variables:
+	SU( 0 ),
+	USU( 0 ),
+	SD( 0 ),
+	USD( 0 ),
+	USI( 0 );
+
+if Close > Close[1] then 
+	SU = Close - Close[1] 
+else 
+	SU = 0;
+
+USU = $UltimateSmoother(Average(SU,4), Length);
+
+if Close < Close[1] then 
+	SD = Close[1] - Close 
+else 
+	SD = 0;
+
+USD = $UltimateSmoother(Average(SD, 4), Length);
+
+If (USU + USD <> 0 and USU > .01 and USD > .01) then 
+	USI = (USU - USD) / (USU + USD);
+
+Plot1( USI, "USI" );
+Plot2( 0, "Zero Line" );

@@ -1,0 +1,53 @@
+Notes:
+
+	Ultimate Strength Index (USI)
+	TASC Trader's Tips for November 2024 article by John Ehlers
+
+
+Import:
+
+	DataSource:	Norgate
+	IncludeList:	&ES_CCB
+	StartDate:	2023-01-01
+	EndDate:	2024-08-01
+	SaveAs:	es.rtd
+
+
+Settings:
+
+	DataFile:	es.rtd
+	BarSize:	Daily
+
+
+Parameters:
+
+	rsi_len:	14
+	usi_len:	28
+	
+
+Data:
+
+	// "MyRSIH" calculation (January 2022 article)
+	CU:	Sum(if(C > C[1], (1 - Cosine(360 * (rsi_len - FunBar + 1) / (rsi_len + 1)))*(C - C[1]), 0), rsi_len)
+	CD:	Sum(if(C < C[1], (1 - Cosine(360 * (rsi_len - FunBar + 1) / (rsi_len + 1)))*(C[1] - C), 0), rsi_len)
+	MyRSIH:	if(BarNum > rsi_len, (CU - CD) / (CU + CD), nan)
+
+	// Ultimate Smoother common
+	a1:	exp(-1.414*3.14159 / usi_len)
+	b1:	2 * a1 * Cosine(1.414*180 / usi_len)
+	c2:	b1
+	c3:	-a1 * a1
+	c1:	(1 + c2 - c3) / 4
+
+	// "USI" calculation (November 2024 article)
+	SU4:	Avg(if(C > C[1], C - C[1], 0), 4)
+	USU:	if(BarNum > rsi_len, (1 - c1) * SU4 + (2 * c1 - c2) * SU4[1] - (c1 + c3) * SU4[2] + c2 * USU[1] + c3 * USU[2], 0)
+	SD4:	Avg(if(C < C[1], C[1] - C, 0), 4)
+	USD:	if(BarNum > rsi_len, (1 - c1) * SD4 + (2 * c1 - c2) * SD4[1] - (c1 + c3) * SD4[2] + c2 * USD[1] + c3 * USD[2], 0)
+	USI:	if(USU + USD <> 0 and USU > 0.01 and USD > 0.01, (USU - USD) / (USU + USD), USI[1])
+
+
+Charts:
+
+	MyRSIH:	MyRSIH {|}
+	USI:	USI {|}

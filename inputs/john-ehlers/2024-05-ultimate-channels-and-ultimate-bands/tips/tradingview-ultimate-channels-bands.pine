@@ -1,0 +1,77 @@
+//  TASC Issue: May 2024 - Vol. 42, Issue 5
+//     Article: Ultimate Channels And Ultimate Bands
+//              Getting The Lag Out Of Two Classic Indicators
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script™ v5
+// Provided By: PineCoders, for tradingview.com
+
+
+//@version=5
+title  = 'TASC 2024.05 Ultimate Channels and Ultimate Bands'
+stitle = 'UCUB'
+indicator(title, stitle, true)
+
+
+// --- Inputs ---
+string M00  = 'Channel'
+string M01  = 'Bands'
+string mode       = input.string(M00, 'Mode:', [M00, M01]) 
+int    length0    = input.int(20,     'Length:')
+int    length1    = input.int(20,     'STR Length:')
+float  multiplier = input.float(1.0,  'Width Multiplier:')
+
+
+// --- Functions ---
+// @function Applies the UltimateSmoother filter.
+// @param    src        Source series.
+// @param    period     Critical period.
+// @returns  us         Smoothed series.
+UltimateSmoother (float src, int period) =>
+    float a1 = math.exp(-1.414 * math.pi / period)
+    float c2 = 2.0 * a1 * math.cos(1.414 * math.pi / period)
+    float c3 = -a1 * a1
+    float c1 = (1.0 + c2 - c3) / 4.0
+    float us = src
+    if bar_index >= 4
+        us := (1.0 - c1) * src + 
+              (2.0 * c1 - c2) * src[1] - 
+              (c1 + c3) * src[2] + 
+              c2 * nz(us[1]) + c3 * nz(us[2])
+    us
+
+
+// @function Uses the UltimateSmoother to calculate
+//           the center of the channel and the smooth
+//           true range (STR) that defines the width.
+// @param    length     Critical period for the center.
+// @param    lengthSTR  Critical period for the STR.
+// @param    mult       STR multiplier.
+// @returns  tuple      Upper and lower channel series.
+UltimateChannel(int length, int lengthSTR, float mult) =>
+    float mid = UltimateSmoother(close, length)
+    float str = UltimateSmoother(ta.tr,lengthSTR) * mult
+    [mid + str, mid - str]
+
+
+// @function Uses the UltimateSmoother to calculate
+//           the center of the band.
+// @param    length     Critical period.
+// @param    mult       Standard deviation multiplier.
+// @returns  tuple      Upper and lower band series.
+UltimateBands(float src, int length, float mult) =>
+    float mid = UltimateSmoother(src, length)
+    float sd  = ta.stdev(src - mid, length) * mult
+    [mid + sd, mid - sd]
+
+
+// --- Calculations ---
+[uc, lc] = if mode == M00
+    UltimateChannel(length0, length1, multiplier)
+else
+    UltimateBands(close, length0, multiplier)
+
+
+// --- Plotting ---
+u = plot(uc, 'Upper', color.rgb(30, 150, 250), 2)
+l = plot(lc, 'Lower', color.rgb(30, 150, 250), 2)
+fill(u, l,  color.rgb(30, 150, 250, 95))

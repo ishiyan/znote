@@ -1,0 +1,42 @@
+//  TASC Issue: April 2024 - Vol. 42, Issue 4
+//     Article: The Ultimate Smoother.
+//              Smoothing data with less lag.
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script™ v5
+// Provided By: PineCoders, for tradingview.com
+
+
+//@version=5
+string title  = 'TASC 2024.04 The Ultimate Smoother'
+string stitle = 'US'
+indicator(title, stitle, true)
+
+
+// --- Inputs ---
+float  src = input.source(close, 'Source Series:')
+int period = input.int(      20, 'Critical Period:')
+
+
+// --- Functions ---
+// @function      The UltimateSmoother is a filter created
+//                by subtracting the response of a high-pass 
+//                filter from that of an all-pass filter.
+// @param src     Source series.
+// @param period  Critical period.
+// @returns       Smoothed series.
+UltimateSmoother (float src, int period) =>
+    float a1 = math.exp(-1.414 * math.pi / period)
+    float c2 = 2.0 * a1 * math.cos(1.414 * math.pi / period)
+    float c3 = -a1 * a1
+    float c1 = (1.0 + c2 - c3) / 4.0
+    float us = src
+    if bar_index >= 4
+        us := (1.0 - c1) * src + 
+              (2.0 * c1 - c2) * src[1] - 
+              (c1 + c3) * src[2] + 
+              c2 * nz(us[1]) + c3 * nz(us[2])
+    us
+
+
+// --- Plotting ---
+plot(UltimateSmoother(src, period), 'US', color.blue, 2)

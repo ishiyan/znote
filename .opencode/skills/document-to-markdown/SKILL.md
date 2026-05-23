@@ -132,22 +132,26 @@ for part in msg.walk():
    tips/
      tips.md              # Main markdown
      assets/              # Chart GIFs (TT-*.gif)
-     TradeStation_*.els   # External code files
-     MetaStock_*.txt
-     WealthLab_*.cs
-     RealTest_*.rts
-     TradingView_*.pine
-     Zorro_*.c
-     Python_*.py
+     code/                # External code files
+       tradestation-*.els
+       tradingview-*.pine
+       zorro-*.c
+       aiq-*.eds
+       python-*.py
+       metastock-*.txt
+       realtest-*.rtest
+     ninja-trader/        # Pre-existing NinjaTrader .cs files (if present)
    ```
+
+   **Naming convention:** `platform-indicator-name[-variant].ext` — e.g., `tradestation-data-sampling-test.els`, `tradingview-undersampled-double-ma.pine`, `zorro-data-sampling-test.c`, `aiq-data-sampling-test.eds`. Use lowercase kebab-case throughout. Use the platform's native file extension (`.els` for EasyLanguage, `.rtest` for RealTest, `.pine` for Pine Script, `.cs` for C#, `.c` for C/Zorro, `.py` for Python, `.eds` for AIQ EDS). Use `.txt` only for platforms with no specific extension (MetaStock, NeuroShell). When a platform has multiple code blocks (indicator + strategy, or indicator + chart + strategy), append `-indicator`, `-strategy`, `-chart`, `-test` etc. to the base name.
 
 4. **Code extraction** — Each `<pre>` block in the HTML contains code for one platform. Extract both as embedded fenced code blocks in `tips.md` AND as standalone external files. Use language hints: `easylanguage`, `metastock`, `csharp`, `realtest`, `pine`, `c`, `python`.
 
 5. **HTML entity decoding** — Code in `<pre>` blocks uses HTML entities (`&lt;` `&gt;` `&amp;`). Decode these when writing external files. Also watch for `&nbsp;` (non-breaking spaces) in TradingView code — replace with regular spaces.
 
-6. **Platforms without code** — Some platforms (NinjaTrader, Wealth-Lab, NeuroShell Trader) only provide download links or GUI instructions. Include their prose and chart figures but no external code file.
+6. **Platforms without code** — Some platforms (Wealth-Lab, NeuroShell Trader, Optuma, thinkorswim, Trade Navigator) only provide download links, shared URLs, or GUI instructions. Include their prose and chart figures but no external code file. **NinjaTrader** sometimes has `.cs` source files in a `ninja-trader/` subfolder alongside the MHTML — if present, link to them from tips.md rather than creating new external files.
 
-7. **BibTeX** — Always add a `@article{}` entry at the end of `tips.md` with the Traders' Tips URL, author (John F. Ehlers for the underlying article), journal (Technical Analysis of Stocks & Commodities), year, month.
+7. **BibTeX** — Always add a `@misc{}` entry at the end of `tips.md` with key `traders_tips_YYYY_MM`, author set to `{{Technical Analysis of STOCKS \& COMMODITIES}}`, title including the article name, `howpublished = {online}`, and the Traders' Tips URL.
 
 8. **Figure numbering** — Figures are numbered sequentially across all platforms (FIGURE 1, 2, 3...). Preserve original numbering and captions.
 
@@ -306,11 +310,45 @@ figure.save('assets/figure-1.png')
 
 **Common crop issues:**
 - Text from article body appearing above the chart → increase top coordinate
-- Bottom axis labels cut off → increase bottom coordinate. **This is the most frequent mistake** — the bottom x-axis date labels and tick marks are easily cut off. Always add at least 150px extra below what appears to be the chart border bottom edge. For figures with captions below, add 250–300px.
+- Bottom axis labels cut off → increase bottom coordinate. **This is the most frequent mistake** — the bottom x-axis date labels and tick marks are easily cut off. Always add at least 250px extra below what appears to be the chart border bottom edge. For TASC pages at 300 DPI (3050×4033 px), a chart that visually ends at y≈1200 typically needs cropping to y≈1780 to capture the full x-axis date row. When in doubt, add 400px below the apparent chart bottom and trim later. For figures with captions below, add 300–400px.
 - For charts that span most of the page width, use full width (`0` to `w`) and only crop vertically
-- Right side of chart cropped → increase right coordinate (don't assume column width matches chart width)
+- **Right side of chart cropped** → increase right coordinate. Don't assume column width matches chart width. The price scale labels on the right side of trading charts are frequently cut off. Always scan for the actual right border position (see programmatic border detection below).
 - Left side cropped (especially captions starting with "FIGURE") → decrease left coordinate
 - **Include the caption in the crop** — contrary to earlier advice about excluding captions, in practice it's better to include the figure caption text in the image (it provides useful context and avoids ambiguity about whether the full figure was captured). The caption should also appear in the markdown text.
+
+**Programmatic border detection (recommended):**
+
+Rather than guessing crop coordinates, scan pixel colors to find the exact chart border positions. Most charting platform screenshots have a colored rectangular border (green, blue, black). Use PIL's `getpixel()` to find these borders precisely:
+
+```python
+from PIL import Image
+
+img = Image.open('page-5.png')
+
+# Scan a horizontal row at the chart's vertical midpoint to find the right border
+# Look for green border: R<100, G>100, B<100
+y_mid = 2000  # adjust to be within the chart area
+for x in range(2500, 1000, -1):  # scan from right to left
+    r, g, b = img.getpixel((x, y_mid))[:3]
+    if g > 100 and r < 100 and b < 100:
+        right_edge = x + 6  # include border + tiny margin
+        break
+
+# Similarly for left border (scan left to right)
+for x in range(0, 1500):
+    r, g, b = img.getpixel((x, y_mid))[:3]
+    if g > 100 and r < 100 and b < 100:
+        left_edge = x - 6
+        break
+```
+
+Key lessons:
+- **Beware off-white page backgrounds** — Scanned/rendered PDFs often have an off-white background (e.g., RGB 250,249,245 → sum=744 instead of 765). If your dark-pixel threshold is too high (e.g., sum<750), every background pixel registers as "dark." Use a threshold of sum<400 or sum<500 for reliable text/border detection. When in doubt, sample a few known-background pixels first to calibrate.
+- Scan **inward from the page edges** to find borders — scanning outward from an estimated position may overshoot into adjacent content.
+- Charts in the **left column** of a 2-column layout have their right green border at ~x=1484 (at 300 DPI / 3050px width). Don't extend past this or you'll capture Figure 2 from the right column.
+- **Full-width charts** (spanning both columns) have their right border at ~x=2234.
+- **Single-column charts** (e.g., equity curves) may have borders at intermediate positions (~x=1871).
+- After finding the border, add only 4–8px margin. Adding too much captures adjacent text or other figures.
 
 **Multi-column PDF layouts (magazines, journals):**
 
@@ -330,6 +368,38 @@ Technical journals like TASC render with two or three text columns but charts th
 
 7. **Two charts on the same page** — When a page has two charts stacked vertically (e.g., Figure 2 at top and Figure 3 below), crop each independently. The gap between them is typically 50–100px. Be careful not to let the bottom of Figure N's crop eat into the top border of Figure N+1, and vice versa. Verify each figure separately with the Read tool.
 
+   **Finding the dividing line between stacked figures:** Scan dark pixel counts per row across the full page height to find structural landmarks:
+   - **Full-width horizontal lines** (dark_count ≈ 255–260 at step=10 sampling) mark chart bottom borders, separator bars, or header bars. These appear as 5–10 consecutive rows with uniformly high counts.
+   - **Caption text** (dark_count ≈ 40–130) appears 10–30px below a full-width line.
+   - **Background gaps** (dark_count < 20) separate figures — look for 30–50px of near-zero rows between one figure's caption and the next figure's header bar.
+   
+   Example for a TASC page at 300 DPI (3050×4033 px) with two stacked charts:
+   ```
+   y=100:  Chart 1 header bar starts
+   y=1726-1734: Full-width separator line (dark_count≈259) = Chart 1 bottom border
+   y=1755-1790: Caption text "FIGURE 1: ULTIMATE CHANNEL..." (dark_count≈40-130)
+   y=1790-1835: Background gap (dark_count<16)
+   y=1839-1841: Full-width line (dark_count≈259) = Chart 2 header bar
+   y=1850+: Chart 2 content begins
+   y=3204-3208: Full-width separator line = Chart 2 bottom border
+   y=3233-3270: Caption text "FIGURE 2: ULTIMATE BAND..." (dark_count≈40-130)
+   ```
+   
+   Crop Figure 1 as `(85, 100, 2845, 1800)` — from above header to below caption. Crop Figure 2 as `(85, 1835, 2845, 3280)` — from header bar to below caption. The scanning code:
+   
+   ```python
+   from PIL import Image
+   img = Image.open('page-2.png')
+   for y in range(0, img.size[1], 1):
+       row_dark = 0
+       for x in range(100, 2800, 10):
+           r, g, b = img.getpixel((x, y))[:3]
+           if r + g + b < 500:
+               row_dark += 1
+       if row_dark > 15:
+           print(f"y={y}: dark_count={row_dark}")
+   ```
+
 **Best practice: crop generously, let user do final trim.**
 When iterating on crops is slow or the user will review the output, always err on the side of including MORE surrounding area (generous margins of 5-10% extra on each side). It is far easier for the user to do a final manual crop than to repeatedly ask for re-crops. Only crop tightly when the figure boundaries are unambiguous (e.g., scanned books with clear border lines detected programmatically).
 
@@ -338,6 +408,89 @@ When iterating on crops is slow or the user will review the output, always err o
 **Charts with two stacked panels (price + oscillator):** Some figures have a price chart panel on top and an indicator/oscillator panel below, all within a single blue border. Treat the entire multi-panel area as one figure — crop from the top of the upper panel border to the bottom of the lower panel border (including axis labels), then include the caption below. Do not split them into separate figures unless they have separate figure numbers.
 
 **"DIGITAL SIGNAL PROCESSING" header bar:** Many Ehlers articles have a section header bar ("DIGITAL SIGNAL PROCESSING") above the chart on page 2. Exclude this from figure crops — start the crop below it (typically y≈200 on a 300 DPI render).
+
+**Interview articles (multi-column text, inline figure):** Interview-format articles (e.g., "A Conversation With...") are mostly text with Q&A. Figures may appear inline within a column rather than spanning the full page width. The chart occupies part of one column with text wrapping around it. Crop coordinates must exclude adjacent column text — push the left boundary rightward until no body text bleeds in. Expect 3–4 crop iterations for these inline figures. Use `pdftotext` for the full text since the content is selectable, then format questions in bold italic and answers as regular paragraphs.
+
+**Text wrapping on BOTH sides of a chart:** In some magazine layouts, article body text wraps around the chart on both the left AND right sides. The chart occupies the center of the page and narrow text columns flow on either side. This means you must find the chart box border on ALL four sides, not just left and top/bottom. Common scenario: a chart on page N has a sidebar column to the right (page x≈2500+) with article text like variable descriptions. Cropping at the page right edge (x=2845 or x=3050) will include this sidebar text.
+
+**Finding the chart box border with vertical line scanning:** When the chart border is not a bright color (green/blue) but a thin dark line blending with chart content, simple single-row scanning is unreliable. Instead, count how many y-positions have a dark pixel at each x-coordinate across the full chart height range. The chart box border is a continuous vertical line that appears at the SAME x-position for nearly every y, while chart data (candlesticks, indicators) produces scattered hits at varying x positions.
+
+```python
+# Find the chart box left border by counting vertical continuity
+candidates = {}
+for x in range(200, 900):
+    hit_count = 0
+    for y in range(110, 1490, 10):  # chart vertical range
+        r, g, b = img.getpixel((x, y))[:3]
+        if (r + g + b) < 500 and b >= r:  # dark, slightly blue-tinted
+            hit_count += 1
+    if hit_count > 100:  # present at >70% of sampled rows
+        candidates[x] = hit_count
+# The x with the highest count is the border line
+```
+
+**Chart header bar wider than the chart box:** Some TradeStation charts have a header bar ("@ES - Daily CME L=5,667.50...") that spans the full page width, while the chart box body (with candlesticks and indicators) has its left border indented. For example, the header may start at x=208 but the chart box left border is at x=585. Article body text occupies the column between x=208 and x=585, wrapping to the LEFT of the chart body but below the header bar. When cropping:
+- If the chart box left border is far from the header start, crop from the chart box border (not the header) to exclude the text column
+- The header text to the left of the chart box border will be lost, but the chart data is preserved
+- This is preferable to including article body text in the figure
+
+**Sidebar text on the right side of charts:** Some pages have article sidebar text (e.g., "The variables SU and SD are exceptionally ragged waveforms...") in a narrow column to the RIGHT of the chart. The chart box right border (at the right edge of the price axis) marks where chart content ends and sidebar text begins. On a 3050px-wide TASC page, the chart right border may be at x≈2460 while the sidebar text starts at x≈2519. Crop at the chart box right border + a few pixels margin (e.g., x=2465), NOT at the page edge or at the rightmost pixel of chart price labels. Scan for the continuous vertical right border the same way as the left border.
+
+### TASC Article content.md format
+
+For TASC (Technical Analysis of Stocks & Commodities) articles, the output `content.md` follows this structure:
+
+```markdown
+# Article Title
+
+- **Author:** Author Name
+- **Publication:** Technical Analysis of STOCKS & COMMODITIES, Volume NN, Month YYYY, pp. X--Y
+- **Article URL:** [Article PDF](https://technical.traders.com/archive/article.asp?file=\VNN\CNN\NNNXXXX.pdf)
+- **Traders' Tips URL:** [Traders' Tips, Month YYYY](https://www.traders.com/Documentation/FEEDbk_docs/YYYY/MM/TradersTips.html)
+
+---
+
+## Subtitle / Section Header
+
+Body text...
+
+![Figure N: Description](assets/figure-0N.png)
+**FIGURE N: TITLE.** Caption text.
+
+## Code Sidebar Title, In EasyLanguage
+
+\`\`\`easylanguage
+{ code }
+\`\`\`
+
+## Further Reading
+## About The Author
+
+---
+
+Availability note linking to Traders.com and Traders' Tips.
+
+---
+
+## BibTeX
+
+\`\`\`bibtex
+@article{key,
+  ...
+}
+
+@misc{traders_tips_YYYY_MM,
+  ...
+}
+\`\`\`
+```
+
+Key conventions:
+- Use `pdftotext` to extract selectable text; use page images for figure cropping
+- Include ALL code sidebars as fenced `easylanguage` blocks under H2 headings
+- Mathematical equations → LaTeX (`$$...$$` display, `$...$` inline)
+- Figures referenced as `assets/figure-0N.png` (zero-padded)
+- BibTeX: `@article` for the main article, `@misc` for the Traders' Tips page
 
 ### Format-specific extraction
 

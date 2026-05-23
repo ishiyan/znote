@@ -1,0 +1,39 @@
+{
+	TASC MAY 2024
+	Ultimate Channel
+	(c) 2024 John F. Ehlers
+}
+
+inputs:
+	STRLength( 20 ),
+	Length( 20 ),
+	NumSTRs( 1 );
+	
+variables:
+	TH( 0 ),
+	TL( 0 ),
+	ROC( 0 ),
+	STR( 0 ),
+	UpperChnl( 0 ),
+	LowerChnl( 0 );
+
+if Close[1] > High then 
+	TH = Close[1] 
+else 
+	TH = High;
+
+if Close[1] < Low then 
+	TL = Close[1] 
+else 
+	TL = Low;
+	
+STR = $UltimateSmoother(TH - TL, STRLength);
+
+UpperChnl = $UltimateSmoother(Close, Length) 
+ + NumSTRs * STR;
+
+LowerChnl = $UltimateSmoother(Close, Length) 
+ - NumSTRs * STR;
+
+Plot1(UpperChnl, "Upper Channel");
+Plot2(LowerChnl, "Lower Channel");

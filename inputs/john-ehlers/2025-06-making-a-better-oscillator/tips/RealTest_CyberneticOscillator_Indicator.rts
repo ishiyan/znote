@@ -1,0 +1,49 @@
+Notes:
+	John Ehlers "Cybernetic Oscillator", TASC, June 2025
+	Implements and plots the indicators as in the article
+	
+Import:
+	DataSource:	Norgate
+	IncludeList:	&ES
+	StartDate:	2023-01-01
+	EndDate:	2025-04-01
+	SaveAs:	es.rtd
+	
+Settings:
+	DataFile:	es.rtd
+	BarSize:	Daily
+
+Parameters:
+	HPLength:	30
+	SSLength:	20
+	RMSlen:	100
+
+Data:
+	// Common constants
+	decay_factor:	-1.414 * 3.14159
+	phase_angle:	1.414 * 180
+	
+	// Highpass Filter of Close
+	hp_a1:	exp(decay_factor / HPLength)
+	hp_b1:	2 * hp_a1 * Cosine(phase_angle / HPLength)
+	hp_c2:	hp_b1
+	hp_c3:	-hp_a1 * hp_a1
+	hp_c1:	(1 + hp_c2 - hp_c3) / 4
+	HPC:	if(BarNum >= 4, hp_c1 * (Close - 2 * Close[1] + Close[2]) + hp_c2 * HPC[1] + hp_c3 * HPC[2], 0)
+
+	// SuperSmoother of HPC
+	ss_a1:	exp(decay_factor / SSLength)
+	ss_b1:	2 * ss_a1 * Cosine(phase_angle / SSLength)
+	ss_c2:	ss_b1
+	ss_c3:	-ss_a1 * ss_a1
+	ss_c1:	(1 - ss_c2 - ss_c3)
+	SSHPC:	if(BarNum >= 4, ss_c1 * (HPC + HPC[1]) / 2 + ss_c2 * SSHPC[1] + ss_c3 * SSHPC[2], HPC)
+
+	// RMS of SSHPC
+	RMS_SSHPC:	Sqr(SumSQ(SSHPC, RMSLen) / RMSLen)
+
+	// Cybernetic Oscillator
+	CyberneticOsc:	SSHPC / RMS_SSHPC
+	
+Charts:
+	CyberneticOsc:	CyberneticOsc {|}

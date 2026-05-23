@@ -1,0 +1,20 @@
+Parameters:
+    period:    20
+    
+Data:
+    // SuperSmoother calculation
+    a1:    exp(-1.414*3.14159 / period)
+    b1:    2 * a1 * Cosine(1.414*180 / period)
+    c2:    b1
+    c3:    -a1 * a1
+    c1:    1 - c2 - c3
+    price:    close
+    super:    if(BarNum >= 4, c1 * (Price + Price[1]) / 2 + c2 * super[1] + c3 * super[2], price)
+
+    // UltimateSmoother calculation
+    c4:    (1 + c2 - c3) / 4
+    ultimate:    if(BarNum >= 4, (1 - c4) * price + (2 * c4 - c2) * price[1] - (c4 + c3) * price[2] + c2 * ultimate[1] + c3 * ultimate[2], price)
+    
+Charts:
+    super:    super
+    ultimate:    ultimate

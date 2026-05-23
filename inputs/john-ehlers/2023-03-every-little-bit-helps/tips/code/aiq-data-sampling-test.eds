@@ -1,0 +1,36 @@
+!Every Little Bit Helps
+!Author: John F. Ehlers, TASC Mar 2023
+!Coded by: Richard Denning, 1/12/2023
+
+!Data Sampling Test
+!(c) John Ehlers 2022
+
+!INPUTS:
+W1 is 14. !Wilder RSI length
+W2 is 14. !Ehlers RSI length
+
+!RSI Wilder code:
+U is [close]-val([close],1).
+D is val([close],1)-[close].
+L1 is 2 * W1 - 1.
+AvgU is ExpAvg(iff(U>0,U,0),L1).
+AvgD is ExpAvg(iff(D>=0,D,0),L1).
+RSIwilder is 100-(100/(1+(AvgU/AvgD))).
+
+!Ehlers RSI code:
+OCavg is ([open] + [close])/2.
+Uoc is  OCavg-valresult(OCavg,1).
+Doc is valresult(OCavg,1)-OCavg.
+L2 is 2 * W2 - 1.
+AvgU2 is ExpAvg(iff(Uoc>0,Uoc,0),L2).
+AvgD2 is ExpAvg(iff(Doc>=0,Doc,0),L2).
+RSIoc is 100-(100/(1+(AvgU2/AvgD2))).
+
+!CTest is RSIwilder.
+!OCTest is RSIoc.
+
+BuyRSIwilder if RSIwilder < 20 and valrule(RSIwilder >= 20,1).
+ExitRSIwilder if RSIwilder > 80 or {Position days}>=20.
+
+BuyRSIoc if RSIoc < 20 and valrule(RSIoc >= 20,1).
+ExitRSIoc if RSIoc > 80 or {Position days}>=20.

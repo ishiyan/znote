@@ -1,0 +1,25 @@
+// TASC APR 2023
+// Undersampled Double MA Indicator
+// (c) 2022 John F. Ehlers
+
+inputs:
+	FastLength( 6 ),
+	SlowLength( 12 );
+
+variables:
+	Sample( 0 ),
+	FastAvg( 0 ),
+	SlowAvg( 0 );
+	
+Sample = Sample[1];
+
+//Sample every five days
+if CurrentBar / 5 = IntPortion(CurrentBar / 5) then 
+	Sample = Close;
+//Find Fast Average using Hann FIR filter 
+FastAvg = $Hann(Sample, FastLength);
+//Find Slow Average using Hann FIR filter 
+SlowAvg = $Hann(Sample, SlowLength);
+
+Plot1(FastAvg, "FastAvg");
+Plot2(SlowAvg, "SlowAvg");

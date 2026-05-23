@@ -1,0 +1,90 @@
+The Cybernetic Oscillator:
+
+{by John Ehlers}
+HPLen:= 30;
+LPLen:= 20;
+
+{High Pass filter of Close}
+a1:= exp(-1.414*3.14159 / HPLen);
+b1:= 2*a1*Cos(1.414*180 / HPLen);
+c1:= -a1*a1;
+x1:= (1 + b1 - c1) / 4;
+HP1:= x1*(C - Ref(2*C,-1) + Ref(C, -2)) + b1*Prev + c1*Ref(Prev, -1);
+
+{Super Smoother of High Pass}
+a2:= exp(-1.414*3.14159 / LPLen);
+b2:= 2*a2*Cos(1.414*180 / LPLen);
+c2:= -a2*a2;
+x2:= (1 + b2 - c2) / 4;
+LP1:= x2*(Sum(HP1,2)/2) + b2*Prev + c2*Ref(Prev, -1);
+
+{Root Mean Square of Super Smoother}
+RMS:= SQRT(Sum(LP1 * LP1, 100) / 100);
+
+{divide by zero trap}
+denom:= if(RMS = 0, -1, RMS);
+If(denom = -1, 0, LP1/denom)
+
+Simpel Rate of Change Strategy
+
+Buy Order:
+LPLen:= 20;
+fastHPLen:= 55;
+slowHPLen:= 156;
+
+{Super Smoother of Close}
+a1:= exp(-1.414*3.14159 / LPLen);
+b1:= 2*a1*Cos(1.414*180 / LPLen);
+c1:= -a1*a1;
+x1:= (1 + b1 - c1) / 4;
+LP1:= x1*(Sum(C,2)/2) + b1*Prev + c1*Ref(Prev, -1);
+
+{fast High Pass filter of Super Smoother}
+a2:= exp(-1.414*3.14159 / fastHPLen);
+b2:= 2*a2*Cos(1.414*180 / fastHPLen);
+c2:= -a2*a2;
+x2:= (1 + b2 - c2) / 4;
+HP1:= x2*(LP1 - Ref(2*LP1,-1) + Ref(LP1, -2)) + b2*Prev + c2*Ref(Prev, -1);
+ROC1:= HP1 - Ref(HP1, -2);
+
+{slow High Pass filter of Super Smoother}
+a3:= exp(-1.414*3.14159 / slowHPLen);
+b3:= 2*a3*Cos(1.414*180 / slowHPLen);
+c3:= -a3*a3;
+x3:= (1 + b3 - c3) / 4;
+HP2:= x3*(LP1 - Ref(2*LP1,-1) + Ref(LP1, -2)) + b3*Prev + c3*Ref(Prev, -1);
+ROC2:= HP2 - Ref(HP2, -2);
+
+ROC1>0 AND ROC2>0
+
+
+
+Sell Order:
+LPLen:= 20;
+fastHPLen:= 55;
+slowHPLen:= 156;
+
+{Super Smoother of Close}
+a1:= exp(-1.414*3.14159 / LPLen);
+b1:= 2*a1*Cos(1.414*180 / LPLen);
+c1:= -a1*a1;
+x1:= (1 + b1 - c1) / 4;
+LP1:= x1*(Sum(C,2)/2) + b1*Prev + c1*Ref(Prev, -1);
+
+{fast High Pass filter of Super Smoother}
+a2:= exp(-1.414*3.14159 / fastHPLen);
+b2:= 2*a2*Cos(1.414*180 / fastHPLen);
+c2:= -a2*a2;
+x2:= (1 + b2 - c2) / 4;
+HP1:= x2*(LP1 - Ref(2*LP1,-1) + Ref(LP1, -2)) + b2*Prev + c2*Ref(Prev, -1);
+ROC1:= HP1 - Ref(HP1, -2);
+
+{slow High Pass filter of Super Smoother}
+a3:= exp(-1.414*3.14159 / slowHPLen);
+b3:= 2*a3*Cos(1.414*180 / slowHPLen);
+c3:= -a3*a3;
+x3:= (1 + b3 - c3) / 4;
+HP2:= x3*(LP1 - Ref(2*LP1,-1) + Ref(LP1, -2)) + b3*Prev + c3*Ref(Prev, -1);
+ROC2:= HP2 - Ref(HP2, -2);
+
+ROC1<0 AND ROC2<0

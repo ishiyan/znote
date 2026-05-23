@@ -1,0 +1,36 @@
+// TASC APR 2023
+// Undersampled Intraday Double MA Indicator
+// (c) 2022 John F. Ehlers
+
+inputs:
+	BegDate( 1221117 ),
+	FastLength( 20 ),
+	SlowLength( 40 );
+
+variables:
+	Gap(0 ),
+	Degap( 0 ),
+	FastAvg( 0 ),
+	SlowAvg( 0 );
+	Degap = Degap[1]; 
+	
+if Time = 645 then
+begin
+	Gap = Close - Degap[1];
+	Degap = Close - Gap;
+end;
+
+if Time = 800 or Time = 900 
+ or Time = 1000 or Time = 1100 
+ or Time = 1200 or Time = 1315 then 
+ 	Degap = Close - Gap;
+ 	
+if Date < BegDate then 
+	Degap = Close;
+//Find Fast Average using Hann FIR filter 
+FastAvg = $Hann(Degap, FastLength);
+//Find Slow Average using Hann FIR filter 
+SlowAvg = $Hann(Degap, SlowLength);
+
+Plot1(FastAvg, "Fast Avg");
+Plot2(SlowAvg, "Slow Avg");
