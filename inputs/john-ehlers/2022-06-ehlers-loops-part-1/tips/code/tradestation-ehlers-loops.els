@@ -1,0 +1,102 @@
+// TASC JUN 2022
+// Ehlers Loops Part 1
+// (C) 2005-2022 John F. Ehlers
+
+// code is designed for Daily and above bar intervals
+// since the keyword "Volume" is used for Volume
+
+inputs:
+	LPPeriod( 20 ),
+	HPPeriod( 125 ),
+	PriceRMSColor( Red ),
+	ZeroLineColor( White ),
+	VolRMSColor( Yellow );
+	
+variables:
+	hpa1( 0 ),
+	hpb1( 0 ),
+	hpc1( 0 ),
+	hpc2( 0 ),
+	hpc3( 0 ),
+	ssa1( 0 ),
+	ssb1( 0 ),
+	ssc1( 0 ),
+	ssc2( 0 ),
+	ssc3( 0 ),
+	HP( 0 ), 
+	VolHP( 0 ),
+	Price( 0 ), 
+	PriceMS( 0 ), 
+	PriceRMS( 0 ),
+	Vol( 0 ), 
+	VolMS( 0 ), 
+	VolRMS( 0 );
+	
+if CurrentBar = 1 then 
+begin
+	hpa1 = ExpValue( -1.414 * 3.14159 / HPPeriod );
+	hpb1 = 2 * hpa1 * Cosine( 1.414 * 180/HPPeriod );
+	hpc2 = hpb1;
+	hpc3 = -hpa1 * hpa1;
+	hpc1 = ( 1 + hpc2 - hpc3 ) / 4;
+	ssa1 = ExpValue( -1.414 * 3.14159 / LPPeriod );
+	ssb1 = 2 * ssa1 * Cosine( 1.414 * 180/LPPeriod );
+	ssc2 = ssb1;
+	ssc3 = -ssa1 * ssa1;
+	ssc1 = 1 - ssc2 - ssc3;
+end;
+
+// Normalized Roofing Filter for Price
+// 2 Pole Butterworth Highpass Filter
+HP = hpc1 * ( Close - 2 * Close[1] + Close[2] ) 
+ + hpc2 * HP[1] + hpc3 * HP[2];
+if CurrentBar < 3 then 
+	HP = 0;
+
+// Smooth with a Super Smoother Filter
+Price = ssc1 * ( HP + HP[1] ) / 2 + ssc2 * Price[1] 
+ + ssc3 * Price[2];
+if CurrentBar < 3 then 
+	Price = 0;
+
+//Scale Price in terms of Standard Deviations
+if CurrentBar = 1 then 
+	PriceMS = Price * Price 
+else
+	PriceMS =.0242 * Price*Price + .9758 * PriceMS[1];
+
+if PriceMS <> 0 then 
+	PriceRMS = Price / SquareRoot( PriceMS );
+
+// Normalized Roofing Filter for Volume
+// 2 Pole Butterworth Highpass Filter
+VolHP = hpc1*( Volume - 2 * Volume[1] + Volume[2] ) +
+ hpc2 * VolHP[1] + hpc3 * VolHP[2];
+if CurrentBar < 3 then 
+	VolHP = 0;
+
+// smooth with a Super Smoother Filter
+Vol = ssc1 * ( VolHP + VolHP[1] ) / 2 + ssc2 * Vol[1] 
+ + ssc3 * Vol[2];
+if CurrentBar < 3 then 
+	Vol = 0;
+
+// scale Vol in terms of Standard Deviations
+if CurrentBar = 1 then 
+	VolMS = Vol * Vol 
+else 
+	VolMS = .0242 * Vol * Vol + .9758 * VolMS[1];
+
+if VolMS <> 0 then 
+	VolRMS = Vol / SquareRoot( VolMS );
+
+// conventional plots
+Plot1( PriceRMS, "PriceRMS", PriceRMSColor, 
+ default, 1 );
+Plot2( 0, "Zero", ZeroLineColor, default, 0 );
+Plot3( VolRMS, "VolRMS", VolRMSColor, default, 1 );
+
+// output to text file
+// ensure c:\Temp directory exists
+print( File( "c:\Temp\EhlersLoops.csv" ), Date, ",", 
+ VolRMS, ",", PriceRMS );

@@ -1,0 +1,123 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    A Technical Description Of Market Data For Traders
+    FM DEMODULATOR
+    by John F. Ehlers
+    
+
+Version:            1.00  03/12/2021
+
+Formula Parameters:                    Default:
+Period                                 30
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("FM Demodulator Indicator");
+    setCursorLabelName("FM DEMODULATOR", 0);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("Period", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);
+        setDefault(30);
+    }
+}
+
+var bVersion = null;
+var xClose = null;
+var xOpen = null;
+var xDeriv = null;
+var xHL = null;
+var a1 = null;
+var b1 = null;
+var c1 = null;
+var c2 = null;
+var c3 = null;
+var SS = null;
+var SS_1 = null;
+var SS_2 = null;
+
+
+function main(Period) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close();  
+        xOpen = open();
+        xDeriv = efsInternal("Calc_Deriv", xClose, xOpen);
+        addBand( 0, PS_DASH, 1, Color.grey); 
+        xHL = efsInternal("Calc_HL", xDeriv);
+        a1 = Math.exp(-1.414 * Math.PI / Period);
+        b1 = 2 * a1 * Math.cos(1.414 * Math.PI / Period);
+        c2 = b1;
+        c3 = -a1 * a1;
+        c1 = 1 - c2 - c3;
+        SS = 0;
+        SS_1 = 0;
+        SS_2 = 0;
+
+        bInit = true; 
+    }      
+    if (getCurrentBarCount() < Period - 3) return;
+    if (getBarState() == BARSTATE_NEWBAR) {
+        SS_2 = SS_1;
+        SS_1 = SS;
+    } 
+
+    SS = c1 * (xHL.getValue(0) + xHL.getValue(1)) / 2 + c2 * SS_1 + c3 * SS_2;
+    if (getCurrentBarCount() < 3) SS = xDeriv.getValue(0);
+    
+    return SS;
+}
+
+
+function Calc_HL(xDeriv){
+    var ret = 0;
+    ret = 10 * xDeriv.getValue(0);
+    if (ret > 1) ret = 1
+    if (ret < -1) ret = -1;
+    return ret;
+}
+
+function Calc_Deriv(xClose, xOpen){
+    var ret = 0;
+    ret = xClose.getValue(0) - xOpen.getValue(0);
+    return ret;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

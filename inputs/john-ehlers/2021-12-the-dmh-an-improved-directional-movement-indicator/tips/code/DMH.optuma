@@ -1,0 +1,8 @@
+//Ehlers DMH Indicator;
+#$Length = 14;
+PlusDM = ADX(DEFAULT=DMPlus, BARS=1);
+MinusDM = ADX(DEFAULT=DMMinus, BARS=1);
+DM1 = PlusDM - MinusDM;
+EMA = MA(DM1, STYLE=Exponential, CALC=Close, BARS=$Length);
+//Use the Finite Impulse Response function to calculate the Hann Window;
+FIR(EMA, BARS=$Length, SMOOTHSTYLE=Hann)

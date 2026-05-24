@@ -1,0 +1,2 @@
+AM	Avg( Max ( Abs( Sub(Close, Open) ), 4 ), 8 )
+    FM	SuperSmoother ( Max2 ( -1, Min2( Mult2( 10, Sub(Close, Open) ), 1 ) ), 30

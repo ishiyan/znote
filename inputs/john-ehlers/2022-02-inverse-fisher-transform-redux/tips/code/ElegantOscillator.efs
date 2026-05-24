@@ -1,0 +1,160 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    Inverse Fisher Transform Redux
+    by John F. Ehlers
+    
+
+Version:            1.00  11/02/2022
+
+Formula Parameters:                    Default:
+BandEdge                               20
+ 
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("Elegant Oscillator");
+    setCursorLabelName("Super Smoother", 0);
+    setCursorLabelName("IFish", 1);
+    setCursorLabelName("Clip", 2);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setDefaultBarFgColor(Color.RGB(0xFE,0x69,0x00), 1);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 2);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("BandEdge", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);  
+        setDefault(20);
+    }    
+}
+
+var bVersion = null;
+var xClose = null;
+var xDeriv = null;
+var xRMS = null;
+var xNDeriv = null;
+var xIFish = null;
+var SS = null;
+var SS_1 = null;
+var SS_2 = null;
+var a1 = null;
+var b1 = null;
+var c1 = null;
+var c2 = null;
+var c3 = null;
+var xInteg = null;
+var xClip = null;
+var xIntegClip = null;
+
+function main(BandEdge) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close(); 
+        addBand(0, PS_DASH, 1, Color.grey, 1);
+        xDeriv = efsInternal('Calc_Deriv', xClose);
+        xNDeriv = efsInternal('Calc_NDeriv', xDeriv);
+        xIFish = efsInternal('Calc_IFish', xNDeriv);
+        SS = null;
+        SS_1 = null;
+        SS_2 = null;                
+        a1 = Math.pow(Math.E, -Math.SQRT2 * Math.PI / BandEdge);
+        b1 = 2 * a1 * Math.cos(Math.SQRT2 * Math.PI / BandEdge);
+        c2 = b1;
+        c3 = -a1 * a1;
+        c1 = 1- c2 - c3;
+        xInteg = efsInternal('Calc_Integ', xIFish);
+        xClip = efsInternal('Calc_Clip', xDeriv);
+        xIntegClip = efsInternal('Calc_Integ', xClip);
+        
+        bInit = true; 
+    }      
+    
+    if (getCurrentBarCount() < 50) return;
+    if (getBarState() == BARSTATE_NEWBAR) {
+        SS_2 = SS_1;
+        SS_1 = SS;
+        SS = 0;
+    }
+    SS = c1 * (xIFish.getValue(0) + xIFish.getValue(-1)) / 2 + c2 * SS_1 + c3 * SS_2;
+
+    return [SS, xInteg.getValue(0), xIntegClip.getValue(0)];        
+}
+
+function Calc_Clip(xDeriv){
+    ret = xDeriv.getValue(0);
+    
+    if (ret > 1) ret = 1;
+    if (ret < -1) ret = -1;
+     
+    return ret;
+}
+
+function Calc_Integ(xSeries){
+    ret = 0;
+    ret = xSeries.getValue(0) + 2 * xSeries.getValue(-1) + 3 * xSeries.getValue(-2) + 3 * xSeries.getValue(-3) + 2 * xSeries.getValue(-4) + xSeries.getValue(-5);       
+    return (ret / 12);
+}
+
+function Calc_IFish(xNDeriv){
+    ret = 0;
+    ret = (Math.pow(Math.E, 2 * xNDeriv.getValue(0)) - 1) / (Math.pow(Math.E, 2 * xNDeriv.getValue(0)) + 1)
+    
+    return ret;
+}
+
+function Calc_NDeriv(xDeriv){
+    ret = 0;
+    RMS  = 0;
+    for (var i = 0; i < 50; i++) {
+        RMS = RMS + xDeriv.getValue(-i) * xDeriv.getValue(-i); 
+    }
+    if (RMS != 0) {
+        RMS = Math.sqrt(RMS / 50);
+        ret = xDeriv.getValue(0) / RMS;
+    }
+    return ret;
+}
+
+function Calc_Deriv(xClose){
+    ret = 0;
+    ret = xClose.getValue(0) - xClose.getValue(-2);
+    return ret;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=http://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}
+ 

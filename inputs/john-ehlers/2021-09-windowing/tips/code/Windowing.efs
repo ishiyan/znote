@@ -1,0 +1,119 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    Windowing
+    by John F. Ehlers
+    
+
+Version:            1.00  07/09/2021
+
+Formula Parameters:                    Default:
+Length                                 20
+Pedestal                               10
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("FIR SMA Indicators");
+    setCursorLabelName("SMA Indicator", 0);
+    setCursorLabelName("Triangle Weighting Indicator", 1);
+    setCursorLabelName("Hamming Window Indicator", 2);
+    setCursorLabelName("Hann Window Indicator", 3);
+    setPriceStudy(false);  
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("Length", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);
+        setDefault(20);
+    }
+    fpArray[x] = new FunctionParameter("Pedestal", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);
+        setDefault(10);            
+    }       
+}
+
+var bVersion = null;
+var xClose = null;
+var xOpen = null;
+var xDeriv = null;
+var xFilt = null;
+var xFiltTr = null;
+var xFiltHam = null;
+var xFiltHann = null;
+
+
+
+function main(Length, Pedestal) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close();  
+        xOpen = open();
+        xDeriv = efsInternal("Calc_Deriv", xClose, xOpen);
+        xFilt =  efsInternal("Calc_Filt", Length, xDeriv);
+        xFiltTr = efsInternal("Calc_FiltTr", Length, xDeriv);
+        xFiltHam = efsInternal("Calc_FiltHam", Length, xDeriv, Pedestal);
+        xFiltHann = efsInternal("Calc_FiltHann", Length, xDeriv);
+        
+        addBand( 0, PS_DASH, 1, Color.grey); 
+        
+        bInit = true; 
+    }      
+
+    if (getCurrentBarCount()  (Length/2)) Coef = (Length + 1 - i);
+        Filt = Filt + (Coef * xDeriv.getValue( - i + 1));
+        SumCoef = SumCoef + Coef;
+    }
+    if (SumCoef != 0) return (Filt/SumCoef)*100;  
+    return Filt*100;
+}
+
+function Calc_Filt(Length, xDeriv){
+    var Filt = 0;
+    var Coef = 0;
+    for (var i = 1; i <= Length; i++){
+        Filt = Filt + xDeriv.getValue(-i)
+        Coef = Coef + 1;
+    }
+    if (Coef != 0) return (Filt/Coef);  
+    return Filt;
+}
+
+function Calc_Deriv(xClose, xOpen){
+    var ret = 0;
+    ret = xClose.getValue(0) - xOpen.getValue(0); 
+    return ret;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

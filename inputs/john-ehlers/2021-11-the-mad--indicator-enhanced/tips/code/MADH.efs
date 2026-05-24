@@ -1,0 +1,115 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    The MAD Indicator, Enhanced
+    by John F. Ehlers
+    
+
+Version:            1.00  09/13/2021
+
+Formula Parameters:                    Default:
+ShortLength                            8
+DominantCycle                          27
+ 
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("Moving Average Difference - Hann Indicator");
+    setCursorLabelName("MADH", 0);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("ShortLength", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);  
+        setDefault(8);
+    }    
+    fpArray[x] = new FunctionParameter("DominantCycle", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1); 
+        setDefault(27);
+    }   
+}
+
+var bVersion = null;
+var xClose = null;
+var xMADH = null;
+var LongLength = null;
+var Filt1 = null;
+var coef = null;
+var Filt2 = null;
+
+
+function main(ShortLength, DominantCycle) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close(); 
+        LongLength = Math.trunc(ShortLength + DominantCycle / 2);
+        addBand(0, PS_DASH, 1, Color.grey, 1);
+        xMADH = efsInternal('Calc_MAD', xClose, ShortLength, LongLength);
+                        
+        bInit = true; 
+    }      
+    
+    if (getCurrentBarCount() < LongLength || getCurrentBarCount() < ShortLength) return;
+
+
+    return xMADH.getValue(0);        
+}
+
+function Calc_MAD(xClose, ShortLength, LongLength){
+    Filt1 = 0;
+    coef = 0;
+    for (var i = 1; i <= ShortLength; i++){
+        Filt1 = Filt1 + (1 - Math.cos(2 * Math.PI * i / (ShortLength + 1))) * xClose.getValue(-i + 1);
+        coef = coef + (1 - Math.cos(2 * Math.PI * i / (ShortLength + 1)));
+    }
+    if (coef != 0) Filt1 = Filt1 / coef;
+        
+    Filt2 = 0;
+    coef = 0;
+    for (var i = 1; i <= LongLength; i++){
+        Filt2 = Filt2 + (1 - Math.cos(2 * Math.PI * i / (LongLength + 1))) * xClose.getValue(-i + 1);
+        coef = coef + (1 - Math.cos(2 * Math.PI * i / (LongLength + 1)));
+    }
+    if (coef != 0) Filt2 = Filt2 / coef;
+    if (Filt2 != 0) ret = 100 * (Filt1 - Filt2) / Filt2;
+    
+    return ret;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

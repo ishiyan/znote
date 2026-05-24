@@ -1,0 +1,114 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    Cycle/Trend Analytics And The MAD Indicator
+    by John F. Ehlers
+    
+
+Version:            1.00  08/12/2021
+
+Formula Parameters:                    Default:
+CTMode                                 Cycle
+ 
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("Cycle/Trend Analytics");
+    setCursorLabelName(" ", 0);
+    setCursorLabelName(" ", 1);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setDefaultBarFgColor(Color.green, 1);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    setPlotType( PLOTTYPE_LINE , 1 );
+    setDefaultBarThickness(4, 0);
+    setDefaultBarThickness(4, 1);   
+    
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("CTMode", FunctionParameter.STRING);
+	with(fpArray[x++]){
+        addOption("Cycle");
+        addOption("Trend");    
+        setDefault("Cycle");
+    }    
+}
+
+var bVersion = null;
+var xClose = null;
+var xColor2 = [];
+var Osc = [];
+
+function main(CTMode) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close(); 
+        addBand(0, PS_DASH, 1, Color.white, 1);
+        
+        if (CTMode == "Cycle") {
+            xPrice = efsInternal('Calc_Price');
+        }
+        else xPrice = xClose;
+        
+        Color1 = 255;
+        Color3 = 0;
+        
+        for (i = 2; i <= 27; i++) {
+            xColor2[i] = 306 - 10.2 * (i+3);
+        }
+                        
+        bInit = true; 
+    }      
+    if (getCurrentBarCount() < 30) return;
+
+    for (i = 2; i <= 27; i++){
+        count = i + 3;
+        Osc[i] = xPrice.getValue(0) - sma(count, xPrice, 0);
+        setBarFgColor(Color.RGB(Color1,xColor2[i],Color3), i);
+        setCursorLabelName("S"+ count, i);
+    }
+
+    if (CTMode == "Cycle") {
+        Osc[0] = xPrice.getValue(0);
+        Osc[1] = sma(5, xPrice, 0) - sma(30, xPrice, 0)
+    }
+
+    return Osc;        
+}
+
+function Calc_Price(){
+    return (Math.sin(2 * Math.PI * getCurrentBarIndex() / (30)));
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

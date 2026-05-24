@@ -1,0 +1,7 @@
+//MvgAv Inputs;
+#$Short = 8;
+#$Long = 23;
+//Calculate MAD;
+S1 = MA(BARS=$Short, CALC=Close);
+L1 = MA(BARS=$Long, CALC=Close);
+100 * ((S1 - L1)/L1)

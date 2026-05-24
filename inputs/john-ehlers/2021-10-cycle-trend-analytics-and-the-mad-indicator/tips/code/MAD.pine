@@ -1,0 +1,13 @@
+//@version=4
+// (C) 2021 John F. Ehlers
+// Translation from EasyLanguage to TradingView's Pine Script by Ricardo Santos, for PineCoders.
+study("TASC 2021.10 - MAD Moving Average Difference")
+int i_shortLength = input(8, "Short Length")
+int i_longLength  = input(23, "Long Length")
+
+float shortAvg = sma(close, i_shortLength)
+float longAvg  = sma(close, i_longLength)
+float mad = 100 * (shortAvg - longAvg) / longAvg
+
+plot(mad, "MAD", mad > 0 ? color.lime : color.red, 2)
+hline(0, "Zero")

@@ -1,0 +1,12 @@
+! Technical Description of Market Data for Traders
+! Author: John F. Ehlers, TASC May 2021
+! Coded by: Richard Denning 3/17/2021
+
+! AM Detector Indicator    
+! (C) 2020-2021   John F. Ehlers
+
+!FORMULAS:
+
+Deriv is [Close] - [Open].
+Envel is Highresult(Abs(Deriv), 4).
+Volatil is Simpleavg(Envel, 8).

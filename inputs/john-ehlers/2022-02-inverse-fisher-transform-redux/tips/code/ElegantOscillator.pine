@@ -1,0 +1,38 @@
+//  TASC Issue: February 2022 - Vol. 40, Issue 2
+//     Article: Inverse Fisher Transform Redux -
+//                   An Elegant Oscillator
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script v5
+// Provided By: PineCoders, for tradingview.com
+
+//@version=5
+indicator("TASC 2022.02 Ehlers' Elegant Oscillator", "EEO")
+
+sourceInput = input.source(close, "Source:")
+bandEdgeInput = input.float(20.0, "Post Smooth:", minval = 2)
+lengthRMSInput = input.int(50, "Length RMS:", minval = 2)
+
+eeo(float src, float band_edge, int lengthRMS = 50) =>
+    var float ANG_FREQ = math.pi * math.sqrt(2) / band_edge
+    float deriv  = src - nz(src[2], nz(src[1], src))
+    float rms    = math.sum(math.pow(deriv, 2), lengthRMS)
+    rms         := math.sqrt(nz(rms / lengthRMS))
+    float ift    = math.exp(2.0 * deriv / rms)
+    ift         := (ift - 1.0) / (ift + 1.0)
+    float alpha  =  math.exp(-ANG_FREQ)
+    float coef2  = -math.pow(alpha, 2)
+    float coef1  =  math.cos(ANG_FREQ) * 2.0 * alpha
+    float coef0  = 1.0 - coef1 - coef2
+    float sma2   = 0.5 * (ift + nz(ift[1], ift))
+    float result = na
+    result := nz(coef0 *     sma2      +
+                 coef1 * nz(result[1]) +
+                 coef2 * nz(result[2]))
+
+signal    = eeo(sourceInput, bandEdgeInput, lengthRMSInput)
+plotColor = signal > 0.0 ? #FF0099   : #0066FF
+areaColor = signal > 0.0 ? #FF009955 : #0066FF55
+
+plot(signal, "Area", areaColor, 1, plot.style_area)
+plot(signal,   "EO", plotColor, 2)
+hline(  0.0, "Zero", color.gray)

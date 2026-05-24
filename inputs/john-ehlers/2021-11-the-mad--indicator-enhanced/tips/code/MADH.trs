@@ -1,0 +1,54 @@
+'The MAD Indicator, Enhanced
+'Author: John F. Ehlers, TASC Nov 2021
+'Coded by: Richard Denning, 9/14/2021
+
+Function EHLERS_MADH(ShortLength, DominantCycle)
+'ShortLength=8, DominantCycle=27
+    Dim LongLength
+    Dim Filt1
+    Dim Filt2
+    Dim coef
+    Dim count
+    Dim MADH As BarArray
+
+    If BarNumber=FirstBar Then
+        LongLength = 20
+        Filt1 = 0
+        Filt2 = 0
+        coef = 0
+        count = 0
+        MADH = 0
+    End If
+
+    LongLength = CInt(ShortLength + DominantCycle / 2)
+    Filt1 = 0
+    coef = 0
+    For count = 1 To ShortLength
+        Filt1 = Filt1 + (1 - TStation_Cosine(360*count / (ShortLength + 1)))*Close[count - 1]
+        coef = coef + (1 - TStation_Cosine(360*count / (ShortLength + 1)))
+    Next
+    If coef <> 0 Then
+        Filt1 = Filt1 / coef
+    End If
+    Filt2 = 0
+    coef = 0
+    For count = 1 To LongLength
+        Filt2 = Filt2 + (1 - TStation_Cosine(360*count / (LongLength + 1)))*Close[count - 1]
+        coef = coef + (1 - TStation_Cosine(360*count / (LongLength + 1)))
+    Next
+    If coef <> 0 Then
+        Filt2 = Filt2 / coef
+    End If
+    If Filt2 <> 0 Then
+        MADH = 100*(Filt1 - Filt2)/Filt2
+    End If
+    EHLERS_MADH = MADH
+End Function
+'-------------------------------------------------------------------------------------------
+'INDICATOR PLOT
+Sub EHLERS_MADH_IND(ShortLength,DominantCycle)
+Dim MADH As BarArray
+MADH = EHLERS_MADH(ShortLength,DominantCycle)
+plot1(MADH)
+plot2(0)
+End Sub

@@ -1,0 +1,11 @@
+AM Detector
+Deriv = ABS(CLOSE() - OPEN());
+Envel = HIGHESTHIGH(Deriv, BARS=4);
+MA(Envel, BARS=8, CALC=Close)
+ 
+FM Demodulator
+Deriv = 10*(CLOSE() - OPEN());
+// calculate the hard limit
+HL =  IF(Deriv>1, 1, IF(Deriv<-1, -1, Deriv));
+// output using the Ehlers SuperSmoother function
+EHLSS(HL, PERIOD=30)

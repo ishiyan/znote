@@ -1,0 +1,63 @@
+'The Elegant Oscillator
+'Author: John F. Ehlers, TASC Feb 2022
+'Coded by: Richard Denning, 12/20/2021
+
+'Take the derivative of prices
+Function EHLERS_ELEGANT_OSC(BandEdge)
+
+    Dim Deriv As BarArray
+    Dim RMS As BarArray
+    Dim count
+    Dim NDeriv As BarArray
+    Dim IFish As BarArray
+    Dim a1 As BarArray
+    Dim b1 As BarArray
+    Dim c1 As BarArray
+    Dim c2 As BarArray
+    Dim c3 As BarArray
+    Dim SS As BarArray
+
+    If BarNumber=FirstBar Then
+        'BandEdge = 20
+        Deriv = 0
+        RMS = 0
+        count = 0
+        NDeriv = 0
+        IFish = 0
+        a1 = 0
+        b1 = 0
+        c1 = 0
+        c2 = 0
+        c3 = 0
+        SS = 0
+    End If
+
+    Deriv = Close - Close[2]
+'Normalize to standard deviation
+    RMS = 0
+    For count = 0 To 49
+        RMS = RMS + Deriv[count]*Deriv[count]
+    Next
+    If RMS <> 0 Then
+        RMS = Sqr(RMS / 50)
+    End If
+    NDeriv = Deriv / RMS
+'Compute the Inverse Fisher Transform
+    IFish = (TStation_ExpValue(2*NDeriv) - 1) / (TStation_ExpValue(2*NDeriv) + 1)
+'Integrate with SuperSmoother
+    a1 = TStation_ExpValue(-1.414*3.14159 / BandEdge)
+    b1 = 2*a1*TStation_Cosine(1.414*180 / BandEdge)
+    c2 = b1
+    c3 = -a1*a1
+    c1 = 1 - c2 - c3
+    SS = c1*(IFish + IFish[1]) / 2 + c2*SS[1] + c3*SS[2]
+EHLERS_ELEGANT_OSC = SS
+End Function
+'-------------------------------------------------------------
+'INDICATOR PLOT
+Sub EHLERS_ELEGANT_OSC_IND(BandEdge)
+Dim SS As BarArray
+SS = EHLERS_ELEGANT_OSC(BandEdge)
+plot1(SS)
+plot2(0)
+End Sub

@@ -1,0 +1,35 @@
+// TASC Issue: November 2021
+// Article: "Moving Average Difference with Hann Windowing (MADH)" by John Ehlers
+// Language: TradingView's Pine Script
+// Provided by: PineCoders, for tradingview.com
+
+//@version=4
+study("TASC 2021.11 - Moving Average Diff. with Hann Windowing (MADH)", "MADH")
+
+float sourceInput        = input(close, "Source:")
+int   shortLengthInput   = input(8,     "Short Length:",   minval = 2)
+int   dominantCycleInput = input(27,    "Dominant Cycle:", minval = 4)
+
+madh(source, shortLength, dominantCycle) =>
+	var float PIx2 = math.pi * 2.0
+	float filt1 = 0.0
+	float coeffs = 0.0
+	for count = 1 to shortLength
+		float hannCoeff = 1.0 - cos(PIx2 * count / (shortLength + 1))
+		filt1 += hannCoeff * source[count - 1]
+		coeffs += hannCoeff
+	filt1 := nz(filt1 / coeffs)
+	int longLength = int(shortLength + dominantCycle * 0.5)
+	float filt2 = 0.0
+	coeffs := 0.0
+	for count = 1 to longLength
+		float hannCoeff = 1.0 - cos(PIx2 * count / (longLength + 1))
+		filt2 += hannCoeff * source[count - 1]
+		coeffs += hannCoeff
+	filt2 := nz(filt2 / coeffs)
+	nz(100.0 * (filt1 - filt2) / filt2)
+
+madhSignal = madh(sourceInput, shortLengthInput, dominantCycleInput)
+
+plot(madhSignal, "MADH", color.orange, 3)
+hline(0, "Zero", color.gray)

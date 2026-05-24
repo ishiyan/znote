@@ -1,0 +1,92 @@
+Indicator:  TASC FEB 2022 Elegant Oscillator
+{
+	TASC FEB 2022
+	The Elegant Oscillator
+	(c) 2021 John F. Ehlers
+}
+
+inputs:
+	BandEdge(20);
+	
+variables:
+	Deriv(0), RMS(0), count(0), NDeriv(0), IFish(0),
+	a1(0), b1(0), c1(0), c2(0), c3(0), SS(0);
+
+//Take the derivative of prices
+Deriv = Close - Close[2];
+//Normalize to standard deviation
+RMS = 0;
+
+for count = 0 to 49 
+begin
+	RMS = RMS + Deriv[count]*Deriv[count];
+end;
+
+if RMS <> 0 then 
+	RMS = SquareRoot(RMS / 50);
+	
+NDeriv = Deriv / RMS;
+
+//Compute the Inverse Fisher Transform
+IFish = (ExpValue(2*NDeriv) - 1) / (ExpValue(2*NDeriv) + 1);
+
+//Integrate with SuperSmoother
+a1 = expvalue(-1.414*3.14159 / BandEdge);
+b1 = 2*a1*Cosine(1.414*180 / BandEdge);
+c2 = b1;
+c3 = -a1*a1;
+c1 = 1 - c2 - c3;
+SS = c1*(IFish + IFish[1]) / 2 + c2*SS[1] + c3*SS[2];
+if Currentbar < 3 
+	then SS = 0;
+	
+//Plot the indicator
+Plot1(SS,"SS", red);
+Plot2(0,"ref", black)
+
+
+Indicator:  TASC FEB 2022 Elegant Oscillator
+
+{
+	TASC FEB 2022
+	Soft And Hard Limiter Comparison
+	2021 John F. Ehlers
+}
+
+variables:
+	Deriv(0),
+	RMS(0),
+	count(0),
+	NDeriv(0),
+	IFish(0),
+	Integ(0),
+	Clip(0),
+	IntegClip(0);
+	Deriv = Close - Close[2];
+	RMS = 0;
+	
+for count = 0 to 49 
+begin
+	RMS = RMS + Deriv[count]*Deriv[count];
+end;
+
+if RMS <> 0 
+	then RMS = SquareRoot(RMS / 50);
+	
+NDeriv = Deriv / RMS;
+IFish = (ExpValue(2*NDeriv) - 1) / (ExpValue(2*NDeriv) + 1);
+Integ = (IFish + 2*IFish[1] + 3*IFish[2] + 3*IFish[3] 
+ + 2*IFish[4] + IFish[5]) / 12;
+Clip = Deriv;
+
+if Clip > 1 
+	then Clip = 1;
+if Clip < -1 
+	then Clip = -1;
+
+IntegClip = (Clip + 2*Clip[1] + 3*Clip[2] + 3*Clip[3] 
+ + 2*Clip[4] + Clip[5]) / 12;
+
+Plot1(Integ,"IFish", red);
+Plot2(0,"ref", black, 1, 1);
+Plot3(IntegClip,"Clip", blue);

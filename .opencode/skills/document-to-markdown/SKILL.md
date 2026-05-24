@@ -121,6 +121,36 @@ for part in msg.walk():
             # Save to assets/
 ```
 
+#### HTML section structure
+
+The HTML uses `div.logoBorder` elements as section headers (containing vendor logo + `<h3>`), with the actual section content (paragraphs, `<pre>` code blocks, images) as **sibling** elements following the div — NOT nested inside it. To parse sections correctly:
+
+```python
+from bs4 import BeautifulSoup
+
+soup = BeautifulSoup(html, 'html.parser')
+logo_divs = soup.find_all('div', class_='logoBorder')
+
+for i, logo_div in enumerate(logo_divs):
+    h3 = logo_div.find('h3')
+    name = h3.get_text(strip=True) if h3 else f'Section {i}'
+    next_div = logo_divs[i+1] if i+1 < len(logo_divs) else None
+    
+    # Walk siblings until next logoBorder div
+    node = logo_div.next_sibling
+    while node:
+        if node == next_div:
+            break
+        if hasattr(node, 'name') and node.name:
+            if node.name == 'pre':
+                # Code block for this platform
+                pass
+            elif node.name in ('p', 'div'):
+                # Prose text or image container
+                pass
+        node = node.next_sibling
+```
+
 #### Key conventions
 
 1. **Traders' Tips URL** — Found in `Content-Location` header of the HTML part (part index 1). Always include in the output markdown header and in BibTeX.
@@ -133,23 +163,23 @@ for part in msg.walk():
      tips.md              # Main markdown
      assets/              # Chart GIFs (TT-*.gif)
      code/                # External code files
-       tradestation-*.els
-       tradingview-*.pine
-       zorro-*.c
-       aiq-*.eds
-       python-*.py
-       metastock-*.txt
-       realtest-*.rtest
+       DMH.els
+       DMH.pine
+       DMH.c
+       DMH.efs
+       DMH.optuma
+       DMH.trs
+       DMH.xlsm
      ninja-trader/        # Pre-existing NinjaTrader .cs files (if present)
    ```
 
-   **Naming convention:** `platform-indicator-name[-variant].ext` — e.g., `tradestation-data-sampling-test.els`, `tradingview-undersampled-double-ma.pine`, `zorro-data-sampling-test.c`, `aiq-data-sampling-test.eds`. Use lowercase kebab-case throughout. Use the platform's native file extension (`.els` for EasyLanguage, `.rtest` for RealTest, `.pine` for Pine Script, `.cs` for C#, `.c` for C/Zorro, `.py` for Python, `.eds` for AIQ EDS). Use `.txt` only for platforms with no specific extension (MetaStock, NeuroShell). When a platform has multiple code blocks (indicator + strategy, or indicator + chart + strategy), append `-indicator`, `-strategy`, `-chart`, `-test` etc. to the base name.
+   **Naming convention:** Use the indicator abbreviation as the base filename with the platform's native extension — e.g., `DMH.els`, `DMH.pine`, `DMH.c`, `DMH.trs`, `DMH.optuma`, `DMH.efs`, `RSIH.els`. Use the platform's native file extension (`.els` for EasyLanguage, `.rtest` for RealTest, `.pine` for Pine Script, `.cs` for C#, `.c` for C/Zorro, `.py` for Python, `.eds` for AIQ EDS, `.efs` for eSignal, `.optuma` for Optuma, `.trs` for TradersStudio). Use `.txt` only for platforms with no specific extension (MetaStock, NeuroShell). When a platform has multiple code blocks that serve different purposes (indicator + strategy), append `_indicator`, `_strategy`, `_test` etc. to the base name.
 
-4. **Code extraction** — Each `<pre>` block in the HTML contains code for one platform. Extract both as embedded fenced code blocks in `tips.md` AND as standalone external files. Use language hints: `easylanguage`, `metastock`, `csharp`, `realtest`, `pine`, `c`, `python`.
+4. **Code extraction** — Each `<pre>` block in the HTML contains code for one platform. Extract both as embedded fenced code blocks in `tips.md` AND as standalone external files. Use language hints: `easylanguage`, `metastock`, `csharp`, `realtest`, `pine`, `c`, `python`. **Multiple `<pre>` blocks per platform:** Some platforms (notably Zorro) split their code across 2–3 `<pre>` blocks (e.g., helper function + main function + run script). Concatenate them into a single external file in the order they appear, separated by a blank line.
 
 5. **HTML entity decoding** — Code in `<pre>` blocks uses HTML entities (`&lt;` `&gt;` `&amp;`). Decode these when writing external files. Also watch for `&nbsp;` (non-breaking spaces) in TradingView code — replace with regular spaces.
 
-6. **Platforms without code** — Some platforms (Wealth-Lab, NeuroShell Trader, Optuma, thinkorswim, Trade Navigator) only provide download links, shared URLs, or GUI instructions. Include their prose and chart figures but no external code file. **NinjaTrader** sometimes has `.cs` source files in a `ninja-trader/` subfolder alongside the MHTML — if present, link to them from tips.md rather than creating new external files.
+6. **Platforms without code** — Some platforms (NeuroShell Trader, Optuma, thinkorswim, Trade Navigator) only provide download links, shared URLs, or GUI instructions. Include their prose and chart figures but no external code file. **Wealth-Lab** varies by issue — sometimes provides full C# code, sometimes only describes built-in features with no code. **NinjaTrader** sometimes has `.cs` source files in a `ninja-trader/` subfolder alongside the MHTML — if present, link to them from tips.md rather than creating new external files.
 
 7. **BibTeX** — Always add a `@misc{}` entry at the end of `tips.md` with key `traders_tips_YYYY_MM`, author set to `{{Technical Analysis of STOCKS \& COMMODITIES}}`, title including the article name, `howpublished = {online}`, and the Traders' Tips URL.
 
@@ -309,12 +339,14 @@ figure.save('assets/figure-1.png')
 5. Iterate until the crop captures only the chart + its axis labels (exclude captions — those go in markdown)
 
 **Common crop issues:**
+- **Top of chart cropped** (header bar, title, or top border missing) → decrease top coordinate. This is common when two figures are stacked vertically and the dividing point is estimated too low. For TASC pages at 300 DPI (3050×4033 px) with two stacked charts, the gap between them may be only 50–150px. Err on the side of starting 150px higher than where you think the figure begins. Example: if figure 3 content ends at y≈1700, figure 4 likely starts at y≈1550, not y≈1700.
 - Text from article body appearing above the chart → increase top coordinate
-- Bottom axis labels cut off → increase bottom coordinate. **This is the most frequent mistake** — the bottom x-axis date labels and tick marks are easily cut off. Always add at least 250px extra below what appears to be the chart border bottom edge. For TASC pages at 300 DPI (3050×4033 px), a chart that visually ends at y≈1200 typically needs cropping to y≈1780 to capture the full x-axis date row. When in doubt, add 400px below the apparent chart bottom and trim later. For figures with captions below, add 300–400px.
+- Bottom axis labels cut off → increase bottom coordinate. **This is the most frequent mistake** — the bottom x-axis date labels and tick marks are easily cut off. Always add at least 250px extra below what appears to be the chart border bottom edge. For TASC pages at 300 DPI (3050×4033 px), a chart that visually ends at y≈1200 typically needs cropping to y≈1780 to capture the full x-axis date row. When in doubt, add 400px below the apparent chart bottom and trim later. For figures with captions below, add 300–400px. **For scatter/loop plots** (Ehlers Loops, Crocker charts) the data points can extend well below the visible x-axis line — always add 500–600px below the axis line to capture outlier points, negative-quadrant data, and the full red/blue border box closure.
 - For charts that span most of the page width, use full width (`0` to `w`) and only crop vertically
-- **Right side of chart cropped** → increase right coordinate. Don't assume column width matches chart width. The price scale labels on the right side of trading charts are frequently cut off. Always scan for the actual right border position (see programmatic border detection below).
+- **Right side of chart cropped** → increase right coordinate. Don't assume column width matches chart width. The price scale labels on the right side of trading charts are frequently cut off. Always scan for the actual right border position (see programmatic border detection below). **Left-column charts in 2-column layouts:** When figures are stacked in the left column, the chart box + Y-axis price labels extend well beyond the text column boundary. For a TASC page rendered at 300 DPI (2438×3225 px at this resolution), left-column charts need a right crop boundary of ~1200px (roughly half the page width), not ~880px (the text column width). The Y-axis labels (price scale) add 100–200px to the right of the chart border line.
 - Left side cropped (especially captions starting with "FIGURE") → decrease left coordinate
 - **Include the caption in the crop** — contrary to earlier advice about excluding captions, in practice it's better to include the figure caption text in the image (it provides useful context and avoids ambiguity about whether the full figure was captured). The caption should also appear in the markdown text.
+- **3D surface plots and rotated axis labels** — Charts with 3D perspective (optimization profit surfaces, etc.) have axis labels that extend further right and below than flat 2D charts. The vertical "Net Profit" label on the right Z-axis, diagonal "SigPeriod" / "ROCPeriod" labels at the bottom, and tick marks like "14" / "141" at the base all get clipped if crop boundaries assume a standard rectangular chart. For these figures, add 100–200px extra on both the right and bottom beyond where the chart's visible box border ends. Always verify rotated/diagonal text is fully captured.
 
 **Programmatic border detection (recommended):**
 
@@ -360,13 +392,13 @@ Technical journals like TASC render with two or three text columns but charts th
 
 3. **Top/bottom text bleed** — Article text or figure captions from above/below the chart leak in. Fix by tightening the top/bottom coordinates to the chart border edges.
 
-4. **Use absolute pixel coordinates** — For rendered pages at known DPI (e.g., 3050×4033 at 300 DPI), absolute pixel coordinates are more reliable than percentages. Document the render dimensions so coordinates can be reproduced.
+4. **Use absolute pixel coordinates** — For rendered pages at known DPI, absolute pixel coordinates are more reliable than percentages. Document the render dimensions so coordinates can be reproduced. Note: page dimensions vary by article — TASC full-page articles render to ~3050×4033 at 300 DPI, but shorter articles (4–5 pages from a larger PDF) may render to ~2438×3225 depending on the PDF's internal page size.
 
 5. **Include captions in the crop** — Crop the chart including its internal header bar, axis labels, AND the figure caption text below. Also put the caption in the markdown text. This ensures the image is self-contained and visually complete, while the markdown caption remains searchable/editable.
 
 6. **Iterative visual verification is mandatory** — Always use the Read tool to view cropped PNGs after each adjustment. Expect 2-4 iterations per figure to eliminate all text bleed artifacts.
 
-7. **Two charts on the same page** — When a page has two charts stacked vertically (e.g., Figure 2 at top and Figure 3 below), crop each independently. The gap between them is typically 50–100px. Be careful not to let the bottom of Figure N's crop eat into the top border of Figure N+1, and vice versa. Verify each figure separately with the Read tool.
+7. **Two charts on the same page** — When a page has two charts stacked vertically (e.g., Figure 2 at top and Figure 3 below), crop each independently. The gap between them is typically 50–100px. Be careful not to let the bottom of Figure N's crop eat into the top border of Figure N+1, and vice versa. Verify each figure separately with the Read tool. **Caption placement between figures:** When Figure 1's caption text sits between the two charts, start Figure 2's crop BELOW Figure 1's caption (skip ~100px of caption text). If you start Figure 2's crop immediately after Figure 1's chart bottom border, you'll include Figure 1's caption at the top of Figure 2's image.
 
    **Finding the dividing line between stacked figures:** Scan dark pixel counts per row across the full page height to find structural landmarks:
    - **Full-width horizontal lines** (dark_count ≈ 255–260 at step=10 sampling) mark chart bottom borders, separator bars, or header bars. These appear as 5–10 consecutive rows with uniformly high counts.
@@ -403,11 +435,17 @@ Technical journals like TASC render with two or three text columns but charts th
 **Best practice: crop generously, let user do final trim.**
 When iterating on crops is slow or the user will review the output, always err on the side of including MORE surrounding area (generous margins of 5-10% extra on each side). It is far easier for the user to do a final manual crop than to repeatedly ask for re-crops. Only crop tightly when the figure boundaries are unambiguous (e.g., scanned books with clear border lines detected programmatically).
 
-**Articles with only one figure:** Many TASC articles (especially shorter 2–3 page ones) have a single chart. Don't skip the crop step — still extract it to `assets/figure-01.png` and reference it from the markdown. The chart typically occupies the right column or spans both columns on page 2.
+**Side-by-side figures:** When two small diagrams appear next to each other (e.g., Figures 1 and 2 showing clockwise and counterclockwise conditions), crop them together as a single image rather than trying to separate them. Reference both figure numbers in the markdown and include both captions.
 
-**Charts with two stacked panels (price + oscillator):** Some figures have a price chart panel on top and an indicator/oscillator panel below, all within a single blue border. Treat the entire multi-panel area as one figure — crop from the top of the upper panel border to the bottom of the lower panel border (including axis labels), then include the caption below. Do not split them into separate figures unless they have separate figure numbers.
+**Magazine PDF pages with ads or legal notices:** TASC PDFs extracted from the full magazine issue sometimes contain unrelated content on intermediate pages (advertisements, legal notices, settlement announcements). Skip these entirely — do not include them in `content.md`. Use `pdftotext` output to identify which pages contain article text vs. unrelated content.
 
-**"DIGITAL SIGNAL PROCESSING" header bar:** Many Ehlers articles have a section header bar ("DIGITAL SIGNAL PROCESSING") above the chart on page 2. Exclude this from figure crops — start the crop below it (typically y≈200 on a 300 DPI render).
+**Articles with only one figure:** Many TASC articles (especially shorter 2–3 page ones) have a single chart. Don't skip the crop step — still extract it to `assets/figure-01.png` and reference it from the markdown. The chart typically occupies the right column or spans both columns on page 2. **Right-column figures** on a 2438px-wide page start at x≈1250 and extend to x≈2400. These often have dark backgrounds (TradeStation dark theme) making border detection harder — use the green/teal outer border line as the guide.
+
+**Multiple figures on one page (right-column stacked):** Some articles place 3 figures vertically stacked in the right column of a single page. Each figure has its own pink/red border box and caption below it. To find exact boundaries, scan for the pink border color (R>180, G<50, B<80) along the left edge (x≈1000–1010 on a 2438px page) to find continuous vertical pink ranges — each range corresponds to one figure's border. Crop each figure from its border top to just above the next figure's border top (to include the caption). Right edge is typically at x≈2243. Example: page with 3 figures yielded pink ranges y=294–591, y=728–1572, y=1797–end.
+
+**Charts with two or three stacked panels (price + oscillator(s)):** Some figures have a price chart panel on top and one or two indicator/oscillator panels below, all within a single red/green/blue/orange border. Treat the entire multi-panel area as one figure — crop from the top of the upper panel border to the bottom of the lowest panel border (including x-axis labels), then include the caption below. Do not split them into separate figures unless they have separate figure numbers. **Three-panel charts** (e.g., price + MAD in red + MADH in yellow, or price + classic RSI + improved RSIH) are common in Ehlers articles comparing indicators — the total height is much larger than expected (~850–1200px on a 2438×3225 page). Always verify all panels are visible before finalizing the crop. Start with a generous vertical range (e.g., y=155 to y=1440) and trim if needed — it's better to include too much than to cut off the bottom panel or caption. **Two-panel charts with left-column text wrapping** (e.g., DMH, MADH articles): the chart spans x≈555–2395 with body text to the left. Start the crop at the chart's colored border left edge to exclude body text.
+
+**"DIGITAL SIGNAL PROCESSING" header bar:** Many Ehlers articles have a section header bar ("DIGITAL SIGNAL PROCESSING") above the chart on page 2. Exclude this from figure crops — start the crop below it (typically y≈155 on a 300 DPI render, though header bottom edge varies from y=90 to y=155 depending on article layout).
 
 **Interview articles (multi-column text, inline figure):** Interview-format articles (e.g., "A Conversation With...") are mostly text with Q&A. Figures may appear inline within a column rather than spanning the full page width. The chart occupies part of one column with text wrapping around it. Crop coordinates must exclude adjacent column text — push the left boundary rightward until no body text bleeds in. Expect 3–4 crop iterations for these inline figures. Use `pdftotext` for the full text since the content is selectable, then format questions in bold italic and answers as regular paragraphs.
 

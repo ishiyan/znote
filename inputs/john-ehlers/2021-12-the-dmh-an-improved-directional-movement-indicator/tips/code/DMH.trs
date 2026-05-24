@@ -1,0 +1,66 @@
+'The DMH: An Improved Directional Movement Indicator
+'Author: John F. Ehlers, TASC Dec 2021
+'Coded by: Richard Denning, 10/10/2021
+
+Function EHLERS_DMH(Len1)
+    'Len1 = 14
+    Dim SF As BarArray
+    Dim PlusDM As BarArray
+    Dim MinusDM As BarArray
+    Dim UpperMove As BarArray
+    Dim LowerMove As BarArray
+    Dim theEMA As BarArray
+    Dim DMSum As BarArray
+    Dim coef As BarArray
+    Dim count
+    Dim DMH As BarArray
+
+    If BarNumber=FirstBar Then
+        'Len1 = 14
+        SF = 0
+        PlusDM = 0
+        MinusDM = 0
+        UpperMove = 0
+        LowerMove = 0
+        theEMA = 0
+        DMSum = 0
+        coef = 0
+        count = 0
+        DMH = 0
+    End If
+
+    SF = 1 / Len1
+    UpperMove = High - High[1]
+    LowerMove = Low[1] - Low 
+    PlusDM = 0
+    MinusDM = 0
+    If UpperMove > LowerMove And UpperMove > 0 Then
+        PlusDM = UpperMove
+    Else
+        If LowerMove > UpperMove And LowerMove > 0 Then
+            MinusDM = LowerMove
+        End If
+    End If
+    theEMA = SF*(PlusDM - MinusDM) + (1 - SF)* theEMA[1]
+    
+'Smooth Directional Movements with Hann Windowed FIR filter
+    DMSum = 0
+    coef = 0
+    For count = 1 To Len1
+        DMSum = DMSum + (1 - TStation_Cosine(360*count / (Len1 + 1)))*theEMA[count - 1]
+        coef = coef + (1 - TStation_Cosine(360*count / (Len1 + 1)))
+    Next
+    If coef <> 0 Then
+        DMH = DMSum / coef
+    End If
+    EHLERS_DMH = DMH
+End Function
+'------------------------------------------------------------
+'INDICATOR PLOT:
+Sub EHLERS_DMH_IND(Len1)
+  Dim DMH As BarArray
+  DMH = EHLERS_DMH(Len1)
+  plot1(DMH)
+  plot2(0)
+End Sub
+'-------------------------------------------------------------

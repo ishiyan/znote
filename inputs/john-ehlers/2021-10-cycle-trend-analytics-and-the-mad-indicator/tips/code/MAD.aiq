@@ -1,0 +1,13 @@
+!CYCLE/TREND ANALYTICS AND THE MAD INDICATOR
+!Author: John F. Ehlers, TASC Oct 2021
+!Coded by: Richard Denning, 8/15/2021
+
+!MAD (Moving Average Difference) Indicator 
+!(C) 2021 John F. Ehler
+
+Shortlength is 8.
+LongLength is 23.
+MAD is 100*(simpleavg([Close], ShortLength) - 
+    simpleavg([Close], LongLength)) / 
+    simpleavg([Close], LongLength).
+    

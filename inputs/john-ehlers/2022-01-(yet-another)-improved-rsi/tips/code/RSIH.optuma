@@ -1,0 +1,6 @@
+//Set Length;
+#$Length = 14;
+//Calculate Ehlers MyRSI;
+R1 = MYRSI(BARS=$Length);
+//Use the Hann Finite Impulse Response Filter of the MyRSI;
+FIR(R1, BARS=$Length, SMOOTHSTYLE=Hann)

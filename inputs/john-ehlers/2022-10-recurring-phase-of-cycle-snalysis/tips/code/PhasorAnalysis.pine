@@ -1,0 +1,101 @@
+//  TASC Issue: November 2022 - Vol. 40, Issue 12
+//     Article: Recurring Phase Of Cycle Analysis
+//              Using Phasor Analysis To Identify Market Trend
+//  Article By: John Ehlers
+//    Language: TradingView's Pine Script™ v5
+// Provided By: PineCoders, for tradingview.com
+
+//@version=5
+indicator(title='TASC 2022.11 Phasor Analysis', overlay=false)
+ 
+Phasor (float Signal = close, int Period = 28) =>
+    var float angFreq = 2.0 * math.pi / Period
+    float  Sx  = 0.0,  float  Sxx = 0.0
+    float rSxy = 0.0,  float iSxy = 0.0
+    float rSyy = 0.0,  float iSyy = 0.0
+    float rSy  = 0.0,  float iSy  = 0.0
+    for i=0 to Period-1
+        float tmp = angFreq * i
+        float X   =    Signal[i]
+        float Yr  =  math.cos(tmp)
+        float Yi  = -math.sin(tmp)
+        Sx   += X,         Sxx += X  * X
+        rSxy += X  * Yr,  iSxy += X  * Yi
+        rSyy += Yr * Yr,  iSyy += Yi * Yi
+        rSy  += Yr,       iSy  += Yi
+    float varianceX     = Period *  Sxx -  Sx *  Sx
+    float varianceYr    = Period * rSyy - rSy * rSy
+    float varianceYi    = Period * iSyy - iSy * iSy
+    float covarianceXYr = Period * rSxy -  Sx * rSy
+    float covarianceXYi = Period * iSxy -  Sx * iSy
+    float rDenominator  = varianceX * varianceYr
+    float iDenominator  = varianceX * varianceYi
+    float real = nz(covarianceXYr / math.sqrt(rDenominator))
+    float imag = nz(covarianceXYi / math.sqrt(iDenominator))
+    float angle     = 0.0
+    float prevAngle = nz(angle[1])
+    angle := if real == 0.0
+        prevAngle
+    else
+        90.0 - math.todegrees(math.atan(imag / real))
+    if real < 0.0
+        angle -= 180.0
+    float temp = math.abs(prevAngle) - math.abs(angle - 360.0)
+    if  -90.0 > prevAngle
+     and temp < angle - prevAngle
+     and 90.0 < angle
+        angle -= 360.0
+    if     angle < prevAngle
+     and ((angle > -135.0 and prevAngle <  135)
+     or   (angle < -90.0  and prevAngle < -90.0))
+        angle := prevAngle
+    angle
+
+Analysis (float Angle) =>
+    float deltaAngle = Angle - nz(Angle[1])
+    if deltaAngle <= 0.0
+        deltaAngle := nz(deltaAngle[1])
+    float derivedPeriod = if deltaAngle == 0.0
+        0.0
+    else
+        math.min(60.0, 360.0 / deltaAngle)
+    int state = 0
+    if deltaAngle <= 6.0
+        state := Angle > -90.0 and Angle < 90.0 ? -1 : 1
+    [derivedPeriod, state]
+
+string grp1 = 'Angle Parameters'
+string grp2 = 'Indicator Choices'
+Signal = input.source(close, 'Source', group=grp1)
+Period = input.int   (28,    'Period', group=grp1, minval=5)
+ThresholdUpper = input.int( 90, 'Upper Threshold',    1, 179)
+ThresholdLower = input.int(-90, 'Lower Threshold', -179,  -1)
+
+Indy =   input.string('Angle', 'Indicator Mode', group=grp2,
+                         options=['Angle','Period','State'])
+ChangeRate = input.int(6, 'Change Rate (degrees)', minval=2,
+ tooltip='Intended for use with the State mode', group=grp2)
+
+float phAngle    = Phasor(Signal, Period)
+[dPeriod, Trend] = Analysis(phAngle)
+
+// Phasor Color Wizardry
+var seventeenTwelfths = 17.0 / 12.0
+var seventeenSixths   = 17.0 /  6.0
+colorValue =  phAngle * seventeenSixths
+colorAngle = color.rgb(phAngle > 90.0 ? 255 : phAngle <-90.0 ? 
+   0.0 : seventeenTwelfths * phAngle + 127.5, phAngle <  0.0 ?
+  phAngle > -90.0 ? 255 : colorValue +  510 : phAngle > 90.0 ?
+      0.0 : 255 - colorValue, phAngle > 0.0 ? phAngle < 90.0 ?
+ 0.0 : colorValue - 255 : phAngle < -90.0 ? 255 : -colorValue)
+
+plot(Indy=='Angle'  ? phAngle : na, 'Angle', colorAngle, 3)
+plot(Indy=='Period' ? dPeriod : na, 'DerivPeriod', #FFFF00)
+plot(Indy=='State'  ? Trend   : na, 'TrendState', linewidth=2,
+  color = Trend > 0 ? #00FF00 : Trend < 0 ? #FF0000 : #888800)
+
+hline(  0, 'ZeroLine', #FFFFFF)
+hline(Indy=='Angle' ? ThresholdUpper : na, 'Upper Threshold',
+                              #FF00FF, hline.style_dotted, 2)
+hline(Indy=='Angle' ? ThresholdLower : na, 'Lower Threshold',
+                              #0055FF, hline.style_dotted, 2)

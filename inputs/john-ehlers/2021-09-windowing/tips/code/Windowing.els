@@ -1,0 +1,139 @@
+Indicator:  TASC SEP 2021 FIR SMA
+{
+	TASC SEP 2021
+	FIR SMA Indicator
+	(C) 2021   John F. Ehlers
+}
+
+Inputs:
+	Length(20);	
+
+Vars:
+	Deriv(0), 
+	Filt(0),
+	coef(0),
+	ROC(0),
+	count(0);
+
+//Derivative of the price wave	
+Deriv = Close - Open;
+
+Filt = 0;
+coef = 0;
+For count = 1 to Length Begin
+	Filt = Filt + Deriv[count];
+	coef = coef + 1;
+End;
+If coef <> 0 Then Filt = Filt / coef;
+
+ROC = (Length / 6.28)*(Filt - Filt[1]);
+	
+Plot1(Filt);
+Plot2(0);
+ 
+
+Indicator:  TASC SEP 2021 FIR Triangle
+{
+	TASC SEP 2021
+	FIR Triangle Weighting Indicator
+	(C) 2021   John F. Ehlers
+}
+
+Inputs:
+	Length(20);	
+
+Vars:
+	Deriv(0), 
+	Filt(0),
+	coef(0),
+	SumCoef(0),
+	ROC(0),
+	count(0);
+
+//Derivative of the price wave	
+Deriv = Close - Open;
+
+Filt = 0;
+SumCoef = 0;
+For count = 1 to Length Begin
+	If count  Length / 2 Then Begin
+		coef = (Length + 1 - count);
+	End;
+	Filt = Filt + coef*Deriv[count - 1];
+	SumCoef = SumCoef + coef;
+End;
+If SumCoef <> 0 Then Filt = Filt / SumCoef;
+
+ROC = (Length / 6.28)*(Filt - Filt[1]);
+
+Plot1(Filt);
+Plot2(0);
+ 
+
+Indicator:  TASC SEP 2021 FIR Hamming
+{
+	TASC SEP 2021
+	FIR Hamming Window Indicator
+	(C) 2021   John F. Ehlers
+}
+
+Inputs:
+	Length(20),
+	Pedestal(10);	
+
+Vars:
+	Deriv(0), 
+	Filt(0),
+	coef(0),
+	ROC(0),
+	count(0);
+
+//Derivative of the price wave	
+Deriv = Close - Open;
+
+Filt = 0;
+coef = 0;
+For count = 0 to Length - 1 Begin
+	Filt = Filt + Sine(Pedestal + (180 - 2*Pedestal)*count / (Length - 1))*Deriv[count];
+	coef = coef + Sine(Pedestal + (180 - 2*Pedestal)*count / (Length - 1));
+End;
+If coef <> 0 Then Filt = Filt / coef;
+
+ROC = (Length / 6.28)*(Filt - Filt[1]);
+	
+Plot1(Filt);
+Plot2(0);{
+
+ 
+Indicator:  TASC SEP 2021 FIR Hann
+{
+	TASC SEP 2021
+	FIR Hann Window Indicator
+	(C) 2021   John F. Ehlers
+}
+
+Inputs:
+	Length(20);	
+
+Vars:
+	Deriv(0), 
+	Filt(0),
+	coef(0),
+	ROC(0),
+	count(0);
+
+//Derivative of the price wave	
+Deriv = Close - Open;
+
+Filt = 0;
+coef = 0;
+For count = 1 to Length Begin
+	Filt = Filt + (1 - Cosine(360*count / (Length + 1)))*Deriv[count - 1];
+	coef = coef + (1 - Cosine(360*count / (Length + 1)));
+End;
+If coef <> 0 Then Filt = Filt / coef;
+
+ROC = (Length / 6.28)*(Filt - Filt[1]);
+	
+Plot1(Filt);
+Plot2(0);

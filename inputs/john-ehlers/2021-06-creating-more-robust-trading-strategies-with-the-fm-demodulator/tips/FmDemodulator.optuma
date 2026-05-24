@@ -1,0 +1,28 @@
+// Simple Strategy
+$SigPeriod = 8;
+$ROCPeriod = 1;
+Deriv = CLOSE()-CLOSE()[2];
+Z3 = Deriv + Deriv[1] + Deriv[2] + Deriv[3];
+Signal= MA(Z3, BARS=$SigPeriod, CALC=Close);
+ROC1 = Signal - OFFSET(Signal, OFFSET=$ROCPeriod);
+//Buy Signal;
+ROC1 CrossesAbove 0
+//Sell Signal;
+//ROC1 CrossesBelow 0
+
+// ---
+
+// Simple with FM Demodulator
+$SigPeriod = 22;
+$ROCPeriod = 10;
+Deriv = CLOSE()-CLOSE()[2];
+Deriv2 = Deriv * Deriv;
+RMS=ACC(Deriv2, RANGE=Look Back Period, BARS=50);
+Clip = (2*Deriv) / SQRT(RMS / 50);
+Z3 = Clip + Clip[1] + Clip[2] + Clip[3];
+Signal= MA(Z3, BARS=$SigPeriod, CALC=Close);
+ROC1 = Signal - OFFSET(Signal, OFFSET=$ROCPeriod);
+//Buy Signal;
+ROC1 CrossesAbove 0
+//Sell Signal;
+//ROC1 CrossesBelow 0

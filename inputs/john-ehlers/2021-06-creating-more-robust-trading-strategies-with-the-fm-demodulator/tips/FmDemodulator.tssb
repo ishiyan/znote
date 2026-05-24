@@ -1,0 +1,88 @@
+'Simple
+'(c) 2013 - 2021 John F. Ehlers
+Sub EHLERS_SIMPLE(SigPeriod, ROCPeriod)
+
+    Dim Deriv As BarArray
+    Dim Z3 As BarArray
+    Dim Signal As BarArray
+    Dim theROC As BarArray
+
+    If BarNumber=FirstBar Then
+        'SigPeriod = 8
+        'ROCPeriod = 1
+        Deriv = 0
+        Z3 = 0
+        Signal = 0
+        theROC = 0
+    End If
+
+'Derivative of the price wave
+    Deriv = Close - Close[2]
+'zeros at Nyquist and 2*Nyquist, 
+'   i.e. Z3 = (1 + Z^-1)*(1 + Z^-2) to integrate derivative
+    Z3 = Deriv + Deriv[1] + Deriv[2] + Deriv[3]
+'Smooth Z3 for trading signal
+    Signal = Average(Z3, SigPeriod)
+'Use Rate of Change to identify entry point
+    theROC = Signal - Signal[ROCPeriod]
+    If CrossesOver(theROC, 0) Then
+        Buy("", 1, 0, Market, Day)
+    End If
+    If CrossesUnder(Signal, 0) Then
+        ExitLong("", "", 1, 0, Market, Day)
+    End If
+End Sub
+'---------------------------------------------
+'Simple Clip
+'(c) 2013 - 2021 John F. Ehlers
+Sub EHLERS_SIMPLE_CLIP(SigPeriod, ROCPeriod)
+
+    Dim Deriv As BarArray
+    Dim RMS As BarArray
+    Dim count As BarArray
+    Dim Clip As BarArray
+    Dim Z3 As BarArray
+    Dim Signal As BarArray
+    Dim theROC As BarArray
+
+    If BarNumber=FirstBar Then
+        'SigPeriod = 22
+        'ROCPeriod = 10
+        Deriv = 0
+        RMS = 0
+        count = 0
+        Clip = 0
+        Z3 = 0
+        Signal = 0
+        theROC = 0
+    End If
+
+'Derivative of the price wave
+    Deriv = Close - Close[2]
+'Normalize Degap to half RMS and hard limit at +/- 1
+    RMS = 0
+    For count = 0 To 49
+        RMS = RMS + Deriv [count]*Deriv [count]
+    Next
+    If RMS <> 0 Then
+        Clip = 2*Deriv / Sqr(RMS / 50)
+    End If
+    If Clip > 1 Then
+        Clip = 1
+    End If
+    If Clip < -1 Then
+        Clip = -1
+    End If
+    Z3 = Clip + Clip [1] + Clip [2] + Clip [3]
+'Smooth Z2 for trading signal 
+Signal = Average(Z3, SigPeriod)
+'Use Rate of Change to identify entry point
+    theROC = Signal - Signal[ROCPeriod]
+    If CrossesOver(theROC, 0) Then
+        Buy("LE", 1, 0, Market, Day)
+    End If
+    If CrossesUnder(Signal, 0) Then
+        ExitLong("LX", "", 1, 0, Market, Day)
+    End If
+End Sub
+'----------------------------------------------

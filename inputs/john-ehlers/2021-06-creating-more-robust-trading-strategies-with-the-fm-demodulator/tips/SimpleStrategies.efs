@@ -1,0 +1,151 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    Creating More Robust Trading Strategies With The FM Demodulator
+    by John F. Ehlers
+    
+
+Version:            1.00  04/08/2021
+
+Formula Parameters:                    Default:
+SigPeriod                              8
+ROCPeriod                              1
+SigPeriod2                             22
+ROCPeriod2                             10
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("Simple Strategies");
+    setPriceStudy(true);
+        
+    var x=0;
+    fpArray[x] = new FunctionParameter("SigPeriod", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);		
+        setDefault(8);
+    }
+    fpArray[x] = new FunctionParameter("ROCPeriod", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);		
+        setDefault(1);
+    }
+     fpArray[x] = new FunctionParameter("SigPeriod2", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("SigPeriod Demodulator");
+        setLowerLimit(1);		
+        setDefault(22);
+    }
+    fpArray[x] = new FunctionParameter("ROCPeriod2", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("ROCPeriod Demodulator");
+        setLowerLimit(1);		
+        setDefault(10);
+    }
+    fpArray[x] = new FunctionParameter("Type", FunctionParameter.STRING);
+	with(fpArray[x++]){
+        setName("Type");
+        addOption("Standard"); 
+        addOption("With FM Demodulator");
+        setDefault("Standard"); 
+    }
+}
+
+var bVersion = null;
+var xClose = null;
+var xOpen = null;
+var xDeriv = null;
+var xZ3 = null;
+var xSignal = null;
+var xROC = null;
+
+
+
+function main(SigPeriod, ROCPeriod, SigPeriod2, ROCPeriod2, Type) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close();  
+        xHigh = high();
+        xLow = low();
+        xDeriv = efsInternal("Calc_Deriv", xClose);
+        if (Type=="Standard"){
+            xZ3 = efsInternal("Calc_z3", xDeriv);
+            xSignal = sma(SigPeriod, xZ3);
+            xROC = roc(ROCPeriod, xSignal);
+        }
+        else {
+            xClip = efsInternal("Calc_clip", xDeriv);
+            xZ3 = efsInternal("Calc_z3", xClip); 
+            xSignal = sma(SigPeriod2, xZ3);
+            xROC = roc(ROCPeriod2, xSignal);
+        }
+        
+        bInit = true; 
+    }      
+
+    if (xROC.getValue(-2) < 0 && xROC.getValue(-1) > 0) {
+        drawShapeRelative(0, xLow.getValue(0) - getMinTick()*100, Shape.UPARROW, null, Color.green, Shape.ONTOP | Shape.TOP, "buy" + getCurrentBarCount());
+    }
+    if (xSignal.getValue(-2) > 0 && xSignal.getValue(-1) < 0){
+        drawShapeRelative(0, xHigh.getValue(0) + getMinTick()*100, Shape.DOWNARROW, null, Color.red, Shape.ONTOP  | Shape.TOP, "sell" + getCurrentBarCount());
+    }
+    
+    return;
+}
+
+function Calc_clip(xDeriv){
+    var RMS = 0;
+    var ret = 0;
+    for (var i = 0; i <=49; i++){
+        RMS = RMS + xDeriv.getValue(-i) * xDeriv.getValue(-i); 
+    }
+    if (RMS != 0) ret = 2 * xDeriv.getValue(0) / Math.sqrt(RMS/50);
+    if (ret > 1) ret = 1;
+    if (ret < -1) ret = -1;
+    
+    return ret;
+}
+
+function Calc_z3(xDeriv){
+    var ret = 0;
+    ret = xDeriv.getValue(0) + xDeriv.getValue(-1) + xDeriv.getValue(-2) + xDeriv.getValue(-3);
+    return ret;
+}
+
+function Calc_Deriv(xClose){
+    var ret = 0;
+    ret = xClose.getValue(0) - xClose.getValue(-2);
+    return ret;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

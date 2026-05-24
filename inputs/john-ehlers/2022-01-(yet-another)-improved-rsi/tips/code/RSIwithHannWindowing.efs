@@ -1,0 +1,101 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    (Yet Another) Improved RSI
+    by John F. Ehlers
+    
+
+Version:            1.00  11/11/2021
+
+Formula Parameters:                    Default:
+RSILength                              14
+ 
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("RSI with Hann Windowing");
+    setCursorLabelName("RSIH", 0);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("RSILength", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);  
+        setDefault(14);
+    }    
+}
+
+var bVersion = null;
+var xClose = null;
+var xRSIH = null;
+var RSILength = null;
+var CU = null;
+var CD = null;
+
+
+function main(RSILength) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close(); 
+        addBand(0, PS_DASH, 1, Color.grey, 1);
+        xRSIH = efsInternal('Calc_RSIH', xClose, RSILength);
+                        
+        bInit = true; 
+    }      
+    
+    if (getCurrentBarCount() < RSILength) return;
+    return xRSIH.getValue(0);        
+}
+
+function Calc_RSIH(xClose, RSILength){
+    ret = 0;
+    CU = 0;
+    CD = 0;
+    for (var i = 1; i <= RSILength; i++){
+        if ((xClose.getValue(-i+1) - xClose.getValue(-i)) > 0) {
+           CU = CU + (1 - Math.cos(2 * Math.PI * i / (RSILength + 1))) * (xClose.getValue(-i+1) - xClose.getValue(-i))
+        } 
+        if ((xClose.getValue(-i) - xClose.getValue(-i+1)) > 0) {
+            CD = CD + (1 - Math.cos(2 * Math.PI * i / (RSILength + 1))) * (xClose.getValue(-i) - xClose.getValue(-i+1)) 
+        }
+    }
+    if (CU + CD != 0) ret = (CU - CD) / (CU + CD);
+    return ret;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=http://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}
+ 

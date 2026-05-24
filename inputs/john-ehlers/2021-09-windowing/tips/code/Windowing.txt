@@ -1,0 +1,1 @@
+WMA-n = Coef-1/SumOfCoefs * Term-1 + Coef-2/SumOfCoefs*Term-2 +���+ Coef-n/SumOfCoefs*Term-n

@@ -1,0 +1,143 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    Directional Movement using Hann Windowing
+    by John F. Ehlers
+    
+
+Version:            1.00  10/07/2021
+
+Formula Parameters:                    Default:
+Length                                 14
+ 
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("Directional Movement using Hann Windowing");
+    setCursorLabelName("DMH", 0);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("Length", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);  
+        setDefault(14);
+    }    
+}
+
+var bVersion = null;
+var xClose = null;
+var xDMH = null;
+var SF = null;
+var xUpperMove = null;
+var xLowerMove = null;
+var PlusDM = null;
+var MinusDM = null;
+var xEMA = [];
+var coef = null;
+
+
+
+
+function main(Length) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close(); 
+        xHigh = high();
+        xLow = low();
+        addBand(0, PS_DASH, 1, Color.grey, 1);
+        SF = 1 / Length;
+        xUpperMove = efsInternal('Calc_xUpperMove', xHigh);
+        xLowerMove = efsInternal('Calc_xLowerMove', xLow);
+        for (var i = 0; i < Length; i++){
+            xEMA[i] = 0;
+        }                    
+        
+        bInit = true; 
+    }      
+    
+    if (getCurrentBarCount() < Length) return;
+    
+    
+    PlusDM = 0 ;
+    MinusDM = 0 ;
+    if (xUpperMove.getValue(0) > xLowerMove.getValue(0) & xUpperMove.getValue(0) > 0) {
+        PlusDM = xUpperMove.getValue(0)
+    }
+    else if (xLowerMove.getValue(0) > xUpperMove.getValue(0) & xLowerMove.getValue(0) > 0) {
+        MinusDM = xLowerMove.getValue(0)
+    }
+    
+    vEMA = SF * (PlusDM - MinusDM) + (1 - SF)* xEMA[0];
+    
+    if (getBarState() == BARSTATE_NEWBAR){
+        xEMA.unshift(vEMA);
+        xEMA.pop();
+    }
+    else {
+        xEMA[0] = vEMA
+    }
+
+    xDMH = Calc_DMH(xEMA, Length);
+
+    return xDMH;        
+}
+
+function Calc_DMH(xEMA, Length){
+    DMSum = 0;
+    coef = 0;
+
+    for (var i = 1; i <= Length; i++){
+        DMSum = DMSum + (1 - Math.cos(2 * Math.PI * i / (Length + 1))) * xEMA[i - 1];
+        coef = coef + (1 - Math.cos(2 * Math.PI * i / (Length + 1))) 
+    }
+    if (coef != 0) {
+     DMH = DMSum / coef;
+    }
+
+    return DMH;    
+}
+
+function Calc_xLowerMove(xLow){
+    return (xLow.getValue(-1) - xLow.getValue(0));
+}
+
+function Calc_xUpperMove(xHigh){
+    return (xHigh.getValue(0) - xHigh.getValue(-1));
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

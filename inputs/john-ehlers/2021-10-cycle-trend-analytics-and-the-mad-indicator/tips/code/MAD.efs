@@ -1,0 +1,94 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    Cycle/Trend Analytics And The MAD Indicator
+    by John F. Ehlers
+    
+
+Version:            1.00  08/12/2021
+
+Formula Parameters:                    Default:
+ShortLength                            8
+LongLength                             23
+ 
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("Moving Average Difference Indicator");
+    setCursorLabelName("MAD", 0);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("ShortLength", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);  
+        setDefault(8);
+    }    
+    fpArray[x] = new FunctionParameter("LongLength", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1); 
+        setDefault(23);
+    }   
+}
+
+var bVersion = null;
+var xClose = null;
+var xMAD = null;
+
+function main(ShortLength, LongLength) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close(); 
+        addBand(0, PS_DASH, 1, Color.grey, 1);
+        xMAD = efsInternal('Calc_MAD', xClose, ShortLength, LongLength);
+                        
+        bInit = true; 
+    }      
+    
+    if (getCurrentBarCount() < LongLength || getCurrentBarCount() < ShortLength) return;
+
+
+    return xMAD.getValue(0);        
+}
+
+function Calc_MAD(xClose, ShortLength, LongLength){
+    ret = 100 * (sma(ShortLength, xClose) - sma(LongLength, xClose)) / sma(LongLength, xClose);
+    return ret;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}
+ 

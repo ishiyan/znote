@@ -1,0 +1,48 @@
+'WINDOWING 
+'Author: John F. Ehlers, TASC September 2021
+'Coded by Richard Denning, 7/18/21
+
+Function EHLERS_FIT_TRIANGLE(Length)
+
+    Dim Deriv As BarArray
+    Dim Filt As BarArray
+    Dim coef As BarArray
+    Dim SumCoef As BarArray
+    Dim theROC As BarArray
+    Dim count
+
+    If BarNumber=FirstBar Then
+        'Length = 20
+        Deriv = 0
+        Filt = 0
+        coef = 0
+        SumCoef = 0
+        theROC = 0
+        count = 0
+    End If
+
+    Deriv = Close - Open
+    Filt = 0
+    SumCoef = 0
+    For count = 1 To Length
+        If count  Length / 2 Then
+            coef = (Length + 1 - count)
+        End If
+        Filt = Filt + coef*Deriv[count - 1]
+        SumCoef = SumCoef + coef
+    Next
+    If SumCoef <> 0 Then
+        Filt = Filt / SumCoef
+    End If
+    theROC = (Length / 6.28)*(Filt - Filt[1])
+    EHLERS_FIT_TRIANGLE = Filt
+End Function
+'---------------------------------------------
+'INDICATOR PLOT FOR TRIANGLE INDICATOR:
+Dim Filt As BarArray
+Filt = EHLERS_FIT_TRIANGLE(length)
+PLOT1(Filt)
+PLOT2(0)
+
+End Sub
+'---------------------------------------------

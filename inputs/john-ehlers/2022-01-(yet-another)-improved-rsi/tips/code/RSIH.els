@@ -1,0 +1,32 @@
+Indicator:  TASC DEC 2021 RSIH
+// TASC JAN 2022
+// RSIH - RSI with Hann Windowing
+// (C) 2005-2021 John F. Ehlers
+
+inputs:
+	RSILength(14);
+	
+variables:
+	count(0),
+	CU(0),
+	CD(0),
+	MyRSI(0);
+	
+// Accumulate "Closes Up" and "Closes Down"
+CU = 0;
+CD = 0;
+
+for count = 1 to RSILength begin
+	if Close[count - 1] - Close[count] > 0 then 
+	 CU = CU + (1 - Cosine(360*count / (RSILength + 1)))
+	 *(Close[count - 1] - Close[count]);
+	if Close[count] - Close[count - 1] > 0 then 
+	 CD = CD + (1 - Cosine(360*count / (RSILength + 1)))
+	 *(Close[count] - Close[count - 1]);
+end;
+
+if CU + CD <> 0 then 
+	MyRSI = (CU - CD) / (CU + CD);
+
+Plot1(MyRSI, "RSIH");
+Plot2(0, "Zero"); 

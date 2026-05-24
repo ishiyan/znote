@@ -1,0 +1,41 @@
+Indicator:  TASC DEC 2021 DMH
+// TASC DEC 2021
+// DMH - Directional Movement using Hann windowing
+// (C) 2021 John F. Ehlers
+
+inputs:
+	Length(14);
+
+variables:
+	SF(0), PlusDM(0), MinusDM(0),
+	UpperMove(0), LowerMove(0), EMA(0),
+	DMSum(0), coef(0), count(0), DMH(0);
+
+SF = 1 / Length;
+UpperMove = High - High[1];
+LowerMove = Low[1] - Low;
+PlusDM = 0 ;
+MinusDM = 0 ;
+
+if UpperMove > LowerMove and UpperMove > 0 then
+	PlusDM = UpperMove
+else if LowerMove > UpperMove and LowerMove > 0 then
+	MinusDM = LowerMove;
+
+EMA = SF*(PlusDM - MinusDM) + (1 - SF)* EMA[1];
+//Smooth Directional Movements with Hann Windowed FIR filter
+
+DMSum = 0;
+coef = 0;
+
+for count = 1 to Length
+begin
+	DMSum = DMSum + (1 - Cosine(360*count / (Length +
+	 1)))*EMA[count - 1];
+	coef = coef + (1 - Cosine(360*count / (Length + 1)));
+end;
+
+if coef <> 0 then DMH = DMSum / coef;
+
+Plot1(DMH, "DMH");
+Plot2(0, "Zero");

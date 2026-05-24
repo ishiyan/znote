@@ -1,0 +1,35 @@
+//  TASC Issue: January 2022 - Vol. 40, Issue 1
+//     Article: "(Yet Another) Improved RSI
+//               Enhanced With Hann Windowing"
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script v5
+// Provided By: PineCoders, for tradingview.com
+
+//@version=5
+indicator("TASC 2022.01 Improved RSI w/Hann", "RSIH")
+
+lengthInput = input.int(14, "Length:", minval = 2)
+
+rsih(length) =>
+    var float PIx2 = 2 * math.pi
+    // Accumulate "Closes Up" and "Closes Down"
+    cu = 0.0
+    cd = 0.0
+    for count = 1 to length
+    	change = close[count] - close[count - 1]
+    	absChange = math.abs(change)
+    	cosPart = math.cos(PIx2 * count / (length + 1))
+    
+    	if change < 0
+    		cu := cu + (1 - cosPart) * absChange
+    	else if change > 0
+    		cd := cd + (1 - cosPart) * absChange
+
+    result = nz((cu - cd) / (cu + cd))
+
+signal = rsih(lengthInput)
+plotColor = signal > 0.0 ? #00FF00   : #FF0080
+areaColor = signal > 0.0 ? #00FF0055 : #FF008055
+plot(signal, "Area", areaColor, 1, plot.style_area)
+plot(signal, "RSIH", plotColor, 2)
+hline(0, "Zero", color.gray)

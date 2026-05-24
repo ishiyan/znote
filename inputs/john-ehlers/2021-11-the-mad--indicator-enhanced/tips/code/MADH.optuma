@@ -1,0 +1,10 @@
+//Calculate MAD Oscillator;
+//MA Inputs;
+#$Short = 8;
+#$Long = 23;
+//Calc MAD;
+S1 = MA(BARS=$Short, CALC=Close);
+L1 = MA(BARS=$Long, CALC=Close);
+MAD1 =100 * ((S1 - L1)/L1);
+//Wrap MAD in the FIR Hann function to calculate MADH;
+FIR(MAD1, SMOOTHSTYLE=Hann, BARS=20)

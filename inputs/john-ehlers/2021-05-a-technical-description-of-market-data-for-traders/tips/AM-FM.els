@@ -1,0 +1,105 @@
+Function:  _TASC_MAY_2021_FM_Demodulator
+// TASC MAY 2021
+// A Technical Description Of Market Data For Traders
+// John F. Ehlers (C) 2020-2021 
+// FM Demodulator
+
+inputs:
+    Period( numericsimple );
+
+variables:
+    Deriv( 0 ), 
+    HL( 0 ),
+    a1( 0 ), 
+    b1( 0 ), 
+    c1( 0 ), 
+    c2( 0 ), 
+    c3( 0 ), 
+    SS( 0 );
+
+{
+derivative to establish zero mean (basically the 
+same as Close - Close[1], but removes intraday gap 
+openings)
+}
+Deriv = Close - Open;
+
+// hard limiter to remove AM noise
+HL = 10 * Deriv;
+if HL > 1 then 
+    HL = 1;
+
+if HL < -1 then 
+    HL = -1;
+
+// integrate with a SuperSmoother
+a1 = ExpValue( -1.414 * 3.14159 / Period );
+b1 = 2 * a1 * Cosine( 1.414 * 180 / Period );
+c2 = b1;
+c3 = -a1 * a1;
+c1 = 1 - c2 - c3;
+SS = c1 * ( HL + HL[1] ) /2 + c2 * SS[1] + c3 * SS[2];
+
+if CurrentBar < 3 then 
+    SS = Deriv;
+
+_TASC_MAY_2021_FM_Demodultor = SS;
+
+Indicator:  TASC MAY 2021 FM Demodulator
+// TASC MAY 2021
+// A Technical Description Of Market Data For Traders
+// John F. Ehlers (C) 2020-2021 
+// FM Demodulator
+
+inputs:
+    Period( 30 );
+
+variables:
+    SS( 0 );
+    
+SS = _TASC_MAY_2021_FM_Demodultor( Period );
+
+Plot1( SS );
+Plot2( 0 );
+
+Indicator: TASC MAY 2021 AM Detector
+// TASC MAY 2021
+// A Technical Description Of Market Data For Traders
+// John F. Ehlers (C) 2020-2021 
+// AM Detector
+
+variables:
+    Deriv( 0 ),
+    Envel( 0 ),
+    Volatil( 0 );
+    
+Deriv = Close - Open;
+Envel = Highest( AbsValue( Deriv ), 4 );
+Volatil = Average( Envel, 8 );
+
+Plot1( Volatil );
+Plot2( 0 );
+
+
+Strategy:  TASC MAY 2021 Strategy
+// TASC MAY 2021
+// A Technical Description Of Market Data For Traders
+// John F. Ehlers (C) 2020-2021 
+// FM Demodulator
+
+// sample strategy for illustrative purposes only
+
+[IntrabarOrderGeneration=false]
+
+inputs:
+    Period( 30 );
+
+variables:
+    SS( 0 );
+    
+SS = _TASC_MAY_2021_FM_Demodultor( Period );
+
+if SS crosses above 0 then
+    Buy ( "LE FM Mod" ) next bar market
+else if SS crosses below 0 then
+    SellShort ( "SE FM Mod" ) next bar market;

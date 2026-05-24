@@ -1,0 +1,116 @@
+Indicator:  TASC AUG 2021 MAB
+// TASC OCT 2021
+// Cycle/Trend Analytics
+// (C) 2021 John F. Ehlers
+
+Inputs:
+	CTMode("trend"); // "cycle" or "trend"
+	
+Vars:
+	Price(0),
+	Length(0),
+	NormalLength(0),
+	Color1(0),
+	Color2(0),
+	Color3(0);
+	
+Arrays:
+	Osc[50](0);
+	
+Plot1(0,"",white, 1, 1);
+	Price = Close;
+	
+If CTMode = "cycle" Then 
+Begin
+	Price = Sine(360*CurrentBar / 30);
+	Plot2(Price,"", cyan, 4, 4);
+	Plot3(Average(Price, 5) - Average(Price, 30),"", green, 4, 4);
+End;
+
+Color1 = 255;
+Color3 = 0;
+For Length = 5 to 30 Begin
+	Osc[Length] = Price - Average(Price, Length);
+End;
+
+For Length = 5 to 30 
+Begin
+	Color2 = 306 - 10.2*Length;
+	//If Length = 3 Then Plot3[0](Osc[Length], "S3", RGB(Color1, 
+	//Color2, Color3),0,4);
+	If Length = 4 Then Plot4[0](Osc[Length], "S4", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 5 Then Plot5[0](Osc[Length], "S5", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 6 Then Plot6[0](Osc[Length], "S6", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 7 Then Plot7[0](Osc[Length], "S7", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 8 Then Plot8[0](Osc[Length], "S8", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 9 Then Plot9[0](Osc[Length], "S9", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 10 Then Plot10[0](Osc[Length], "S10", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 11 Then Plot11[0](Osc[Length], "S11", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 12 Then Plot12[0](Osc[Length], "S12", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 13 Then Plot13[0](Osc[Length], "S13", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 14 Then Plot14[0](Osc[Length], "S14", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 15 Then Plot15[0](Osc[Length], "S15", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 16 Then Plot16[0](Osc[Length], "S16", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 17 Then Plot17[0](Osc[Length], "S17", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 18 Then Plot18[0](Osc[Length], "S18", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 19 Then Plot19[0](Osc[Length], "S19", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 20 Then Plot20[0](Osc[Length], "S20", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 21 Then Plot21[0](Osc[Length], "S21", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 22 Then Plot22[0](Osc[Length], "S22", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 23 Then Plot23[0](Osc[Length], "S23", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 24 Then Plot24[0](Osc[Length], "S24", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 25 Then Plot25[0](Osc[Length], "S25", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 26 Then Plot26[0](Osc[Length], "S26", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 27 Then Plot27[0](Osc[Length], "S27", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 28 Then Plot28[0](Osc[Length], "S28", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 29 Then Plot29[0](Osc[Length], "S29", RGB(Color1, 
+	 Color2, Color3),0,4);
+	If Length = 30 Then Plot30[0](Osc[Length], "S30", RGB(Color1, 
+	 Color2, Color3),0,4);
+End
+
+ 
+
+Indicator:  TASC OCT 2021 MAD
+// TASC AUG 2021
+// MAD (Moving Average Difference) Indicator
+// (C) 2021 John F. Ehlers
+
+Inputs:
+	ShortLength(8),
+	LongLength(23);
+	
+Vars:
+	MAD(0);
+	MAD = 100*(Average(Close, 
+	 ShortLength) - Average(Close, 
+	 LongLength)) / Average(Close, 
+	 LongLength);
+	 
+Plot1(MAD, "", red, 4, 4);
+Plot2(0,"", white, 1, 1)

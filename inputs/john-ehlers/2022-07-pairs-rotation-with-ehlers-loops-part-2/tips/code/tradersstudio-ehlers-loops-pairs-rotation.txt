@@ -1,0 +1,87 @@
+'Ehlers Loops2, TASC July 2022
+'Author: John F. Ehlers
+'Coded by: Richard Denning, 5/18/2022
+
+'Ehlers Loops Pairs Rotation Chart
+'(C) 2005-2022 John F. Ehlers
+
+Function EHLERS_LOOPS2(LPPeriod, HPPeriod, IndPrice2 As BarArray, ByRef Price1RMS)
+
+    Dim HP1 As BarArray
+    Dim HP2 As BarArray
+    Dim hpa1 As BarArray
+    Dim hpb1 As BarArray
+    Dim hpc1 As BarArray
+    Dim hpc2 As BarArray
+    Dim hpc3 As BarArray
+    Dim ssa1 As BarArray
+    Dim ssb1 As BarArray
+    Dim ssc1 As BarArray
+    Dim ssc2 As BarArray
+    Dim ssc3 As BarArray
+    Dim Price1 As BarArray
+    Dim Price1MS As BarArray
+    'Dim Price1RMS As BarArray
+    Dim Price2 As BarArray
+    Dim Price2MS As BarArray
+    Dim Price2RMS As BarArray
+ 
+    'LPPeriod = 20
+    'HPPeriod = 125
+       
+    If BarNumber = FirstBar Then
+        hpa1 = TStation_ExpValue(-1.414*3.14159 / HPPeriod)
+        hpb1 = 2*hpa1*TStation_Cosine(1.414*180 / HPPeriod)
+        hpc2 = hpb1
+        hpc3 = -hpa1*hpa1
+        hpc1 = (1 + hpc2 - hpc3) / 4
+        ssa1 = TStation_ExpValue(-1.414*3.14159 / LPPeriod)
+        ssb1 = 2*ssa1*TStation_Cosine(1.414*180 / LPPeriod)
+        ssc2 = ssb1
+        ssc3 = -ssa1*ssa1
+        ssc1 = 1 - ssc2 - ssc3
+    End If
+    HP1 = hpc1*(C - 2*C[1]+ C[2]) + hpc2*HP1[1] + hpc3*HP1[2]
+   
+    Price1 = ssc1*(HP1 + HP1[1]) / 2 + ssc2*Price1[1] + ssc3*Price1[2]
+  
+    If BarNumber = FirstBar Then
+        Price1MS = Price1*Price1
+    Else
+        Price1MS = 0.0242*Price1*Price1 + 0.9758*Price1MS[1]
+    End If
+    If Price1MS <> 0 Then
+        Price1RMS = Price1 / Sqr(Price1MS)
+    End If
+    HP2 = hpc1*(IndPrice2 - 2*IndPrice2[1] + IndPrice2[2]) + hpc2*HP2[1] + hpc3*HP2[2]
+   
+    Price2 = ssc1*(HP2 + HP2[1]) / 2 + ssc2*Price2[1] + ssc3*Price2[2]
+   
+    If BarNumber = FirstBar Then
+        Price2MS = Price2*Price2
+    Else
+        Price2MS = 0.0242*Price2*Price2 + 0.9758*Price2MS[1]
+    End If
+    If Price2MS <> 0 Then
+        Price2RMS = Price2 / Sqr(Price2MS)
+    End If
+    EHLERS_LOOPS2 = Price2RMS
+   
+End Function
+'------------------------------------------------------------------------------
+'A System Code File to Export Data to Terminal Window
+'Which Can Then Be pasted Into Excel For Plotting on a Scatter Graph
+'Use This Code To Setup a Session
+
+Sub EHLERS_LOOPS2_SYS(LPPeriod, HPPeriod)
+'LLPeriod = 20, HPPeriod = 125
+
+Dim Price1RMS As BarArray
+Dim Price2RMS As BarArray
+Dim VolRMS As BarArray
+Dim IndPrice2 As BarArray
+IndPrice2 = C of independent1
+Price2RMS = EHLERS_LOOPS2(LPPeriod, HPPeriod, IndPrice2, Price1RMS) 
+Print FormatDateTime(Date)," Price1RMS ",Round(Price1RMS,2)," Price2RMS ",Round(Price2RMS,2)
+End Sub
+'------------------------------------------------------------------------------

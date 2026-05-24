@@ -1,0 +1,55 @@
+// TASC JUN 2021
+// Creating More Robust Trading Strategies With The FM
+// Demodulator
+// (c) 2013 - 2021 John F. Ehlers
+// Simple strategy with FM demodulator
+
+inputs:
+	SigPeriod( 22 ),
+	ROCPeriod( 10 );
+
+variables:
+	Deriv( 0 ),
+	RMS( 0 ),
+	count( 0 ),
+	Clip( 0 ),
+	Z3( 0 ),
+	Signal( 0 ),
+	ROC( 0 );
+
+// derivative of the price wave
+Deriv = Close - Close[2];
+
+// normalize Degap to half RMS and hard limit at +/- 1
+RMS = 0;
+
+for count = 0 to 49 
+begin
+	RMS = RMS + Deriv[count] * Deriv[count];
+end;
+
+if RMS <> 0 then 
+	Clip = 2 * Deriv / SquareRoot( RMS / 50 );
+
+if Clip > 1 then 
+	Clip = 1;
+
+if Clip < -1 then 
+	Clip = -1;
+
+// zeros at Nyquist and 2*Nyquist, 
+// i.e. Z3 = (1 + Z^-1)*(1 + Z^-2) to integrate 
+// derivative
+Z3 = Clip + Clip [1] + Clip [2] + Clip [3];
+
+// smooth Z2 for trading signal
+Signal = Average( Z3, SigPeriod );
+
+// use Rate of Change to identify entry point
+ROC = Signal - Signal[ROCPeriod];
+
+if ROC crosses over 0 then 
+	Buy next bar on Open;
+	
+if Signal crosses under 0 then 
+	Sell next bar on Open;

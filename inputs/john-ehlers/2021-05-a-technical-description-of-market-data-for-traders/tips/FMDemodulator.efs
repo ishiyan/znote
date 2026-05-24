@@ -1,0 +1,96 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:      
+    A Technical Description Of Market Data For Traders
+    AM Detector
+    by John F. Ehlers
+    
+
+Version:            1.00  03/12/2021
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("AM Detector");
+    setCursorLabelName("AM Detector", 0);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setPlotType( PLOTTYPE_LINE , 0 );
+}
+
+var bVersion = null;
+var xClose = null;
+var xOpen = null;
+var xDeriv = null;
+var xAbsDeriv = null;
+var xEnvel = null;
+var xVolatil = null;
+
+function main(Period) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close();  
+        xOpen = open();
+        xDeriv = efsInternal("Calc_Deriv", xClose, xOpen);
+        xAbsDeriv = efsInternal("Calc_AbsDeriv", xDeriv);
+        xEnvel = efsInternal("Calc_Envel", xAbsDeriv);
+        xVolatil = sma(8, xEnvel);
+        addBand( 0, PS_DASH, 1, Color.grey); 
+        
+        bInit = true; 
+    }      
+
+    if (getCurrentBarCount() < 8) return;
+    return xVolatil.getValue(0);
+}
+
+function Calc_Envel(xAbsDeriv){
+    var ret = 0;
+    ret = highest(4, xAbsDeriv);    
+    return ret;
+}
+
+function Calc_AbsDeriv(xDeriv){
+    var ret = 0;
+    ret = Math.abs(xDeriv.getValue(0));
+    return ret;
+}
+
+function Calc_Deriv(xClose, xOpen){
+    var ret = 0;
+    ret = xClose.getValue(0) - xOpen.getValue(0);
+    return ret;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

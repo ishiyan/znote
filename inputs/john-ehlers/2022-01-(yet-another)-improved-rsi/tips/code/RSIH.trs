@@ -1,0 +1,51 @@
+'(Yet Another) Improved RSI
+'Author: John F. Ehlers, TASC Jan 2022
+'Coded by: Richard Denning, 11/05/2021
+
+'RSIH - RSI with Hann Windowing
+'(C) 2005-2021  John F. Ehlers
+
+Function EHLERS_RSIH(RSILength)
+    Dim count
+    Dim CU As BarArray
+    Dim CD As BarArray
+    Dim MyRSI As BarArray
+
+    If BarNumber=FirstBar Then
+        'RSILength = 14
+        count = 0
+        CU = 0
+        CD = 0
+        MyRSI = 0
+    End If
+
+    CU = 0
+    CD = 0
+    For count = 1 To RSILength
+        If Close[count - 1] - Close[count] > 0 Then
+            CU = CU + (1 - TStation_Cosine(360*count/(RSILength+1)))*(Close[count-1]-Close[count])
+        End If
+        If Close[count] - Close[count - 1] > 0 Then
+            CD = CD + (1 - TStation_Cosine(360*count/(RSILength+1)))*(Close[count]-Close[count-1])
+        End If
+    Next
+
+    If CU + CD <> 0 Then
+        MyRSI = (CU - CD)/(CU + CD)
+    End If
+
+    EHLERS_RSIH = MyRSI
+End Function
+'-----------------------------------
+'INDICATOR PLOT
+Sub EHLERS_RSIH_IND(RSIHLength)
+Dim myRSIH As BarArray
+myRSIH = EHLERS_RSIH(RSIHLength)
+plot1(myRSIH)
+plot2(0)
+End Sub
+'-----------------------------------
+
+
+Function EHLERS_RSIH: Computes RSIH indicator
+Indicator plot EHLERS_RSIH_IND: Plots the RSIH indicator on a chart

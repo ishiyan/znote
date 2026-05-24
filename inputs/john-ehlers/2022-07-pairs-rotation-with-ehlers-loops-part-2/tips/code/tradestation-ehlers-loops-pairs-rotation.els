@@ -1,0 +1,96 @@
+// TASC JUL 2022
+// Ehlers Loops Pairs Rotation Chart
+// (C) 2005-2022 John F. Ehlers
+
+inputs:
+	LPPeriod( 20 ),
+	HPPeriod( 125 );
+
+variables:
+	HP1( 0 ), 
+	HP2( 0 ),
+	hpa1( 0 ),
+	hpb1( 0 ),
+	hpc1( 0 ),
+	hpc2( 0 ),
+	hpc3( 0 ),
+	ssa1( 0 ),
+	ssb1( 0 ),
+	ssc1( 0 ),
+	ssc2( 0 ),
+	ssc3( 0 ),
+	Price1( 0 ), 
+	Price1MS( 0 ), 
+	Price1RMS( 0 ),
+	Price2( 0 ), 
+	Price2MS( 0 ), 
+	Price2RMS( 0 );
+
+if CurrentBar = 1 then 
+begin
+	hpa1 = expvalue(-1.414*3.14159 / HPPeriod);
+	hpb1 = 2*hpa1*Cosine(1.414*180 / HPPeriod);
+	hpc2 = hpb1;
+	hpc3 = -hpa1*hpa1;
+	hpc1 = (1 + hpc2 - hpc3) / 4;
+	ssa1 = expvalue(-1.414*3.14159 / LPPeriod);
+	ssb1 = 2*ssa1*Cosine(1.414*180 / LPPeriod);
+	ssc2 = ssb1;
+	ssc3 = -ssa1*ssa1;
+	ssc1 = 1 - ssc2 - ssc3;
+End;
+
+// Normalized Roofing Filter for Data1 
+// (horizontal plot)
+// 2 Pole Butterworth Highpass Filter
+HP1 = hpc1*(Close of Data1 - 2*Close[1] of Data1 + Close[2] of 
+Data1) + hpc2*HP1[1] + hpc3*HP1[2];
+
+if CurrentBar < 3 then 
+	HP1 = 0;
+
+// Smooth with a Super Smoother Filter 
+Price1 = ssc1*(HP1 + HP1[1]) / 2 + ssc2*Price1[1] 
+ + ssc3*Price1[2];
+
+if CurrentBar < 3 then Price1 = 0;
+// Scale Price in terms of Standard Deviations
+
+if CurrentBar = 1 then 
+	Price1MS = Price1 * Price1 
+else 
+	Price1MS = .0242*Price1*Price1 
+	 + .9758*Price1MS[1];
+
+if Price1MS <> 0 then 
+	Price1RMS = Price1 / SquareRoot(Price1MS);
+	
+// Normalized Roofing Filter for Data2
+// (horizontal plot)
+// 2 Pole Butterworth Highpass Filter
+HP2 = hpc1*(Close of Data2 - 2*Close[1] of Data2
+ + Close[2] of Data2) + hpc2*HP2[1] + hpc3*HP2[2];
+
+if CurrentBar < 3 then 
+ HP2 = 0;
+
+// Smooth with a Super Smoother Filter 
+Price2 = ssc1*(HP2 + HP2[1]) / 2 + ssc2*Price2[1] +
+ssc3*Price2[2];
+
+if CurrentBar < 3 then 
+ Price2 = 0;
+
+// Scale Price in terms of Standard Deviations
+if CurrentBar = 1 then 
+	Price2MS = Price2*Price2 
+else 
+	Price2MS = .0242*Price2*Price2 + .9758*Price2MS[1];
+
+if Price2MS <> 0 then 
+	Price2RMS = Price2 / SquareRoot(Price2MS);
+
+// Conventional Plots
+Plot1( Price1RMS, "Price1 RMS" );
+Plot2( 0, "Zero Line" );
+Plot3( Price2RMS, "Price2 RMS" );

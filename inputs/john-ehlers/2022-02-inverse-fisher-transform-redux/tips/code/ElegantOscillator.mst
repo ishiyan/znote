@@ -1,0 +1,14 @@
+pds:= 20;  {BandEdge}
+deriv:= C-Ref(C, -2);
+RMS:= Sum(deriv * deriv, 50);
+rms2:= Sqrt(rms/50);
+denom:= If(rms2=0, -1, rms2);
+nderiv:= If(denom= -1, 1, deriv/denom);
+ifish:= (Exp(2*nderiv)-1) / (Exp(2*nderiv)+1);
+a1:= Exp(-1.414*3.14159 / pds);
+b1:= 2*a1*Cos(1.414*180 / pds);
+c3:= -a1*a1;
+c1:= 1 - b1 - c3;
+ss:= c1 * (ifish + Ref(ifish, -1))/2 + 
+b1*PREV + c3*Ref(PREV, -1);
+ss

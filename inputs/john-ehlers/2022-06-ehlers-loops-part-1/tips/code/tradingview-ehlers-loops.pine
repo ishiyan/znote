@@ -1,0 +1,69 @@
+//  TASC Issue: June 2022 - Vol. 40, Issue 7
+//     Article: Ehlers Loops
+//  Article By: John F. Ehlers
+//    Language: TradingView's Pine Script v5
+// Provided By: PineCoders, for tradingview.com
+
+//@version=5
+indicator("TASC 2022.06 Ehlers Loops", "ELs", precision=3)
+
+//== 2 Pole Butterworth Highpass Filter ==//
+butterworthHP(float Series, float Period) =>
+    var float ALPHA =  math.pi * math.sqrt(2.0) / Period
+    var float BETA  =  math.exp(-ALPHA )
+    var float COEF2 = -math.pow(BETA, 2)
+    var float COEF1 =  math.cos( ALPHA ) * 2.0 * BETA
+    var float COEF0 =  (1.0 + COEF1 - COEF2) * 0.25
+    float tmp    = nz(Series[1],  Series)
+    float whiten =    Series + nz(Series[2], tmp) - 2.0 * tmp 
+    float smooth = na, smooth := COEF0 *     whiten     +
+                                 COEF1 *  nz(smooth[1]) +
+                                 COEF2 *  nz(smooth[2])
+
+//===== 2 Pole Super Smoother Filter =====//
+superSmoother(float Series, float Period) =>
+    var float ALPHA =  math.pi * math.sqrt(2.0) / Period
+    var float BETA  =  math.exp(-ALPHA )
+    var float COEF2 = -math.pow(BETA, 2)
+    var float COEF1 =  math.cos( ALPHA ) * 2.0 * BETA
+    var float COEF0 =  1.0 - COEF1 - COEF2
+    float sma2   = math.avg(Series, nz(Series[1], Series))
+    float smooth = na, smooth := COEF0 *      sma2      +
+                                 COEF1 *  nz(smooth[1]) +
+                                 COEF2 *  nz(smooth[2])
+
+//===== Faster Root Mean Square =====//
+fastRMS(float Series, float Period) =>
+    if Period < 1
+        runtime.error("Err: fastRMS(Period=) is less than 1")
+    var float COEF0 = 2.0 / (Period + 1)
+    var float COEF1 = 1.0 -  COEF0
+    float pow = math.pow(Series, 2)
+    float ema = na, ema := COEF0 *    pow +
+                           COEF1 * nz(ema[1], pow)
+    nz(Series / math.sqrt(ema))
+
+source    = input.source(close,      "Source")
+periodLP  = input.int( 20,  "Low-Pass Period", minval= 7)
+periodHP  = input.int(125, "High-Pass Period", minval=20)
+periodRMS = input.int( 80,       "RMS Period",   step=10)
+
+//==== Normalized Roofing Filter for Price ====//
+float HP       = butterworthHP(source, periodHP )
+float Price    = superSmoother(    HP, periodLP )
+float PriceRMS =       fastRMS( Price, periodRMS)
+
+//=== Normalized Roofing Filter for Volume ==//
+float VolHP  = butterworthHP(volume, periodHP )
+float Vol    = superSmoother( VolHP, periodLP )
+float VolRMS =       fastRMS(   Vol, periodRMS)
+
+plot(PriceRMS, "Area", #0077FF40, style=plot.style_area)
+plot(PriceRMS, "PRMS", #0077FF, 2)
+plot(  VolRMS, "VRMS", #FF7700)
+
+hline(    2.0,   "2σ", #FF0000CC)
+hline(    1.0,   "1σ", #FF000055, hline.style_dotted, 2)
+hline(    0.0, "Zero", #808080)
+hline(   -1.0,  "-1σ", #00FF0055, hline.style_dotted, 2)
+hline(   -2.0,  "-2σ", #00FF00CC)
