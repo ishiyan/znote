@@ -1,0 +1,97 @@
+'Fourier Series Model of The Market
+'Author: John F. Ehlers, TASC Jun 2019
+'Coded by: Richard Denning, 4/16/2019
+'www.TradersEdgeSystems.com
+
+'Compute filter coefficients once
+Function WAVE(Fundamental,Bandwidth)
+  'Fundamental = 20
+    Dim G1 As BarArray
+    Dim S1 As BarArray
+    Dim L1 As BarArray
+    Dim BP1 As BarArray
+    Dim Q1 As BarArray
+    Dim P1 As BarArray
+    Dim G2 As BarArray
+    Dim S2 As BarArray
+    Dim L2 As BarArray
+    Dim BP2 As BarArray
+    Dim Q2 As BarArray
+    Dim P2 As BarArray
+    Dim G3 As BarArray
+    Dim S3 As BarArray
+    Dim L3 As BarArray
+    Dim BP3 As BarArray
+    Dim Q3 As BarArray
+    Dim P3 As BarArray
+    Dim count As BarArray
+   
+   If CurrentBar = 1 Then 
+        L1 = TStation_Cosine(360 / Fundamental)
+        G1 = TStation_Cosine(Bandwidth*360 / Fundamental)
+        S1 = 1 / G1 - Sqr(1 / (G1*G1) - 1)
+        L2 = TStation_Cosine(360 / (Fundamental / 2))
+        G2 = TStation_Cosine(Bandwidth*360 / (Fundamental / 2))
+        S2 = 1 / G2 - Sqr(1 / (G2*G2) - 1)
+        L3 = TStation_Cosine(360 / (Fundamental / 3))
+        G3 = TStation_Cosine(Bandwidth*360 / (Fundamental / 3))
+        S3 = 1 / G3 - Sqr(1 / (G3*G3) - 1)
+   End If
+   
+'Fundamental Band-Pass
+    BP1 = .5*(1 - S1)*(Close - Close[2]) + L1*(1 + S1)*BP1[1] - S1*BP1[2]
+    
+'Fundamental Quadrature
+    Q1 = (Fundamental / 6.28)*(BP1 - BP1[1])
+        
+'Second Harmonic Band-Pass
+    BP2 = .5*(1 - S2)*(Close - Close[2]) + L2*(1 + S2)*BP2[1] - S2*BP2[2]
+        
+'Second Harmonic Quadrature
+    Q2 = (Fundamental / 6.28)*(BP2 - BP2[1])
+       
+'Thrid Harmonic Band-Pass
+    BP3 = .5*(1 - S3)*(Close - Close[2]) + L3*(1 + S3)*BP3[1] - S3*BP3[2]
+    Q3 = (Fundamental / 6.28)*(BP3 - BP3[1])
+        
+'Sum power of each harmonic at each bar over the Fundamental period
+    P1 = 0
+    P2 = 0
+    P3 = 0
+    For count = 0 To Fundamental - 1
+        P1 = P1 + BP1[count]*BP1[count] + Q1[count]*Q1[count]
+        P2 = P2 + BP2[count]*BP2[count] + Q2[count]*Q2[count]
+        P3 = P3 + BP3[count]*BP3[count] + Q3[count]*Q3[count]
+    Next
+    
+'Add the three harmonics together using their relative amplitudes
+    If P1 <> 0 Then
+        WAVE = BP1 + Sqr(P2 / P1)*BP2 + Sqr(P3 / P1)*BP3
+    End If
+'Print FormatDateTime(Date)," P1 ",P1," WAVE ",wave
+End Function
+'----------------------------------------------------------------------
+Function TSTATION_COSINE(TSdegrees)
+TSTATION_COSINE = Cos(DegToRad(TSdegrees))
+End Function
+'----------------------------------------------------------------------
+'Code to plot indicator
+Sub WAVE_IND(FundamentalLen,Bandwidth)
+Dim theWAVE As BarArray
+theWAVE = WAVE(FundamentalLen,Bandwidth)
+plot1(theWAVE)
+'-----------------------------------------------------------------------
+'Optional cyclic trading signal 
+'Rate Of change crosses zero at cyclic turning points 
+Sub WAVE_SYS(FundamentalLen,Bandwidth)
+Dim theWAVE As BarArray
+Dim theROC As BarArray
+theWAVE = WAVE(FundamentalLen,Bandwidth)
+theROC = (FundamentalLen / 12.57)*(theWAVE - theWAVE[2])
+If theROC[1] >= 0 And theROC < 0 Then Buy("LE",1,0,Market,Day)
+If theROC[1] <= 0 And theROC > 0 Then ExitLong("LX","",1,0,Market,Day)
+If theROC[1] <= 0 And theROC > 0 Then Sell("SE",1,0,Market,Day)
+If theROC[1] >= 0 And theROC < 0 Then ExitShort("SX","",1,0,Market,Day)
+End Sub
+'------------------------------------------------------------------------
+End Sub

@@ -1,0 +1,164 @@
+// RocketRSI Indicator
+// (C) 2005-2018 John F. Ehlers
+// TASC May 2018
+
+inputs:
+	SmoothLength( 10 ),
+	RSILength( 10 ),
+	OBOSLevel( 2 ) ;
+variables:
+	a1( 0 ),
+	b1( 0 ),
+	c1( 0 ),
+	c2( 0 ),
+	c3( 0 ),
+	Filt( 0 ),
+	Mom( 0 ),
+	count( 0 ),
+	CU( 0 ),
+	CD( 0 ),
+	MyRSI( 0 ),
+	RocketRSI( 0 ),
+	DollarsPerTrade( 0 ),
+	PositionSize( 0 ) ;
+	
+//Compute Super Smoother coefficients once
+if CurrentBar = 1 then 
+begin
+	a1 = expvalue( -1.414 * 3.14159 
+		/ ( SmoothLength ) ) ;
+	b1 = 2 * a1 * Cosine( 1.414 * 180 
+		/ ( SmoothLength ) ) ;
+	c2 = b1 ;
+	c3 = -a1 * a1 ;
+	c1 = 1 - c2 - c3 ;
+end ;
+
+//Create half dominant cycle Momentum
+Mom = Close - Close[RSILength - 1] ;
+
+//SuperSmoother Filter
+Filt = c1 * ( Mom + Mom[1] ) 
+	/ 2 + c2 * Filt[1] + c3 * Filt[2] ;
+
+//Accumulate "Closes Up" and "Closes Down"
+CU = 0 ;
+CD = 0 ;
+for count = 0 to RSILength -1 
+begin
+	if Filt[count] - Filt[count + 1] > 0 then 
+		CU = CU + Filt[count] - Filt[count + 1] ;
+	if Filt[count] - Filt[count + 1] < 0 then 
+		CD = CD + Filt[count + 1] -	Filt[count] ;
+end ; 
+
+if CU + CD <> 0 then 
+	MyRSI = ( CU - CD ) / ( CU + CD ) ;
+
+//Limit RocketRSI output to 
+//+/- 3 Standard Deviations
+iF MyRSI > .999 then 
+	MyRSI = .999 ;
+if MyRSI < -.999 then 
+	MyRSI = -.999 ;
+
+//Apply Fisher Transform to establish 
+//Gaussian Probability Distribution
+RocketRSI = .5 * Log( ( 1 + MyRSI ) 
+	/ ( 1 - MyRSI ) ) ;
+
+Plot1( RocketRSI, "RocketRSI" ) ;
+Plot2( 0, "Zero Line" ) ;
+Plot3( OBOSLevel, "OB Level" ) ;
+Plot4( -OBOSLevel, "OS Level" ) ;
+
+
+
+Strategy: RocketRSI
+
+// RocketRSI Strategy
+// (C) 2005-2018 John F. Ehlers
+// TASC May 2018
+
+inputs:
+	SmoothLength( 10 ),
+	RSILength( 10 ),
+	OBOSLevel( 2 ),
+	InitialCapital( 100000 ),
+	Leverage( 2 ),
+	SLAmount( 2 ) ;
+variables:
+	a1( 0 ),
+	b1( 0 ),
+	c1( 0 ),
+	c2( 0 ),
+	c3( 0 ),
+	Filt( 0 ),
+	Mom( 0 ),
+	count( 0 ),
+	CU( 0 ),
+	CD( 0 ),
+	MyRSI( 0 ),
+	RocketRSI( 0 ),
+	DollarsPerTrade( 0 ),
+	PositionSize( 0 ) ;
+	
+//Compute Super Smoother coefficients once
+if CurrentBar = 1 then 
+begin
+	a1 = expvalue( -1.414 * 3.14159 
+		/ ( SmoothLength ) ) ;
+	b1 = 2 * a1 * Cosine( 1.414 * 180 
+		/ ( SmoothLength ) ) ;
+	c2 = b1 ;
+	c3 = -a1 * a1 ;
+	c1 = 1 - c2 - c3 ;
+end ;
+
+//Create half dominant cycle Momentum
+Mom = Close - Close[RSILength - 1] ;
+
+//SuperSmoother Filter
+Filt = c1 * ( Mom + Mom[1] ) 
+	/ 2 + c2 * Filt[1] + c3 * Filt[2] ;
+
+//Accumulate "Closes Up" and "Closes Down"
+CU = 0 ;
+CD = 0 ;
+for count = 0 to RSILength -1 
+begin
+	if Filt[count] - Filt[count + 1] > 0 then 
+		CU = CU + Filt[count] - Filt[count + 1] ;
+	if Filt[count] - Filt[count + 1] < 0 then 
+		CD = CD + Filt[count + 1] -	Filt[count] ;
+end ; 
+
+if CU + CD <> 0 then 
+	MyRSI = ( CU - CD ) / ( CU + CD ) ;
+
+//Limit RocketRSI output to 
+//+/- 3 Standard Deviations
+iF MyRSI > .999 then 
+	MyRSI = .999 ;
+if MyRSI < -.999 then 
+	MyRSI = -.999 ;
+
+//Apply Fisher Transform to establish 
+//Gaussian Probability Distribution
+RocketRSI = .5 * Log( ( 1 + MyRSI ) 
+	/ ( 1 - MyRSI ) ) ;
+
+// Calculate Position Size
+DollarsPerTrade = ( InitialCapital + NetProfit 
+	+ OpenPositionProfit ) * Leverage ;
+PositionSize = DollarsPerTrade / Close ;
+
+
+if RocketRSI crosses below -OBOSLevel then
+	Buy PositionSize shares next bar at Market 
+else if RocketRSI crosses above OBOSLevel then
+	SellShort PositionSize shares next bar at Market ;	
+
+// Apply a Stop Loss
+SetStopShare ;
+SetStopLoss( SLAmount )

@@ -1,0 +1,36 @@
+'DEVIATION SCALED MOVING AVERAGE (DSMA)
+'Author: John F. Ehlers, TASC July 2018 
+'Coded by: Richard Denning 5/9/18
+'www.TradersEdgeSystems.com
+
+Function DSMA(Period) As BarArray
+Dim  a1, b1, c1, c2, c3, Zeros As BarArray, Filt As BarArray, ScaledFilt, RMS, count, alpha1
+    If CurrentBar = 1 Then
+'Smooth with a Super Smoother
+        a1 = Exp(-1.414*3.14159 / (0.5*Period))
+        b1 = 2*a1*Cos(DegToRad(1.414*180 / (0.5*Period)))
+        c2 = b1
+        c3 = -a1*a1
+        c1 = 1 - c2 - c3
+    End If
+    Zeros = Close - Close[2]
+'SuperSmoother Filter
+    Filt = c1*(Zeros + Zeros[1]) / 2 + c2*Filt[1] + c3*Filt[2]
+'Compute Standard Deviation
+    RMS = 0
+    For count = 0 To Period - 1
+        RMS = RMS + Filt[count]*Filt[count]
+    Next
+    If Period <> 0 Then RMS = Sqr(RMS / Period)
+'Rescale Filt in terms of Standard Deviations
+    If RMS <> 0 Then ScaledFilt = Filt / RMS
+    If Period <> 0 Then alpha1 = Abs(ScaledFilt)*5 / Period
+    DSMA = alpha1*Close + (1 - alpha1)*DSMA[1]
+End Function
+'-----------------------------------------------------------
+Sub EHLERS_DSMA_IND(dsmaLen)
+Dim theDSMA As BarArray
+theDSMA = DSMA(dsmaLen)
+plot1(theDSMA)
+End Sub
+'-----------------------------------------------------------

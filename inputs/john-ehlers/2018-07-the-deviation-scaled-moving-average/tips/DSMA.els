@@ -1,0 +1,105 @@
+Function: EhlersDSMA
+// Deviation Scaled Moving Average (DSMA)
+// (c) 2013 - 2018 John F. Ehlers
+// TASC JUL 2018
+// EhlersDSMA function
+using elsystem ;
+
+inputs:
+    Period( numericsimple ) ;
+    
+variables:
+    a1( 0 ),
+    b1( 0 ),
+    c1( 0 ),
+    c2( 0 ),
+    c3( 0 ),
+    Zeros( 0 ),
+    Filt( 0 ),
+    ScaledFilt( 0 ),
+    RMS( 0 ),
+    count( 0 ),
+    alpha1( 0 ),
+    DSMA( 0 ) ;
+    
+once
+begin    
+	if Period <= 0 then
+		throw Exception.Create( "The 'Period' input to the " + 
+		"EhlersDSMA function must be greater than 0." ) ;
+
+    //Smooth with a Super Smoother 
+    a1 = ExpValue( -1.414 * 3.14159 / ( .5 * Period ) ) ;
+    b1 = 2 * a1 * Cosine( 1.414 * 180 / ( .5 * Period ) ) ;
+    c2 = b1 ;
+    c3 = -a1 * a1 ;
+    c1 = 1 - c2 - c3 ;
+end ;
+
+//Produce Nominal zero mean with zeros in the transfer 
+//response at DC and Nyquist with no spectral distortion
+//Nominally whitens the spectrum because of 6 dB 
+//per octave rolloff
+Zeros = Close - Close[2] ;
+
+//SuperSmoother Filter
+Filt = c1 * ( Zeros + Zeros[1] ) / 2 + c2 * Filt[1] + c3 * Filt[2] ;
+
+//Compute Standard Deviation    
+RMS = 0;
+For count = 0 to Period - 1 
+begin
+    RMS = RMS + Filt[count] * Filt[count] ; 
+end ;
+RMS = SquareRoot( RMS / Period ) ;
+
+//Rescale Filt in terms of Standard Deviations
+If RMS <> 0 then 
+	ScaledFilt = Filt / RMS ;
+
+alpha1 = AbsValue( ScaledFilt ) * 5 / Period ;
+DSMA = alpha1 * Close + ( 1 - alpha1 ) * DSMA[1] ;
+
+EhlersDSMA = DSMA ;
+
+
+Indicator: DSMA
+// TASC JUL 2018
+// Ehlers DSMA
+inputs:
+	Period( 40 ) ;
+	
+variables:
+	DSMAValue( 0 ) ;
+	
+DSMAValue = EhlersDSMA( Period ) ;
+
+Plot1( DSMAValue, "DSMA" ) ;		
+
+if AlertEnabled  then 
+begin
+	if Close crosses over DSMAValue then
+		Alert( "Price crossing over DSMA" ) 
+	else if Close crosses under DSMAValue then
+		Alert( "Price crossing under DSMA" ) ;
+end ;
+	
+
+Strategy: DSMA
+// TASC JUL 2018
+// Ehlers DSMA
+inputs:
+	FastPeriod( 40 ),
+	SlowPeriod( 100 ) ;
+	
+variables:
+	FastDSMAValue( 0 ),
+	SlowDSMAValue( 0 ) ;
+	
+FastDSMAValue = EhlersDSMA( FastPeriod ) ;
+SlowDSMAValue = EhlersDSMA( SlowPeriod ) ;
+
+if FastDSMAValue crosses above SlowDSMAValue then
+	Buy next bar at Market
+else if FastDSMAValue crosses below SlowDSMAValue then
+	SellShort next bar at Market ;

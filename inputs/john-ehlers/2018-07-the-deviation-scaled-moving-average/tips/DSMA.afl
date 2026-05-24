@@ -1,0 +1,30 @@
+// Deviation Scaled Moving Average (DSMA) 
+// TASC Traders Tips July 2018 
+Period = Param( "Period", 40, 2, 100, 1 ); 
+
+PI = 3.1415926; 
+
+a1 = exp( -1.414 * PI / ( 0.5 * Period ) ); 
+b1 = 2 * a1 * cos( 1.414 * PI / ( 0.5 * Period ) ); 
+c2 = b1; 
+c3 = -a1 * a1; 
+c1 = 1 - c2 - c3; 
+
+Zeros = Close - Ref( Close, -2 ); 
+
+// SuperSmoother Filter 
+Filt = IIR( Zeros, c1 * 0.5, c2, c1 * 0.5, c3 ); 
+
+// Compute Standard Deviation 
+RMS = Sum( Filt * Filt, Period ); 
+RMS = sqrt( RMS / Period ); 
+
+// Rescale Filt in terms of Standard Deviations 
+ScaledFilt = Filt / RMS; 
+alpha1 = abs( ScaledFilt ) * 5 / Period; 
+
+DSMA = AMA( Close, alpha1 ); 
+
+Plot( DSMA, "DSMA"+ Period, colorBlue, styleThick ); 
+
+Plot( C, "Price", colorDefault, styleCandle );

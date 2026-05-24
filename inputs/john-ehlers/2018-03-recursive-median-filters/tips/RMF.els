@@ -1,0 +1,43 @@
+Indicator: Recursive Median Oscillator
+
+{
+Recursive Median Oscillator
+(c) 2017 John F. Ehlers
+TASC March 2018
+}
+
+inputs:
+	Price( Close ),
+	LPPeriod( 12 ),
+	HPPeriod( 30 ) ;
+variables:
+	Alpha1( 0 ),
+	Alpha2( 0 ),
+	RM( 0 ),
+	RMO( 0 ) ;
+	
+// Set EMA constant from LPPeriod input
+Alpha1 = ( Cosine( 360 / LPPeriod ) 
+	+ Sine( 360 / LPPeriod ) - 1 ) 
+	/ Cosine( 360 / LPPeriod ) ;
+
+// Recursive Median (EMA of a 5 
+// bar Median filter)
+RM = Alpha1 * Median( Price, 5 ) 
+	+ ( 1 - Alpha1 ) * RM[1] ;
+
+// Highpass filter cyclic components 
+// whose periods are shorter than 
+// HPPeriod to make an oscillator
+
+Alpha2 = ( Cosine( .707 * 360 / HPPeriod ) 
+	+ Sine( .707 * 360 / HPPeriod ) - 1 ) 
+	/ Cosine( .707 * 360 / HPPeriod ) ;
+
+RMO = ( 1 - Alpha2 / 2 ) * ( 1 - Alpha2 / 2 ) 
+	* ( RM - 2 * RM[1] + RM[2] ) 
+	+ 2 * ( 1 - Alpha2 ) * RMO[1] 
+	- ( 1 - Alpha2 ) * ( 1 - Alpha2 ) * RMO[2] ;
+
+Plot1( RMO, "RMO" ) ;
+Plot2( 0, "ZeroLine" );

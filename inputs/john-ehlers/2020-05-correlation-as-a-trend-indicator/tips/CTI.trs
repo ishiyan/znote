@@ -1,0 +1,56 @@
+'Correlation as a Trend Indicator
+'Author: John Ehlers, TASC May 2020
+'Coded by: Richard Denning 3/20/20
+'www.TrdersEdgesystems.com
+
+Function Ehlers_Correl(Length)
+    Dim Sx As BarArray
+    Dim Sy As BarArray
+    Dim Sxx As BarArray
+    Dim Sxy As BarArray
+    Dim Syy As BarArray
+    Dim count As BarArray
+    Dim X As BarArray
+    Dim Y As BarArray
+    Dim Corr As BarArray
+
+    If BarNumber=FirstBar Then
+        'Length = 20
+        Sx = 0
+        Sy = 0
+        Sxx = 0
+        Sxy = 0
+        Syy = 0
+        count = 0
+        X = 0
+        Y = 0
+        Corr = 0
+    End If
+
+    Sx = 0
+    Sy = 0
+    Sxx = 0
+    Sxy = 0
+    Syy = 0
+    For count = 0 To Length - 1
+        X = Close[count]
+        Y = -count
+        Sx = Sx + X
+        Sy = Sy + Y
+        Sxx = Sxx + X*X
+        Sxy = Sxy + X*Y
+        Syy = Syy + Y*Y
+    Next
+    If (Length*Sxx - Sx*Sx > 0) And (Length*Syy - Sy*Sy > 0) Then
+        Corr = (Length*Sxy - Sx*Sy) / Sqr((Length*Sxx - Sx*Sx)*(Length*Syy - Sy*Sy))
+    End If
+Ehlers_correl = Corr
+End Function
+'-----------------------------------------------------------------------------------
+Sub Ehlers_Correl_Ind(length)
+Dim Corr As BarArray
+Corr = Ehlers_Correl(length)
+Plot1(Corr)
+Plot2(0)
+End Sub
+'------------------------------------------------------------------------------------

@@ -1,0 +1,159 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:        
+   Correlation As A Cycle Indicator
+   by John F. Ehlers
+    
+
+Version:            1.00  04/13/2020
+
+Formula Parameters:                     Default:
+Period                                  20
+InputPeriod                             20
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("Correlation Angle Indicator");
+    setCursorLabelName("Correlation Angle", 0);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    addBand( 0, PLOTTYPE_DOT, 1, Color.grey); 
+    
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("Period", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(0);		
+        setDefault(20);
+    }
+    fpArray[x] = new FunctionParameter("InputPeriod", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(0);		
+        setDefault(20);
+    }
+        
+}
+
+var bVersion = null;
+var Length = null; 
+var xClose = null;
+var Sx = null; 
+var Sy = null; 
+var Sxx = null; 
+var Syy = null; 
+var Sxy = null; 
+var X = null; 
+var Y = null; 
+var Real = null; 
+var Imag = null; 
+var Angle = null; 
+var Angle_1 = null;
+var State = null; 
+var xPrice = null;
+
+function main(Period,InputPeriod) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        Length = Period;
+        xClose = close();
+        xPrice = xClose
+        if (InputPeriod != 0) xPrice = efsInternal("Calc_Price", xClose, InputPeriod)
+        Angle_1 = 0;
+        Angle = 0;
+        
+        bInit = true; 
+    }      
+    if (getBarState() == BARSTATE_NEWBAR) {
+        Angle_1 = Angle;
+        Angle = 0;
+    }
+
+    //Correlate price with cosine wave having a fixed period
+    Sx = 0; 
+    Sy = 0; 
+    Sxx = 0; 
+    Syy = 0; 
+    Sxy = 0; 
+    for (var i = 1; i <= Length; i++){
+        X = xPrice.getValue(-i+1);
+        Y = Math.cos(2 * Math.PI * (i-1) / Period);
+        Sx = Sx + X;
+        Sy = Sy + Y;
+        Sxx = Sxx + X*X;
+        Sxy = Sxy + X*Y;
+        Syy = Syy + Y*Y;
+    }
+
+    if ((Length * Sxx - Sx*Sx > 0) && (Length*Syy - Sy*Sy >0)) {
+        Real = (Length*Sxy - Sx*Sy)/ Math.sqrt((Length*Sxx - Sx*Sx) * (Length*Syy - Sy*Sy))
+    }
+
+    //Correlate with a negative sine wave having a fixed period
+    Sx = 0; 
+    Sy = 0; 
+    Sxx = 0; 
+    Syy = 0; 
+    Sxy = 0; 
+    for (var i = 1; i <= Length; i++){
+        X = xPrice.getValue(-i+1);
+        Y = - Math.sin(2 * Math.PI * (i-1) / Period);
+        Sx = Sx + X;
+        Sy = Sy + Y;
+        Sxx = Sxx + X*X;
+        Sxy = Sxy + X*Y;
+        Syy = Syy + Y*Y;
+    }
+
+    if ((Length * Sxx - Sx*Sx > 0) && (Length*Syy - Sy*Sy >0)) {
+        Imag = (Length*Sxy - Sx*Sy)/ Math.sqrt((Length*Sxx - Sx*Sx) * (Length*Syy - Sy*Sy))
+    }
+    //Compute the angle as an arctangent function and resolve
+    //ambiguity
+    if (Imag != 0) Angle = Math.PI/2 + Math.atan(Real / Imag);
+    if (Imag > 0) Angle = Angle - Math.PI;
+    
+    //Do not allow the rate change of angle to go negative
+    if ((Angle_1 - Angle < 270 * Math.PI / 180) && (Angle < Angle_1 )) Angle = Angle_1;
+    
+    return [Angle * 180 / Math.PI]
+}
+var ret = 0;
+function Calc_Price(xClose, InputPeriod) {
+    ret = Math.sin(2 * Math.PI * xClose.getValue(0) / InputPeriod)
+    return ret;
+}
+
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

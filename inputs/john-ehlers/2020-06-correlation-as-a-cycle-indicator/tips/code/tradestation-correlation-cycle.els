@@ -1,0 +1,96 @@
+Indicator: Correlation Cycle
+// Correlation Angle Indicator     
+// (C) 2013-2020   John F. Ehlers 
+// TASC Jun 2020                  
+
+inputs: Period( 14 ), 
+	InputPeriod( 0 ) ;  //Uses price data if 0
+variables: Length( 20 ), Price( 0 ), 
+	Sx( 0 ), Sy( 0 ), Sxx( 0 ), Sxy( 0 ), 
+	Syy( 0 ), Count( 0 ), X( 0 ), Y( 0 ), 
+	Real( 0 ), Imag( 0 ), Angle( 0 ), State( 0 ) ; 
+
+//Correlate over one full cycle period 
+Length = Period ; 
+Price = Close ; 
+
+//Creates a theoretical sinusoid 
+//having an period equal to the 
+//input period as the data input 
+if InputPeriod <> 0 then 
+	Price = Sine( 360 * CurrentBar / InputPeriod) ; 
+
+//Correlate price with 
+//cosine wave having a fixed period 
+Sx = 0 ; 
+Sy = 0 ; 
+Sxx = 0 ; 
+Sxy = 0 ; 
+Syy = 0 ; 
+for Count = 1 to Length 
+begin   
+	X = Price[count - 1] ; 
+	Y = Cosine( 360 * ( Count - 1 ) / Period ) ; 
+	Sx = Sx + X ; 
+	Sy = Sy + Y ; 
+	Sxx = Sxx + X * X ; 
+	Sxy = Sxy + X * Y ; 
+	Syy = Syy + Y*Y ; 
+end ; 
+
+if ( Length * Sxx - Sx * Sx > 0 ) 
+	and ( Length * Syy - Sy * Sy > 0 ) then 
+	Real = ( Length * Sxy - Sx * Sy ) / 
+	SquareRoot( ( Length * Sxx - Sx * Sx ) * 
+	( Length * Syy - Sy * Sy ) ) ; 
+
+//Correlate with a negative 
+//sine wave having a fixed period 
+Sx = 0 ; 
+Sy = 0 ; 
+Sxx = 0 ; 
+Sxy = 0 ; 
+Syy = 0 ; 
+for Count = 1 to Length 
+begin   
+	X = Price[count - 1]; 
+	Y = -Sine( 360 * ( count - 1 ) / Period ) ; 
+	Sx = Sx + X ; 
+	Sy = Sy + Y ; 
+	Sxx = Sxx + X * X ; 
+	Sxy = Sxy + X * Y ; 
+	Syy = Syy + Y * Y ; 
+end ; 
+
+if ( Length * Sxx - Sx * Sx > 0 ) 
+	and ( Length * Syy - Sy * Sy > 0 ) then 
+	Imag = ( Length * Sxy - Sx * Sy ) / 
+	SquareRoot( ( Length * Sxx - Sx * Sx ) * 
+	( Length * Syy - Sy * Sy ) ) ; 
+
+//Compute the angle as an arctangent 
+//function and resolve ambiguity 
+if Imag <> 0 then 
+	Angle = 90 + Arctangent( Real / Imag ) ; 
+
+if Imag > 0 then 
+Angle = Angle - 180 ; 
+//Do not allow the rate change of angle to go negative 
+if Angle[1] - Angle < 270 and Angle < Angle[1] then 
+	Angle = Angle[1] ; 
+
+//Plot1(Real); 
+//Plot2(Imag); 
+//Plot3(Angle, "Phasor" ); 
+
+if InputPeriod <> 0 then 
+	Plot6(Price, "Price"); 
+
+//Compute and plot market state 
+State = 0; 
+if AbsValue( Angle - Angle[1] ) < 9 and Angle < 0 then 
+	State = -1	; 
+if AbsValue( Angle - Angle[1] ) < 9 and Angle >= 0 then 
+	State = 1; 
+Plot4( State, "Correlation Cycle" ) ;
+Plot5( 0, "ZL" ) ;

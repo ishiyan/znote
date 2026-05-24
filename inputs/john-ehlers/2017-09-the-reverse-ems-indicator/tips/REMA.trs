@@ -1,0 +1,32 @@
+'THE REVERSE EMA INDICATOR, TASC Sept 2017
+'Author: John Ehlers
+'Coded by: Richard Denning, 7/12/17
+'www.TradersEdgeSystems.ocm
+
+Function EHLERS_REVERSE_EMA(AA)
+ 'AA = .1
+    Dim CC
+    Dim EMA As BarArray
+    Dim RE1 As BarArray
+    Dim RE2 As BarArray
+    Dim RE3 As BarArray
+    Dim RE4 As BarArray
+    Dim RE5 As BarArray
+    Dim RE6 As BarArray
+    Dim RE7 As BarArray
+    Dim RE8
+    Dim Wave
+
+    CC = 1 - AA
+    EMA = AA*Close + CC*EMA[1]
+    RE1 = CC*EMA + EMA[1]
+    RE2 = (CC^2)*RE1 + RE1[1]
+    RE3 = (CC^4)*RE2 + RE2[1]
+    RE4 = (CC^8)*RE3 + RE3[1]
+    RE5 = (CC^16)*RE4 + RE4[1]
+    RE6 = (CC^32)*RE5 + RE5[1]
+    RE7 = (CC^64)*RE6 + RE6[1]
+    RE8 = (CC^128)*RE7 + RE7[1]
+    Wave = EMA - AA*RE8
+    EHLERS_REVERSE_EMA = Wave
+End Function

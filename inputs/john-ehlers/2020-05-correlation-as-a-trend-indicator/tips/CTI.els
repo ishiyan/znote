@@ -1,0 +1,71 @@
+Indicator: Correlation Trend
+// Correlation Trend Indicator
+// TASC MAY 2020
+// John F. Ehlers
+
+
+inputs: Length( 20 ), TriggerLevel( .5 ) ;
+variables: Corr( 0 ) ;
+
+Corr = _CorrelationTrend( Length ) ;
+
+Plot1( Corr, "Trend Cor" ) ;
+Plot2( TriggerLevel, "Trigger" ) ;
+
+
+Strategy: Correlation Trend
+// Correlation Trend Strategy
+// TASC MAY 2020
+// John F. Ehlers
+
+
+inputs: FastLength( 20 ), SlowLength( 40 ),
+	BuyThreshold( .5 ), SellThreshold( 0 ) ;
+variables: CorrF( 0 ), CorrS( 0 ) ;
+
+CorrF = _CorrelationTrend( FastLength ) ;
+CorrS = _CorrelationTrend( SlowLength ) ;
+
+if CorrF crosses over BuyThreshold then
+	Buy next bar at Market ;
+	
+if CorrS crosses under SellThreshold then	
+	sell next bar at Market ;	
+
+
+Function: _CorrelationTrend
+// _CorrelationTrend Function
+// TASC MAY 2020
+// John F. Ehlers
+
+
+inputs:Length( numericsimple ) ;
+variables:Sx( 0 ), Sy( 0 ), Sxx( 0 ), 
+	Sxy( 0 ), Syy( 0 ), 
+	count( 0 ), X( 0 ), Y( 0 ), Corr( 0 ),
+	Num( 0 ), Denom( 0 ); 
+ 
+Sx = 0 ; 
+Sy = 0 ; 
+Sxx = 0 ; 
+Sxy = 0 ; 
+Syy = 0 ; 
+for count = 0 to Length - 1 
+begin  
+ 	X = Close[count] ; 
+ 	Y = -count ; 
+ 	Sx = Sx + X ; 
+ 	Sy = Sy + Y ; 
+ 	Sxx = Sxx + X * X ; 
+ 	Sxy = Sxy + X * Y ; 
+ 	Syy = Syy + Y * Y ; 
+end ; 
+
+Num = Length * Sxy - Sx * Sy ;
+Denom = SquareRoot( ( Length * Sxx - Sx * Sx )
+	* ( Length * Syy - Sy * Sy ) ) ;
+
+if Denom <> 0 then
+	Corr = Num / Denom ;
+
+_CorrelationTrend = Corr ;

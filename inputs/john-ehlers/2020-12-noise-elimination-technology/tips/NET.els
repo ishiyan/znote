@@ -1,0 +1,62 @@
+// MyRSI with Noise Elimination Technology
+// John F. Ehlers
+// TASC DEC 2020
+
+inputs:
+    RSILength( 14 ),
+    NETLength( 14 );
+    
+variables:
+    CU( 0 ), 
+    CD( 0 ), 
+    count( 0 ), 
+    MyRSI( 0 ),
+    Num( 0 ), 
+    Denom( 0 ), 
+    K( 0 ), 
+    NET( 0 );
+
+arrays: 
+    X[100]( 0 ), 
+    Y[100]( 0 );
+
+// accumulate "Closes Up" and "Closes Down"
+CU = 0;
+CD = 0;
+
+for count = 0 to RSILength -1 
+begin
+    if Close[count] - Close[count + 1] > 0 then 
+        CU = CU + Close[count] - Close[count + 1];
+    
+    if Close[count] - Close[count + 1] < 0 then 
+        CD = CD + Close[count + 1] - Close[count];
+end;
+
+if CU + CD <> 0 then 
+    MyRSI = ( CU - CD ) / ( CU + CD );
+
+// Noise Elimination Technology (NET)
+for count = 1 to NETLength 
+begin
+    X[count] = MyRSI[count - 1];
+    Y[count] = -count;
+end;
+
+Num = 0;
+
+for count = 2 to NETLength 
+begin
+    for K = 1 to count - 1 
+    begin
+        Num = Num - Sign( X[count] - X[K] );
+    end;
+end;
+
+Denom = 0.5 * NETLength * ( NETLength - 1 );
+NET = Num / Denom;
+
+// Plots 
+Plot1( MyRSI, "MyRSI" );
+Plot2( NET, "NET" );
+Plot3( 0, "ZeroLine" );

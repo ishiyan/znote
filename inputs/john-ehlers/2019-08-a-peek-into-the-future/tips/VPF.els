@@ -1,0 +1,97 @@
+Indicator: Voss Filter
+
+// A Peek Into the Future
+// John F. Ehlers
+// TASC Aug 2019
+
+inputs:
+	Period( 20 ),
+	Predict( 3 ) ;
+
+variables:
+	Order( 0 ),
+	F1( 0 ),
+	G1( 0 ),
+	S1( 0 ),
+	Bandwidth( 0 ),
+	Count( 0 ),
+	SumC( 0 ),
+	Filt( 0 ),
+	Voss( 0 ) ;
+	
+once
+begin
+	Bandwidth = .25 ;
+	Order = 3 * Predict ;
+	F1 = Cosine( 360 / Period ) ;
+	G1 = Cosine( Bandwidth * 360 / Period ) ;
+	S1 = 1/ G1 - Squareroot( 1 / ( G1 * G1 ) - 1 ) ;
+end ;		
+
+if CurrentBar > 5 then
+	Filt = .5 * ( 1 - S1 ) * ( Close - Close[2] ) +
+		F1 * ( 1 + S1 ) * Filt[1] - S1 * Filt[2] 
+else
+	Filt = 0 ;
+	
+SumC = 0 ;
+for Count = 0 to Order -1
+begin
+	Sumc = SumC + ( ( Count + 1 ) / Order ) *
+		Voss[Order - Count] ; 
+end ;
+
+Voss = ( ( 3 + Order ) / 2 ) * Filt - SumC ;
+
+Plot1( Filt, "BPF" ) ;
+Plot2( Voss, "Voss" ) ;	
+
+Strategy: Voss Filter
+
+// A Peek Into the Furure
+// John F. Ehlers
+// TASC Aug 2019
+
+inputs:
+	Period( 20 ),
+	Predict( 3 ) ;
+
+variables:
+	Order( 0 ),
+	F1( 0 ),
+	G1( 0 ),
+	S1( 0 ),
+	Bandwidth( 0 ),
+	Count( 0 ),
+	SumC( 0 ),
+	Filt( 0 ),
+	Voss( 0 ) ;
+	
+once
+begin
+	Bandwidth = .25 ;
+	Order = 3 * Predict ;
+	F1 = Cosine( 360 / Period ) ;
+	G1 = Cosine( Bandwidth * 360 / Period ) ;
+	S1 = 1/ G1 - Squareroot( 1 / ( G1 * G1 ) - 1 ) ;
+end ;		
+
+if CurrentBar > 5 then
+	Filt = .5 * ( 1 - S1 ) * ( Close - Close[2] ) +
+		F1 * ( 1 + S1 ) * Filt[1] - S1 * Filt[2] 
+else
+	Filt = 0 ;
+	
+SumC = 0 ;
+for Count = 0 to Order -1
+begin
+	Sumc = SumC + ( ( Count + 1 ) / Order ) *
+		Voss[Order - Count] ; 
+end ;
+
+Voss = ( ( 3 + Order ) / 2 ) * Filt - SumC ;
+
+if Voss crosses above Filt then
+	Buy next bar at Market
+else if Voss crosses below Filt then
+	Sell next bar at Market ;

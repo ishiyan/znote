@@ -1,0 +1,53 @@
+'RocketRSI
+'Author: John Ehlers, TASC May 2018
+'Coded by: Richard Denning, 3/12/18
+'www.TradersEdgeSystems.com
+
+Function RocketRSI(SmoothLength, RSILength)
+    Dim a1
+    Dim b1
+    Dim c1
+    Dim c2
+    Dim c3
+    Dim Filt As BarArray
+    Dim count
+    Dim CU
+    Dim CD
+    Dim myRSI
+    
+    'SmoothLength = 8
+    'RSILength = 10
+       
+    If CurrentBar - 1 Then
+        a1 = Exp(-1.414*3.14159 / (SmoothLength))
+        b1 = 2*a1*Cos(DegToRad(1.414*180 / (SmoothLength)))
+        c2 = b1
+        c3 = -a1*a1
+        c1 = 1 - c2 - c3
+    End If
+    Filt = c1*(Close + Close[1]) / 2 + c2*Filt[1] + c3*Filt[2]
+    CU = 0
+    CD = 0
+    For count = 0 To RSILength -1
+        If Filt[count] - Filt[count + 1] > 0 Then
+            CU = CU + Filt[count] - Filt[count + 1]
+        End If
+        If Filt[count] - Filt[count + 1] < 0 Then
+            CD = CD + Filt[count + 1] - Filt[count]
+        End If
+    Next
+    If CU + CD <> 0 Then
+         myRSI = (CU - CD) / (CU + CD)
+    End If
+    If myRSI > 0.999 Then myRSI = 0.999
+    If myRSI < -0.999 Then myRSI = -0.999
+    RocketRSI = 0.5*Log((1+myRSI) / (1 - myRSI))
+End Function
+'---------------------------------------------------------------
+Sub Ehlers_RocketRSI_IND(SmoothLength, RSILength)
+  Dim MyRSI
+  MyRSI = RocketRSI(SmoothLength,RSILength)
+  plot1(MyRSI)
+  plot2(0)
+End Sub
+'----------------------------------------------------------------

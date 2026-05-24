@@ -1,0 +1,71 @@
+// Fourier Series Analysis 
+
+Fundamental = 20; 
+Bandwidth = 0.1; 
+TWOPI = 2 * 3.1415926; 
+
+//compute filter coefficients 
+L1 = cos( TWOPI / Fundamental); 
+G1 = cos( Bandwidth*TWOPI / Fundamental); 
+S1 = 1 / G1 - sqrt(1 / (G1*G1) - 1); 
+L2 = cos(TWOPI / (Fundamental / 2)); 
+G2 = cos(Bandwidth*TWOPI / (Fundamental / 2)); 
+S2 = 1 / G2 - sqrt(1 / (G2*G2) - 1); 
+L3 = cos(TWOPI / (Fundamental / 3)); 
+G3 = cos(Bandwidth*TWOPI / (Fundamental / 3)); 
+S3 = 1 / G3 - sqrt(1 / (G3*G3) - 1); 
+
+
+// Fundamental Band-Pass 
+// 2nd order IIR 
+// IIR( array, b0, 
+//             a1, b1, 
+//             a2, b2 ) 
+// aX - output (feedback) at X bar back   
+// bX - input at X bar back 
+               
+BP1 = IIR( Close, 0.5*( 1 - S1 ), 
+                  L1*(1 + S1), 0, 
+                  -S1, - 0.5*( 1 - S1 ) ); 
+
+// Fundamental Quadrature 
+Q1 = (Fundamental / TWOPI)*(BP1 - Ref(BP1, -1 )); 
+
+//Second Harmonic Band-Pass 
+BP2 = IIR( Close, 0.5*(1 - S2), 
+                  L2*(1 + S2), 0, 
+                  -S2, - 0.5*(1 - S2) ); 
+
+//Second Harmonic Quadrature 
+Q2 = (Fundamental / TWOPI)*(BP2 - Ref( BP2, -1 )); 
+
+// Third Harmonic Band-Pass 
+BP3 = IIR( Close, 0.5*(1 - S3), 
+                  L3*(1 + S3), 0, 
+                  -S3, - 0.5*(1 - S3) ); 
+
+
+//Third Harmonic  Quadrature 
+Q3 = (Fundamental / TWOPI)*(BP3 - Ref(BP3, -1) ); 
+
+// Sum power of each harmonic at each bar over the Fundamental period 
+P1 = 0; P2 = 0; P3 = 0; 
+for( count = 0; count < Fundamental; count++ ) 
+{ 
+  b = Ref( BP1, -count ); q = Ref( Q1, -count ); 
+  P1 += b * b + q * q;   
+  b = Ref( BP2, -count ); q = Ref( Q2, -count ); 
+  P2 += b * b + q * q;   
+  b = Ref( BP3, -count ); q = Ref( Q3, -count ); 
+  P3 += b * b + q * q;   
+} 
+
+// Add the three harmonics together using their relative amplitudes 
+Wave = BP1 + sqrt(P2 / P1)*BP2 + sqrt(P3 / P1)*BP3; 
+
+Plot(Wave, "Wave", colorRed ); 
+
+// Optional cyclic trading signal 
+// Rate of change crosses zero at cyclic turning points 
+rocc = (Fundamental / 12.57)*(Wave - Ref(Wave, -2)); 
+// Plot(rocc, "Rate of change crosses zero", colorBlue);

@@ -1,0 +1,133 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:        
+   Truncated Indicators
+   by John F. Ehlers
+    
+
+Version:            1.00  05/13/2020
+
+Formula Parameters:                     Default:
+Period                                  20
+Length                                  10
+Bandwidth                               0.1
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("Bandpass and Truncated");
+    setCursorLabelName("Standard", 0);
+    setCursorLabelName("Truncated", 1);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setDefaultBarFgColor(Color.RGB(0xFE,0x69,0x00), 1);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    setPlotType( PLOTTYPE_LINE , 1 );
+    addBand( 0, PLOTTYPE_DOT, 1, Color.grey); 
+    
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("Period", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);		
+        setDefault(20);
+    }
+    fpArray[x] = new FunctionParameter("Length", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);
+        setUpperLimit(98);  
+        setDefault(10);            
+    }
+    fpArray[x] = new FunctionParameter("Bandwidth", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(0);		
+        setDefault(.1);            
+    }
+        
+}
+
+var bVersion = null;
+var L1 = null;
+var G1 = null; 
+var S1 = null; 
+var BP = null; 
+var BP_1 = null;
+var BP_2 = null;
+var BPT = null; 
+var Trunc = [];
+var xClose = null;
+
+
+function main(Period,Length,Bandwidth) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        L1 = Math.cos(2 * Math.PI / Period)
+        G1 = Math.cos(Bandwidth * 2 * Math.PI / Period)
+        S1 = 1 / G1 - Math.sqrt(1 / (G1*G1) - 1)
+        xClose = close();  
+        BP_1 = 0;
+        BP = 0;       
+        for (var i = 0; i <= 100; i++){
+            Trunc[i] = 0
+        } 
+        
+        bInit = true; 
+    }      
+
+    if (getCurrentBarCount() <= Length) return;
+    if (getBarState() == BARSTATE_NEWBAR) {
+        BP_2 = BP_1;
+        BP_1 = BP;
+    }
+    
+    if (getCurrentBarCount() <= 3) BP = 0;
+    else BP = .5 * (1 - S1) * (xClose.getValue(0) - xClose.getValue(-2)) + L1 * (1 + S1) * BP_1 - S1 * BP_2;
+    
+    //Stack the Trunc Array
+    for (var i = 100; i > 1; i--) {
+        Trunc[i] = Trunc[i-1]
+    }
+
+    //Truncated Bandpass
+    Trunc[Length + 2] = 0;
+    Trunc[Length + 1] = 0;
+    for (var i = Length; i > 0; i--) {
+        Trunc[i] = .5 * (1 - S1) * (xClose.getValue(-i + 1) - xClose.getValue(-i - 1)) + L1 * (1 + S1) * Trunc[i + 1] - S1 * Trunc[i + 2]; 
+    } 
+
+    BPT = Trunc[1] //convert to a variable
+
+    return [BP, BPT]
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

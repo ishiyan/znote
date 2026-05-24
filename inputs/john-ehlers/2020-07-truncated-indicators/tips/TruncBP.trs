@@ -1,0 +1,98 @@
+'TRUNCATED INDICATORS
+'Author: John F. Ehlers, TASC July 2020
+'Coded by Richard Denning, 5/17/2020
+'www.TradersEdgeSystems.com
+
+'FUNCTION THAT CALCULATES BP:
+Function Ehlers_BP(Period, Bandwidth, Length)
+'LENGTH must be less than 98 due to array size
+    Dim L1 As BarArray
+    Dim G1 As BarArray
+    Dim S1 As BarArray
+    Dim count
+    Dim BP As BarArray
+    'Dim BPT As BarArray
+    Dim Trunc As Array
+
+    If BarNumber=FirstBar Then
+        'Period = 20
+        'Bandwidth = .1
+        'Length = 10
+        L1 = 0
+        G1 = 0
+        S1 = 0
+        count = 0
+        BP = 0
+        'BPT = 0
+    End If
+
+    ReDim (Trunc, 101)
+    
+'Standard Bandpass
+    L1 = TStation_Cosine(360 / Period)
+    G1 = TStation_Cosine(Bandwidth*360 / Period)
+    S1 = 1 / G1 - Sqr(1 / (G1*G1) - 1)
+    BP = .5*(1 - S1)*(Close - Close[2]) + L1*(1 + S1)*BP[1] - S1*BP[2]
+Ehlers_BP = BP
+End Function
+'----------------------------------------------------------------------
+'FUNCTION THAT CALCULATES BPT:
+Function Ehlers_BPT(Period, Bandwidth, Length)  ', byref BP as bararray)
+'LENGTH must be less than 98 due to array size
+    Dim L1 As BarArray
+    Dim G1 As BarArray
+    Dim S1 As BarArray
+    Dim count
+    Dim BP As BarArray
+    Dim BPT As BarArray
+    Dim Trunc As Array
+
+    If BarNumber=FirstBar Then
+        'Period = 20
+        'Bandwidth = .1
+        'Length = 10
+        L1 = 0
+        G1 = 0
+        S1 = 0
+        count = 0
+        'BP = 0
+        BPT = 0
+    End If
+
+    ReDim (Trunc, 101)
+   
+'Standard Bandpass
+    L1 = TStation_Cosine(360 / Period)
+    G1 = TStation_Cosine(Bandwidth*360 / Period)
+    S1 = 1 / G1 - Sqr(1 / (G1*G1) - 1)
+    'See separate function (Ehlers_BP) for BP calculation:
+    'BP = .5*(1 - S1)*(Close - Close[2]) + L1*(1 + S1)*BP[1] - S1*BP[2]
+
+'Stack the Trunc Array   
+For count=100 To 2 Step -1
+    Trunc[count] = Trunc[count-1]
+Next
+
+'Truncated Bandpass
+Trunc[Length + 2] = 0
+Trunc[Length + 1] = 0
+For count = Length To 1 Step -1
+    Trunc[count] = .5*(1 - S1)*(Close[count - 1] - Close[count + 1]) + L1*(1 + S1)*Trunc[count + 1] - S1*Trunc[count + 2]
+Next
+
+'Convert to a variable
+BPT = Trunc[1]
+Ehlers_BPT = BPT
+End Function
+'------------------------------------------------------------------------------------------------------------------------
+'INDICATOR PLOT THAT PLOTS BP AND BPT:
+Sub Ehlers_BPT_IND(Period, Bandwidth, Length)
+Dim BP As BarArray
+Dim BPT As BarArray
+If BarNumber = FirstBar Then BP = 0
+BP = EHLERS_BP(Period, Bandwidth, Length)
+BPT = EHLERS_BPT(Period, Bandwidth, Length)
+plot1(BP)
+plot2(BPT)
+End Sub
+'---------------------------------------------

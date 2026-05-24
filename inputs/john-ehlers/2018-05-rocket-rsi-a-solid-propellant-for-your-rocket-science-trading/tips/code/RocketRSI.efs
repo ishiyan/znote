@@ -1,0 +1,144 @@
+/*********************************
+Provided By:  
+eSignal (Copyright c eSignal), a division of Interactive Data 
+Corporation. 2016. All rights reserved. This sample eSignal 
+Formula Script (EFS) is for educational purposes only and may be 
+modified and saved under a new file name.  eSignal is not responsible
+for the functionality once modified.  eSignal reserves the right 
+to modify and overwrite this EFS file with each new release.
+
+Description:        
+    RocketRSI - A Solid Propellant For Your Rocket Science Trading by John F. Ehlers
+
+Version:            1.00  21/03/2018
+
+Formula Parameters:                     Default:
+Smoothing Length                        8
+RSI Length                              10
+
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+var fpArray = new Array();
+
+function preMain(){
+    setPriceStudy(false);
+    setStudyTitle("Rocket RSI");
+    
+    var x = 0;
+    fpArray[x] = new FunctionParameter("SmLength", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Smoothing Length");
+        setLowerLimit(1);
+        setDefault(8);
+    }
+    fpArray[x] = new FunctionParameter("RSILength", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("RSI Length");
+        setLowerLimit(1);
+        setDefault(10);
+    }
+}
+
+var bInit = false;
+var bVersion = null;
+var xRocketRSI = null
+
+function main(SmLength, RSILength){
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    
+    if (getCurrentBarCount() <= SmLength + RSILength + 1) return;
+    
+    if (getBarState() == BARSTATE_ALLBARS){
+        bInit = false;
+    }
+    
+    if (!bInit){
+        var a1 = Math.exp(-Math.SQRT2 * Math.PI / SmLength);
+        var b1 = 2 * a1* Math.cos( (Math.PI / 180) * Math.SQRT2 * 180 / SmLength);
+        var c2 = b1;
+        var c3 = - a1 * a1;
+        var c1 = 1 - c2 - c3;
+        
+        var xMomentum = mom(RSILength-1);
+        var xSSFilter = efsInternal("calc_SSFilter", xMomentum, c1, c2, c3);
+        xRocketRSI = efsInternal("calc_RocketRSI", RSILength, xSSFilter);
+        
+        addBand(0, PS_DASH, 1, Color.grey, 1);
+        
+        bInit = true;
+    }
+
+    if( xRocketRSI.getValue(0) != null) return xRocketRSI.getValue(0);
+}
+
+var nSSFilter = 0;
+var nSSFilter_1 = 0;
+var nSSFilter_2 = 0;
+
+function calc_SSFilter(xMomentum, c1, c2, c3){
+    if (xMomentum.getValue(-1) == null) return;
+    
+    if (getBarState() == BARSTATE_NEWBAR){
+        nSSFilter_2 = nSSFilter_1;
+        nSSFilter_1 = nSSFilter;
+    }
+        
+    nSSFilter = c1 * (xMomentum.getValue(0) + xMomentum.getValue(-1)) / 2 + c2 * nSSFilter_1 + c3 * nSSFilter_2;
+    
+    if (nSSFilter == null) return;
+    
+    return nSSFilter;
+}
+
+function calc_RocketRSI(RSILength, xSSFilter){     
+    if (xSSFilter.getValue(-RSILength - 1) == null) return;
+    
+    var nCU = 0;
+    var nCD = 0;
+    var nMyRSI = 0;
+    var nRocketRSI = 0;
+    
+    for (var i = 0; i < RSILength; i++){
+        
+        if (xSSFilter.getValue(-i) - xSSFilter.getValue(-i - 1) > 0)
+            nCU += (xSSFilter.getValue(-i) - xSSFilter.getValue(-i - 1));
+        
+        if (xSSFilter.getValue(-i) - xSSFilter.getValue(-i - 1) < 0)
+            nCD += (xSSFilter.getValue(-i - 1) - xSSFilter.getValue(-i)); 
+    }
+
+    
+    if ((nCU + nCD) != 0) nMyRSI = (nCU - nCD) / (nCU + nCD);
+    
+    if (nMyRSI > 0.999) nMyRSI = 0.999;
+    if (nMyRSI < -0.999) nMyRSI = -0.999;
+        
+    nRocketRSI = 0.5 * Math.log((1 + nMyRSI) / (1 - nMyRSI));
+    
+    return nRocketRSI;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=http://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

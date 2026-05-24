@@ -1,0 +1,155 @@
+Indicator: Fisherized Deviation Scaled Oscillator
+// TASC OCT 2018
+// Ehlers FDSA
+inputs:
+	Period( 40 ),
+	OverBought( 2 ),
+	OverSold( -2 ),
+	OutPutData( false ),
+	FilePath( "C:\ProbabilityDensity.CSV" ) ;
+
+variables:
+	a1( 0 ), b1( 0 ), c1( 0 ), c2( 0 ), 
+	c3( 0 ), Zeros( 0 ), Filt( 0 ), RMS( 0 ),
+	count( 0 ), ScaledFilt( 0 ), FisherFilt( 0 ), 
+	Idx( 0 ), J( 0 ), K( 0 ) ;
+
+arrays:
+	Bin[61](0);
+
+
+if CurrentBar = 1 Then 
+//once
+begin
+//Smooth with a Super Smoother
+	a1 = expvalue( -1.414 * 3.14159 / ( .5 * Period ) ) ;
+	b1 = 2 * a1 * Cosine( 1.414 * 180 / ( .5 * Period ) ) ;
+	c2 = b1 ;
+	c3 = -a1 * a1 ;
+	c1 = 1 - c2 - c3 ;
+end ;
+
+//Produce Nominal zero mean with zeros in the transfer response at
+//DC and Nyquist with no spectral distortion
+//Nominally whitens the spectrum because of 6 dB per octave rolloff
+Zeros = Close - Close[2] ;
+
+//SuperSmoother Filter
+Filt = c1 * ( Zeros + Zeros[1] ) 
+	/ 2 + c2 * Filt[1] + c3 * Filt[2] ;
+
+//Compute Standard Deviation
+RMS = 0;
+For count = 0 to Period - 1 
+begin
+	RMS = RMS + Filt[count] * Filt[count] ;
+end;
+RMS = SquareRoot( RMS / Period ) ;
+
+//Rescale Filt in terms of Standard Deviations
+If RMS <> 0 then 
+	ScaledFilt = Filt / RMS ;
+
+//Apply Fisher Transform to establish real Gaussian Probability
+//Distribution
+If AbsValue( ScaledFilt ) < 2 then 
+	FisherFilt = .5 * 
+	Log( ( 1 + ScaledFilt / 2 ) / ( 1 - ScaledFilt / 2 ) ) ;
+Plot1( FisherFilt, "Fisher Filt" ) ;
+Plot2( 0, "ZL" ) ;
+Plot3( OverBought, "OB" ) ;
+Plot4( OverSold, "OS" ) ;
+
+
+//Bin the indicator values in Bins from -3 to +3
+if OutPutData then
+begin
+	For Idx = 1 to 60 
+	begin
+		J = (Idx - 31) / 10;
+		K = (Idx - 30) / 10;
+		If FisherFilt > J and FisherFilt <= K then 
+			Bin[Idx] = Bin[Idx] + 1;
+	end;
+	
+	//Output the Bin measurements to a fi le
+	once ( LastBarOnChartEx ) 
+	begin
+		FileDelete( FilePath ) ;
+		For Idx = 1 to 61 
+		begin
+			FileAppend( FilePath, NumToStr( .1 * ( Idx - 31 ), 1 ) 
+			+ "," + NumToStr( Bin[Idx], 0 ) + NewLine ) ;
+		end;
+	end ;
+end ;
+	
+
+Strategy: Fisherized Deviation Scaled Oscillator
+// TASC OCT 2018
+// Ehlers FDSA
+inputs:
+	Period( 40 ),
+	OverBought( 2 ),
+	OverSold( -2 ),
+	OutPutData( false ),
+	FilePath( "C:\Data\ProbabilityDensity.CSV" ) ;
+
+variables:
+	a1( 0 ), b1( 0 ), c1( 0 ), c2( 0 ), 
+	c3( 0 ), Zeros( 0 ), Filt( 0 ), RMS( 0 ),
+	count( 0 ), ScaledFilt( 0 ), FisherFilt( 0 ), 
+	Idx( 0 ), J( 0 ), K( 0 ) ;
+
+arrays:
+	Bin[61](0);
+
+
+if CurrentBar = 1 Then 
+//once
+begin
+//Smooth with a Super Smoother
+	a1 = expvalue( -1.414 * 3.14159 / ( .5 * Period ) ) ;
+	b1 = 2 * a1 * Cosine( 1.414 * 180 / ( .5 * Period ) ) ;
+	c2 = b1 ;
+	c3 = -a1 * a1 ;
+	c1 = 1 - c2 - c3 ;
+end ;
+
+//Produce Nominal zero mean with zeros in the transfer response at
+//DC and Nyquist with no spectral distortion
+//Nominally whitens the spectrum because of 6 dB per octave rolloff
+Zeros = Close - Close[2] ;
+
+//SuperSmoother Filter
+Filt = c1 * ( Zeros + Zeros[1] ) 
+	/ 2 + c2 * Filt[1] + c3 * Filt[2] ;
+
+//Compute Standard Deviation
+RMS = 0;
+For count = 0 to Period - 1 
+begin
+	RMS = RMS + Filt[count] * Filt[count] ;
+end;
+RMS = SquareRoot( RMS / Period ) ;
+
+//Rescale Filt in terms of Standard Deviations
+If RMS <> 0 then 
+	ScaledFilt = Filt / RMS ;
+
+//Apply Fisher Transform to establish real Gaussian Probability
+//Distribution
+If AbsValue( ScaledFilt ) < 2 then 
+	FisherFilt = .5 * 
+	Log( ( 1 + ScaledFilt / 2 ) / ( 1 - ScaledFilt / 2 ) ) ;
+
+
+if FisherFilt crosses below OverBought then
+	Sell Short next bar at Market
+else if FisherFilt crosses over OverSold then
+	Buy next bar at Market ;	
+
+if FisherFilt crosses below 0 then
+	Sell next bar at Market
+else if FisherFilt crosses over 0 then
+	Buy to Cover next bar at Market ;

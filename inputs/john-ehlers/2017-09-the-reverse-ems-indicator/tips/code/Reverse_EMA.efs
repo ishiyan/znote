@@ -1,0 +1,114 @@
+/*********************************
+Provided By:  
+eSignal (Copyright c eSignal), a division of Interactive Data 
+Corporation. 2016. All rights reserved. This sample eSignal 
+Formula Script (EFS) is for educational purposes only and may be 
+modified and saved under a new file name.  eSignal is not responsible
+for the functionality once modified.  eSignal reserves the right 
+to modify and overwrite this EFS file with each new release.
+
+Description:        
+    The Reverse EMA Indicator by John F. Ehlers
+
+Version:            1.00  07/12/2017
+
+Formula Parameters:                     Default:
+Alpha                                   0.1
+
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+var fpArray = new Array();
+
+function preMain(){
+    setPriceStudy(false);
+
+    var x=0;
+    fpArray[x] = new FunctionParameter("Alpha", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Alpha Value");
+        setDefault(0.1);
+        setLowerLimit(0);
+        }
+}
+
+var bInit = false;
+var bVersion = null;
+
+var xClose = null;
+
+var xEMA = null;
+var xRevEMA = null;
+
+function main (Alpha){
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    
+    var nLength = ((2 / Alpha) - 1) * 3;
+    
+    if (getCurrentBarCount() < nLength) return;
+    
+    if (getBarState() == BARSTATE_ALLBARS){
+        bInit = false;
+    }
+    
+    if (!bInit){
+        xClose = close();
+
+        xEMA = efsInternal("calc_EMA", Alpha, xClose);
+        xRevEMA = efsInternal("calc_RevEMA", (1 - Alpha), 1, xEMA);
+        
+        var power = 2;
+        
+        for (var i = 0; i < 7; i++){
+            xRevEMA = efsInternal("calc_RevEMA", (1 - Alpha), power, xRevEMA);
+            power *= 2;
+            
+        }
+        
+        addBand(0, PS_DASH, 1, Color.grey, 1);
+    
+        bInit = true;
+    }
+
+    if (xRevEMA.getValue(0) != null){
+        return (xEMA.getValue(0) - 0.1 * xRevEMA.getValue(0));
+    }
+}
+
+function calc_EMA(nAA, xSeries){
+    var nEMA_1 = ref(-1);
+    if (nEMA_1 == null) nEMA_1 = 0;
+    var nEMA = ((xSeries.getValue(0) - nEMA_1) * nAA) + nEMA_1;
+    
+    if (nEMA != null) return nEMA;
+}
+
+function calc_RevEMA(nCC, power, xSeries){
+    if (xSeries.getValue(-1) == null) return;
+    var nRevEMA = Math.pow(nCC, power) * xSeries.getValue(0) + xSeries.getValue(-1);
+    
+    if (nRevEMA != null) return nRevEMA;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=http://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

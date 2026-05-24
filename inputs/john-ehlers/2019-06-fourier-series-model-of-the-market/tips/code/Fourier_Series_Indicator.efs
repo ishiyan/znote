@@ -1,0 +1,187 @@
+/*********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:        
+   Fourier series Model Of The Market
+   by John F. Ehlers
+    
+
+Version:            1.00  04/08/2019
+
+Formula Parameters:                     Default:
+Fundamental                             20
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+
+
+var fpArray = new Array();
+
+function preMain(){
+    setPriceStudy(false);
+    setStudyTitle("Fourier Series Indicator");
+    setCursorLabelName("Fourier Series Indicator");
+    setPlotType(PLOTTYPE_LINE);
+    
+    var x = 0;
+    fpArray[x] = new FunctionParameter("Fundamental", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Fundamental");
+        setLowerLimit(1);
+        setDefault(20);        
+    }
+    
+}
+
+var bInit = false;
+var bVersion = null;
+var xClose = null;
+var Bandwidth = 0.1;
+var G1 = 0;
+var S1 = 0;
+var L1 = 0;
+var BP1 = 0;
+var Q1 = 0;
+var P1 = 0;
+var G2 = 0;
+var S2 = 0;
+var L2 = 0;
+var BP2 = 0;
+var Q2 = 0;
+var P2 = 0; 
+var G3 = 0;
+var S3 = 0;
+var L3 = 0;
+var BP3 = 0;
+var Q3 = 0;
+var P3 = 0; 
+var Wave = 0;
+var vBP1 = [];
+var vBP2 = [];
+var vBP3 = [];
+var vQ1 = [];
+var vQ2 = [];
+var vQ3 = [];
+var fNewBar = null;
+
+
+
+function main(Fundamental){
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+        
+    if (getBarState() == BARSTATE_ALLBARS){
+        bInit = false;
+    }
+
+    if (getCurrentBarCount() < Fundamental) {
+        
+        vBP1.unshift(0);
+        vBP2.unshift(0);
+        vBP3.unshift(0)
+        vQ1.unshift(0)
+        vQ2.unshift(0)
+        vQ3.unshift(0)
+        return;
+        
+    }
+    
+    if (!bInit){
+        
+        xClose = close();
+        L1 = Math.cos(2 * Math.PI / Fundamental);
+        L2 = Math.cos(2 * Math.PI / (Fundamental / 2));
+        L3 = Math.cos(2 * Math.PI / (Fundamental / 3));
+        G1 = Math.cos(Bandwidth * 2 * Math.PI / Fundamental);
+        G2 = Math.cos(Bandwidth * 2 * Math.PI / (Fundamental / 2));
+        G3 = Math.cos(Bandwidth * 2 * Math.PI / (Fundamental / 3));
+        S1 = 1 / G1 - Math.sqrt(1 / (G1*G1) - 1);      
+        S2 = 1 / G2 - Math.sqrt(1 / (G2*G2) - 1);      
+        S3 = 1 / G3 - Math.sqrt(1 / (G3*G3) - 1);     
+        
+        addBand(0, PS_DASH, 1, Color.grey, 0);    
+        bInit = true;
+    }
+
+    fNewBar = false;
+    P1 = 0;
+    P2 = 0;
+    P3 = 0;
+
+    if (getBarState() == BARSTATE_NEWBAR) fNewBar = true;        
+    if (!fNewBar) {
+        vBP1.shift();
+        vBP2.shift();
+        vBP3.shift();
+        vQ1.shift();
+        vQ2.shift();
+        vQ3.shift();
+    }
+
+    if (getCurrentBarCount() <= 3) {
+        vBP1.unshift(0);
+        vBP2.unshift(0);
+        vBP3.unshift(0);
+    }
+    else {
+        vBP1.unshift(0.5 * (1 - S1)*(xClose.getValue(0) - xClose.getValue(-2)) + L1*(1 + S1)*vBP1[0] - S1*vBP1[1]);
+        vBP2.unshift(0.5 * (1 - S2)*(xClose.getValue(0) - xClose.getValue(-2)) + L2*(1 + S2)*vBP2[0] - S2*vBP2[1]);
+        vBP3.unshift(0.5 * (1 - S3)*(xClose.getValue(0) - xClose.getValue(-2)) + L3*(1 + S3)*vBP3[0] - S3*vBP3[1]);
+    }
+
+    if (getCurrentBarCount() <= 4) {
+        vQ1.unshift(0);
+        vQ2.unshift(0);
+        vQ3.unshift(0);
+    }
+    else {
+        vQ1.unshift((Fundamental / 6.28)*(vBP1[0] - vBP1[1]));
+        vQ2.unshift((Fundamental / 6.28)*(vBP2[0] - vBP2[1]));
+        vQ3.unshift((Fundamental / 6.28)*(vBP3[0] - vBP3[1]));
+    }
+       
+    for (var i = 0; i < Fundamental; i++) {        
+        P1 = P1 + vBP1[i]*vBP1[i] + vQ1[i]*vQ1[i]; 
+        P2 = P2 + vBP2[i]*vBP2[i] + vQ2[i]*vQ2[i];
+        P3 = P3 + vBP3[i]*vBP3[i] + vQ3[i]*vQ3[i];        
+    }
+    Wave = Calc_Ret(0, vBP1, vBP2, vBP3, P1, P2, P3);
+    
+    return Wave
+}
+
+
+function Calc_Ret(V, vBP1, vBP2, vBP3, P1, P2, P3){
+    if (P1 == 0) return;
+    var vWave = vBP1[0 + V] + Math.sqrt(P2 / P1)*vBP2[0 + V] + Math.sqrt(P3 / P1)*vBP3[0 + V];
+    return vWave;
+}
+ 
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=http://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

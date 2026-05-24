@@ -1,0 +1,29 @@
+// Recursive Median Oscillator 
+Version( 6.0 ); 
+
+LPPeriod = Param("LPPeriod", 12 ); 
+HPPeriod = Param("HPPeriod", 30 ); 
+
+PI = 3.1415926; 
+
+angle = 2 * PI / LPPeriod; 
+alpha1 = ( cos( angle ) + sin( angle ) - 1 )/cos( angle ); 
+
+mp = Median( Close, 5 ); 
+
+rm = AMA( mp, alpha1 ); 
+
+angle2 = 0.707 * 2 * PI / HPPeriod; 
+alpha2 = ( cos( angle2 ) + sin( angle2 ) - 1 ) / cos( angle2 ); 
+
+b0 = ( 1 - alpha2 / 2 ) * ( 1 - alpha2 / 2 ); 
+b1 = - 2 * b0; 
+b2 = b0; 
+a1 = 2 * ( 1 - alpha2 ); 
+a2 = - ( 1 - alpha2 ) * ( 1 - alpha2 ); 
+
+// recursive second order filter 
+RMO = IIR( rm, b0, a1, b1, a2, b2 ); 
+
+Plot( RMO, "RMO" + _PARAM_VALUES(), colorRed ); 
+Plot( 0, "", colorBlue );

@@ -155,35 +155,51 @@ for i, logo_div in enumerate(logo_divs):
 
 1. **Traders' Tips URL** — Found in `Content-Location` header of the HTML part (part index 1). Always include in the output markdown header and in BibTeX.
 
-2. **Asset filtering** — MHTML contains vendor logos (`vendor_logos/`) and static site images (`static_images/bookArrow.gif`). Skip these; only extract `images/TT-*.gif` chart figures and the article thumbnail.
+2. **Asset filtering** — MHTML contains vendor logos (`vendor_logos/`), static site images (`static_images/bookArrow.gif`), and the article thumbnail (a small `TT-*.gif` image referenced by `class="letterImg"`, e.g., `TT-Ehlers.gif`). Skip all of these; only extract `images/TT-*.gif` chart figures that appear inside `div.figBorder` containers.
 
 3. **Output structure** — Place in same directory as source MHTML:
    ```
    tips/
      tips.md              # Main markdown
      assets/              # Chart GIFs (TT-*.gif)
-     code/                # External code files
-       DMH.els
-       DMH.pine
-       DMH.c
-       DMH.efs
-       DMH.optuma
-       DMH.trs
-       DMH.xlsm
+     NET.els              # External code files (in same dir as tips.md)
+     NET.cs
+     NET.c
+     NET.efs
+     NET.trs
+     code/                # Pre-existing downloaded files (e.g., .xlsm spreadsheets)
+       NoiseEliminationTechnology.xlsm
      ninja-trader/        # Pre-existing NinjaTrader .cs files (if present)
    ```
 
-   **Naming convention:** Use the indicator abbreviation as the base filename with the platform's native extension — e.g., `DMH.els`, `DMH.pine`, `DMH.c`, `DMH.trs`, `DMH.optuma`, `DMH.efs`, `RSIH.els`. Use the platform's native file extension (`.els` for EasyLanguage, `.rtest` for RealTest, `.pine` for Pine Script, `.cs` for C#, `.c` for C/Zorro, `.py` for Python, `.eds` for AIQ EDS, `.efs` for eSignal, `.optuma` for Optuma, `.trs` for TradersStudio). Use `.txt` only for platforms with no specific extension (MetaStock, NeuroShell). When a platform has multiple code blocks that serve different purposes (indicator + strategy), append `_indicator`, `_strategy`, `_test` etc. to the base name.
+   External code files extracted from `<pre>` blocks go directly in the tips/ directory alongside tips.md — NOT inside `code/`. The `code/` subfolder is reserved for pre-existing downloaded binary files (spreadsheets, ZIP archives) that were already there before conversion. Link to these from tips.md.
 
-4. **Code extraction** — Each `<pre>` block in the HTML contains code for one platform. Extract both as embedded fenced code blocks in `tips.md` AND as standalone external files. Use language hints: `easylanguage`, `metastock`, `csharp`, `realtest`, `pine`, `c`, `python`. **Multiple `<pre>` blocks per platform:** Some platforms (notably Zorro) split their code across 2–3 `<pre>` blocks (e.g., helper function + main function + run script). Concatenate them into a single external file in the order they appear, separated by a blank line.
+   **Naming convention:** Use the indicator abbreviation as the base filename with the platform's native extension — e.g., `NET.els`, `NET.cs`, `NET.c`, `NET.trs`, `NET.efs`, `DMH.els`, `DMH.pine`, `RSIH.els`. Use the platform's native file extension (`.els` for EasyLanguage, `.rtest` for RealTest, `.pine` for Pine Script, `.cs` for C#/Wealth-Lab, `.c` for C/Zorro, `.py` for Python, `.eds` for AIQ EDS, `.efs` for eSignal, `.optuma` for Optuma, `.trs` for TradersStudio). Use `.txt` only for platforms with no specific extension (MetaStock, NeuroShell). When a platform has multiple code blocks that serve different purposes (indicator + strategy), append `_indicator`, `_strategy`, `_test` etc. to the base name.
+
+4. **Code extraction** — Each `<pre>` block in the HTML contains code for one platform. Extract both as embedded fenced code blocks in `tips.md` AND as standalone external files. Use language hints: `easylanguage`, `metastock`, `csharp`, `realtest`, `pine`, `c`, `python`, `javascript` (for eSignal EFS), `basic` (for TradersStudio). **Multiple `<pre>` blocks per platform:** Some platforms (notably Zorro) split their code across 2–3 `<pre>` blocks (e.g., helper function + main function + run script). Concatenate them into a single external file in the order they appear, separated by a blank line.
 
 5. **HTML entity decoding** — Code in `<pre>` blocks uses HTML entities (`&lt;` `&gt;` `&amp;`). Decode these when writing external files. Also watch for `&nbsp;` (non-breaking spaces) in TradingView code — replace with regular spaces.
 
-6. **Platforms without code** — Some platforms (NeuroShell Trader, Optuma, thinkorswim, Trade Navigator) only provide download links, shared URLs, or GUI instructions. Include their prose and chart figures but no external code file. **Wealth-Lab** varies by issue — sometimes provides full C# code, sometimes only describes built-in features with no code. **NinjaTrader** sometimes has `.cs` source files in a `ninja-trader/` subfolder alongside the MHTML — if present, link to them from tips.md rather than creating new external files.
+6. **Platforms without code** — Some platforms (NeuroShell Trader, Optuma, thinkorswim, Trade Navigator, Quantacula Studio) only provide download links, shared URLs, drag-and-drop building blocks, or GUI instructions. Include their prose and chart figures but no external code file. **Wealth-Lab** varies by issue — sometimes provides full C# code, sometimes only describes built-in features with no code. **NinjaTrader** sometimes has `.cs` source files in a `ninja-trader/` subfolder alongside the MHTML — if present, link to them from tips.md rather than creating new external files.
 
 7. **BibTeX** — Always add a `@misc{}` entry at the end of `tips.md` with key `traders_tips_YYYY_MM`, author set to `{{Technical Analysis of STOCKS \& COMMODITIES}}`, title including the article name, `howpublished = {online}`, and the Traders' Tips URL.
 
 8. **Figure numbering** — Figures are numbered sequentially across all platforms (FIGURE 1, 2, 3...). Preserve original numbering and captions.
+
+    **Missing images:** Some MHTML archives are incomplete — images referenced in the HTML (e.g., `TT-Ninja.gif`, `TT-Excel5.gif`) may not be present as MIME parts. When an image is referenced but missing from the archive, omit the `![](assets/...)` markdown image tag and keep only the bold caption text. Do NOT create broken image links.
+
+9. **Microsoft Excel** — Excel tips typically provide a download link to an `.xlsm` file (which may already exist in a `code/` subfolder). Reference it from tips.md as `[code/NoiseEliminationTechnology.xlsm](code/NoiseEliminationTechnology.xlsm)`. Excel sections often have multiple figures (e.g., the standard replication figure plus additional experiments by the author). Do NOT create an external code file for Excel — the spreadsheet IS the code.
+
+10. **tips.md header format** — Always start tips.md with:
+    ```markdown
+    # Traders' Tips: Month YYYY
+
+    - **Article:** Article Title by Author Name
+    - **Traders' Tips URL:** [Traders' Tips, Month YYYY](URL)
+
+    ---
+    ```
+    Each platform section uses `## Platform Name: Month YYYY` as its heading. End with a BibTeX section under `## BibTeX`.
 
 ### Web page specifics
 

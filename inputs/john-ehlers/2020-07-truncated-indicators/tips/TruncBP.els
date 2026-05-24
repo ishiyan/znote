@@ -1,0 +1,100 @@
+Indicator: Truncated BP Filter
+// Truncated BP Filter
+// John F. Ehlers
+// TASC JUL 2020
+
+inputs: 
+	Period( 20 ), 
+	Bandwidth( .1 ), 
+	Length( 10 ) ; 
+variables: 
+	L1( 0 ), G1( 0 ), S1( 0 ), 
+	count( 0 ), BP( 0 ), BPT( 0 ) ;
+arrays: 
+	Trunc[100]( 0 ) ; 
+
+//Standard Bandpass 
+L1 = Cosine( 360 / Period ) ; 
+G1 = Cosine( Bandwidth * 360 / Period ) ; 
+S1 = 1 / G1 - SquareRoot( 1 / ( G1 * G1 ) - 1 ) ;
+BP = .5 * ( 1 - S1 ) * ( Close - Close[2] )
+	 + L1 * ( 1 + S1 ) * BP[1] - S1 * BP[2] ; 
+
+If CurrentBar <= 3 then 
+	BP = 0 ; 
+	
+//Stack the Trunc Array 
+for Count = 100 downto 2 
+begin 
+	Trunc[count] = Trunc[count - 1] ; 
+end ; 
+
+//Truncated Bandpass 
+Trunc[Length + 2] = 0 ; 
+Trunc[Length + 1] = 0 ; 
+
+for count = Length downto 1 
+begin 
+	Trunc[count] = .5 * ( 1 - S1 ) 
+		* ( Close[count - 1] - Close[count + 1] ) 
+		+ L1 * ( 1 + S1 ) * Trunc[count + 1] 
+		- S1 * Trunc[count + 2] ; 
+end ; 
+
+BPT = Trunc[1]; //convert to a variable 
+
+Plot1(BP, "BP Filt" ) ; 
+Plot2( BPT, "Trunc BP Filt") ;
+Plot4( 0, "ZL" ) ;
+
+Strategy: Truncated BP Filter
+
+// Truncated BP Filter
+// John F. Ehlers
+// TASC JUL 2020
+
+inputs: 
+	Period( 20 ), 
+	Bandwidth( .1 ), 
+	Length( 10 ) ; 
+variables: 
+	L1( 0 ), G1( 0 ), S1( 0 ), 
+	count( 0 ), BP( 0 ), BPT( 0 ) ;
+arrays: 
+	Trunc[100]( 0 ) ; 
+
+//Standard Bandpass 
+L1 = Cosine( 360 / Period ) ; 
+G1 = Cosine( Bandwidth * 360 / Period ) ; 
+S1 = 1 / G1 - SquareRoot( 1 / ( G1 * G1 ) - 1 ) ;
+BP = .5 * ( 1 - S1 ) * ( Close - Close[2] )
+	 + L1 * ( 1 + S1 ) * BP[1] - S1 * BP[2] ; 
+
+If CurrentBar <= 3 then 
+	BP = 0 ; 
+	
+//Stack the Trunc Array 
+for Count = 100 downto 2 
+begin 
+	Trunc[count] = Trunc[count - 1] ; 
+end ; 
+
+//Truncated Bandpass 
+Trunc[Length + 2] = 0 ; 
+Trunc[Length + 1] = 0 ; 
+
+for count = Length downto 1 
+begin 
+	Trunc[count] = .5 * ( 1 - S1 ) 
+		* ( Close[count - 1] - Close[count + 1] ) 
+		+ L1 * ( 1 + S1 ) * Trunc[count + 1] 
+		- S1 * Trunc[count + 2] ; 
+end ; 
+
+BPT = Trunc[1]; //convert to a variable 
+
+
+if BPT crosses over 0  then 
+	Buy next bar at Market 
+else if BPT crosses under 0  Then
+	SellShort next bar at Market ;

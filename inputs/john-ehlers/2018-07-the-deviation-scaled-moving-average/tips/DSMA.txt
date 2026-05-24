@@ -1,0 +1,11 @@
+tp:= Input("time periods",2, 200, 40);
+a1:= Exp(-1.414 * 3.14159 / (tp/2));
+b1:= 2*a1 * Cos(1.414*180 /(tp/2));
+c2:= b1;
+c3:= -a1 * a1;
+c1:= 1 - c2 - c3;
+zeros:= C-Ref(C,-2);
+filt:= c1 * (zeros + Ref(zeros, -1))/2 + c2*PREV + c3*Ref(PREV,-1);
+ScaledFilt:= filt/Std(filt,tp);
+a2:= Abs(ScaledFilt*5)/tp;
+If(Cum(1)<=tp+4, C, a2*C + ((1-a2)*PREV))

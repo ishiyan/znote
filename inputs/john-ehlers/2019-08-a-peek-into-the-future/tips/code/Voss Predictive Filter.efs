@@ -1,0 +1,135 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:        
+   Peaks And Valleys. A Peek Into The Future
+   by John F. Ehlers
+    
+
+Version:            1.00  06/11/2019
+
+Formula Parameters:                     Default:
+Periods                                 20
+Predict                                 3
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+
+
+var fpArray = new Array();
+
+function preMain(){
+    setPriceStudy(false);
+    setStudyTitle("Voss Predictive Filter");
+    setCursorLabelName("Filter", 0);
+    setCursorLabelName("Voss", 1); 
+    setPlotType(PLOTTYPE_LINE);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF),1);
+    setDefaultBarFgColor(Color.RGB(0xFE,0x69,0x00),0);
+    
+    var x = 0;
+    fpArray[x] = new FunctionParameter("Periods", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Periods");
+        setLowerLimit(1);
+        setDefault(20);        
+        }
+    fpArray[x] = new FunctionParameter("Predict", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Predict");
+        setLowerLimit(1);
+        setDefault(3);           
+        }
+}
+
+var bInit = false;
+var bVersion = null;
+var xClose = null;
+var vOrder = null;
+var F1 = null;
+var G1 = null;
+var S1 = null;
+var Bandwidth = null;
+var count = null;
+var SumC = null;
+var Filt = null;
+var Filt_1 = null;
+var Filt_2 = null;
+var Voss = [];
+
+
+function main(Periods, Predict){
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+        
+    if (getBarState() == BARSTATE_ALLBARS){
+        bInit = false;
+    }
+   if (getCurrentBarCount() < Periods || getCurrentBarCount() < (3 * Predict)) {
+        Voss.unshift(0); 
+        return;
+    }
+    if (!bInit){        
+        xClose = close();
+        Bandwidth = 0.25;   
+        Order = 3 * Predict;
+        F1 = Math.cos(2 * Math.PI / Periods);
+        G1 = Math.cos( Bandwidth * 2 * Math.PI / Periods);
+        S1 = 1 / G1 - Math.sqrt( 1 / (G1*G1) - 1);
+        Filt_2 = 0;
+        Filt_1 = 0;
+        Filt = 0;
+        
+        bInit = true;
+    }    
+
+    if (getBarState() == BARSTATE_NEWBAR)   {
+        Filt_2 = Filt_1;
+        Filt_1 = Filt;
+        Filt = 0;
+    }  
+    else Voss.shift();
+    
+    if (getCurrentBarCount() <= 5) {
+        Filt = 0;
+    }
+    else {
+        Filt  =  0.5 * (1  -  S1)*(xClose.getValue(0)  -  xClose.getValue(-2))  +  F1 * (1  +  S1) * Filt_1  - S1 * Filt_2;
+    }
+
+    SumC = 0;
+    for (var i = 0; i < Order; i++) {
+        SumC = SumC + ((i + 1) / Order) * Voss[Order - i - 1];
+    }
+    Voss.unshift(((3 + Order) / 2) * Filt - SumC);
+    
+    return [Filt, Voss[0]];
+}
+ 
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=http://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

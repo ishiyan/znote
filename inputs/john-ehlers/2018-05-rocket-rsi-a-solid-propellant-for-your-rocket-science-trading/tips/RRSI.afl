@@ -1,0 +1,46 @@
+// RocketRSI Indicator 
+// based on TS code by John F. Ehlers, S&C May 2018 
+
+SmoothLength = Param("SmoothLength", 10, 2, 50 ); 
+RSILength = Param("RSILength", 10, 2, 50 ); 
+
+// Compute Super Smoother coefficients once 
+
+PI = 3.1415926; 
+
+a1 = exp( -1.414 * PI / SmoothLength ); 
+b1 = 2 * a1 * Cos( 1.414 * PI / SmoothLength ); 
+c2 = b1; 
+c3 = -a1 * a1; 
+c1 = 1 - c2 - c3; 
+
+// Create half dominant cycle Momentum 
+Mom = Close - Ref( Close, RSILength - 1 ); 
+
+// SuperSmoother Filter 
+Filt = IIR( Mom, 0.5 * c1, c2, 0.5 * c1, c3 ); 
+
+// Accumulate "Closes Up" and "Closes Down" 
+Diff = Ref( Filt, -1 ) - Filt; 
+
+Up = Max( Diff, 0 ); 
+Dn = Max( -Diff, 0 ); 
+
+CU = Sum( Up, RSILength ); 
+CD = Sum( Dn, RSILength ); 
+
+MyRSI = ( CU - CD ) / ( CU + CD ); 
+
+MyRSI = Ref( MyRSI, - RSILength + 1 ); 
+
+// Limit RocketRSI output to +/- 3 Standard Deviations 
+
+MyRSI = Min( 0.999, MyRSI ); 
+MyRSI = Max( -0.999, MyRSI ); 
+
+// Apply Fisher Transform to establish Gaussian Probability Distribution 
+RocketRSI = .5 * Log( ( 1 + MyRSI ) / ( 1 - MyRSI ) ); 
+
+Plot( RocketRSI, "RocketRSI" + _PARAM_VALUES(), colorRed, styleThick ); 
+
+Plot( 0, "", colorBlue, styleNoLabel ); 

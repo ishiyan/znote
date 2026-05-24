@@ -1,0 +1,3 @@
+MetaStock formula for correlation trend indicator:
+pds:= Input("Number of periods", 5, 200, 20);
+Correl(Cum(1), C, pds, 0)

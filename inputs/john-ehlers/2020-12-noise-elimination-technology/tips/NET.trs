@@ -1,0 +1,68 @@
+'Noise Elimination Technology
+'Author: John F. Ehlers, TASC Dec 2020
+'Coded by: Richard Denning, 10/16/20
+
+Function Ehlers_RSI(RSIlength)
+    Dim CU As BarArray
+    Dim CD As BarArray
+    Dim count As BarArray
+    Dim MyRSI As BarArray
+
+    CU = 0
+    CD = 0
+    For count = 0 To RSIlength -1
+        If Close[count] - Close[count + 1] > 0 Then
+            CU = CU + Close[count] - Close[count + 1]
+        End If
+        If Close[count] - Close[count + 1] < 0 Then
+            CD = CD + Close[count + 1] - Close[count]
+        End If
+    Next
+    If CU + CD <> 0 Then
+        MyRSI = (CU - CD) / (CU + CD)
+    End If
+Ehlers_RSI = MyRSI
+End Function
+'------------------------------------------------------
+Function Ehlers_NET(NETlength,myRSI As BarArray)
+    Dim count
+    Dim Num As BarArray
+    Dim Denom As BarArray
+    Dim K As BarArray
+    Dim NET As BarArray
+    Dim X As Array
+    Dim Y As Array
+'NETLength = 14
+    ReDim (X, 101)
+    ReDim (Y, 101)
+    X = GValue501
+    Y = GValue502
+        For count = 1 To NETlength
+            X[count] = myRSI[count - 1]
+            Y[count] = -count
+        Next
+        Num = 0
+        Dim temp As BarArray
+        For count = 2 To NETlength
+            For K = 1 To count - 1
+                temp = Sign(X[count] - X[K])
+                Num = Num - temp
+            Next
+        Next
+        Denom = 0.5*NETlength*(NETlength - 1)
+        If Denom<>0 Then NET = Num / Denom
+    GValue501 = X
+    GValue502 = Y
+  Ehlers_NET = NET
+End Function
+'-------------------------------------------------------
+Sub Ehlers_NET_IND(NETlength,RSIlength)
+Dim myRSI As BarArray
+Dim NET As BarArray
+myRSI = Ehlers_RSI(RSIlength)
+NET = Ehlers_NET(NETlength,myRSI)
+plot1(myRSI)
+plot2(NET)
+plot3(0)
+End Sub
+'-------------------------------------------------------

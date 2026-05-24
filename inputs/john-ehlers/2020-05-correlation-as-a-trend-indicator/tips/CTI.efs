@@ -1,0 +1,117 @@
+/**********************************
+Provided By:  
+Copyright 2019 Intercontinental Exchange, Inc. All Rights Reserved. 
+eSignal is a service mark and/or a registered service mark of Intercontinental Exchange, Inc. 
+in the United States and/or other countries. This sample eSignal Formula Script (EFS) 
+is for educational purposes only. 
+Intercontinental Exchange, Inc. reserves the right to modify and overwrite this EFS file with each new release. 
+
+Description:        
+   Correlation As A
+    Trend Indicator
+   by John F. Ehlers
+    
+
+Version:            1.00  11/03/2019
+
+Formula Parameters:                     Default:
+Length                                  20
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+
+function preMain() {
+    setStudyTitle("CORRELATION TREND INDICATORS");
+    setCursorLabelName("Correlation Trend Indicator", 0);
+    setPriceStudy(false);
+    setDefaultBarFgColor(Color.RGB(0x00,0x94,0xFF), 0);
+    setPlotType( PLOTTYPE_LINE , 0 );
+    addBand(0, PS_DASH, 1, Color.grey);
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("Length", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);		
+        setDefault(20);
+    }
+}
+
+var bVersion = null;
+var xClose = null;
+var Sx = null; 
+var Sy = null;
+var Sxx = null; 
+var Sxy = null;
+var Syy = null;
+var count = [];
+var X = null;
+var Y = null;
+var Corr = null;
+
+
+function main(Length) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return; 
+    
+    if ( bInit == false ) { 
+        xClose = close();
+        Sx = 0
+        Sy = 0
+        Sxx = 0;
+        Sxy = 0;
+        Syy = 0;
+                
+        bInit = true; 
+    }  
+
+    if (getCurrentBarCount() < Length) return;
+
+        Sx = 0
+        Sy = 0
+        Sxx = 0;
+        Sxy = 0;
+        Syy = 0;
+        X = 0
+        Y = 0
+
+    for (var i = 0; i <= Length - 1; i++){
+        X = xClose.getValue(-i)
+        Y = -i
+        Sx = Sx + X
+        Sy = Sy + Y
+        Sxx = Sxx + X*X
+        Sxy = Sxy + X*Y
+        Syy = Syy + Y*Y
+    }
+
+    if ((Length * Sxx - Sx*Sx > 0)&& (Length * Syy - Sy*Sy > 0)) {
+        Corr = (Length * Sxy - Sx*Sy) / Math.sqrt((Length * Sxx - Sx*Sx)*(Length*Syy - Sy*Sy))
+    }
+    
+    return [Corr]
+}
+ 
+
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

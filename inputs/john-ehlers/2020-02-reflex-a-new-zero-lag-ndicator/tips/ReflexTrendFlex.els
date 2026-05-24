@@ -1,0 +1,129 @@
+Function: _Reflex
+
+{
+TASC Feb 2020
+(C) 2019 John F. Ehlers
+_Reflex function
+}
+Inputs:
+	Length(numericsimple);
+Vars:
+	Slope( 0 ),
+	sum( 0 ),
+	count( 0 ),
+	a1( 0), b1(0), c1(0), 
+	c2(0), c3(0), Filt(0),
+	MS(0),Reflex(0);
+
+//Gently smooth the data in a SuperSmoother
+a1 = ExpValue( -1.414 * 3.14159 / 
+	( .5 * Length ) ) ;
+b1 = 2 * a1 * Cosine( 1.414 * 180 / 
+	( .5 * Length ) ) ;
+c2 = b1 ;
+c3 = -a1 * a1 ;
+c1 = 1 - c2 - c3 ;
+Filt = c1 * ( Close + Close[1] ) / 2 
+	+ c2 * Filt[1] + c3 * Filt[2] ;
+
+//Length is assumed cycle period
+Slope = ( Filt[Length] - Filt ) / Length ;
+
+//Sum the differences
+Sum = 0;
+for count = 1 to Length 
+begin
+	Sum = Sum + ( Filt + count * Slope ) - 
+		Filt[count] ;
+end;
+Sum = Sum / Length ;
+
+//Normalize in terms of Standard Deviations
+MS = .04 * Sum * Sum + .96 * MS[1] ;
+if MS <> 0 then 
+	Reflex = Sum / SquareRoot( MS ) ;
+
+_Reflex = Reflex ;
+
+
+Function: _TrendFlex
+
+{
+TASC Feb 2020
+(C) 2019 John F. Ehlers
+_Trendflex function
+}
+inputs:
+	Length( numericsimple ) ;
+Vars:
+	Sum( 0 ), Count( 0 ), a1( 0 ), 
+	b1( 0 ), c1( 0 ), c2( 0 ), c3( 0 ), 
+	Filt( 0 ), MS( 0 ), Trendflex( 0 ) ;
+
+//Gently smooth the data in a SuperSmoother
+a1 = ExpValue( -1.414 * 3.14159 / 
+	( .5 * Length ) ) ;
+b1 = 2 * a1 * Cosine( 1.414 * 180 / 
+	( .5 * Length ) ) ;
+c2 = b1 ;
+c3 = -a1 * a1 ;
+c1 = 1 - c2 - c3 ;
+Filt = c1 * ( Close + Close[1] ) / 2 + 
+	c2 * Filt[1] + c3 * Filt[2] ;
+
+//Sum the differences
+Sum = 0 ;
+for count = 1 to Length 
+begin
+	Sum = Sum + Filt - Filt[count] ;
+end ;
+Sum = Sum / Length ;
+
+//Normalize in terms of Standard Deviations
+MS = .04 * Sum * Sum + .96 * MS[1] ;
+if MS <> 0 then 
+	Trendflex = Sum / SquareRoot( MS ) ;
+
+_Trendflex = trendflex ;
+
+
+Indicator:  Trendflex Cross
+
+{
+TASC Feb 2020
+(C) 2019 John F. Ehlers
+}
+inputs:
+	FastLength( 20 ),
+	SlowLength( 50 ) ;
+variables:	
+	FastTF( 0 ),
+	SlowTF( 0) ;
+
+FastTF = _TrendFlex( FastLength ) ;	
+SlowTF = _TrendFlex( SlowLength ) ;
+
+Plot1( FastTF - SlowTF ) ;
+Plot2( 0 ) ;
+
+
+Strategy: Trendflex Cross
+
+{
+TASC Feb 2020
+(C) 2019 John F. Ehlers
+}
+inputs:
+	FastLength( 20 ),
+	SlowLength( 50 ) ;
+variables:	
+	FastTF( 0 ),
+	SlowTF( 0) ;
+
+FastTF = _TrendFlex( FastLength ) ;	
+SlowTF = _TrendFlex( SlowLength ) ;
+
+if FastTF crosses over SlowTF then	
+	Buy next bar at Market 
+else if FastTF crosses under SlowTF then	
+	SellShort next bar at Market ;

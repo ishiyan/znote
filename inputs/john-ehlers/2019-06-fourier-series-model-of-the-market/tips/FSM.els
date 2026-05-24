@@ -1,0 +1,186 @@
+Indicator: Fourier Series Indicator
+// TASC JUN 2019
+// Fourier Series Analysis
+// (C) 2005-2018 John F. Ehlers
+
+inputs:
+	Fundamental( 20 ) ;
+	
+variables:
+	Bandwidth(.1),
+	G1( 0 ), S1( 0 ), L1( 0 ), BP1( 0 ), Q1( 0 ), P1( 0 ),
+	G2( 0 ), S2( 0 ), L2( 0 ), BP2( 0 ), Q2( 0 ), P2( 0 ),
+	G3( 0 ), S3( 0 ), L3( 0 ), BP3( 0 ), Q3( 0 ), P3( 0 ),
+	count( 0 ),	Wave( 0 ), ROC( 0 ) ;
+
+//compute filter coefficients once
+once
+begin
+	L1 = Cosine( 360 / Fundamental ) ;
+	G1 = Cosine( Bandwidth * 360 / Fundamental ) ;
+	S1 = 1 / G1 - SquareRoot( 1 / ( G1 * G1 ) - 1 ) ;
+	L2 = Cosine( 360 / ( Fundamental / 2 ) ) ;
+	G2 = Cosine( Bandwidth * 360 / ( Fundamental / 2 ) ) ;
+	S2 = 1 / G2 - SquareRoot( 1 / ( G2 * G2 ) - 1 ) ;
+	L3 = Cosine( 360 / ( Fundamental / 3 ) ) ;
+	G3 = Cosine( Bandwidth * 360 / ( Fundamental / 3 ) ) ;
+	S3 = 1 / G3 - SquareRoot( 1 / ( G3 * G3 ) - 1 ) ;
+end ;
+
+//Fundamental Band-Pass
+BP1 = .5 * ( 1 - S1) * ( Close - Close[2] ) 
+	+ L1 * ( 1 + S1 ) * BP1[1] - S1 * BP1[2] ;
+if CurrentBar  <= 3 then 
+	BP1 = 0 ;
+	
+//Fundamental Quadrature
+Q1 = ( Fundamental / 6.28 ) * ( BP1 - BP1[1] ) ;
+if CurrentBar <= 4 then 
+	Q1 = 0 ;
+	
+//Second Harmonic Band-Pass
+BP2 = .5 * ( 1 - S2 ) * ( Close - Close[2] ) 
+	+ L2 * ( 1 + S2 ) * BP2[1] - S2 * BP2[2] ;
+if CurrentBar <= 3 then 
+	BP2 = 0 ;
+	
+//Second Harmonic Quadrature
+Q2 = ( Fundamental / 6.28 ) * ( BP2 - BP2[1] ) ;
+if CurrentBar <= 4 then 
+	Q2 = 0 ;
+
+//Third Harmonic Band-Pass
+BP3 = .5 * ( 1 - S3 ) * ( Close - Close[2] ) 
+	+ L3 * ( 1 + S3 ) * BP3[1] - S3 * BP3[2] ;
+if CurrentBar <= 3 then 
+	BP3 = 0 ;
+	
+//Third Harmonic Quadrature
+Q3 = ( Fundamental / 6.28 ) * ( BP3 - BP3[1] ) ;
+if CurrentBar <= 4 then 
+Q3 = 0 ;
+
+//Sum power of each harmonic at 
+//each bar over the Fundamental period
+P1 = 0 ;
+P2 = 0 ;
+P3 = 0 ;
+For count = 0 to Fundamental - 1 
+begin
+	P1 = P1 + BP1[count] * BP1[count] 
+		+ Q1[count] * Q1[count] ;
+	P2 = P2 + BP2[count] * BP2[count] 
+		+ Q2[count] * Q2[count] ;
+	P3 = P3 + BP3[count] * BP3[count] 
+		+ Q3[count] * Q3[count] ;
+end ;
+
+//Add the three harmonics together 
+//using their relative amplitudes
+If P1 <> 0 then 
+	Wave = BP1 + SquareRoot( P2 / P1 ) * BP2 
+		+ SquareRoot( P3 / P1 ) * BP3 ;
+
+Plot1( Wave );
+Plot2( 0 );
+
+//Optional cyclic trading signal
+//Rate of change crosses zero at 
+//cyclic turning points
+ROC = ( Fundamental / 12.57 ) * 
+	( Wave - Wave[2] ) ;
+Plot3( ROC ) ;
+
+
+Strategy: Fourier Series Strategy
+// TASC JUN 2019
+// Fourier Series Analysis
+// (C) 2005-2018 John F. Ehlers
+
+inputs:
+	Fundamental( 20 ) ;
+	
+variables:
+	Bandwidth(.1),
+	G1( 0 ), S1( 0 ), L1( 0 ), BP1( 0 ), Q1( 0 ), P1( 0 ),
+	G2( 0 ), S2( 0 ), L2( 0 ), BP2( 0 ), Q2( 0 ), P2( 0 ),
+	G3( 0 ), S3( 0 ), L3( 0 ), BP3( 0 ), Q3( 0 ), P3( 0 ),
+	count( 0 ),	Wave( 0 ), ROC( 0 ) ;
+
+//compute filter coefficients once
+once
+begin
+	L1 = Cosine( 360 / Fundamental ) ;
+	G1 = Cosine( Bandwidth * 360 / Fundamental ) ;
+	S1 = 1 / G1 - SquareRoot( 1 / ( G1 * G1 ) - 1 ) ;
+	L2 = Cosine( 360 / ( Fundamental / 2 ) ) ;
+	G2 = Cosine( Bandwidth * 360 / ( Fundamental / 2 ) ) ;
+	S2 = 1 / G2 - SquareRoot( 1 / ( G2 * G2 ) - 1 ) ;
+	L3 = Cosine( 360 / ( Fundamental / 3 ) ) ;
+	G3 = Cosine( Bandwidth * 360 / ( Fundamental / 3 ) ) ;
+	S3 = 1 / G3 - SquareRoot( 1 / ( G3 * G3 ) - 1 ) ;
+end ;
+
+//Fundamental Band-Pass
+BP1 = .5 * ( 1 - S1) * ( Close - Close[2] ) 
+	+ L1 * ( 1 + S1 ) * BP1[1] - S1 * BP1[2] ;
+if CurrentBar  <= 3 then 
+	BP1 = 0 ;
+	
+//Fundamental Quadrature
+Q1 = ( Fundamental / 6.28 ) * ( BP1 - BP1[1] ) ;
+if CurrentBar <= 4 then 
+	Q1 = 0 ;
+	
+//Second Harmonic Band-Pass
+BP2 = .5 * ( 1 - S2 ) * ( Close - Close[2] ) 
+	+ L2 * ( 1 + S2 ) * BP2[1] - S2 * BP2[2] ;
+if CurrentBar <= 3 then 
+	BP2 = 0 ;
+	
+//Second Harmonic Quadrature
+Q2 = ( Fundamental / 6.28 ) * ( BP2 - BP2[1] ) ;
+if CurrentBar <= 4 then 
+	Q2 = 0 ;
+
+//Third Harmonic Band-Pass
+BP3 = .5 * ( 1 - S3 ) * ( Close - Close[2] ) 
+	+ L3 * ( 1 + S3 ) * BP3[1] - S3 * BP3[2] ;
+if CurrentBar <= 3 then 
+	BP3 = 0 ;
+	
+//Third Harmonic Quadrature
+Q3 = ( Fundamental / 6.28 ) * ( BP3 - BP3[1] ) ;
+if CurrentBar <= 4 then 
+Q3 = 0 ;
+
+//Sum power of each harmonic at 
+//each bar over the Fundamental period
+P1 = 0 ;
+P2 = 0 ;
+P3 = 0 ;
+For count = 0 to Fundamental - 1 
+begin
+	P1 = P1 + BP1[count] * BP1[count] 
+		+ Q1[count] * Q1[count] ;
+	P2 = P2 + BP2[count] * BP2[count] 
+		+ Q2[count] * Q2[count] ;
+	P3 = P3 + BP3[count] * BP3[count] 
+		+ Q3[count] * Q3[count] ;
+end ;
+
+//Add the three harmonics together 
+//using their relative amplitudes
+If P1 <> 0 then 
+	Wave = BP1 + SquareRoot( P2 / P1 ) * BP2 
+		+ SquareRoot( P3 / P1 ) * BP3 ;
+
+//Rate of change crosses zero at 
+//cyclic turning points
+ROC = ( Fundamental / 12.57 ) * 
+	( Wave - Wave[2] ) ;
+
+if ROC crosses over 0 then 
+	Buy next bar at Market
+else if ROC crosses under 0 then
+	SellShort next bar at Market ;

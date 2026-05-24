@@ -1,0 +1,18 @@
+_SECTION_BEGIN("ReverseEMA"); 
+
+function ReverseEMA( alpha ) 
+{ 
+    beta = 1 - alpha; 
+    re = eema = AMA( C, alpha ); 
+
+    for( i = 1, p = 1; i <= 8; i++, p *= 2 ) 
+       re = re * ( beta ^ p )  +   Ref( re, -1 ); 
+
+    return eema - alpha * re; 
+} 
+
+alpha = Param("alpha", 0.1, 0.01, 0.99, 0.01 ); 
+Plot( ReverseEMA( alpha ) , _DEFAULT_NAME(), colorRed ); 
+Plot( 0, "", colorBlue, styleNoLabel ); 
+
+_SECTION_END();

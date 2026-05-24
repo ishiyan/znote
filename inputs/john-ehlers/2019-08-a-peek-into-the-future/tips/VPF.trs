@@ -1,0 +1,77 @@
+'A Peek Into The Future
+'Author: John Ehlers, TASC Aug 2019
+'Coded by: Richard Denning, 6/14/19
+'www.TradersEdgeSystems.com
+
+'FUNCTION TO COMPUTE VOSS PREDICTIVE FILTER
+Function VOSS(Period, Predict) As BarArray
+    'Period = 20
+    'Predict = 3
+    Dim Order As BarArray
+    Dim F1 As BarArray
+    Dim G1 As BarArray
+    Dim S1 As BarArray
+    Dim Bandwidth As BarArray
+    Dim count As BarArray
+    Dim SumC As BarArray
+    Dim theFilt As BarArray
+    Dim theVoss As BarArray
+
+    Bandwidth = .25
+    Order = 3*Predict
+    F1 = TStation_Cosine(360 / Period)
+    G1 = TStation_Cosine(Bandwidth*360 / Period)
+    S1 = 1 / G1 - Sqr(1 / (G1*G1) - 1)
+    
+    theFilt = .5*(1 - S1)*(Close - Close[2]) + F1*(1 + S1)*theFilt[1] - S1*theFilt[2]
+    SumC = 0
+    For count = 0 To Order - 1
+        SumC = SumC + ((count + 1) / Order)*theVoss[Order - count]
+    Next
+    theVoss = ((3 + Order) / 2)*theFilt - SumC
+    VOSS = theVoss
+End Function
+'--------------------------------------------------------------------------------------
+'FUNCTION TO COMPUTE BANDPASS FILTER (FILT)
+Function FILT(Period, Predict) As BarArray
+    'Period = 20
+    'Predict = 3
+    Dim Order As BarArray
+    Dim F1 As BarArray
+    Dim G1 As BarArray
+    Dim S1 As BarArray
+    Dim Bandwidth As BarArray
+    Dim count As BarArray
+    Dim SumC As BarArray
+    Dim theFilt As BarArray
+    Dim theVoss As BarArray
+
+    Bandwidth = .25
+    Order = 3*Predict
+    F1 = TStation_Cosine(360 / Period)
+    G1 = TStation_Cosine(Bandwidth*360 / Period)
+    S1 = 1 / G1 - Sqr(1 / (G1*G1) - 1)
+    
+    theFilt = .5*(1 - S1)*(Close - Close[2]) + F1*(1 + S1)*theFilt[1] - S1*theFilt[2]
+    
+    SumC = 0
+    For count = 0 To Order - 1
+        SumC = SumC + ((count + 1) / Order)*theVoss[Order - count]
+    Next
+    theVoss = ((3 + Order) / 2)*theFilt - SumC
+    FILT = theFilt
+End Function
+'-------------------------------------------------------------------------------------
+'INDICATOR PLOT FOR VOSS AND FILT
+Sub VOSS_IND(Period, Predict)
+    'Period = 20
+    'Predict = 3
+    Dim theFILT As BarArray
+    Dim theVOSS As BarArray
+
+    theFILT = FILT(Period,Predict)
+    theVOSS = VOSS(Period,Predict)
+    plot1(theFILT)
+    plot2(theVOSS)
+End Sub
+'--------------------------------------------------------------------------------------

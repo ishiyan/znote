@@ -1,0 +1,64 @@
+'Recursive Median Filters
+'Author: John Ehlers, TASC March 2018
+'Coded by: Richard Denning, 1/11/2018
+'www.TradersEdgeSystems.com
+
+Function EHLERS_RM(Price As BarArray,LPPeriod)
+    Dim alpha1
+    Dim n
+    Dim RM As BarArray
+    Dim MP As Array
+    ReDim(MP,5)
+    
+    If BarNumber=FirstBar Then
+        'Price = C
+        'LPPeriod = 12
+        alpha1 = 0
+        RM = 0
+    End If
+
+    'Set EMA constant from LPPeriod input
+    alpha1 = (Cos(DegToRad(360/LPPeriod))+Sin(DegToRad(360/LPPeriod))-1)/Cos(DegToRad(360/LPPeriod))
+    
+    'Recursive Median
+    'EMA Of 5 bar Median filter
+    For n=0 To 4
+        MP[n]=Price[n]
+    Next
+    RM = alpha1*Median(MP) + (1-alpha1)*RM[1]
+EHLERS_RM = RM
+End Function
+'----------------------------------------------
+'Indicator plot for RM function
+Sub EHLERS_RM_IND(LPPeriod)
+     plot1(EHLERS_RM(C,LPPeriod))
+End Sub
+'-----------------------------------------------
+Function EHLERS_RMO(Price As BarArray,LPPeriod,HPPeriod)
+    Dim alpha2
+    Dim RM As BarArray
+    Dim RMO As BarArray
+    
+    If BarNumber=FirstBar Then
+        'Price = C
+        'LPPeriod = 12
+        'HPPeriod = 30
+        alpha2 = 0
+        RM = 0
+        RMO = 0
+    End If
+    
+    'Get recursive median fllter
+    RM = EHLERS_RM(Price,LPPeriod)
+    
+    'Highpass filter cyclic components whose periods are shorter than HPPeriod to make an oscillator
+    alpha2 = (Cos(DegToRad(.707*360/HPPeriod))+Sin(DegToRad(.707*360/HPPeriod)-1))/Cos(DegToRad(.707*360/HPPeriod))
+    RMO = (1-alpha2/2)*(1-alpha2/2)*(RM-2*RM[1]+RM[2])+2*(1-alpha2)*RMO[1]-(1-alpha2)*(1-alpha2)*RMO[2]
+EHLERS_RMO = RMO 
+End Function
+'-----------------------------------------------
+Sub EHLERS_RMO_IND(LPPeriod,HPPeriod)
+    plot1(EHLERS_RMO(C,LPPeriod,HPPeriod))
+    plot2(0)
+End Sub
+'-----------------------------------------------

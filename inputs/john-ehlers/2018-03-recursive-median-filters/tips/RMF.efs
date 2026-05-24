@@ -1,0 +1,138 @@
+/*********************************
+Provided By:  
+eSignal (Copyright c eSignal), a division of Interactive Data 
+Corporation. 2016. All rights reserved. This sample eSignal 
+Formula Script (EFS) is for educational purposes only and may be 
+modified and saved under a new file name.  eSignal is not responsible
+for the functionality once modified.  eSignal reserves the right 
+to modify and overwrite this EFS file with each new release.
+
+Description:        
+    Recursive Median Filters by John F. Ehlers
+
+Version:            1.00  01/10/2018
+
+Formula Parameters:                     Default:
+LPPeriod                                12
+HPPeriod                                30
+MedPeriod                               5
+
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+var fpArray = new Array();
+
+function preMain(){
+    setPriceStudy(false);
+    setStudyTitle("RMO");
+    
+    var x = 0;
+    fpArray[x] = new FunctionParameter("LPPeriod", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);
+        setDefault(12);
+    }
+    fpArray[x] = new FunctionParameter("HPPeriod", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);
+        setDefault(30);
+    }
+    fpArray[x] = new FunctionParameter("MedPeriod", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setLowerLimit(1);
+        setDefault(5);
+    }
+}
+
+var bInit = false;
+var bVersion = null;
+var xRM = null;
+var xRMO = null;
+
+
+function main(LPPeriod, HPPeriod, MedPeriod){
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    
+    if (getCurrentBarCount() <= HPPeriod + LPPeriod) return;
+
+    if (getBarState() == BARSTATE_ALLBARS){
+        bInit = false;
+    }
+    
+    if (!bInit){
+        var alpha1 = (Math.cos(Math.PI / 180 * (360 / LPPeriod)) 
+                    + Math.sin(Math.PI / 180 * (360 / LPPeriod)) - 1) 
+                    / Math.cos(Math.PI / 180 * (360 / LPPeriod));
+        var alpha2 = (Math.cos(Math.PI / 180 * (0.707 * 360 / HPPeriod)) 
+                    + Math.sin(Math.PI / 180 * (0.707 * 360 / HPPeriod)) - 1) 
+                    / Math.cos(Math.PI / 180 * (0.707 * 360 / HPPeriod));
+        xRM = efsInternal("calc_RM", close(), MedPeriod, alpha1);
+        xRMO = efsInternal("calc_RMO", xRM, alpha2);
+        addBand(0, PS_DASH, 1, Color.grey, 1);
+        bInit = true;
+    }
+
+    if (xRMO.getValue(0) != null) return xRMO.getValue(0);
+
+}
+
+function calc_RM(xClose, MedPeriod, alpha1){
+    var nRM = 0;
+    var nRM_1 = ref(-1) == null ? 0 : ref(-1);
+    var aMedian = new Array(MedPeriod);
+        
+    for (var i = 0; i < MedPeriod; i++){
+        aMedian[i] = xClose.getValue(-i);
+    }
+    aMedian.sort(_ASC);
+
+    var nMedianPrice = (MedPeriod % 2 > 0) ? aMedian[Math.ceil(MedPeriod / 2) - 1] 
+                                           : (aMedian[(MedPeriod / 2 - 1)] + aMedian[(MedPeriod / 2 )]) / 2
+
+    nRM = alpha1 * nMedianPrice + (1 - alpha1) * nRM_1;
+    return nRM;
+}
+
+function calc_RMO(xRM, alpha2){
+    var nRM = xRM.getValue(0);
+    var nRM_1 = xRM.getValue(-1);
+    var nRM_2 = xRM.getValue(-2);
+    
+    if (nRM_2 == null) return;
+    
+    var nRMO = 0;
+    var nRMO_1 = ref(-1) == null ? 0 : ref(-1);
+    var nRMO_2 = ref(-2) == null ? 0 : ref(-2);
+    
+    nRMO = (1 - alpha2 / 2) * (1 - alpha2 /2) * (nRM - 2 * nRM_1 + nRM_2) 
+            + 2 * (1 - alpha2) * nRMO_1 - (1 - alpha2) * (1 - alpha2) * nRMO_2;
+    return nRMO;
+}
+
+function _ASC(a, b){
+    return (a - b);
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

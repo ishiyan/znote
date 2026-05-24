@@ -1,0 +1,13 @@
+alpha:= 0.1;
+ca:= 1-alpha;
+ma:= (alpha * C) + (ca*PREV);
+re1:= ca*ma + Ref(ma, -1);
+re2:= Power(ca,2)*re1 + Ref(re1,-1);
+re3:= Power(ca,4)*re2 + Ref(re2,-1);
+re4:= Power(ca,8)*re3 + Ref(re3,-1);
+re5:= Power(ca,16)*re4 + Ref(re4,-1);
+re6:= Power(ca,32)*re5 + Ref(re5,-1);
+re7:= Power(ca,64)*re6 + Ref(re6,-1);
+re8:= Power(ca,128)*re7 + Ref(re7,-1);
+ma - (alpha*re8);
+0

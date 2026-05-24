@@ -1,0 +1,7 @@
+&Mom := Expression - (Expression).(RsiLength - 1) 
+&Filt := Ehlers SuperSmoother (&Mom , SmoothLength) 
+&CU := MovingSum (&Filt - (&Filt).1 , RsiLength , 1) 
+&CD := MovingSum ((&Filt).1 - &Filt , RsiLength , 1) 
+&MyRSI := (&CU - &CD) / (&CU + &CD) 
+&LimitRSI := IFF (&MyRSI > 0.999 , 0.999 , IFF (&MyRSI < -0.999 , -0.999 , &MyRSI)) 
+0.5 * Log ((1 + &LimitRSI) / (1 - &LimitRSI))

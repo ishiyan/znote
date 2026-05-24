@@ -1,0 +1,327 @@
+'PROBABILITY-PROBABLY A GOOD THING TO KNOW
+'Author: John Ehlers, TASC Oct 2018
+'Coded by: Richard Denning, 8/19/2018
+'www.TradersEdgeSystems.com
+
+Sub Ehlers_Prob(SmoothLength, RSILength)
+
+    Dim a1 As BarArray
+    Dim b1 As BarArray
+    Dim c1 As BarArray
+    Dim c2 As BarArray
+    Dim c3 As BarArray
+    Dim Filt As BarArray
+    Dim count As BarArray
+    Dim CU As BarArray
+    Dim CD As BarArray
+    Dim MyRSI As BarArray
+    Dim I As BarArray
+    Dim J As BarArray
+    Dim K As BarArray
+    Dim Bin As Array
+
+    If BarNumber=FirstBar Then
+        'SmoothLength = 8
+        'RSILength = 14
+        a1 = 0
+        b1 = 0
+        c1 = 0
+        c2 = 0
+        c3 = 0
+        Filt = 0
+        count = 0
+        CU = 0
+        CD = 0
+        MyRSI = 0
+        I = 0
+        J = 0
+        K = 0
+    End If
+
+    ReDim (Bin, 62)
+    Bin = GValue501
+    If CurrentBar - 1 Then
+        a1 = Exp(-1.414*3.14159 / (SmoothLength))
+        b1 = 2*a1*Cos(DegToRad(1.414*180 / (SmoothLength)))
+        c2 = b1
+        c3 = -a1*a1
+        c1 = 1 - c2 - c3
+    End If
+    Filt = c1*(Close + Close[1]) / 2 + c2*Filt[1] + c3*Filt[2]
+'Accumulate "Closes Up" and "Closes Down"
+    CU = 0
+    CD = 0
+    For count = 0 To RSILength -1
+        If Filt[count] - Filt[count + 1] > 0 Then
+            CU = CU + Filt[count] - Filt[count + 1]
+        End If
+        If Filt[count] - Filt[count + 1] < 0 Then
+            CD = CD + Filt[count + 1] - Filt[count]
+        End If
+    Next
+    If CU + CD <> 0 Then
+        MyRSI = (CU - CD) / (CU + CD)
+    End If
+    For I = 1 To 60
+        J = (I - 31) / 10
+        K = (I - 30) / 10
+        If MyRSI > J And MyRSI <= K Then
+            Bin[I] = Bin[I] + 1
+        End If
+    Next
+'Output the Bin measurements to a file
+    If BarNumber = LastBar Then
+        For I = 1 To 61
+            Print (I - 31) / 10,",", Bin[I]
+        Next
+    End If
+    GValue501 = Bin
+End Sub
+'------------------------------------------------------------
+
+
+Sub EHLERS_PROB2(SmoothLength, RSILength)
+
+    Dim a1 As BarArray
+    Dim b1 As BarArray
+    Dim c1 As BarArray
+    Dim c2 As BarArray
+    Dim c3 As BarArray
+    Dim Filt As BarArray
+    Dim Mom As BarArray
+    Dim count As BarArray
+    Dim CU As BarArray
+    Dim CD As BarArray
+    Dim MyRSI As BarArray
+    Dim RocketRSI As BarArray
+    Dim I As BarArray
+    Dim J As BarArray
+    Dim K As BarArray
+    Dim Bin As Array
+
+    If BarNumber=FirstBar Then
+        'SmoothLength = 8
+        'RSILength = 10
+        a1 = 0
+        b1 = 0
+        c1 = 0
+        c2 = 0
+        c3 = 0
+        Filt = 0
+        Mom = 0
+        count = 0
+        CU = 0
+        CD = 0
+        MyRSI = 0
+        RocketRSI = 0
+        I = 0
+        J = 0
+        K = 0
+    End If
+
+    ReDim (Bin, 62)
+    Bin = GValue501
+    If CurrentBar - 1 Then
+        a1 = Exp(-1.414*3.14159 / (SmoothLength))
+        b1 = 2*a1*Cos(DegToRad(1.414*180 / (SmoothLength)))
+        c2 = b1
+        c3 = -a1*a1
+        c1 = 1 - c2 - c3
+    End If
+    Mom = Close - Close[RSILength - 1]
+'SuperSmoother Filter
+    Filt = c1*(Mom + Mom[1]) / 2 + c2*Filt[1] + c3*Filt[2]
+'Accumulate "Closes Up" and "Closes Down"
+    CU = 0
+    CD = 0
+    For count = 0 To RSILength -1
+        If Filt[count] - Filt[count + 1] > 0 Then
+            CU = CU + Filt[count] - Filt[count + 1]
+        End If
+        If Filt[count] - Filt[count + 1] < 0 Then
+            CD = CD + Filt[count + 1] - Filt[count]
+        End If
+    Next
+    If CU + CD <> 0 Then
+        MyRSI = (CU - CD) / (CU + CD)
+    End If
+    If MyRSI > .999 Then
+        MyRSI = .999
+    End If
+    If MyRSI < -.999 Then
+        MyRSI = -.999
+    End If
+    RocketRSI = .5*Log((1 + MyRSI) / (1 - MyRSI))
+'Plot1(RocketRSI); 
+'Plot2(0);
+'Bin the indicator values in Bins from -3 to +3
+    For I = 1 To 60
+        J = (I - 31) / 10
+        K = (I - 30) / 10
+        If RocketRSI > J And RocketRSI <= K Then
+            Bin[I] = Bin[I] + 1
+        End If
+    Next
+'Output the Bin measurements to a file
+    If BarNumber = LastBar Then
+        For I = 1 To 61
+            Print (I - 31) / 10,",", Bin[I]
+        Next
+    End If
+    GValue501 = Bin
+End Sub
+'------------------------------------------------------
+
+
+Sub EHLERS_PROB3(Period)
+
+    Dim a1 As BarArray
+    Dim b1 As BarArray
+    Dim c1 As BarArray
+    Dim c2 As BarArray
+    Dim c3 As BarArray
+    Dim Zeros As BarArray
+    Dim Filt As BarArray
+    Dim RMS As BarArray
+    Dim count As BarArray
+    Dim ScaledFilt As BarArray
+    Dim I As BarArray
+    Dim J As BarArray
+    Dim K As BarArray
+    Dim Bin As Array
+
+    If BarNumber=FirstBar Then
+        'Period = 40
+        a1 = 0
+        b1 = 0
+        c1 = 0
+        c2 = 0
+        c3 = 0
+        Zeros = 0
+        Filt = 0
+        RMS = 0
+        count = 0
+        ScaledFilt = 0
+        I = 0
+        J = 0
+        K = 0
+    End If
+
+    ReDim (Bin, 62)
+    Bin = GValue501
+    If CurrentBar - 1 Then
+'Smooth with a Super Smoother
+        a1 = Exp(-1.414*3.14159 / (.5*Period))
+        b1 = 2*a1*Cos(DegToRad(1.414*180 / (.5*Period)))
+        c2 = b1
+        c3 = -a1*a1
+        c1 = 1 - c2 - c3
+    End If
+    Zeros = Close - Close[2]
+'SuperSmoother Filter
+    Filt = c1*(Zeros + Zeros[1]) / 2 + c2*Filt[1] + c3*Filt[2]
+'Compute Standard Deviation
+    RMS = 0
+    For count = 0 To Period - 1
+        RMS = RMS + Filt[count]*Filt[count]
+    Next
+    RMS = Sqr(RMS / Period)
+'Rescale Filt in terms of Standard Deviations
+    If RMS <> 0 Then
+        ScaledFilt = Filt / RMS
+    End If
+    For I = 1 To 60
+        J = (I - 31) / 10
+        K = (I - 30) / 10
+        If ScaledFilt > J And ScaledFilt <= K Then
+            Bin[I] = Bin[I] + 1
+        End If
+    Next
+'Output the Bin measurements to a file
+    If BarNumber = LastBar Then
+        For I = 1 To 61
+        Print (I - 31) / 10,",", Bin[I]
+        Next
+    End If
+    GValue501 = Bin
+End Sub
+'---------------------------------------------------------------
+
+
+Sub EHLERS_PROB4(Period)
+
+    Dim a1 As BarArray
+    Dim b1 As BarArray
+    Dim c1 As BarArray
+    Dim c2 As BarArray
+    Dim c3 As BarArray
+    Dim Zeros As BarArray
+    Dim Filt As BarArray
+    Dim RMS As BarArray
+    Dim count As BarArray
+    Dim ScaledFilt As BarArray
+    Dim FisherFilt As BarArray
+    Dim I As BarArray
+    Dim J As BarArray
+    Dim K As BarArray
+    Dim Bin As Array
+
+    If BarNumber=FirstBar Then
+        'Period = 40
+        a1 = 0
+        b1 = 0
+        c1 = 0
+        c2 = 0
+        c3 = 0
+        Zeros = 0
+        Filt = 0
+        RMS = 0
+        count = 0
+        ScaledFilt = 0
+        FisherFilt = 0
+        I = 0
+        J = 0
+        K = 0
+    End If
+
+    ReDim (Bin, 62)
+    Bin = GValue501
+    If CurrentBar - 1 Then
+'Smooth with a Super Smoother
+        a1 = Exp(-1.414*3.14159 / (.5*Period))
+        b1 = 2*a1*Cos(DegToRad(1.414*180 / (.5*Period)))
+        c2 = b1
+        c3 = -a1*a1
+        c1 = 1 - c2 - c3
+    End If
+    Zeros = Close - Close[2]
+'SuperSmoother Filter
+    Filt = c1*(Zeros + Zeros[1]) / 2 + c2*Filt[1] + c3*Filt[2]
+'Compute Standard Deviation RMS = 0;
+    For count = 0 To Period - 1
+        RMS = RMS + Filt[count]*Filt[count]
+    Next
+    RMS = Sqr(RMS / Period)
+'Rescale Filt in terms of Standard Deviations
+    If RMS <> 0 Then
+        ScaledFilt = Filt / RMS
+    End If
+    If Abs(ScaledFilt) < 2 Then
+        FisherFilt = .5*Log((1 + ScaledFilt / 2) / (1 - ScaledFilt / 2))
+    End If
+    For I = 1 To 60
+        J = (I - 31) / 10
+        K = (I - 30) / 10
+        If FisherFilt > J And FisherFilt <= K Then
+            Bin[I] = Bin[I] + 1
+        End If
+    Next
+'Output the Bin measurements to a file
+    If BarNumber = LastBar Then
+        For I = 1 To 61
+            Print (I - 31) / 10,",", Bin[I]
+        Next
+    End If
+    GValue501 = Bin
+End Sub
+'-------------------------------------------------------------------------

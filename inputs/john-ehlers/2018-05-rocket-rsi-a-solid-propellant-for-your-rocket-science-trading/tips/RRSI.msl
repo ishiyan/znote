@@ -1,0 +1,45 @@
+MYRSI:
+
+sml:= 8; {smooth length}
+rsil:= 10; {RSI length}
+
+{super smoother}
+a1:= Exp(-1.414 * 3.14159 / sml);
+b1:= 2*a1 * Cos(1.414*180 / sml);
+c2:= b1;
+c3:= -a1 * a1;
+c1:= 1 - c2 - c3;
+filt:= c1 * (C + Ref(C, -1))/2 + c2*PREV + c3*Ref(PREV,-1);
+
+{RSI}
+change:= ROC(filt, 1, $);
+CU:= Sum(If(change > 0, change, 0), rsil);
+CD:= Sum(If(change < 0, Abs(change), 0), rsil);
+denom:= If(CU+CD = 0, -1, CU+CD);
+If(denom=-1, 0, (CU-CD)/denom)
+
+
+RocketRSI:
+
+sml:= 8; {smooth length}
+rsil:= 10; {RSI length}
+
+{super smoother}
+a1:= Exp(-1.414 * 3.14159 / sml);
+b1:= 2*a1 * Cos(1.414*180 / sml);
+c2:= b1;
+c3:= -a1 * a1;
+c1:= 1 - c2 - c3;
+
+rmom:= C-Ref(C, -(rsil-1));
+filt:= c1 * (rmom + Ref(rmom, -1))/2 + c2*PREV + c3*Ref(PREV,-1);
+
+{RSI}
+change:= ROC(filt, 1, $);
+CU:= Sum(If(change > 0, change, 0), rsil);
+CD:= Sum(If(change < 0, Abs(change), 0), rsil);
+denom:= If(CU+CD = 0, -1, CU+CD);
+myRSI:= If(denom=-1, 50, (CU-CD)/denom);
+
+limit:= If(myRSI>0.999, 0.999, If(myRSI<-0.999, -0.999, myRSI));
+.5*Log((1+limit) / (1-limit))

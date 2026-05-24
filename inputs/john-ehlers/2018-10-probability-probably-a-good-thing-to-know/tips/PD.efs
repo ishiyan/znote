@@ -1,0 +1,146 @@
+/*********************************
+Provided By:  
+eSignal (Copyright c eSignal), a division of Interactive Data 
+Corporation. 2016. All rights reserved. This sample eSignal 
+Formula Script (EFS) is for educational purposes only and may be 
+modified and saved under a new file name.  eSignal is not responsible
+for the functionality once modified.  eSignal reserves the right 
+to modify and overwrite this EFS file with each new release.
+
+Description:        
+    Probability—Probably A Good Thing To Know by John F. Ehlers
+    
+
+Version:            1.00  8/13/2018
+
+Formula Parameters:                     Default:
+Period                                  40
+
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+var fpArray = new Array();
+
+function preMain(){
+    setPriceStudy(false);
+    setStudyTitle("Fisher Deviation-scaled Oscillator");
+    
+    setCursorLabelName("DSO", 0);
+    setCursorLabelName("FDSO", 1);
+    setDefaultBarFgColor(Color.RGB(0xFE,0x69,0x00), 1);
+    
+    var x = 0;
+    fpArray[x] = new FunctionParameter("Period", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Period");
+        setLowerLimit(1);
+        setDefault(40);
+    }
+}
+
+var bInit = false;
+var bVersion = null;
+var xClose = null;
+var xRMS = null;
+
+
+function main(Period){
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    
+    if (getCurrentBarCount() < Period) return;
+    
+    if (getBarState() == BARSTATE_ALLBARS){
+        bInit = false;
+    }
+    
+    if (!bInit){
+        var a1 = Math.exp(-Math.SQRT2 * Math.PI /(0.5 * Period));
+        var b1 = 2 * a1* Math.cos(Math.PI * Math.SQRT2 / (0.5 * Period));
+        var c2 = b1;
+        var c3 = - a1 * a1;
+        var c1 = 1 - c2 - c3;
+                
+        xClose = close();
+        var xZeros = efsInternal("calc_Zeros", xClose);
+        var xSSFilter = efsInternal("calc_SSFilter", xZeros, c1, c2, c3);
+        xRMS = efsInternal("calc_RMS", Period, xSSFilter);
+        addBand(0, PS_DASH, 1, Color.grey, 2);
+        
+        bInit = true;
+    }
+    
+    if (Math.abs(xRMS.getValue(0)) < 2) {
+        var nFisherFilt = 0.5 * Math.log((1 + xRMS.getValue(0) / 2) / (1 - xRMS.getValue(0) / 2));
+    } 
+    
+    return [xRMS.getValue(0), nFisherFilt]
+}
+
+function calc_Zeros (xClose){
+    if (xClose.getValue(-2) != null)
+        return xClose.getValue(0) - xClose.getValue(-2);
+}
+
+var nSSFilter = 0;
+var nSSFilter_1 = 0;
+var nSSFilter_2 = 0;
+
+function calc_SSFilter(xZeros, c1, c2, c3){
+    if (xZeros.getValue(-1) == null) return;
+    
+    if (getBarState() == BARSTATE_NEWBAR){
+        nSSFilter_2 = nSSFilter_1;
+        nSSFilter_1 = nSSFilter;
+    }
+
+    if (getBarState() == BARSTATE_ALLBARS){
+        nSSFilter = 0;
+        nSSFilter_1 = 0;
+        nSSFilter_2 = 0;
+    }
+        
+    nSSFilter = c1 * (xZeros.getValue(0) + xZeros.getValue(-1)) 
+                    / 2 + c2 * nSSFilter_1 + c3 * nSSFilter_2;
+    
+    return nSSFilter;
+}
+
+function calc_RMS(Period, xSSFilter){     
+    if (xSSFilter.getValue(-Period) == null) return;
+    
+    var nRMS = 0;
+    
+    for (var i = 0; i < Period; i++){
+        nRMS += Math.pow(xSSFilter.getValue(-i), 2);
+    }
+    
+    nRMS = Math.sqrt(nRMS / Period);
+
+    var nRMSScaled = xSSFilter.getValue(0) / nRMS;
+    
+    return nRMSScaled;
+}
+
+function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}
