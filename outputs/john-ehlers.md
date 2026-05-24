@@ -279,6 +279,23 @@ Articles focused on theory, methodology, and trading concepts rather than introd
 - **SIERRA HOTEL** [1]
 - **StockSpotter.com** [1]
 
+## TASC Publications with Ric Way (2010–2017)
+
+Ric Way programmed indicators and trading systems for Ehlers. Together they co-authored 10 TASC articles focused on trading system design, SwamiCharts visualization, and market mode detection:
+
+| Month | Year | Title | Article |
+|-------|------|-------|---------|
+| Mar | 2010 | Empirical Mode Decomposition | [\V28\C03\043EHLR](https://technical.traders.com/archive/article.asp?file=\V28\C03\043EHLR.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2010/03/TradersTips.html) |
+| Jun | 2010 | Fractal Dimension As A Market Mode Sensor | [\V28\C06\109EHLR](https://technical.traders.com/archive/article.asp?file=\V28\C06\109EHLR.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2010/06/TradersTips.html) |
+| Nov | 2010 | Zero Lag (Well, Almost) | [\V28\C011\211EHLE](https://technical.traders.com/archive/article.asp?file=\V28\C011\211EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2010/11/TradersTips.html) |
+| Mar | 2012 | Introducing SwamiCharts | [\V30\C03\258EHLE](https://technical.traders.com/archive/article.asp?file=\V30\C03\258EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2012/03/TradersTips.html) |
+| Apr | 2012 | Setting Strategies With SwamiCharts | [\V30\C04\278EHLE](https://technical.traders.com/archive/article.asp?file=\V30\C04\278EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2012/04/TradersTips.html) |
+| Oct | 2012 | SwamiCharts Convolution | [\V30\C10\400EHLE](https://technical.traders.com/archive/article.asp?file=\V30\C10\400EHLE.pdf) |
+| Dec | 2012 | Reducing Risk While Finding Profit | [\V30\C12\442EHLE](https://technical.traders.com/archive/article.asp?file=\V30\C12\442EHLE.pdf) |
+| May | 2014 | The Real Reason Traders Lose Money (And What To Do About It) | [\V32\C05\777EHLE](https://technical.traders.com/archive/article.asp?file=\V32\C05\777EHLE.pdf) |
+| Mar | 2015 | Trading System Design: A Statistical Approach | [\V33\C03\945EHLE](https://technical.traders.com/archive/article.asp?file=\V33\C03\945EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2015/03/TradersTips.html) |
+| Jan | 2017 | Be Your Own Hedge Fund | [\V35\C01\355EHLE](https://technical.traders.com/archive/article.asp?file=\V35\C01\355EHLE.pdf) |
+
 ## TASC Publications (Complete List, 1985–2026)
 
 Ehlers has been a Contributing Editor of *Technical Analysis of Stocks & Commodities* since the mid-1980s [1][2]. Below is the complete article archive.
@@ -378,6 +395,7 @@ Each article that introduces a new indicator typically has an associated **Trade
 | Month | Title | Description | Article |
 |-------|-------|-------------|---------|
 | Sep | The Reverse EMA Indicator | The exponential moving average is a popular indicator among technical analysts. But it has its shortcomings. Here's a look at how the indicator can be used so it results in minimum lag and provides crisper trading signals... | [\V35\C09\504EHLE](https://technical.traders.com/archive/article.asp?file=\V35\C09\504EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2017/09/TradersTips.html) |
+| Jan | Be Your Own Hedge Fund *(with Ric Way)* | | [\V35\C01\355EHLE](https://technical.traders.com/archive/article.asp?file=\V35\C01\355EHLE.pdf) |
 
 ### 2016
 
@@ -393,6 +411,7 @@ Each article that introduces a new indicator typically has an associated **Trade
 |-------|-------|-------------|---------|
 | Sep | Decyclers | Trends are great when they're moving in the direction you want them to. But when they reverse, you don't want to be caught off-guard... | [\V33\C09\057EHLE](https://technical.traders.com/archive/article.asp?file=\V33\C09\057EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2015/09/TradersTips.html) |
 | May | Schr�dinger's Cat | What information is contained in market data? Can you develop an indicator or trading system that can extract this information to provide an edge in trading? Here's a look... | [\V33\C05\983EHLE](https://technical.traders.com/archive/article.asp?file=\V33\C05\983EHLE.pdf) |
+| Mar | Trading System Design: A Statistical Approach *(with Ric Way)* | | [\V33\C03\945EHLE](https://technical.traders.com/archive/article.asp?file=\V33\C03\945EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2015/03/TradersTips.html) |
 | Jan | Whiter Is Brighter | White noise, pink noise -- does it make a difference? It sure does, and here is how you can use noise theory to create an indicator with zero lag that works both as a countertrend oscillator and as a trend identifier... | [\V33\C01\908EHLE](https://technical.traders.com/archive/article.asp?file=\V33\C01\908EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2015/01/TradersTips.html) |
 
 ### 2014
@@ -401,6 +420,24 @@ Each article that introduces a new indicator typically has an associated **Trade
 |-------|-------|-------------|---------|
 | Jan | Predictive And Successful Indicators | Have you ever thought about how the high-to-low price swings increase as the time interval increases on a chart? This tends to create more noise and distorts indicators. Here are a couple of filters you can incorporate into your trading system to smooth data and remove indicator distortions... | [\V32\C01\692EHLE](https://technical.traders.com/archive/article.asp?file=\V32\C01\692EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2014/01/TradersTips.html) |
 | Aug | The Quotient Transform | Here's one way to detect a trend early and know how long to stick with it... | [\V32\C08\825EHLE](https://technical.traders.com/archive/article.asp?file=\V32\C08\825EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2014/08/TradersTips.html) |
+| May | The Real Reason Traders Lose Money (And What To Do About It) *(with Ric Way)* | | [\V32\C05\777EHLE](https://technical.traders.com/archive/article.asp?file=\V32\C05\777EHLE.pdf) |
+
+### 2012
+
+| Month | Title | Description | Article |
+|-------|-------|-------------|---------|
+| Mar | Introducing SwamiCharts *(with Ric Way)* | | [\V30\C03\258EHLE](https://technical.traders.com/archive/article.asp?file=\V30\C03\258EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2012/03/TradersTips.html) |
+| Apr | Setting Strategies With SwamiCharts *(with Ric Way)* | | [\V30\C04\278EHLE](https://technical.traders.com/archive/article.asp?file=\V30\C04\278EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2012/04/TradersTips.html) |
+| Oct | SwamiCharts Convolution *(with Ric Way)* | | [\V30\C10\400EHLE](https://technical.traders.com/archive/article.asp?file=\V30\C10\400EHLE.pdf) |
+| Dec | Reducing Risk While Finding Profit *(with Ric Way)* | | [\V30\C12\442EHLE](https://technical.traders.com/archive/article.asp?file=\V30\C12\442EHLE.pdf) |
+
+### 2010
+
+| Month | Title | Description | Article |
+|-------|-------|-------------|---------|
+| Mar | Empirical Mode Decomposition *(with Ric Way)* | | [\V28\C03\043EHLR](https://technical.traders.com/archive/article.asp?file=\V28\C03\043EHLR.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2010/03/TradersTips.html) |
+| Jun | Fractal Dimension As A Market Mode Sensor *(with Ric Way)* | | [\V28\C06\109EHLR](https://technical.traders.com/archive/article.asp?file=\V28\C06\109EHLR.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2010/06/TradersTips.html) |
+| Nov | Zero Lag (Well, Almost) *(with Ric Way)* | | [\V28\C011\211EHLE](https://technical.traders.com/archive/article.asp?file=\V28\C011\211EHLE.pdf), [Tips](https://www.traders.com/Documentation/FEEDbk_docs/2010/11/TradersTips.html) |
 
 ### 2008
 
@@ -2096,5 +2133,95 @@ Ehlers holds annual workshops each October, open to traders. Documented for 2017
   publisher = {Amazon},
   note = {ASIN: B0F79TYDNW},
   url = {https://www.amazon.com/Cybernetic-Trading-Indicators-John-Ehlers/dp/B0F79TYDNW}
+}
+
+@article{tasc:v28c03043ehlr,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {Empirical Mode Decomposition},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2010},
+  month = mar,
+  url = {https://technical.traders.com/archive/article.asp?file=\V28\C03\043EHLR.pdf}
+}
+
+@article{tasc:v28c06109ehlr,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {Fractal Dimension As A Market Mode Sensor},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2010},
+  month = jun,
+  url = {https://technical.traders.com/archive/article.asp?file=\V28\C06\109EHLR.pdf}
+}
+
+@article{tasc:v28c011211ehle,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {Zero Lag (Well, Almost)},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2010},
+  month = nov,
+  url = {https://technical.traders.com/archive/article.asp?file=\V28\C011\211EHLE.pdf}
+}
+
+@article{tasc:v30c03258ehle,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {Introducing SwamiCharts},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2012},
+  month = mar,
+  url = {https://technical.traders.com/archive/article.asp?file=\V30\C03\258EHLE.pdf}
+}
+
+@article{tasc:v30c04278ehle,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {Setting Strategies With SwamiCharts},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2012},
+  month = apr,
+  url = {https://technical.traders.com/archive/article.asp?file=\V30\C04\278EHLE.pdf}
+}
+
+@article{tasc:v30c10400ehle,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {SwamiCharts Convolution},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2012},
+  month = oct,
+  url = {https://technical.traders.com/archive/article.asp?file=\V30\C10\400EHLE.pdf}
+}
+
+@article{tasc:v30c12442ehle,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {Reducing Risk While Finding Profit},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2012},
+  month = dec,
+  url = {https://technical.traders.com/archive/article.asp?file=\V30\C12\442EHLE.pdf}
+}
+
+@article{tasc:v32c05777ehle,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {The Real Reason Traders Lose Money (And What To Do About It)},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2014},
+  month = may,
+  url = {https://technical.traders.com/archive/article.asp?file=\V32\C05\777EHLE.pdf}
+}
+
+@article{tasc:v33c03945ehle,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {Trading System Design: A Statistical Approach},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2015},
+  month = mar,
+  url = {https://technical.traders.com/archive/article.asp?file=\V33\C03\945EHLE.pdf}
+}
+
+@article{tasc:v35c01355ehle,
+  author = {Ehlers, John F. and Way, Ric},
+  title = {Be Your Own Hedge Fund},
+  journal = {Technical Analysis of Stocks \& Commodities},
+  year = {2017},
+  month = jan,
+  url = {https://technical.traders.com/archive/article.asp?file=\V35\C01\355EHLE.pdf}
 }
 ```
