@@ -1,0 +1,54 @@
+'Constant
+$EMA:=1;
+$SMA:=2;
+$Gauss:=3;
+$Butter:=4;
+$HP:=5;
+$2PHP:=6;
+$BP:=7;
+$BS:=8;
+'Converting Parameter Values
+myPrice := fml(data1, param1);
+$Type := choose(paramis(2, "EMA"),$EMA,paramis(2, "SMA"),$SMA,
+                paramis(2, "Gauss"),$Gauss,paramis(2, "Butter"),$Butter,
+                paramis(2, "HP"),$HP,paramis(2, "2PHP"),$2PHP,
+                paramis(2, "BP"),$BP,paramis(2, "BS"),$BS,0);
+$N := param3;
+$myPeriod := param4;
+$delta := param5;
+'assignment calculation values
+$gamma1 := if($Type=$BP or $Type=$BS,
+               1/cos(720*$delta1/$myPeriod), 0);
+$beta1 := choose($Type=$Gauss or $Type=$Butter or $Type=$2PHP,
+                  2.415*(1-cos(360/$myPeriod)),
+                 $Type=$BP or $Type=$BS,
+                 cos(360/$myPeriod), 0);
+$alpha := choose($Type=$EMA or $Type=$HP,
+                 (cos(360/$myPeriod)+sin(360/$myPeriod)-1)/cos(360/$myPeriod),
+                 $Type=$Gauss or $Type=$Butter or $Type=$2PHP,
+                 -1*$beta1+sqrt($beta1*$beta1+2*$beta1),
+                 $Type=$BP or $Type=$BS,
+                 $gamma1-sqrt($gamma1*$gamma1-1), 0);
+$c0 := choose($Type=$Gauss, $alpha*$alpha,
+              $Type=$Butter, $alpha*$alpha/4,
+              $Type=$HP, 1-$alpha/2,
+              $Type=$2PHP, (1-$alpha/2)*(1-$alpha/2),
+              $Type=$BP, (1-$alpha)/2,
+              $Type=$BS, (1+$alpha)/2, 1);
+$c1 := if($Type=$SMA,if($N=0, 0, 1/$N), 0);
+$b0 := choose($Type=$EMA,$alpha,$Type=$SMA,if($N=0, 0, 1/$N),1);
+$b1 := choose($Type=$Butter,2,$Type=$HP,-1,
+              $Type=$2PHP,-2,$Type=$BS,-2*$beta1,0);
+$b2 := choose($Type=$Butter or $Type=$2PHP or $Type=$BS,1,
+              $Type=$BP,-1,0);
+$a1 := choose($Type=$EMA or $Type=$HP,1-$alpha,
+              $Type=$SMA,1,
+              $Type=$2PHP or $Type=$Gauss,2*(1-$alpha),
+              $Type=$BP or $Type=$BS, $beta1*(1+$alpha),0);
+$a2 := choose($Type=$Gauss or $Type=$2PHP,-1*(1-$alpha)*(1-$alpha),
+              $Type=$BP or $Type=$BS,-1*$alpha,0);
+Flit := if(data1.barsnum(0)<=$N,
+           if($Type=$HP or $Type=$2PHP,0,myPrice),
+           $c0*($b0*myPrice+$b1*myPrice(1)+$b2*myPrice(2))+
+           $a1*Flit(1)+$a2*Flit(2)-$c1*myPrice($N));
+plot1 := Flit;

@@ -1,0 +1,60 @@
+'THE QUOTIENT TRANSFORM
+'Author: John Ehlers, TASC August 2014
+'Coded by: Richard Denning 6/08/2014
+'www.TradersEdgeSystems.com
+
+'Roofing filter for cycles less than maxBarsLen bars
+Function EHLERS_NORMROOF(Price As BarArray, maxBarsLen, LPPeriod, K)
+'Price=Close, maxBarsLen=100, LPPeriod=30, K=0.85
+Dim alpha1
+Dim HP As BarArray
+Dim SSfilt As BarArray
+Dim Peak As BarArray
+Dim X As BarArray
+Dim Quotient As BarArray
+'Highpass filter cyclic components whose periods are shorter than 100 bars
+  alpha1 = (Cos(DegToRad(0.707*360 / maxBarsLen) + Sin(DegToRad(0.707*360 / maxBarsLen) - 1))) /Cos(DegToRad(0.707*360 / maxBarsLen))
+  HP = (1 - alpha1 / 2)*(1 - alpha1 /2)*(Price - 2*Price[1] + Price[2]) + 2*(1 - alpha1)*HP[1] - (1 - alpha1)*(1 - alpha1)*HP[2]
+'Smooth with a Super Smoother Filter
+  'assert(false)
+  SSfilt = EHLERS_SUPSMO(HP,LPPeriod)
+'Fast Attack - Slow Decay Algorithm
+Peak = 0.991*Peak[1]
+If Abs(SSfilt) > Peak Then Peak = Abs(SSfilt)
+'Normalized Roofing Filter
+If Peak<>0 Then X=SSfilt/Peak
+if K*X+1 <> 0 then Quotient=(X+K)/(K*X+1)
+EHLERS_NORMROOF = Quotient
+End Function
+'------------------------------------------------------------------------
+'SuperSmoother filter
+' 2013 John F. Ehlers
+Function EHLERS_SUPSMO(Price As BarArray,LPPeriod)
+Dim a1, b1, c1, c2, c3, Filt As BarArray
+a1 = Exp(-1.414*3.14159 / LPPeriod)
+b1 = 2*a1*Cos(DegToRad(1.414*180 / LPPeriod))
+c2 = b1
+c3 = -a1*a1
+c1 = 1 - c2 - c3
+Filt = c1*(Price + Price[1]) / 2 + c2*Filt[1] + c3*Filt[2]
+EHLERS_SUPSMO = Filt
+End Function
+'--------------------------------------------------------------------------
+'Indicator plot for Early-Onset Trend (Norm Roofing Filter) Indicator
+Sub EHLERS_NORMROOF_IND(Kslow,Kfast)
+'Price=Close, maxBarsLen=100, LPPeriod=30, K=0.85
+plot1(EHLERS_NORMROOF(Close,100,30,Kslow))
+Plot2(EHLERS_NORMROOF(Close,100,30,Kfast))
+plot3(0)
+End Sub
+'---------------------------------------------------------------------------
+Sub EHLERS_QUOTIENT_TRANS_SYS(maxBarsLen,LPPeriod,Kslow,Kfast)
+'Price=C,maxBarsLen=100,LPPeriod=30,Kslow=0.85,Kfast=0.40
+Dim SlowLine As BarArray
+Dim FastLine As BarArray
+SlowLine = EHLERS_NORMROOF(Close,maxBarsLen,LPPeriod,Kslow)
+FastLine = EHLERS_NORMROOF(Close,maxBarsLen,LPPeriod,Kfast)
+If SlowLine > 0 And SlowLine[1] < 0 Then Buy("LE",1,0,Market,Day)
+If FastLine < 0 And FastLine[1] > 0 Then ExitLong("LX","",1,0,Market,Day)
+End Sub
+'----------------------------------------------------------------------------

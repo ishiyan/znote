@@ -1,0 +1,107 @@
+ZeroLagEMAInd2
+
+inputs:
+	Length( 20 ),
+	GainLimit( 50 ),
+	Thresh( 1 ), { see article for threshold explanation }
+	UseThreshold( true ), { if true, then the threshold is used for the 
+        ShowMe dots and crossing alert - see notes below } 
+	DrawMALines( true ), { if true, the Moving Average lines are plotted }
+	DrawShowMeDots( false ), { if true, ShowMe dots are plotted when a cross 
+        of EC and EMA are detected }
+	DotOffsetTicks( 10 ), { offset for the ShowMe dots }
+	DrawPaintBars( false ) ; { draw PaintBars, color depending on EC > EMA }
+
+variables:
+	ATick( 0 ),
+	alpha( 0 ),
+	Gain( 0 ),
+	BestGain( 0 ),
+	EC( 0 ),
+	Error( 0 ),
+	LeastError( 0 ),
+	EMA( 0 ),
+	CrossOver( false ),
+	CrossUnder( false ) ;
+
+if CurrentBar = 1 then
+	ATick = MinMove / PriceScale ; { calculate value of a tick }
+
+alpha = 2 / ( Length + 1 ) ;
+EMA = alpha * Close + ( 1 - alpha ) * EMA[1] ;
+LeastError = 1000000 ;
+
+for Value1 = -GainLimit to GainLimit 
+	begin
+	Gain = Value1 / 10 ;
+	EC = alpha *( EMA + Gain * ( Close - EC[1] ) ) + ( 1 - alpha ) * EC[1] ;
+	Error = Close - EC ;
+	If AbsValue( Error ) < LeastError then 
+		begin
+		LeastError = AbsValue( Error ) ;
+		BestGain = Gain ;
+		end ;
+	end ;
+
+EC = alpha * ( EMA + BestGain * ( Close - EC[1] ) ) + ( 1 - alpha ) * EC[1] ;
+
+if DrawMALines then
+	begin
+	Plot1( EC, "EC" ) ;
+	Plot2( EMA, "EMA" ) ;
+	end ;
+
+{
+The requirements for crosses over or under of EC in relation to EMA is 
+dependent upon the "UseThreshold" input.  If the input is set to "True", 
+the Threshold requirement is taken into account, similar to the strategy 
+code posted by John Ehlers. Note that the CrossOver and CrossUnder variables 
+not only control the plotting of the ShowMe dots but also the triggering of the alert.
+}
+CrossOver = IffLogic( UseThreshold, EC crosses over EMA and 
+ 100 * LeastError / Close > Thresh, EC crosses over EMA ) ;
+
+CrossUnder = IffLogic( UseThreshold, EC crosses under EMA and 
+ 100 * LeastError / Close > Thresh, EC crosses under EMA ) ;
+
+if CrossOver then
+	begin
+	if DrawShowMeDots then
+		Plot3( Low - ATick * DotOffsetTicks, "ECxEMA", Yellow ) ;
+	Alert( "EC cross over EMA" ) ; { alert for cross over }
+	end ;
+if CrossUnder then
+	begin 
+	if DrawShowMeDots then
+		Plot3( High + ATick * DotOffsetTicks, "ECxEMA", Magenta ) ;
+	Alert( "EC cross under EMA" ) ; { alert for cross under }
+	end ;
+
+{
+This code emulates the PaintBar study.  If EC is above EMA, the bars are painted cyan,
+ otherwise they are painted red.  Note that the plot styles has specific settings to 
+ paint the bars properly.  If indicator is applied to a candlestick chart, the thickness 
+ of the plots may need to adjusted. 
+}	
+If DrawPaintBars then
+	begin
+	Plot4( High ) ;
+	Plot5( Low ) ;
+	Plot6( Open ) ;
+	Plot7( Close ) ;
+	if EC > EMA then 
+		begin
+		SetPlotColor( 4, Cyan ) ;
+		SetPlotColor( 5, Cyan ) ;
+		SetPlotColor( 6, Cyan ) ;
+		SetPlotColor( 7, Cyan ) ;
+		end
+	else
+		begin
+		SetPlotColor( 4, Red ) ;
+		SetPlotColor( 5, Red ) ;
+		SetPlotColor( 6, Red ) ;
+		SetPlotColor( 7, Red ) ;
+		end
+	end ;
+ 

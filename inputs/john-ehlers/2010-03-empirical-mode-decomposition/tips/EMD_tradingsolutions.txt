@@ -1,0 +1,44 @@
+Function Name: Ehlers Bandpass Filter Beta
+Short Name: EBPF_Beta
+Inputs: Period
+Cos (Div (360, Period))
+
+Function Name: Ehlers Bandpass Filter Gamma
+Short Name: EBPF_Gamma
+Inputs: Period, Delta
+Div (1, Cos (Div (Mult (720, Delta), Period)))
+
+Function Name: Ehlers Bandpass Filter Alpha
+Short Name: EBPF_Alpha
+Inputs: Period, Delta
+Sub (EBPF_Gamma (Period, Delta), Sqrt (Sub (Pow (EBPF_Gamma (Period, Delta), 2), 1)))
+
+Function Name: Ehlers Bandpass Filter
+Short Name: EBPF
+Inputs: Price, Period, Delta
+Sub (Add (Mult (0.5, Mult (Sub (1, EBPF_Alpha (Period, Delta)), Sub (Price, Lag (Price, 2)))), Mult (Mult (EBPF_Beta (Period), Add (1, EBPF_Alpha (Period, Delta))), Prev (1))), Mult (EBPF_Alpha (Period, Delta), Prev (2)))
+
+Function Name: Ehlers Bandpass Filter Trend
+Short Name: EBPF_Trend
+Inputs: Price, Period, Delta
+Div (Add (MA (EBPF (Price, Period, Delta), Period), Lag (MA (EBPF (Price, Period, Delta), Period), Period)), 2)
+
+Function Name: Ehlers Bandpass Filter Peak
+Short Name: EBPF_Peak
+Inputs: Price, Period, Delta
+If (And (GT (Lag (EBPF (Price, Period, Delta), 1), EBPF (Price, Period, Delta)), GT (Lag (EBPF (Price, Period, Delta), 1), Lag (EBPF (Price, Period, Delta), 2))), Lag (EBPF (Price, Period, Delta), 1), Prev (1))
+
+Function Name: Ehlers Bandpass Filter Valley
+Short Name: EBPF_Valley
+Inputs: Price, Period, Delta
+If (And (LT (Lag (EBPF (Price, Period, Delta), 1), EBPF (Price, Period, Delta)), LT (Lag (EBPF (Price, Period, Delta), 1), Lag (EBPF (Price, Period, Delta), 2))), Lag (EBPF (Price, Period, Delta), 1), Prev (1))
+
+Function Name: Ehlers Bandpass Filter Upper Threshold
+Short Name: EBPF_Upper
+Inputs: Price, Period, Delta, Fraction, Threshold Period
+Mult (Fraction, MA (EBPF_Peak (Price, Period, Delta), Threshold Period))
+
+Function Name: Ehlers Bandpass Filter Lower Threshold
+Short Name: EBPF_Lower
+Inputs: Price, Period, Delta, Fraction, Threshold Period
+Mult (Fraction, MA (EBPF_Valley (Price, Period, Delta), Threshold Period))

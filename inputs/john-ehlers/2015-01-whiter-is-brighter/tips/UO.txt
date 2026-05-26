@@ -1,0 +1,19 @@
+Universal Oscillator:
+
+bandedge:= 20;
+whitenoise:= (C - Ref(C,-2))/2;
+
+{super smoother filter}
+a1:= Exp(-1.414 * 3.14159 / bandedge);
+b1:= 2*a1 * Cos(1.414*180 /bandedge);
+c2:= b1;
+c3:= -a1 * a1;
+c1:= 1 - c2 - c3;
+filt:= c1 * (whitenoise + Ref(whitenoise, -1))/2 + c2*PREV + c3*Ref(PREV,-1);
+filt1:= If(Cum(1) = 0, 0, If(Cum(1) = 2, c2*PREV,
+If(Cum(1) = 3, c2*PREV + c3*Ref(PREV,-1), filt)));
+
+pk:= If(Cum(1) = 2, .0000001,
+If(Abs(filt1) > PREV, Abs(filt1), 0.991 * PREV));
+denom:= If(pk=0, -1, pk);
+If(denom = -1, PREV, filt1/pk)

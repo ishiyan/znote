@@ -1,0 +1,25 @@
+! FRACTAL DIMENSION AS A MARKET MODE SENSOR
+! Author: John Ehlers, TASC June 2010
+! Coded by: Richard Denning
+! www.TradersEdgeSystems.com
+
+!INPUT:
+N 	is 30.	!must be even integer
+
+!FRACTAL DIMENSION INDICATOR:
+HalfN	is N*0.5.
+Price	is ([high]+[low])*0.5.
+Smooth	is (Price + 2*Valresult(Price,1) + 2*Valresult(Price,2) 
+		+ Valresult(Price,3)) / 6.
+N1	is (HighResult(Smooth,HalfN) 
+		- LowResult(Smooth,HalfN)) / (HalfN).
+N2	is (HighResult(Smooth,HalfN,HalfN) 
+		- LowResult(Smooth,HalfN,HalfN)) / (HalfN).
+N3	is (HighResult(Smooth,N) - LowResult(Smooth,N)) / N.
+barsInto	is reportDate() - ruleDate().
+end	if barsInto > 60.
+fracDimen is iff(end, Price, dimen ).
+dimen	is 0.5*( ( Ln(N1+N2) - Ln(N3)  ) 
+		/ Ln(2) + ValResult(fracDimen, 1) ).
+!PLOT as custom indicator:
+dimenFinal is ^SimpleAvg(dimen,20).

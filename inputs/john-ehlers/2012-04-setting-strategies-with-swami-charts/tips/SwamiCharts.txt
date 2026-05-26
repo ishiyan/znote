@@ -1,0 +1,123 @@
+Imports Microsoft.VisualBasic
+Imports System.Windows.Forms
+Imports System.Drawing
+Imports Updata
+Imports System.IO
+Imports System.Text
+ 
+Public Class Updata_TestIndicator
+    Implements ICustomIndicator
+ 
+    Public Sub init() Implements ICustomIndicator.init
+    End Sub
+ 
+    Public Function getLines(ByVal iLineStyles() As LineStyles, ByVal iChartStyles() As ChartStyles, ByVal sNames() As String, ByVal iColours() As Integer, ByVal iColours2() As Integer) As Integer Implements ICustomIndicator.getLines
+        iLineStyles(0) = LineStyles.Dot
+        iChartStyles(0) = ChartStyles.Chart
+        iColours(0) = Color.Red.ToArgb()
+        iColours2(0) = Color.Red.ToArgb()
+        sNames(0) = "Swami Chart"     
+        getLines = 1
+    End Function
+  
+    Public Function queryForParameters(ByVal iRets() As Updata.VariableTypes, ByVal sNames() As String, ByVal sDescrips() As String, ByVal defaults As Object()) As Integer Implements ICustomIndicator.queryForParameters
+        iRets(0) = VariableTypes.PriceVariable
+        sNames(0) = "Period"
+        sDescrips(0) = "Period"
+        defaults(0) = CType(20, Integer)
+        iRets(1) = VariableTypes.PriceVariable
+        sNames(1) = "Fraction"
+        sDescrips(1) = "Fraction"
+        defaults(1) = CType(0.1, Double)
+        iRets(2) = VariableTypes.PriceVariable
+        sNames(2) = "Delta"
+        sDescrips(2) = "Delta"
+        defaults(2) = CType(0.5, Double)
+        queryForParameters = 3
+    End Function
+ 
+    Private Colour1(60, 1) As Integer
+    Private Colour2(60, 1) As Integer
+ 
+    Public Function recalculateAll(ByVal dSrc()() As Double, ByVal oParams() As Object, ByVal dRet()()() As Double, ByVal iTradeTypes()() As Integer, ByVal dTradeOpenPrices()() As Double, ByVal dTradeClosePrices()() As Double, ByVal iTradeAmounr()() As Integer, ByVal dStopLevels()() As Double) As Boolean Implements ICustomIndicator.recalculateAll
+        If dSrc.Length = 0 Then
+            recalculateAll = False
+        End If
+       'Vars
+       dim InputPeriod as Integer
+       dim PVPeriod as Integer
+       dim i,k as Integer
+       dim inc as Integer
+       dim beta(60) as Single
+       dim gamma(60) as Single
+       dim alpha(60) as Single
+       dim price(dRet(0).Length-1) as Single 
+       dim Avg(60,dRet(0).Length-1) as Single
+       dim BP(60,dRet(0).Length-1) as Single
+       dim Peak(60,dRet(0).Length-1) as Single 
+       dim Valley(60,dRet(0).Length-1) as Single
+       dim AvgPeak(60,dRet(0).Length-1) as Single
+       dim AvgValley(60,dRet(0).Length-1) as Single
+       dim FracAvgPeak(60,dRet(0).Length-1) as Single
+       dim FracAvgValley(60,dRet(0).Length-1) as Single
+       ReDim Colour1(60, dRet(0).Length-1)
+       ReDim Colour2(60, dRet(0).Length-1) 
+       dim Dist(60) As Single
+       dim Width(60) as Single
+       dim Centre(60) as Single
+       dim Period As Integer = CType(oParams(0), Integer) 
+       dim Fraction As Single = CType(oParams(1), Single)
+       dim delta As Single = CType(oParams(2), Single)
+       
+         For i = 50 To dRet(0).Length-1  
+           inc +=1 
+           For Period=10 To 60
+           InputPeriod=2*Period
+           PVPeriod=System.Math.Round(2.5*Period)
+           price(i)=(dSrc(i)(1)+dSrc(i)(2))/2
+           beta(Period) = System.Math.Cos(2*System.Math.Pi/Period) 
+           gamma(Period) = 1/System.Math.Cos(4*System.Math.Pi*delta/Period) 
+           alpha(Period) = gamma(Period) - System.Math.Sqrt(gamma(Period)*gamma(Period)-1) 
+           'Trend Component
+           BP(Period,i)=0.5*(1-alpha(Period))*(price(i)-price(i-2))+beta(Period)*(1+alpha(Period))*BP(Period,i-1)-alpha(Period)*BP(Period,i-2)   
+           'Running Avg Calc
+           If inc>=InputPeriod
+              Avg(Period,i) = Average(BP,InputPeriod,i,Period)
+           End If 
+           If BP(Period,i-1)>BP(Period,i) And BP(Period,i-1)>BP(Period,i-2)
+              Peak(Period,i)=BP(Period,i-1)
+           ElseIf BP(Period,i-1)=(2.5*Period)
+              AvgPeak(Period,i) = Average(Peak,PVPeriod,i,Period)
+              AvgValley(Period,i) = Average(Valley,PVPeriod,i,Period)
+              FracAvgPeak(Period,i) = Fraction*Average(Peak,PVPeriod,i,Period)
+              FracAvgValley(Period,i) = Fraction*Average(Valley,PVPeriod,i,Period) 
+              Width(Period) = FracAvgPeak(Period,i)-FracAvgValley(Period,i)
+              Centre(Period) = (FracAvgPeak(Period,i)+FracAvgValley(Period,i))/2
+               'Colour Palette
+               If Avg(Period,i)>Centre(Period)
+                 if Avg(Period,i)>Centre(Period)+Width(Period)  
+                    Dist(Period)=1
+                    Colour1(Period, i) = 0
+                    Colour2(Period, i) = 255
+                 else
+                     Dist(Period)=(Avg(Period,i)-Centre(Period))/Width(Period)
+                     Colour1(Period, i) = System.Math.Max(255*(1-Dist(Period)),0)
+                     Colour2(Period, i) = 255 
+                 end if
+               Else 
+                 if Avg(Period,i) iFirstVisible Then
+                            If y - y2 > 1 Then
+                                g.FillRectangle(brush, x, y2, x - pLastPoint.x + 1, y - y2 + 1)
+                            Else
+                                g.FillRectangle(brush, x, y2, x - pLastPoint.x + 1, 1)
+                            End If
+                        End If
+                        pLastPoint = New Point(x, y)
+                    Next i
+               Next period
+            End Using
+            paint = True
+        End If
+      End Function
+ 
+End Class

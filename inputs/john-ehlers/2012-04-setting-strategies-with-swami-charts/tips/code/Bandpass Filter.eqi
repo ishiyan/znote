@@ -1,0 +1,21 @@
+Meta:
+	TrigMode( TrigModeDegrees );
+	
+Inputs:
+	Price((H+L)/2),
+	Period(20),
+	delta(.1);
+	
+Vars:
+	gamma(0),
+	alpha(0),
+	beta(0),
+	BP(0);
+	beta = Cosine(360 / Period);
+	
+gamma = 1 / Cosine(720*delta / Period);
+alpha = gamma - SquareRoot(gamma*gamma - 1);
+BP = .5*(1 - alpha)*(Price - Price[2]) + beta*(1 + alpha)*BP[1]- alpha*BP[2];
+
+DrawLine(BP, "Bandpass Filter", StyleSolid, 1, red);
+DrawLIne(0, "Zero", StyleDash, 1, Black );

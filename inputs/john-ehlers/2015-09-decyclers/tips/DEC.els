@@ -1,0 +1,147 @@
+Indicator: Simple Decycler
+
+// TASC Sep 2015
+// Decyclers - John F. Ehlers
+// Simple Decyclers
+
+inputs:
+	HPPeriod( 125 ) ;
+	
+variables:
+	alpha1( 0 ),
+	HP( 0 ),
+	Decycle( 0 ) ;
+	
+// High Pass Filter
+alpha1 = ( Cosine ( 0.707 * 360 / HPPeriod ) + 
+Sine( 0.707 * 360 / HPPeriod ) - 1 ) 
+/ Cosine( .707 * 360 / HPPeriod ) ;
+
+HP = ( 1 - alpha1 / 2 ) * ( 1 - alpha1 / 2 ) * 
+( Close - 2 * Close[1] + Close[2] ) + 2 * 
+( 1 - alpha1 ) * HP[1] - ( 1 - Alpha1 ) * 
+( 1 - alpha1 ) * HP[2] ;		
+
+Decycle = Close - HP ;
+
+Plot1( Decycle, "DeCycle" ) ;
+Plot2( 1.005 * Decycle, "UpperBand" ) ;
+Plot3( 0.995 * Decycle, "LowerBand" ) ;		
+	
+
+
+Indicator: Decycler Oscillator
+
+// TASC Sep 2015
+// Decyclers - John F. Ehlers
+// Decycler Oscillator
+
+inputs:
+	HPPeriod( 125 ),
+	K( 1 ) ;
+	
+variables:
+	alpha1( 0 ),
+	alpha2( 0 ),
+	HP( 0 ),
+	Decycle( 0 ),
+	DecycleOsc( 0 ) ;
+	
+
+alpha1 = ( Cosine ( 0.707 * 360 / HPPeriod ) + 
+Sine( 0.707 * 360 / HPPeriod ) - 1 ) 
+/ Cosine( .707 * 360 / HPPeriod ) ;
+
+HP = ( 1 - alpha1 / 2 ) * ( 1 - alpha1 / 2 ) * 
+( Close - 2 * Close[1] + Close[2] ) + 2 * 
+( 1 - alpha1 ) * HP[1] - ( 1 - Alpha1 ) * 
+( 1 - alpha1 ) * HP[2] ;		
+
+Decycle = Close - HP ;
+
+
+alpha2 = ( Cosine( 0.707 * 360 / ( 0.5 * HPPeriod ) ) 
++ Sine( 0.707 * 360 / ( 0.5 * HPPeriod ) ) - 1) /
+ Cosine( 0.707 * 360 / ( 0.5 * HPPeriod ) ) ;
+
+DecycleOsc = ( 1 - alpha2 / 2 ) * ( 1 - alpha2 / 2 ) * 
+( Decycle - 2 * Decycle[1] + Decycle[2] ) + 2 * 
+( 1 - alpha2 ) * DecycleOsc[1] - ( 1 - alpha2 ) * 
+( 1 - alpha2 ) * DecycleOsc[2] ;
+
+
+Plot1( 100 * K * DecycleOsc / Close, "DecycleOsc" ) ;
+Plot2( 0, "ZeroLine" ) ;
+
+
+
+Function: DecyclerOscillator
+
+// TASC Sep 2015
+// Decyclers - John F. Ehlers
+// Decycler Oscillator Function
+
+inputs:
+	Price( NumericSeries ),
+	HPPeriod( NumericSimple ),
+	K( NumericSimple ) ;
+	
+variables:
+	alpha1( 0 ),
+	alpha2( 0 ),
+	HP( 0 ),
+	Decycle( 0 ),
+	DecycleOsc( 0 ) ;
+	
+// High Pass Filter
+alpha1 = ( Cosine ( 0.707 * 360 / HPPeriod ) + 
+Sine( 0.707 * 360 / HPPeriod ) - 1 ) / 
+Cosine( .707 * 360 / HPPeriod ) ;
+
+HP = ( 1 - alpha1 / 2 ) * ( 1 - alpha1 / 2 ) * 
+( Price - 2 * Price[1] + Price[2] ) + 2 * 
+( 1 - alpha1 ) * HP[1] - ( 1 - Alpha1 ) * 
+( 1 - alpha1 ) * HP[2] ;		
+
+Decycle = Price - HP ;
+
+alpha2 = ( Cosine( 0.707 * 360 / ( 0.5 * HPPeriod ) ) 
++ Sine( 0.707 * 360 / ( 0.5 * HPPeriod ) ) - 1) / 
+Cosine( 0.707 * 360 / ( 0.5 * HPPeriod ) ) ;
+
+DecycleOsc = ( 1 - alpha2 / 2 ) * ( 1 - alpha2 / 2 ) * 
+( Decycle - 2 * Decycle[1] + Decycle[2] ) + 2 * 
+( 1 - alpha2 ) * DecycleOsc[1] - ( 1 - alpha2 ) * 
+( 1 - alpha2 ) * DecycleOsc[2] ;
+
+DecyclerOscillator = 100 * K * DecycleOsc / Price ;
+
+
+Strategy: Decycler Oscillator
+
+// TASC Sep 2015
+// Decyclers - John F. Ehlers
+// Decycler Oscillator Strategy
+
+inputs:
+	Price( Close ),
+	Fast_HPPeriod( 100 ),
+	Fast_K( 1.2 ),
+	Slow_HPPeriod( 125 ),
+	Slow_K( 1 ) ;
+
+variables:
+	Fast_Val( 0 ),
+	Slow_Val( 0 ) ;
+
+Fast_Val = 
+DecyclerOscillator( Price, Fast_HPPeriod, Fast_K ) ;
+
+Slow_Val = 
+DecyclerOscillator( Price, Slow_HPPeriod, Slow_K ) ;
+
+if Fast_Val crosses over Slow_Val then
+	Buy next bar at Market
+else if Slow_Val crosses over Fast_Val then
+	SellShort next bar at Market ;	
+	

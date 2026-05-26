@@ -1,0 +1,19 @@
+PeriodMACD = -1 + PeriodPassBand/2.5;
+
+AmiBroker code
+Period1 = Param("Period1", 40, 1, 100 ); 
+Period2 = Param("Period2", 60, 1, 100 ); 
+
+a1 = 5 / Period1; 
+a2 = 5 / Period2; 
+
+// pass band by difference of EMA's 
+// essentially it is 're-invented' MACD 
+PB = AMA( C, a1 ) - AMA( C, a2 ); 
+         
+RMS = sqrt( MA( PB * PB, 50 ) ); 
+
+Plot( PB, "PassBand" + _PARAM_VALUES(), colorRed, styleThick ); 
+Plot( RMS, "", colorYellow ); 
+Plot( -RMS, "", colorYellow ); 
+Plot( 0, "", colorBlue, styleNoLabel );

@@ -1,0 +1,20 @@
+Output/Input = (b0 + b1Z-1 + b2Z-2 - bNZ-N )/(1 - a1Z-1 - a2Z-2)
+
+'- bN  b2  b1  b0 ; a2  a1' filter dataset
+
+1. Exponential moving average with alpha = 0.2:
+'.2;.8' filter dataset
+This is equivalent with the Fdc expression:
+.2 expave dataset
+or, to use the corresponding equivalent number of days (9):
+9 expave dataset
+2. Simple five-day moving average using the Ehlers method: Normally, this
+   is produced in Fdc by the input:
+5 movave dataset
+Ehlers's code used in the article would translate to:
+'-.2 0 0 0 .2;1' filter dataset
+
+'-.2 0 0 0 .2;1;(totave dataset first 5)' filter dataset
+
+3. Two-pole Gaussian filter with alpha = 0.2
+'04; -.64 1.6' filter dataset

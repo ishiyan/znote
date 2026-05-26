@@ -1,0 +1,58 @@
+// Magazine: Technical Analysis of Stocks & Commodities, May 2004
+// Article: The Inverse Fisher Transform by John F. Ehlers
+// Study: INVERSE FISHER TRANSFORM OF RSI
+// Provided By: TS Support, LLC for eSignal
+var RSI = null;
+function preMain(){
+    setStudyTitle("INVERSE FISHER TRANSFORM OF RSI");
+    setCursorLabelName("IFish",0);
+    setDefaultBarFgColor(Color.red,0);
+    addBand(.5, PS_SOLID, 1, Color.black);
+    addBand(-.5, PS_SOLID, 1, Color.black);
+    setDefaultBarThickness(2);
+    setComputeOnClose();
+}
+function main(){
+    wmaLength = 9;
+    rsiLength = 5;
+    if (RSI == null) RSI = new RSIStudy(rsiLength,"close");
+    var IFish = 0, WtdSum = 0 ;
+    Value1 = .1 * (RSI.getValue(RSIStudy.RSI) - 50);
+    for(i = 0; i < wmaLength; i++)
+        WtdSum += (wmaLength - i) * (.1 * (RSI.getValue(RSIStudy.RSI,-i) - 50)) ;
+    CumWt = (wmaLength + 1 ) * wmaLength * .5 ;
+    Value2 = WAverage = WtdSum / CumWt ;
+    IFish = (Math.exp(2 * Value2) - 1) / (Math.exp(2 * Value2) + 1);
+    return IFish;
+}
+
+// Magazine: Technical Analysis of Stocks & Commodities, May 2004
+// Article: The Inverse Fisher Transform by John F. Ehlers
+// Study: CYBER CYCLE WITH INVERSE FISHER TRANSFORM
+// Provided By: TS Support, LLC for eSignal
+var Smooth_1 = 0;
+var Smooth_2 = 0;
+var Cycle_1 = 0;
+var Cycle_2 = 0;
+function preMain(){
+    setStudyTitle("CYBER CYCLE WITH INVERSE FISHER TRANSFORM");
+    setCursorLabelName("Cycle",0);
+    setDefaultBarFgColor(Color.green,0);
+    setDefaultBarThickness(2);
+    setComputeOnClose();
+}
+function main(alpha){
+    if(alpha == null) alpha = .07;
+    var Smooth = 0, Cycle = 0, ICycle = 0;
+    Smooth = ((high() + low()) / 2 + high(-1) + low(-1) + high(-2) + low(-2) + (high(-3) + low(-3)) / 2 ) / 6;
+    Cycle = (1 - .5 * alpha) * (1 - .5 * alpha) * (Smooth - 2 * Smooth_1 + Smooth_2) + 2 * (1 - alpha) *
+              Cycle_1 - (1 - alpha) * (1 - alpha) * Cycle_2;
+    if(getCurrentBarIndex() - getOldestBarIndex() < 7)
+    Cycle = ((high() + low()) / 2 - high(-1) - low(-1) + high(-2) + low(-2)) / 4;
+    ICycle = (Math.exp(2 * Cycle) - 1) / (Math.exp(2 * Cycle) + 1);
+    Smooth_2 = Smooth_1;
+    Smooth_1 = Smooth;
+    Cycle_2 = Cycle_1;
+    Cycle_1 = Cycle;
+    return ICycle;
+}

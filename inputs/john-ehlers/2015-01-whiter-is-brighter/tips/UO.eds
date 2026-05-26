@@ -1,0 +1,29 @@
+!WHITER IS BRIGHTER
+!Author: John Ehlers, TASC Jan 2015
+!Coded by: Richard Denning 11/11/2014
+!www.TradersEdgeSystems.com
+
+!Universal Oscillator
+!(c) 2014 John F. Ehlers
+
+!INPUTS:
+BandEdge is 20.
+
+!SuperSmoother Filter
+WhiteNoise is ([Close] - val([Close],2)) / 2.
+a1 is Exp(-1.414*3.14159 / BandEdge).
+b1 is 2*a1*Cos((1.414*180) / BandEdge).
+c2 is b1.
+c3 is -a1*a1.
+c1 is 1 - c2 - c3.
+
+DaysInto is ReportDate() - RuleDate().
+Stop if DaysInto > 10.
+stopfilt is iff(stop,[close], filt).
+Filt is c1*(WhiteNoise + valresult(WhiteNoise,1)) / 2
+  + c2*valresult(stopfilt,1) + c3*valresult(stopfilt,2).
+stopPeak is iff(stop,[close], peak).
+Peak is 0.991*valresult(stopPeak,1).
+ !Plot for Univeral Oscillator
+
+Universal is (Filt / (max(Peak,abs(Filt))))*10.

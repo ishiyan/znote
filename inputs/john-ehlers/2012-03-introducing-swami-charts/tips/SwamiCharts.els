@@ -1,0 +1,853 @@
+_SwamiChart_Aroon (Indicator)
+
+{ TASC March 2012 }
+{ Introducing Swami Charts }
+
+variables:
+	N( 0 ),
+	J( 0 ),
+	HH( 0 ),
+	LL( 0 ),
+	HighBarsBack( 0 ),
+	LowBarsBack( 0 ),
+	Color1( 0 ),
+	Color2( 0 ),
+	Color3( 0 ) ;
+
+arrays:
+	Aroon[60]( 0 ) ;
+	
+for N = 4 to 60 
+	begin
+	HH = Close ;
+	LL = Close ;
+	for J = 0 to N begin
+		if High[J] > HH then 
+			begin
+			HH = High[J] ;
+			HighBarsBack = J ;
+			end ;
+		if Low[J] < LL then 
+			begin
+			LL = Low[J] ;
+			LowBarsBack = J ;
+			end ;
+	end ;
+
+	Aroon[N] = 0 ;
+	if HighBarsBack > LowBarsBack then 
+		Aroon[N] = 1 ;
+	end ;
+
+for N = 8 to 48 
+	begin
+	Color3 = 0 ;
+	if Aroon[N] = 0 then 
+		begin
+		Color1 = 0 ;
+		Color2 = 255 ;
+		end ;
+	if Aroon[N] = 1 then 
+		begin
+		Color1 = 255 ;
+		Color2 = 0 ;
+		end ;
+
+	if N = 4 then 
+		Plot4( 4, "S4", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 5 then 
+		Plot5( 5, "S5", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 6 then 
+		Plot6( 6, "S6", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 7 then 
+		Plot7( 7, "S7", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 8 then 
+		Plot8( 8, "S8", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 9 then 
+		Plot9( 9, "S9", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 10 then 
+		Plot10( 10, "S10", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 11 then 
+		Plot11( 11, "S11", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 12 then 
+		Plot12( 12, "S12", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 13 then 
+		Plot13( 13, "S13", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 14 then 
+		Plot14( 14, "S14", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 15 then 
+		Plot15( 15, "S15", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 16 then 
+		Plot16( 16, "S16", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 17 then 
+		Plot17( 17, "S17", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 18 then 
+		Plot18( 18, "S18", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 19 then 
+		Plot19( 19, "S19", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 20 then 
+		Plot20( 20, "S20", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 21 then 
+		Plot21( 21, "S21", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 22 then 
+		Plot22( 22, "S22", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 23 then 
+		Plot23( 23, "S23", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 24 then 
+		Plot24( 24, "S24", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 25 then 
+		Plot25( 25, "S25", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 26 then 
+		Plot26( 26, "S26", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 27 then 
+		Plot27( 27, "S27", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 28 then 
+		Plot28( 28, "S28", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 29 then 
+		Plot29( 29, "S29", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 30 then 
+		Plot30( 30, "S30", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 31 then 
+		Plot31( 31, "S31", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 32 then 
+		Plot32( 32, "S32", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 33 then 
+		Plot33( 33, "S33", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 34 then 
+		Plot34( 34, "S34", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 35 then 
+		Plot35( 35, "S35", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 36 then 
+		Plot36( 36, "S36", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 37 then 
+		Plot37( 37, "S37", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 38 then 
+		Plot38( 38, "S38", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 39 then 
+		Plot39( 39, "S39", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 40 then 
+		Plot40( 40, "S40", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 41 then 
+		Plot41( 41, "S41", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 42 then 
+		Plot42( 42, "S42", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 43 then 
+		Plot43( 43, "S43", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 44 then 
+		Plot44( 44, "S44", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 45 then 
+		Plot45( 45, "S45", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 46 then 
+		Plot46( 46, "S46", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 47 then 
+		Plot47( 47, "S47", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 48 then 
+		Plot48( 48, "S48", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 49 then 
+		Plot49( 49, "S49", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 50 then 
+		Plot50( 50, "S50", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 51 then 
+		Plot51( 51, "S41", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 52 then 
+		Plot52( 52, "S42", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 53 then 
+		Plot53( 53, "S43", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 54 then 
+		Plot54( 54, "S44", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 55 then 
+		Plot55( 55, "S45", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 56 then 
+		Plot56( 56, "S46", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 57 then 
+		Plot57( 57, "S47", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 58 then 
+		Plot58( 58, "S48", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 59 then 
+		Plot59( 59, "S49", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 60 then 
+		Plot60( 60, "S50", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+
+	end ;
+
+
+
+
+_SwamiChart_CCI (Indicator)
+
+{ TASC March 2012 }
+{ Introducing Swami Charts }
+
+variables:
+	N( 0 ),
+	Color1( 0 ),
+	Color2( 0 ),
+	Color3( 0 ) ;
+
+arrays:
+	CCIAvg[48, 2]( 0 ) ;
+
+for N = 12 to 48 
+	begin
+	CCIAvg[N, 2] = CCIAvg[N, 1] ;
+	CCIAvg[N, 1] = 0.33 * ( ( CCI( N ) / 100 + 1 ) 
+	 / 2 ) + 0.67 * CCIAvg[N, 2] ;
+	if CCIAvg[N, 1] > 1 then 
+		CCIAvg[N, 1] = 1 ;
+	if CCIAvg[N, 1] < 0 then 
+		CCIAvg[N, 1] = 0 ;
+	end ;
+
+for N = 12 to 48 
+	begin
+	if CCIAvg[N, 1] >= 0.5 then 
+		begin
+		Color1 = 255 * ( 2 - 2 * CCIAvg[N, 1] ) ;
+		Color2 = 255 ;
+		Color3 = 0 ;
+		end
+	else if CCIAvg[N, 1] < 0.5 then
+		begin
+		Color1 = 255 ;
+		Color2 = 255 * 2 * CCIAvg[N, 1] ;
+		Color3 = 0 ;
+		end ;
+
+	if N = 12 then 
+		Plot12( 12, "S12", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 13 then 
+		Plot13( 13, "S13", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 14 then 
+		Plot14( 14, "S14", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 15 then 
+		Plot15( 15, "S15", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 16 then 
+		Plot16( 16, "S16", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 17 then 
+		Plot17( 17, "S17", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 18 then 
+		Plot18( 18, "S18", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 19 then 
+		Plot19( 19, "S19", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 20 then 
+		Plot20( 20, "S20", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 21 then 
+		Plot21( 21, "S21", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 22 then 
+		Plot22( 22, "S22", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 23 then 
+		Plot23( 23, "S23", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 24 then 
+		Plot24( 24, "S24", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 25 then 
+		Plot25( 25, "S25", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 26 then 
+		Plot26( 26, "S26", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 27 then 
+		Plot27( 27, "S27", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 28 then 
+		Plot28( 28, "S28", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 29 then 
+		Plot29( 29, "S29", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 30 then 
+		Plot30( 30, "S30", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 31 then 
+		Plot31( 31, "S31", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 32 then 
+		Plot32( 32, "S32", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 33 then 
+		Plot33( 33, "S33", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 34 then 
+		Plot34( 34, "S34", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 35 then 
+		Plot35( 35, "S35", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 36 then 
+		Plot36( 36, "S36", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 37 then 
+		Plot37( 37, "S37", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 38 then 
+		Plot38( 38, "S38", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 39 then 
+		Plot39( 39, "S39", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ; 
+	if N = 40 then 
+		Plot40( 40, "S40", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 41 then 
+		Plot41( 41, "S41", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 42 then 
+		Plot42( 42, "S42", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 43 then 
+		Plot43( 43, "S43", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 44 then 
+		Plot44( 44, "S44", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 45 then 
+		Plot45( 45, "S45", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 46 then 
+		Plot46( 46, "S46", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 47 then 
+		Plot47( 47, "S47", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 48 then 
+		Plot48( 48, "S48", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+
+	end ;
+
+
+
+
+_SwamiChart_RSI (Indicator)
+
+{ TASC March 2012 }
+{ Introducing Swami Charts }
+
+variables:
+	N( 0 ),
+	Change( 0 ),
+	ChgRatio( 0 ),
+	Color1( 0 ),
+	Color2( 0 ),
+	Color3( 0 ) ;
+
+arrays:
+	NetChgAvg[48, 2]( 0 ),
+	TotChgAvg[48, 2]( 0 ),
+	MyRSI[48, 2]( 0 ) ;
+
+for N = 12 to 48 
+	begin
+		
+	NetChgAvg[N, 2] = NetChgAvg[N, 1] ;
+	TotChgAvg[N, 2] = TotChgAvg[N, 1] ;
+	MyRSI[N, 2] = MyRSI[N, 1] ;
+	Change = Close - Close[1] ;
+	NetChgAvg[N, 1] = NetChgAvg[N, 2] + ( 1 / N ) 
+	 * ( Change - NetChgAvg[N, 2] ) ;
+	TotChgAvg[N, 1] = TotChgAvg[N, 2] + ( 1 / N ) * 
+	 ( AbsValue( Change ) - TotChgAvg[N, 2] ) ;
+
+	if TotChgAvg[N, 1] <> 0 then 
+		ChgRatio = NetChgAvg[N, 1] / TotChgAvg[N, 1] 
+	else 
+		ChgRatio = 0 ;
+
+	MyRSI[N, 1] = 0.33 * ( 4 * ChgRatio + 1 ) / 
+	 2 + 0.67 * MyRSI[N, 2] ;
+
+	if MyRSI[N, 1] > 1 then 
+		MyRSI[N, 1] = 1 ;
+
+	if MyRSI[N, 1] < 0 then 
+		MyRSI[N, 1] = 0 ;
+
+	end ;
+
+for N = 12 to 48 
+	begin
+	
+	if MyRSI[N, 1] >= 0.5 then 
+		begin
+		Color1 = 255 *( 2 - 2 * MyRSI[N, 1] ) ;
+		Color2 = 255 ;
+		Color3 = 0 ;
+		end
+	else if MyRSI[N, 1] < 0.5 then 
+		begin
+		Color1 = 255 ;
+		Color2 = 255 * 2 * MyRSI[N, 1] ;
+		Color3 = 0 ;
+		end ;
+
+	if N = 12 then 
+		Plot12( 12, "S12", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 13 then 
+		Plot13( 13, "S13", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 14 then 
+		Plot14( 14, "S14", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 15 then 
+		Plot15( 15, "S15", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 16 then 
+		Plot16( 16, "S16", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 17 then 
+		Plot17( 17, "S17", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 18 then 
+		Plot18( 18, "S18", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 19 then 
+		Plot19( 19, "S19", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 20 then 
+		Plot20( 20, "S20", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 21 then 
+		Plot21( 21, "S21", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 22 then 
+		Plot22( 22, "S22",  
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 23 then 
+		Plot23( 23, "S23", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 24 then 
+		Plot24( 24, "S24", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 25 then 
+		Plot25( 25, "S25", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 26 then 
+		Plot26( 26, "S26", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 27 then 
+		Plot27( 27, "S27", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 28 then 
+		Plot28( 28, "S28", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 29 then 
+		Plot29( 29, "S29", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 30 then 
+		Plot30( 30, "S30", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 31 then 
+		Plot31( 31, "S31", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 32 then 
+		Plot32( 32, "S32", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 33 then 
+		Plot33( 33, "S33", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 34 then 
+		Plot34( 34, "S34", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 35 then 
+		Plot35( 35, "S35", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 36 then 
+		Plot36( 36, "S36", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 37 then 
+		Plot37( 37, "S37", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 38 then 
+		Plot38( 38, "S38", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 39 then 
+		Plot39( 39, "S39", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 40 then 
+		Plot40( 40, "S40", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 41 then 
+		Plot41( 41, "S41", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 42 then 
+		Plot42( 42, "S42", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 43 then 
+		Plot43( 43, "S43", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 44 then 
+		Plot44( 44, "S44", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 45 then 
+		Plot45( 45, "S45", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 46 then 
+		Plot46( 46, "S46", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 47 then 
+		Plot47( 47, "S47", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 48 then 
+		Plot48( 48, "S48", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	
+	end ;
+
+
+
+_SwamiChart_Stoch (Indicator)
+
+{ TASC March 2012 }
+{ Introducing Swami Charts }
+			
+variables:
+	N( 0 ),
+	J( 0 ),
+	HH( 0 ),
+	LL( 0 ),
+	Color1( 0 ),
+	Color2( 0 ),
+	Color3( 0 ) ;
+
+arrays:
+	Stoc[48, 2]( 0 ),
+	Num[48, 2]( 0 ),
+	Denom[48, 2]( 0 ) ;
+
+for N = 6 to 48 
+	begin
+	Num[N, 2] = Num[N, 1] ;
+	Denom[N, 2] = Denom[N, 1] ;
+	Stoc[N, 2] = Stoc[N, 1] ;
+	HH = 0 ;
+	LL = 1000000 ;
+	for J = 0  to N - 1 
+		begin
+		if Close[J] > HH then 
+			HH = Close[J] ;
+ 	    if Close[J] < LL then 
+			LL = Close[J] ;
+		end ; 
+	Num[N, 1] = 0.5 * ( Close - LL ) + 
+	 0.5 * Num[N, 2] ;
+	Denom[N, 1] = 0.5 * ( HH - LL ) + 
+	 0.5 * Denom[N, 2] ;
+	if Denom[N, 1] <> 0 then 
+		Stoc[N, 1] = 0.2 * ( Num[N, 1] / 
+		 Denom[N, 1] ) + 0.8 * Stoc[N, 2] ;
+	end ;
+
+for N = 6 to 48 
+	begin
+		
+	if Stoc[N, 1] >= 0.5 then 
+		begin
+		Color1 = 255 * ( 2 - 2 * Stoc[N, 1] ) ;
+		Color2 = 255 ;
+		Color3 = 0 ;
+		end
+	else if Stoc[N, 1] < 0.5 then 
+		begin
+		Color1 = 255 ;
+		Color2 = 255 * 2 * Stoc[N, 1] ;
+		Color3 = 0 ;
+		end ;
+
+	if N = 4 then 
+		Plot4( 4, "S4", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 5 then 
+		Plot5( 5, "S5", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 6 then 
+		Plot6( 6, "S6", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 7 then 
+		Plot7( 7, "S7", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 8 then 
+		Plot8( 8, "S8", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 9 then 
+		Plot9( 9, "S9", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 10 then 
+		Plot10( 10, "S10", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 11 then 
+		Plot11( 11, "S11", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 12 then 
+		Plot12( 12, "S12", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 13 then 
+		Plot13( 13, "S13", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 14 then 
+		Plot14( 14, "S14", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 15 then 
+		Plot15( 15, "S15", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 16 then 
+		Plot16( 16, "S16", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 17 then 
+		Plot17( 17, "S17", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 18 then 
+		Plot18( 18, "S18", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 19 then 
+		Plot19( 19, "S19", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 20 then 
+		Plot20( 20, "S20", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 21 then 
+		Plot21( 21, "S21", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 22 then 
+		Plot22( 22, "S22", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 23 then 
+		Plot23( 23, "S23", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 24 then 
+		Plot24( 24, "S24", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 25 then 
+		Plot25( 25, "S25", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 26 then 
+		Plot26( 26, "S26", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 27 then 
+		Plot27( 27, "S27", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 28 then 
+		Plot28( 28, "S28", 
+	 	RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 29 then 
+		Plot29( 29, "S29", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 30 then 
+		Plot30( 30, "S30", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 31 then 
+		Plot31( 31, "S31", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 32 then 
+		Plot32( 32, "S32", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 33 then 
+		Plot33( 33, "S33", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 34 then 
+		Plot34( 34, "S34", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 35 then 
+		Plot35( 35, "S35", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 36 then 
+		Plot36( 36, "S36", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 37 then 
+		Plot37( 37, "S37", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 38 then 
+		Plot38( 38, "S38", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 39 then 
+		Plot39( 39, "S39", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 40 then 
+		Plot40( 40, "S40", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 41 then 
+		Plot41( 41, "S41", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 42 then 
+		Plot42( 42, "S42", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 43 then 
+		Plot43( 43, "S43", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 44 then 
+		Plot44( 44, "S44", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 45 then 
+		Plot45( 45, "S45", 
+	 	 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 46 then 
+		Plot46( 46, "S46", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 47 then 
+		Plot47( 47, "S47", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+	if N = 48 then 
+		Plot48( 48, "S48", 
+		 RGB( Color1, Color2, Color3 ), 0, 4 ) ;
+
+ 	end ;
+
+_SwamiChart_RSIStrat (Strategy)
+
+{ TASC March 2012 }
+{ Introducing Swami Charts }
+
+inputs:
+	LongColor( 50 ),
+	ShortColor( 50 ) ;
+
+variables:
+	N( 0 ),
+	Change( 0 ),
+	ChgRatio( 0 ),
+	Color1( 0 ),
+	Color2( 0 ),
+	Color3( 0 ),
+	Color1Tot( 0 ),
+	Color2Tot( 0 ),
+	ColorCount( 0 ),
+	Color1Avg( 0 ),
+ 	Color2Avg( 0 ) ;
+
+arrays:
+	NetChgAvg[48, 2]( 0 ),
+	TotChgAvg[48, 2]( 0 ),
+	MyRSI[48, 2]( 0 ) ;
+
+for N = 12 to 48 
+	begin
+		
+	NetChgAvg[N, 2] = NetChgAvg[N, 1] ;
+	TotChgAvg[N, 2] = TotChgAvg[N, 1] ;
+	MyRSI[N, 2] = MyRSI[N, 1] ;
+	Change = Close - Close[1] ;
+	NetChgAvg[N, 1] = NetChgAvg[N, 2] + ( 1 / N ) 
+	 * ( Change - NetChgAvg[N, 2] ) ;
+	TotChgAvg[N, 1] = TotChgAvg[N, 2] + ( 1 / N ) * 
+	 ( AbsValue( Change ) - TotChgAvg[N, 2] ) ;
+
+	if TotChgAvg[N, 1] <> 0 then 
+		ChgRatio = NetChgAvg[N, 1] / TotChgAvg[N, 1] 
+	else 
+		ChgRatio = 0 ;
+
+	MyRSI[N, 1] = 0.33 * ( 4 * ChgRatio + 1 ) / 
+	 2 + 0.67 * MyRSI[N, 2] ;
+
+	if MyRSI[N, 1] > 1 then 
+		MyRSI[N, 1] = 1 ;
+
+	if MyRSI[N, 1] < 0 then 
+		MyRSI[N, 1] = 0 ;
+
+	end ;
+
+ColorCount = 0 ;
+Color1Tot = 0 ;
+Color2Tot = 0 ;
+
+for N = 12 to 48 
+	begin
+	
+	if MyRSI[N, 1] >= 0.5 then 
+		begin
+		Color1 = 255 *( 2 - 2 * MyRSI[N, 1] ) ;
+		Color2 = 255 ;
+		Color3 = 0 ;
+		end
+	else if MyRSI[N, 1] < 0.5 then 
+		begin
+		Color1 = 255 ;
+		Color2 = 255 * 2 * MyRSI[N, 1] ;
+		Color3 = 0 ;
+		end ;
+	
+	Color1Tot = Color1Tot + Color1 ;
+	Color2Tot = Color2Tot + Color2 ;
+	ColorCount = ColorCount + 1 ;
+	end ;
+
+Color1Avg = Color1Tot / ColorCount ;
+Color2Avg = Color2Tot / ColorCount ;
+
+{ Long Entry }
+if Color1Avg = 255 and Color2Avg > LongColor then
+	buy next bar market ;
+
+{ Short Entry }
+if Color1Avg > ShortColor and Color2Avg = 255 then
+	sellshort next bar market ;

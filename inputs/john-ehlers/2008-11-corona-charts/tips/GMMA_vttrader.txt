@@ -1,0 +1,24 @@
+{Provided By: Visual Trading Systems, LLC & Capital Market Services, LLC (c) Copyright 2008}
+{Description: Guppy Multiple Moving Average (GMMA)}
+{Notes: T.A.S.C., April 2008 "Similar but Different, True Price Value" by Daryl Guppy and Chen Jing}
+{Notes: T.A.S.C., May 2008 "Parallel Listings and True Price Value" by Daryl Guppy and Chen Jing}
+{vt_GMMA Version 1.0}
+
+{Short-Term Moving Averages}
+
+ShortMA1:= mov(MaPrice,3,MaType);
+ShortMA2:= mov(MaPrice,5,MaType);
+ShortMA3:= mov(MaPrice,8,MaType);
+ShortMA4:= mov(MaPrice,10,MaType);
+ShortMA5:= mov(MaPrice,12,MaType);
+ShortMA6:= mov(MaPrice,15,MaType);
+
+{Long-Term Moving Averages}
+
+
+LongMA1:= mov(MaPrice,30,MaType);
+LongMA2:= mov(MaPrice,35,MaType);
+LongMA3:= mov(MaPrice,40,MaType);
+LongMA4:= mov(MaPrice,45,MaType);
+LongMA5:= mov(MaPrice,50,MaType);
+LongMA6:= mov(MaPrice,60,MaType);

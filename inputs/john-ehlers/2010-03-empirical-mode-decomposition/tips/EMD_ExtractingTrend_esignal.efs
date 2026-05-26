@@ -1,0 +1,127 @@
+/*********************************
+Provided By:
+    eSignal (Copyright c eSignal), a division of Interactive Data
+    Corporation. 2010. All rights reserved. This sample eSignal
+   Formula Script (EFS) is for educational purposes only and
+   may be modified and saved under a new file name. eSignal is
+   not responsible for the functionality once modified. eSignal
+   reserves the right to modify and overwrite this EFS file with
+   each new release.
+
+Description:
+    Extracting The Trend
+
+Version:            1.00  01/08/2010
+
+Formula Parameters:                     Default:
+    Length                              20
+    Delta                               0.5
+    Price                               hl2
+
+Notes:
+   The related article is copyrighted material. If you are not a
+   subscriber of Stocks & Commodities, please visit
+   www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+var bVersion = null;
+
+function preMain() {
+    setPriceStudy(false);
+    setShowCursorLabel(true);
+    setShowTitleParameters(false);
+    setStudyTitle("Extracting The Trend");
+    setCursorLabelName("ExTrend", 0);
+    setDefaultBarFgColor(Color.red, 0);
+    setPlotType(PLOTTYPE_LINE, 0);
+    setDefaultBarThickness(2, 0);
+    var x=0;
+    fpArray[x] = new FunctionParameter("Length", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Length");
+        setLowerLimit(1);
+        setDefault(20);
+    }
+    fpArray[x] = new FunctionParameter("Delta", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Delta");
+        setLowerLimit(0.00001);
+        setDefault(0.5);
+    }
+	fpArray[x] = new FunctionParameter("Price", FunctionParameter.STRING);
+	with(fpArray[x++]){
+        setName("Price Source");
+        addOption("open");
+        addOption("high");
+        addOption("low");
+        addOption("close");
+        addOption("hl2");
+        addOption("hlc3");
+        addOption("ohlc4");
+        setDefault("hl2");
+    }
+}
+
+var xBandpassFilter = null;
+var xTrend = null;
+
+function main(Length, Delta, Price) {
+var nBarState = getBarState();
+var nTrend = 0;
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    if (nBarState == BARSTATE_ALLBARS) {
+        if (Length == null) Length = 20;
+        if (Delta == null) Delta = 0.5;
+        if (Price == null) Price = "hl2";
+    }
+    if (!bInit) {
+        addBand(0, PS_SOLID, 1, Color.blue, "Zero");
+        xBandpassFilter = efsInternal("Calc_BandpassFilter", Length, Delta, Price);
+        xTrend = sma(2 * Length, xBandpassFilter);
+        bInit = true;
+    }
+    nTrend = xTrend.getValue(0);
+    if (nTrend == null) return;
+    return nTrend;
+}
+
+var bSecondInit = false;
+var xPrice = null;
+
+function Calc_BandpassFilter(Length, Delta, Price) {
+var gamma = 0;
+var alpha = 0;
+var beta = 0;
+var BP = 0;
+var BP1 = ref(-1);
+var BP2 = ref(-2);
+    if (bSecondInit == false) {
+        xPrice = eval(Price)();
+        bSecondInit = true;
+    }
+    if (xPrice.getValue(-2) == null) return;
+    beta = Math.cos(Math.PI * (360 / Length) / 180);
+    gamma = 1 / Math.cos(Math.PI * (720 * Delta / Length) / 180);
+    alpha = gamma - Math.sqrt(gamma * gamma - 1);
+    BP = 0.5 * (1 - alpha) * (xPrice.getValue(0) - xPrice.getValue(-2)) + beta * (1 + alpha) * BP1 - alpha * BP2;
+    return BP;
+}
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.",
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp",
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}

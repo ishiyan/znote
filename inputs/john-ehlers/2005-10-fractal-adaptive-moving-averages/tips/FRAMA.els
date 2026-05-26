@@ -1,0 +1,109 @@
+Strategy:  FractalAMA Bands
+{ The IntrabarOrderGeneration attribute is set to false in this strategy because
+  strategy calculations depend on end-of-bar prices. }
+[IntrabarOrderGeneration = false]
+inputs:
+ Price( 0.5 * ( H + L ) ),
+ N( 16 ),
+ NumDevsUp( 2 ),
+ NumDevsDn( 2 ),
+ TrailAmt( 0.5 ),
+ BandColor( Yellow ),
+ DataType( 1 ) ; { pass in 1 if you are working with the entire population, and 2
+                    if you are working with a sample and want the standard deviation
+                    for the population }
+variables:
+ Divisor( 0 ),
+ Mean( 0 ),
+ SumSqr( 0 ),
+ AvgDiff( 0 ),
+ FracStandardDev( 0 ),
+ LowerBand( 0 ),
+ UpperBand( 0 ),
+ TL_ID1( -1 ),
+ TL_ID2( -1 ) ;
+// AvgDiff = 0 ;
+Divisor = Iff( DataType = 1, N, N - 1 ) ;
+if Divisor > 0 then
+ begin
+ Mean = AdaptMovAvg_Fractal( Price, N ) ;
+ SumSqr = 0 ;
+ for Value1 = 0 to N - 1
+  begin
+  SumSqr = SumSqr + Square( Price[Value1] - Mean ) ;
+  end ;
+ AvgDiff = SumSqr / Divisor ;
+ end ;
+if AvgDiff > 0 then
+ FracStandardDev = SquareRoot( AvgDiff )
+else
+ FracStandardDev = 0 ;
+LowerBand = Mean - NumDevsDn * FracStandardDev ;
+UpperBand = Mean + NumDevsUp * FracStandardDev ;
+if CurrentBar > 1 and Low crosses over LowerBand then
+{ CB > 1 check used to avoid spurious cross confirmation at CB = 1 }
+ Buy ( "BBandLE" ) next bar LowerBand stop ;
+if CurrentBar > 1 and High crosses under UpperBand then
+ SellShort next bar at UpperBand Stop ; { ie, don't buy if next bar completely
+                                          below current LowerBand, but wait for
+                                          next crossing condition - an example of
+                                          a non-persistent setup with an
+                                          indefinite stop/limit trigger }
+SetStopShare ;
+SetDollarTrailing( TrailAmt ) ;
+SetProfitTarget ( 3 * TrailAmt ) ;
+{ Use trendlines to "plot" the bands on the chart }
+TL_ID1 = TL_New( Date[1], Time[1], UpperBand[1], Date,
+ Time, UpperBand ) ;
+TL_SetColor( TL_ID1, BandColor ) ;
+TL_ID2 = TL_New( Date[1], Time[1], LowerBand[1], Date,
+ Time, LowerBand ) ;
+TL_SetColor( TL_ID2, BandColor ) ;
+Function:  AdaptMovAvg_Fractal
+inputs:
+ Price( NumericSeries ),
+ N( NumericSimple ) ; { N must be an even number }
+variables:
+ N3( 0 ),
+ HH( 0 ),
+ LL( 0 ),
+ HalfN( 0 ),
+ Count( 0 ),
+ N1( 0 ),
+ N2( 0 ),
+ Dimen( 0 ),
+ Alpha( 0 ),
+ Filt( 0 ) ;
+N3 = ( Highest( High, N ) - Lowest( Low, N ) ) / N ;
+HH = High ;
+LL = Low ;
+HalfN = 0.5 * N ;
+for Count = 0 to HalfN - 1
+ begin
+ if High[Count] > HH
+  then HH = High[Count] ;
+ if Low[Count] < LL then
+  LL = Low[Count] ;
+ end ;
+N1 = ( HH - LL ) / HalfN ;
+HH = High[HalfN] ;
+LL = Low[HalfN] ;
+for Count = HalfN to N - 1
+ begin
+ if High[Count] > HH then
+  HH = High[Count] ;
+ if Low[Count] < LL then
+  LL = Low[Count] ;
+ end ;
+N2 = ( HH - LL ) / HalfN ;
+if N1 > 0 and N2 > 0 and N3 > 0 then
+ Dimen = ( Log( N1 + N2 ) - Log( N3 ) ) / Log( 2 ) ;
+Alpha = ExpValue( -4.6 * ( Dimen - 1 ) ) ;
+if Alpha < 0.01 then
+ Alpha = 0.01
+else if Alpha > 1 then
+ Alpha = 1 ;
+Filt = Alpha * Price + ( 1 - Alpha ) * Filt[1] ;
+if CurrentBar < N + 1 then
+ Filt = Price ;
+AdaptMovAvg_Fractal = Filt ;

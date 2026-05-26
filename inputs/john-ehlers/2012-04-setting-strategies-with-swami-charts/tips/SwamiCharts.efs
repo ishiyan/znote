@@ -1,0 +1,828 @@
+Corona_Chart_Swing_Position.efs
+
+/*********************************
+Provided By:  
+    eSignal (Copyright c eSignal), a division of Interactive Data 
+    Corporation. 2012. All rights reserved. This sample eSignal 
+    Formula Script (EFS) is for educational purposes only and may be 
+    modified and saved under a new file name.  eSignal is not responsible
+    for the functionality once modified.  eSignal reserves the right 
+    to modify and overwrite this EFS file with each new release.
+   
+
+Description:        
+    Setting Strategies With SwamiCharts
+
+Version:            1.00  13/02/2012
+
+Notes:
+    The swing position indicator shows the phasing of
+    the data within the dominant cycle. A value of -5 means the
+    cycle is at its valley. A value of +5 means the cycle is at its
+    peak. In a pure cycle the Swing Position will trace out the
+    shape of a sine wave.
+    The related article is copyrighted material. If you are not
+    a subscriber of Stocks & Commodities, please visit www.traders.com.
+
+Formula Parameters:                     Default:
+    View Line                           True
+**********************************/
+
+var fpArray = new Array();
+var bInit = false;
+var bVersion = null;
+
+function preMain() {
+
+    setPriceStudy(false);
+    setShowCursorLabel(false);
+    setShowTitleParameters( false );
+    setStudyTitle("Corona Chart Swing Position");
+    setDefaultBarThickness(3, 50);
+
+    var x=0;
+
+    fpArray[x] = new FunctionParameter("ViewLine", FunctionParameter.BOOLEAN);
+    with(fpArray[x++]){
+        setName("View Line");
+        setDefault(true);
+    }    
+
+}
+
+var	nLineR = 180;
+var	nLineG = 255;
+var	nLineB = 210;
+var	nFuzzR = 0;
+var	nFuzzG = 172;
+var	nFuzzB = 64;
+var xPrice = null;
+
+var nRef_Global = 0;
+var	ndelta = 0.1;
+var	ngamma = 0;
+var	nalpha = 0;
+var	nbeta = 0;
+var	nN = 0;
+var	nPeriod = 0;
+var	nMaxAmpl = 0;
+var	nNum = 0;
+var	nDenom = 0;
+var	nDC = 0;
+var	nDomCyc = 0;
+var	nColor1 = 0;
+var	nColor2 = 0;
+var	nColor3 = 0;
+var	nalpha1 = 0;
+var	xHP = null;
+var	nSmoothHP = 0;
+var	nSmoothHP1 = 0;
+var ngamma2 = 0;
+var	nalpha2 = 0;
+var	nbeta2 = 0;
+var	ndelta2 = 0.1;
+var	nBP2 = 0;
+var	nBP2_1 = 0;
+var	nBP2_2 = 0;
+var	nQ2 = 0;
+var	nHL = 0;
+var	nLL = 0;
+var	ncount = 0;
+var	nWidth = 0;
+var nCalc_HP_Ref = 0;
+
+
+var xResultArray = new Array(51);
+
+var	aI = new Array(61);
+var	aOldI = new Array(61);
+var	aOlderI = new Array(61);
+var	aQ = new Array(61);
+var	aOldQ = new Array(61);
+var	aOlderQ = new Array(61);
+var	aReal = new Array(61);
+var	aOldReal = new Array(61);
+var	aOlderReal = new Array(61);
+var	aImag = new Array(61);
+var	aOldImag = new Array(61);
+var	aOlderImag = new Array(61);
+var	aAmpl = new Array(61);
+var	aOldAmpl = new Array(61);
+var	aDB = new Array(61);
+var	aOldDB = new Array(61);
+var aDC = new Array(61);
+var	aPsn = new Array(61);
+
+var	aRaster = new Array(51);
+var	aOldRaster = new Array(51);
+var	aLead60 = new Array(51);
+
+
+
+function main(ViewLine) {
+    var nResCounter = 0;
+    var nState = getBarState();
+    var pi = 3.1415926;
+    var nCounter = 0;
+
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;   
+
+
+    if (nState == BARSTATE_ALLBARS) {
+        resetVars();
+    }
+    
+	nalpha1 = (1 - (Math.sin(pi * (360 / 30) / 180)) / (Math.cos(pi * (360 / 30) / 180)));
+
+     
+    if ( bInit == false ) {
+        bShowDC  = ViewLine;
+        xPrice = hl2();
+        xHP = efsInternal("Calc_HP", xPrice, nalpha1);
+        bInit = true; 
+        drawTextPixel( 10, 10,"J Corona Chart Swing Position", Color.black,  null, Text.RELATIVETOLEFT | Text.RELATIVETOTOP, "Name" ,10, -10 );             
+    } 
+    
+    if (getCurrentBarCount() < 5) return;
+
+
+
+    if (nState == BARSTATE_NEWBAR) {
+        nSmoothHP1 = nSmoothHP;
+        
+        aDC.pop();
+        aDC.unshift(nDC);
+
+        aLead60.pop();
+        aLead60.unshift(0.5 * nBP2 + 0.866 * nQ2);
+
+        aPsn.pop();
+        aPsn.unshift((aLead60[0] - nLL) / (nHL - nLL));
+
+        nBP2_2 = nBP2_1;
+        nBP2_1 = nBP2;
+        
+        for (nN = 12; nN <= 60; nN++) {
+            aOlderI[nN] = aOldI[nN];
+            aOldI[nN] = aI[nN];
+            aOlderQ[nN] = aOldQ[nN];
+            aOldQ[nN] = aQ[nN];
+            aOlderReal[nN] = aOldReal[nN];
+            aOldReal[nN] = aReal[nN];
+            aOlderImag[nN] = aOldImag[nN];
+            aOldImag[nN] = aImag[nN];
+            aOldAmpl[nN] = aAmpl[nN];
+            aOldDB[nN] = aDB[nN];
+        }
+    }    
+
+   	nSmoothHP = 0 
+    if (xPrice.getValue(-1) != null) nSmoothHP = xPrice.getValue(0) - xPrice.getValue(-1);
+    
+    if (xHP.getValue(-5) != null) {
+        nSmoothHP = (xHP.getValue(0) + 2 * xHP.getValue(-1) + 3 * xHP.getValue(-2) + 3 * xHP.getValue(-3) + 2 * xHP.getValue(-4) + xHP.getValue(-5)) / 12;
+    }
+
+
+	ndelta = (-0.015) * getCurrentBarCount() + 0.5;
+	if (ndelta < 0.1) ndelta = 0.1;
+
+
+	if (getCurrentBarCount() > 12) {
+		for (nN = 12; nN <= 60; nN++) {
+			nbeta = Math.cos(pi * (720 / nN) / 180);
+			ngamma = 1 / Math.cos(pi * (1440 * ndelta / nN) / 180);
+			nalpha = ngamma -  Math.sqrt(ngamma * ngamma - 1);
+			aQ[nN] = (0.5 * nN / 6.28318) * (nSmoothHP - nSmoothHP1);
+			aI[nN] = nSmoothHP;
+			aReal[nN] = 0.5 * (1 - nalpha) * (aI[nN] - aOlderI[nN]) + nbeta * (1 + nalpha) * aOldReal[nN] -	nalpha * aOlderReal[nN];
+			aImag[nN] = 0.5 * (1 - nalpha) * (aQ[nN] - aOlderQ[nN]) + nbeta * (1 + nalpha) * aOldImag[nN] -	nalpha * aOlderImag[nN];
+			aAmpl[nN] = (aReal[nN] * aReal[nN] + aImag[nN] * aImag[nN]);
+		}
+	}
+
+
+	nMaxAmpl = aAmpl[12];
+	for (nN = 12; nN <= 60; nN++) {
+        if (aAmpl[nN] > nMaxAmpl) nMaxAmpl = aAmpl[nN];
+	}
+
+     
+	for (nN = 12; nN <= 60; nN++) {
+		if (nMaxAmpl != 0 && (aAmpl[nN] / nMaxAmpl) > 0) 
+		    aDB[nN] = (-10) * Math.log(0.01 / (1 - 0.99 * aAmpl[nN] / nMaxAmpl)) / Math.log(10);
+		aDB[nN] = 0.33 * aDB[nN] + 0.67 * aOldDB[nN];
+		if (aDB[nN] > 20) aDB[nN] = 20;
+	}
+
+	nNum = 0;
+	nDenom = 0;
+	for (nN = 12; nN <= 60; nN++) {
+		if (aDB[nN] <= 6) {
+			nNum = nNum + nN * (20 - aDB[nN]);
+			nDenom = nDenom + (20 - aDB[nN]);
+		}
+		if (nDenom != 0) {
+            nDC = 0.5 * nNum / nDenom;
+            aDC[0] = nDC;
+        }
+	}
+
+
+	nDomCyc = Median(aDC, 5);
+	if (nDomCyc < 6) nDomCyc = 6;
+
+
+	nbeta2 = Math.cos(pi * (360 / nDomCyc) / 180);
+	ngamma2 = 1 / Math.cos(pi * (720 * ndelta2 / nDomCyc) / 180);
+	nalpha2 = ngamma2 - Math.sqrt(ngamma2 * ngamma2 - 1);
+
+	nBP2 = 0.5 * (1 - nalpha2) * (xPrice.getValue(0) - xPrice.getValue(-1)) + nbeta2 * (1 + nalpha2) * nBP2_1 - nalpha2 * nBP2_2;
+
+    nQ2 = (nDomCyc / 6.28318)*(nBP2 - nBP2_1);
+
+    aLead60[0] = 0.5 * nBP2 + 0.866 * nQ2;
+	nHL = aLead60[0];
+	nLL = aLead60[0];
+
+	
+    for (ncount = 0; ncount < 51; ncount++) {
+		if (aLead60[ncount] > nHL) nHL =aLead60[ncount];
+		if (aLead60[ncount] < nLL) nLL = aLead60[ncount];
+	}
+
+
+    aPsn[0] = (aLead60[0] - nLL) / (nHL - nLL);
+	nHL = aPsn[0];
+	nLL = aPsn[0];
+    
+
+	for (ncount = 0; ncount < 21; ncount++) {
+		if (aPsn[ncount] > nHL)  nHL = aPsn[ncount];
+		if (aPsn[ncount] < nLL)  nLL = aPsn[ncount];
+	}
+
+
+	
+	if (nHL - nLL > 0.85) { nWidth = 0.01 } else  { nWidth = 0.15 * (nHL - nLL);}
+
+
+	for (nN = 1; nN < 51; nN++) {
+		aRaster[nN] = 20;
+		if (nN < Math.round(50 * aPsn[0]))  aRaster[nN] = 0.5 * (Math.pow(((20 * aPsn[0] - 0.4 * nN) / nWidth), 0.95) + 0.5 * aOldRaster[nN]);
+		if (nN > Math.round(50 * aPsn[0]))  aRaster[nN] = 0.5 * (Math.pow((((-20) * aPsn[0] + 0.4 * nN) / nWidth), 0.95) + 0.5 * aOldRaster[nN]);
+		if (nN == Math.round(50 * aPsn[0]))  aRaster[nN] = 0.5 * aOldRaster[nN];
+		if (aRaster[nN] < 0)  aRaster[nN] = 0;
+		if (aRaster[nN] > 20) aRaster[nN] = 20;
+		if (nHL - nLL > 0.8) aRaster[nN] = 20;
+		aOldRaster[nN] = aRaster[nN];
+	}
+
+
+	for (nN = 1; nN < 51; nN++) {
+		if (aRaster[nN] <= 10) {
+			nColor1 = Math.round(nLineR + aRaster[nN] * (nFuzzR - nLineR) / 10);
+			nColor2 = Math.round(nLineG + aRaster[nN] * (nFuzzG - nLineG) / 10);
+			nColor3 = Math.round(nLineB + aRaster[nN] * (nFuzzB - nLineB) / 10);
+		}
+		
+        if (aRaster[nN] > 10) {
+			nColor1 = Math.round(nFuzzR * (2 - aRaster[nN] / 10));
+			nColor2 = Math.round(nFuzzG * (2 - aRaster[nN] / 10));
+			nColor3 = Math.round(nFuzzB * (2 - aRaster[nN] / 10));
+		}
+
+        xResultArray[nResCounter++] = 0.2 * nN - 5;
+        setBarFgColor(Color.RGB(nColor1, nColor2, nColor3), nResCounter-1);
+        setPlotType(PLOTTYPE_LINE, nResCounter-1); 
+        setBarThickness(5, nResCounter-1);        
+	}
+
+
+    if (bShowDC == true) {
+        xResultArray[nResCounter++] = (10 * aPsn[0] - 5);
+        setBarFgColor(Color.RGB(nLineR, nLineG, nLineB), nResCounter-1);
+    }    
+
+
+    return xResultArray; 
+}
+
+function resetVars() {
+    nRef_Global = 0;
+    ndelta = 0.1;
+    ngamma = 0;
+    nalpha = 0;
+    nbeta = 0;
+    nN = 0;
+    nPeriod = 0;
+    nMaxAmpl = 0;
+    nNum = 0;
+    nDenom = 0;
+    nDC = 0;
+    nDomCyc = 0;
+    nColor1 = 0;
+    nColor2 = 0;
+    nColor3 = 0;
+    nalpha1 = 0;
+    
+    nSmoothHP = 0;
+    nSmoothHP1 = 0;
+    ngamma2 = 0;
+    nalpha2 = 0;
+    nbeta2 = 0;
+    ndelta2 = 0.1;
+    nBP2 = 0;
+    nBP2_1 = 0;
+    nBP2_2 = 0;
+    nQ2 = 0;
+    nHL = 0;
+    nLL = 0;
+    ncount = 0;
+    nWidth = 0;
+    nCalc_HP_Ref = 0;
+
+
+    for (var i = 0; i < 61; i++) {
+        if (i < 51) xResultArray[i] = null;
+        aI[i] = 0;
+        aOldI[i] = 0;
+        aOlderI[i] = 0;
+        aQ[i] = 0;
+        aOldQ[i] = 0;
+        aOlderQ[i] = 0;
+        aReal[i] = 0;
+        aOldReal[i] = 0;
+        aOlderReal[i] = 0;
+        aImag[i] = 0;
+        aOldImag[i] = 0;
+        aOlderImag[i] = 0;
+        aAmpl[i] = 0;
+        aOldAmpl[i] = 0;
+        aDB[i] = 0;
+        aOldDB[i] = 0;
+        aDC[i] = 0;
+        aPsn[i] = 0;
+    }
+    
+    for (var i = 0; i < 51; i++) {
+        aRaster[i] = 0;
+        aOldRaster[i] = 0;
+        aLead60[i] = 0;
+    }	
+
+    return;
+}
+
+
+// calcHP globals
+var nPrevHP = null;
+var nCurrHP = null;
+
+function Calc_HP(x, nAlpha1) {
+    var nHP = null;
+    
+    if (getCurrentBarCount() <= 5 ) {
+        nCurrHP = x.getValue(0);
+        return nCurrHP;
+    } else {
+        if (x.getValue(-1) == null) return null;
+        if (getBarState() == BARSTATE_NEWBAR) nPrevHP = nCurrHP;
+        nCurrHP = ( 0.5*(1 + nAlpha1)*(x.getValue(0) - x.getValue(-1)) + nAlpha1*nPrevHP );
+        return nCurrHP;
+    }
+
+}
+
+
+function Median(myArray, Length) {
+    var aArray = new Array(Length);
+    var nMedian = null;
+
+    for (var i = 0; i < Length; i++) {
+        aArray[i] = myArray[i];
+    }
+
+    aArray = aArray.sort(compareNumbers);
+    nMedian = aArray[Math.round((Length-1)/2)];
+    return nMedian;
+}
+
+function compareNumbers(a, b) {
+   return a - b
+}
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}
+
+Market_Mode_Indicator.efs
+/*********************************
+Provided By:  
+    eSignal (Copyright c eSignal), a division of Interactive Data 
+    Corporation. 2012. All rights reserved. This sample eSignal 
+    Formula Script (EFS) is for educational purposes only and may be 
+    modified and saved under a new file name.  eSignal is not responsible
+    for the functionality once modified.  eSignal reserves the right 
+    to modify and overwrite this EFS file with each new release.
+
+Description:        
+    Setting Strategies With SwamiCharts
+    
+Version:            1.00  13/02/2012
+
+Formula Parameters:                     Default:
+    Length                              20
+    Delta                               0.5
+    Fraction                            0.1
+    Price                               hl2
+    
+Notes:
+    The related article is copyrighted material. If you are not a subscriber
+    of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+var bVersion = null;
+
+function preMain() {
+    setPriceStudy(false);
+    setShowCursorLabel(true);
+    setShowTitleParameters(false);
+    setStudyTitle("Market Mode Indicator");
+    setCursorLabelName("Mean", 0);
+    setDefaultBarFgColor(Color.red, 0);
+    setPlotType(PLOTTYPE_LINE, 0);
+    setDefaultBarThickness(2, 0);
+    setCursorLabelName("Peak", 1);
+    setDefaultBarFgColor(Color.blue, 1);
+    setPlotType(PLOTTYPE_LINE, 1);
+    setDefaultBarThickness(2, 1);
+    setCursorLabelName("Valley", 2);
+    setDefaultBarFgColor(Color.blue, 2);
+    setPlotType(PLOTTYPE_LINE, 2);
+    setDefaultBarThickness(2, 2);
+    var x=0;
+    fpArray[x] = new FunctionParameter("Length", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Length");
+        setLowerLimit(1);		
+        setDefault(20);
+    }    
+    fpArray[x] = new FunctionParameter("Delta", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Delta");
+        setLowerLimit(0.00001);		
+        setDefault(0.5);
+    }        
+    fpArray[x] = new FunctionParameter("Fraction", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Fraction");
+        setLowerLimit(0.00001);		
+        setDefault(0.1);
+    }        
+	fpArray[x] = new FunctionParameter("Price", FunctionParameter.STRING);
+	with(fpArray[x++]){
+        setName("Price Source");
+        addOption("open"); 
+        addOption("high");
+        addOption("low");
+        addOption("close");
+        addOption("hl2");
+        addOption("hlc3");
+        addOption("ohlc4"); 
+        setDefault("hl2"); 
+    }    
+}
+
+var xEmpiricalModeDecomposition_Mean = null;
+var xEmpiricalModeDecomposition_Peak = null;
+var xEmpiricalModeDecomposition_Valley = null;
+
+function main(Length, Delta, Fraction, Price) {
+var nBarState = getBarState();
+var nEmpiricalModeDecomposition_Mean = 0;
+var nEmpiricalModeDecomposition_Peak = 0;
+var nEmpiricalModeDecomposition_Valley = 0;
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;   
+    if (nBarState == BARSTATE_ALLBARS) {
+        if (Length == null) Length = 20;
+        if (Delta == null) Delta = 0.5;
+        if (Fraction == null) Fraction = 0.1;        
+        if (Price == null) Price = "hl2";        
+    }    
+    if (bInit == false) { 
+        xEmpiricalModeDecomposition_Mean = efsInternal("Calc_EmpiricalModeDecomposition", Length, Delta, Fraction, Price);
+        xEmpiricalModeDecomposition_Peak = getSeries(xEmpiricalModeDecomposition_Mean, 1);
+        xEmpiricalModeDecomposition_Valley = getSeries(xEmpiricalModeDecomposition_Mean, 2);
+        bInit = true; 
+    }
+    nEmpiricalModeDecomposition_Mean = xEmpiricalModeDecomposition_Mean.getValue(0);
+    nEmpiricalModeDecomposition_Peak = xEmpiricalModeDecomposition_Peak.getValue(0);
+    nEmpiricalModeDecomposition_Valley = xEmpiricalModeDecomposition_Valley.getValue(0);
+    if (nEmpiricalModeDecomposition_Mean == null ||
+        nEmpiricalModeDecomposition_Peak == null ||
+        nEmpiricalModeDecomposition_Valley == null) return;
+    return new Array(nEmpiricalModeDecomposition_Mean, nEmpiricalModeDecomposition_Peak, nEmpiricalModeDecomposition_Valley);
+}
+
+var bSecondInit = false;
+var xMean = null;
+var xAvrPeak = null;
+var xAvrValley = null;
+
+function Calc_EmpiricalModeDecomposition(Length, Delta, Fraction, Price) {
+var nMean = 0;
+var nAvrPeak = 0;
+var nAvrValley = 0;
+    if (bSecondInit == false) { 
+        xMean = efsInternal("Calc_Mean_Peak_Valley", Length, Delta, Price);
+        xAvrPeak = sma(50, getSeries(xMean, 1));
+        xAvrValley = sma(50, getSeries(xMean, 2));
+        bSecondInit = true; 
+    }
+    nMean = xMean.getValue(0);
+    nAvrPeak = xAvrPeak.getValue(0);
+    nAvrValley = xAvrValley.getValue(0);
+    if (nMean == null || nAvrPeak == null || nAvrValley == null) return;
+    nAvrPeak = Fraction * nAvrPeak;
+    nAvrValley = Fraction * nAvrValley;
+    return new Array(nMean, nAvrPeak, nAvrValley);
+}
+
+var bMPVInit = false;
+var nPeak = 0;
+var nValley = 0;
+
+function Calc_Mean_Peak_Valley(Length, Delta, Price) {
+var nMean = 0;
+var BP = 0;
+var BP1 = 0;
+var BP2 = 0;
+    if (bMPVInit == false) { 
+        xBandpassFilter = efsInternal("Calc_BandpassFilter", Length, Delta, Price);
+        xMean = sma(2 * Length, xBandpassFilter);
+        bMPVInit = true; 
+    }
+    nMean = xMean.getValue(0);
+    BP = xBandpassFilter.getValue(0);
+    BP1 = xBandpassFilter.getValue(-1);
+    BP2 = xBandpassFilter.getValue(-2);
+    if (BP1 > BP && BP1 > BP2) {
+        nPeak = BP1;
+    }    
+    if (BP1 < BP && BP1 < BP2) {
+        nValley = BP1;    
+    }    
+    return new Array(nMean, nPeak, nValley);
+}
+
+var bThirdInit = false;
+var xPrice = null;
+
+function Calc_BandpassFilter(Length, Delta, Price) {
+var gamma = 0;
+var alpha = 0;
+var beta = 0;
+var BP = 0;
+var BP1 = ref(-1);
+var BP2 = ref(-2);
+    if (bThirdInit == false) {
+        xPrice = eval(Price)();
+        bThirdInit = true;
+    }
+    if (xPrice.getValue(-2) == null) return;
+    beta = Math.cos(Math.PI * (360 / Length) / 180);
+    gamma = 1 / Math.cos(Math.PI * (720 * Delta / Length) / 180);
+    alpha = gamma - Math.sqrt(gamma * gamma - 1);
+    BP = 0.5 * (1 - alpha) * (xPrice.getValue(0) - xPrice.getValue(-2)) + beta * (1 + alpha) * BP1 - alpha * BP2;
+    return BP;
+}
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}
+
+SwamiCharts_Market_Mode.efs
+/*********************************
+Provided By:  
+    eSignal (Copyright � eSignal), a division of Interactive Data 
+    Corporation. 2012. All rights reserved. This sample eSignal 
+    Formula Script (EFS) is for educational purposes only and may be 
+    modified and saved under a new file name.  eSignal is not responsible
+    for the functionality once modified.  eSignal reserves the right 
+    to modify and overwrite this EFS file with each new release.
+
+Description:        
+    Setting Strategies With SwamiCharts
+
+Version:            1.00  13/02/2012
+
+Formula Parameters:                     Default:
+    Fastest Period                      12
+    Lowest Period                       48
+    Delta                               0.5
+    Fraction                            0.1
+    Price                               hl2
+    Line Thickness                      5
+
+Notes:
+    The related article is copyrighted material. If you are not a subscriber
+    of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+
+var bInit = false;
+var bVersion = null;
+
+function preMain() 
+{
+    setStudyTitle("Swami Market Mode");
+
+    setShowCursorLabel(false);    
+    setPriceStudy(false);
+    setShowTitleParameters(false);
+    
+    setComputeOnClose(true);
+
+    var x=0;
+    fpArray[x] = new FunctionParameter("gFastPeriod", FunctionParameter.NUMBER);
+    with(fpArray[x++])
+    {
+        setName("Fastest Period");
+        setLowerLimit(1);
+        setUpperLimit(20);
+        setDefault(12);
+    }   
+    fpArray[x] = new FunctionParameter("gSlowPeriod", FunctionParameter.NUMBER);
+    with(fpArray[x++])
+    {
+        setName("Lowest Period");
+        setLowerLimit(40);
+        setUpperLimit(100);
+        setDefault(48);
+    }    
+    fpArray[x] = new FunctionParameter("gDelta", FunctionParameter.NUMBER);
+    with(fpArray[x++]){
+        setName("Delta");
+        setLowerLimit(0.00001);		
+        setDefault(0.5);
+    }        
+    fpArray[x] = new FunctionParameter("gFraction", FunctionParameter.NUMBER);
+    with(fpArray[x++]){
+        setName("Fraction");
+        setLowerLimit(0.00001);		
+        setDefault(0.1);
+    }      
+    fpArray[x] = new FunctionParameter("gPrice", FunctionParameter.STRING);
+    with(fpArray[x++]){
+        setName("Price Source");
+        addOption("open"); 
+        addOption("high");
+        addOption("low");
+        addOption("close");
+        addOption("hl2");
+        addOption("hlc3");
+        addOption("ohlc4"); 
+        setDefault("hl2"); 
+    }
+    fpArray[x] = new FunctionParameter("gLineThickness", FunctionParameter.NUMBER);
+    with(fpArray[x++])
+    {
+        setName("Line Thickness");
+        setLowerLimit(1);
+        setUpperLimit(20);
+        setDefault(5);
+    }      
+}
+
+var resArray = null;
+var xMeanArray = null;
+
+function main(gFastPeriod, gSlowPeriod, gDelta, gFraction, gPrice, gLineThickness) {
+
+    var nBarState = getBarState();
+
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;  
+
+    if (!bInit) 
+    { 
+        resArray = new Array();
+        xMeanArray = new Array();
+
+        for (var i = gFastPeriod; i <= gSlowPeriod; i++) 
+        {
+            resArray.push(i);
+
+            var xBandpassFilter = efsInternal("Calc_BandpassFilter", i, gDelta, gPrice);
+            var xMean = sma(2 * i, xBandpassFilter); 
+           
+            xMeanArray.push(xMean);
+
+            setDefaultBarThickness(gLineThickness, i - gFastPeriod);
+        }
+
+        bInit = true; 
+    }
+
+    for (var i = 0; i <= gSlowPeriod - gFastPeriod; i++) 
+    {
+        var nMean = xMeanArray[i].getValue(0);
+
+        if (nMean == null)
+            return;
+
+        var colorR = 255;
+        var colorG = 255;
+        var colorB = 0;
+
+        if (nMean > 0)
+        {
+            if (nMean <= 1)
+                colorR = -255 * nMean + 255;
+            else
+                colorR = 0;
+        }
+        else 
+        {
+            if (nMean >= -1)
+                colorG = 255 * nMean + 255;
+            else
+                colorG = 0;
+        }
+        
+        setBarFgColor(Color.RGB(colorR, colorG, colorB), i);
+    }
+
+    return resArray;
+}
+
+var bSecondInit = false;
+var xPrice = null;
+
+function Calc_BandpassFilter(Length, gDelta, gPrice) {
+    var gamma = 0;
+    var alpha = 0;
+    var beta = 0;
+    var BP = 0;
+    var BP1 = ref(-1);
+    var BP2 = ref(-2);
+
+    if (!bSecondInit) 
+    {
+        xPrice = eval(gPrice)();
+        bSecondInit = true;
+    }
+    
+    if (xPrice.getValue(-2) == null) return;
+    beta = Math.cos(Math.PI * (360 / Length) / 180);
+    gamma = 1 / Math.cos(Math.PI * (720 * gDelta / Length) / 180);
+    alpha = gamma - Math.sqrt(gamma * gamma - 1);
+    BP = 0.5 * (1 - alpha) * (xPrice.getValue(0) - xPrice.getValue(-2)) + beta * (1 + alpha) * BP1 - alpha * BP2;
+    return BP;
+}
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+        Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+        null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+        Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+        null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}

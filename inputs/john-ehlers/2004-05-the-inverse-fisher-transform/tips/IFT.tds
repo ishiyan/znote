@@ -1,0 +1,42 @@
+Name: Inverse Fisher Transform of RSI
+Short Name: IFish
+Inputs: Close
+Formula:
+Div (Sub (Exp (Mult (2,WMA (Mult (0.1,Sub (RSI (Close,5),50)),9))),1),Add (Exp (Mult
+ (2,WMA (Mult (0.1,Sub (RSI (Close,5),50)),9))),1))
+
+Name: Inverse Fisher Transform of RSI System
+Inputs: Close
+Enter Long when any of these rules are true:
+CrossAbove (IFish (Close, -0.5)
+CrossAbove (IFish (Close, 0.5)
+Enter Short when any of these rules are true:
+CrossBelow (IFish (Close, 0.5)
+CrossBelow (IFish (Close, -0.5)
+
+Name: Cyber Cycle Smoothed Price
+Short Name: ICycleSmooth
+Inputs: Price
+Formula:
+Div (Add (Price, Add (Mult (2, Lag (Price,1)), Add (Mult (2, Lag (Price,2)), Lag (Price,3)))),6)
+
+Name: Cyber Cycle Internal Cycle
+Short Name: ICycleCycle
+Inputs: Price, Alpha
+Formula:
+If (LT (Bar# (),7), Div (Add3 (Price, Mult (-2, Lag (Price,1)), Lag (Price,2)),4),Sub (Add (Mult3
+ (Sub (1, Mult (0.5,Alpha)), Sub (1,Mult (0.5,Alpha)), Add3 (ICycleSmooth (Price), Mult (-2, Lag
+ (ICycleSmooth (Price),1)), Lag (ICycleSmooth (Price),2))), Mult3 (2, Sub (1,Alpha),Prev (1))),
+ Mult3 (Sub (1,Alpha), Sub (1,Alpha), Prev (2))))
+
+Name: Cyber Cycle with Inverse Fisher Transform (General)
+Short Name: ICycleGeneral
+Inputs: Price, Alpha
+Formula:
+Div (Sub (Exp (Mult (2,ICycleCycle (Price,Alpha))),1), Add (Exp (Mult (2,ICycleCycle (Price,Alpha))),1))
+
+Name: Cyber Cycle with Inverse Fisher Transform
+Short Name: ICycle
+Inputs: High, Low, Alpha
+Formula:
+ICycleGeneral (Div (Add (High,Low),2),Alpha)

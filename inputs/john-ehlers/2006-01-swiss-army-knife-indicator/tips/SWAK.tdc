@@ -1,0 +1,24 @@
+{Provided by: Alyuda Research, Inc � 2005,
+Version: Tradecision 2.0
+Description: SWISS ARMY KNIFE INDICATOR by John F. Ehlers,
+"Swiss Army Knife Indicator," January 2006 issue of
+ Technical Analysis of STOCKS & COMMODITIES magazine}
+Input
+     Price: "Price", (High+Low)/2;
+     Type: "Type", "EMA";
+     N: "SMA Period", 0, 0;
+     Period: "Period", 20, 0;
+     delta1: "Delta", 0;
+end_input
+var
+   c0 := 1;
+   c1 := 0;
+   b0 := 1;
+   b1 := 0;
+   b2 := 0;
+   a1 := 0;
+   a2 := 0;
+   alpha := 0;
+   beta1 := 0;
+   gamma1 := 0;
+end_var

@@ -1,0 +1,102 @@
+ZERO_LAG indicator
+ins
+Length : "Enter Period",20;
+GainLimit:"Enter Gain Limit",50;
+end_ins
+var
+alpha:=0;
+Gain:=0;
+BestGain:=0;
+EC:=0;
+Error:=0;
+LeastError:=0;
+EMA:=0;
+Value1:=0;
+end_var
+
+if HistorySize < 1 then return c;
+alpha:=2 / (Length + 1);
+EMA:=alpha * Close + (1 - alpha) * EMA\1\;
+LeastError:=1000000;
+for Value1:= -GainLimit to GainLimit do begin
+	Gain:=Value1 / 10;
+	EC:=alpha * (EMA + Gain * (Close - EC\1\)) + (1 - alpha) * EC\1\;
+	Error:=Close - EC;
+	if Abs(Error) < LeastError then
+		begin
+			LeastError:=Abs(Error);
+			BestGain:=Gain;
+		end;
+end;
+EC:=alpha * (EMA + BestGain * (Close - EC\1\)) + (1 - alpha) * EC\1\;
+
+return EC;
+
+
+ZERO_LAG strategy
+Long Rule:
+var
+Length := 20;
+GainLimit:=50;
+alpha:=0;
+Gain:=0;
+BestGain:=0;
+EC:=0;
+Error:=0;
+LeastError:=0;
+EMA:=0;
+Value1:=0;
+Thresh:=1;
+end_var
+
+if HistorySize < 1 then return false;
+alpha:=2 / (Length + 1);
+EMA:=alpha * Close + (1 - alpha) * EMA\1\;
+LeastError:=1000000;
+for Value1:= -GainLimit to GainLimit do begin
+	Gain:=Value1 / 10;
+	EC:=alpha * (EMA + Gain * (Close - EC\1\)) + (1 - alpha) * EC\1\;
+	Error:=Close - EC;
+	if Abs(Error) < LeastError then
+		begin
+			LeastError:=Abs(Error);
+			BestGain:=Gain;
+		end;
+end;
+EC:=alpha * (EMA + BestGain * (Close - EC\1\)) + (1 - alpha) * EC\1\;
+
+return CrossAbove(EC,EMA) and 100*LeastError / Close > Thresh;
+
+Short Rule:
+var
+Length := 20;
+GainLimit:=50;
+alpha:=0;
+Gain:=0;
+BestGain:=0;
+EC:=0;
+Error:=0;
+LeastError:=0;
+EMA:=0;
+Value1:=0;
+Thresh:=1;
+end_var
+
+if HistorySize < 1 then return false;
+alpha:=2 / (Length + 1);
+EMA:=alpha * Close + (1 - alpha) * EMA\1\;
+LeastError:=1000000;
+for Value1:= -GainLimit to GainLimit do begin
+	Gain:=Value1 / 10;
+	EC:=alpha * (EMA + Gain * (Close - EC\1\)) + (1 - alpha) * EC\1\;
+	Error:=Close - EC;
+	if Abs(Error) < LeastError then
+		begin
+			LeastError:=Abs(Error);
+			BestGain:=Gain;
+		end;
+end;
+EC:=alpha * (EMA + BestGain * (Close - EC\1\)) + (1 - alpha) * EC\1\;
+
+return CrossBelow(EC,EMA) and 100*LeastError / Close > Thresh;
+

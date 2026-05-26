@@ -1,0 +1,184 @@
+/*********************************
+Provided By:  
+    Interactive Data Corporation (Copyright � 2014) 
+    All rights reserved. This sample eSignal Formula Script (EFS)
+    is for educational purposes only. Interactive Data Corporation
+    reserves the right to modify and overwrite this EFS file with 
+    each new release. 
+
+Description:        
+    Universal Oscillator by John Ehlers
+
+    
+
+Formula Parameters:                     Default:
+    BandEdge                            20
+    
+Version:            1.00  11/11/2014
+
+Notes:
+    The related article is copyrighted material. If you are not a subscriber
+    of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+
+
+var fpArray = new Array();
+
+
+
+function preMain(){
+
+    
+    setStudyTitle("Universal Oscillator");
+    setPriceStudy(false);
+
+    
+
+    setCursorLabelName("UniOsc", 0);   
+
+   
+
+    addBand(0,PS_SOLID,1,Color.grey);
+
+    var x = 0;
+
+    fpArray[x] = new FunctionParameter("BandEdge", FunctionParameter.NUMBER);
+    with(fpArray[x++]){
+        setName("BandEdge");
+        setLowerLimit(1);
+        setDefault(20);
+    }    
+}
+
+
+var bVersion = null;
+
+var WhiteNoise = 0;
+
+var WhiteNoise_1 = 0;
+
+var Filt = 0;
+
+var Filt_1 = 0;
+
+var Filt_2 = 0;
+
+var Peak = 0;
+
+var Peak_1 = 0;
+
+
+
+function main(BandEdge){
+
+    
+
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+
+    
+
+    if(BandEdge==null) BandEdge = 20;
+
+    
+
+    var a1 = 0;
+
+    var b1 = 0;
+
+    var c1 = 0; 
+
+    var c2 = 0;
+
+    var c3 = 0;
+
+    var Universal = 0;
+
+    
+
+    if(getBarState()==BARSTATE_ALLBARS){
+
+        xClose = close();
+
+    }
+
+
+
+    if(getBarState()==BARSTATE_NEWBAR){
+
+        WhiteNoise_1 = WhiteNoise;
+
+        Filt_2 = Filt_1;
+
+        Filt_1 = Filt;
+
+        Peak_1 = Peak;
+
+    }
+
+
+
+    WhiteNoise = (xClose.getValue(0)-xClose.getValue(-1))/2;
+
+    a1 = Math.exp(-1.414*3.14159/BandEdge);
+
+    b1 = 2*a1*Math.cos(1.414*180/BandEdge);
+
+    c2 = b1;
+
+    c3 = -a1*a1;
+
+    c1 = 1-c2-c3;
+
+    Filt = c1*(WhiteNoise+WhiteNoise_1)/2+c2*Filt_1+c3*Filt_2;
+
+
+
+    if(getCurrentBarCount()==1) Filt = 0
+
+    if(getCurrentBarCount()==2) Filt = c1*0*(xClose.getValue(0)+xClose.getValue(-1))/2+c2*Filt_1;
+
+    if(getCurrentBarCount()==3) Filt = c1*0*(xClose.getValue(0)+xClose.getValue(-1))/2+c2*Filt_1+c3*Filt_2;
+
+
+
+    Peak = .991*Peak_1;
+
+    if(getCurrentBarCount()==1) Peak = 0.0000001;
+
+    if(Math.abs(Filt)>Peak) Peak = Math.abs(Filt);
+
+    if(Peak!=0) Universal = Filt/Peak;
+
+    
+
+    return Universal;
+
+}
+
+
+
+function verify(){
+
+    
+    var b = false;
+
+    
+    if (getBuildNumber() < 779){
+
+        
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else 
+        b = true;
+    
+    return b;
+}

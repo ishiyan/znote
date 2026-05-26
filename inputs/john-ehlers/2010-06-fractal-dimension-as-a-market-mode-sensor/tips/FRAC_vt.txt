@@ -1,0 +1,67 @@
+Name: TASC - 06/2010 - Fractal Dimension
+Function Name Alias: tasc_FractalDimension
+Label Mask: TASC - 06/2010 - Fractal Dimension (%Price%,%Periods%,%SmPer%,%SmType%) = %Dimen%
+Placement: New Frame
+Data Inspection Alias: Fractal Dimension
+
+[New] button�
+Name: Price
+Display Name: Price
+Type: price
+Default: Median Price
+
+[New] button�
+Name: Periods
+Display Name: Periods (must be even number)
+Type: integer (with bounds)
+Default: 30
+Min Bounds: 2
+Max Bounds: 9998
+
+[New] button�
+Name: SmPer
+Display Name: Smoothing Periods
+Type: integer (with bounds)
+Default: 20
+Min Bounds: 1
+Max Bounds: 9999
+
+[New] button�
+Name: SmType
+Display Name: Smoothing Type
+Type: MA Type
+Default: Simple
+
+[New] button�
+Var Name: Dimen
+Name: (Dimension)
+Line Color: dark blue
+Line Width: slightly thicker
+Line Type: solid
+
+[New] button�
+Value: +1.6000
+Line Color: red
+Line Width: thin
+Line Type: dashed
+
+[New] button�
+Value: +1.4000
+Line Color: red
+Line Width: thin
+Line Type: dashed
+
+{Provided By: Capital Market Services, LLC & Visual Trading Systems, LLC}
+{Copyright: 2010}
+{Description: TASC, June 2010 - �Cycle or Trend? Fractal Dimension As A Market Mode Sensor�
+ by John F. Ehlers and Ric Way}
+{File: tasc_FractalDimension.vtscr - Version 1.0}
+
+N:= Periods;
+HalfN:= Int(Periods/2);
+Smooth:= (Price + 2*ref(Price,-1) + 2*ref(Price,-2) + ref(Price,-3)) / 6;
+N1:= (ref(HHV(H,HalfN),-HalfN) - ref(LLV(L,HalfN),-HalfN)) / HalfN;
+N2:= (HHV(H,HalfN) - LLV(L,HalfN)) / HalfN;
+N3:= (HHV(H,N) - LLV(L,N)) / N;
+Ratio:= 0.5 * ((Log(N1+N2) - Log(N3)) / Log(2)+if(Dimen<>Null,Dimen,C));
+Dimen:= mov(Ratio,SmPer,SmType);

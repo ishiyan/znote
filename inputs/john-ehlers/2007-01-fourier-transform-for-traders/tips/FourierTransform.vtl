@@ -1,0 +1,382 @@
+1. Navigator Window>Tools>Trading Systems Builder>[New] button
+2. In the Indicator Bookmark, type the following text for each field:
+Name: TASC - 08/2006 - "Going Beyond 70 and 30 In Forex"
+Short Name: TASC_082006_RSI_TS_01
+Label Mask: TASC - 08/2006 - "Going Beyond 70 and 30 In Forex" (ATR(%atrperiods%),
+ RSI(%rsipr%,%rsitpr%), %% of ATR Levels: %atrel%, %atrsl%)
+3. In the Input Bookmark, create the following variables:
+[New] button... Name: atrperiods , Display Name: ATR Periods , Type: integer , Default: 21
+[New] button... Name: rsipr , Display Name: RSI Price , Type: price , Default: close
+[New] button... Name: rsitpr , Display Name: RSI Periods , Type: integer , Default: 21
+[New] button... Name: atrel , Display Name: % of ATR for Entry Level , Type: float , Default: 0.1500
+[New] button... Name: atrsl , Display Name: % of ATR for Stoploss Level , Type: float , Default: 0.3000
+4. In the Formula Bookmark, copy and paste the following formula:
+{Provided By: Visual Trading Systems, LLC (c) Copyright 2007}
+{Description: Going Beyond 70 and 30 In Forex - Trading System}
+{Notes: August 2006 Issue ? Going Beyond 70 and 30 In Forex by Jamie Saettele}
+{TASC_082006_RSI_TS_01 Version 1.0}
+{Control Error}
+Barnum:= BarCount();
+{ATR Indicator}
+_ATR:= ATR(atrperiods);
+{Relative Strength Index}
+rsi_r:= (rsipr - ref(rsipr,-1));
+rsi_rs:= Wilders(if(rsi_r>0,rsi_r,0),rsitpr) / Wilders(if(rsi_r<0,Abs(rsi_r),0),rsitpr);
+RSIndex:= 100-(100/(1+rsi_rs));
+RSIML:= 50;
+RSIUp:= 60;
+RSIDown:= 40;
+RSIOS:= 30;
+RSIOB:= 70;
+{1st Set of Entry/Exit Trade Signals}
+PreLongEntryCond1:= Cross(RSIndex,RSIML);
+PreLEC1High:= valuewhen(1,PreLongEntryCond1,H);
+PreLEC1EntryLevel:= PreLEC1High + PREC((valuewhen(1,PreLongEntryCond1,_ATR) * atrel),4);
+LongEntrySetup:= Cross(C,PreLEC1EntryLevel);
+LongExitSetup:= Cross(RSIML,RSIndex) OR Cross(RSIOB,RSIndex);
+LongTradeSetup:= If(PREV=NULL,LongEntrySetup,
+ ref(barssince(PreLEC1EntryLevel<>ref(PreLEC1EntryLevel,
+ -1))<barssince(LongEntrySetup),-1) and LongEntrySetup);
+LongEntrySignal:= Long2TradeAlert=0 AND Cross(LongTradeSetup,0.5);
+LongEntryPrice:= valuewhen(1,LongEntrySignal,C);
+LongEntryInitialStop:= if(LongTradeAlert=1 OR LongEntrySignal
+ OR LongExitSignal, valuewhen(1,LongEntrySignal,PreLEC1EntryLevel)
+ - PREC((valuewhen(1,LongEntrySignal,_ATR) * atrsl),4), null);
+LongExitSignal:= LongTradeAlert=1 AND (LongExitSetup OR Cross(LongEntryInitialStop,C));
+LongExitPrice:= valuewhen(1,LongExitSignal,C);
+LongTradeAlert:= SignalFlag(LongEntrySignal,LongExitSignal);
+{----}
+PreShortEntryCond1:= Cross(RSIML,RSIndex);
+PreSEC1Low:= valuewhen(1,PreShortEntryCond1,L);
+PreSEC1EntryLevel:= PreSEC1Low - PREC((valuewhen(1,PreShortEntryCond1,_ATR) * atrel),4);
+ShortEntrySetup:= Cross(PreSEC1EntryLevel,C);
+ShortExitSetup:= Cross(RSIndex,RSIML) OR Cross(RSIndex,RSIOS);
+ShortTradeSetup:= If(PREV=NULL,ShortEntrySetup,
+ ref(barssince(PreSEC1EntryLevel<>ref(PreSEC1EntryLevel,
+ -1))<barssince(ShortEntrySetup),-1) and ShortEntrySetup);
+ShortEntrySignal:= Short2TradeAlert=0 AND Cross(ShortTradeSetup,0.5);
+ShortEntryPrice:= valuewhen(1,ShortEntrySignal,C);
+ShortEntryInitialStop:= if(ShortTradeAlert=1 OR ShortEntrySignal
+ OR ShortExitSignal, valuewhen(1,ShortEntrySignal,PreSEC1EntryLevel)
+ + PREC((valuewhen(1,ShortEntrySignal,_ATR) * atrsl),4), null);
+ShortExitSignal:= ShortTradeAlert=1 AND (ShortExitSetup OR Cross(C,ShortEntryInitialStop));
+ShortExitPrice:= valuewhen(1,ShortExitSignal,C);
+ShortTradeAlert:= SignalFlag(ShortEntrySignal,ShortExitSignal);
+{***********************************************}
+{2nd Set of Entry/Exit Signals}
+Long2EntrySetup:= (LongTradeAlert=1 OR Cross(LongTradeAlert,0.5)) AND Cross(RSIndex,RSIUp);
+Long2ExitSetup:= Cross(ShortEntrySignal,0.5) OR Cross(RSIDown,RSIndex);
+Long2EntrySignal:= Long2TradeAlert=0 AND Long2EntrySetup;
+Long2ExitSignal:= (Long2TradeAlert=1 AND Long2ExitSetup) OR
+                  (Long2TradeAlert=1 AND Cross(ShortTradeSetup,0.5));
+Long2TradeAlert:= SignalFlag(Long2EntrySignal,Long2ExitSignal);
+Long2EntryPrice:= valuewhen(1,Long2EntrySignal,C);
+Long2ExitPrice:= valuewhen(1,Long2ExitSignal,C);
+{----}
+Short2EntrySetup:= (ShortTradeAlert=1 OR Cross(ShortTradeAlert,0.5)) AND Cross(RSIDown,RSIndex);
+Short2ExitSetup:= Cross(LongEntrySignal,0.5) OR Cross(RSIndex,RSIUp);
+Short2EntrySignal:= Short2TradeAlert=0 AND Short2EntrySetup;
+Short2ExitSignal:= (Short2TradeAlert=1 AND Short2ExitSetup) OR
+                   (Short2TradeAlert=1 AND Cross(LongTradeSetup,0.5));
+Short2TradeAlert:= SignalFlag(Short2EntrySignal,Short2ExitSignal);
+Short2EntryPrice:= valuewhen(1,Short2EntrySignal,C);
+Short2ExitPrice:= valuewhen(1,Short2ExitSignal,C);
+{***********************************************}
+{1st Set of Auto-Trading Variables}
+OpenBuy:= LongEntrySignal and (eventCount('OpenBuy')=eventCount('CloseBuy'));
+CloseBuy:= LongExitSignal and (eventCount('OpenBuy')>eventCount('CloseBuy'));
+OpenSell:= ShortEntrySignal and (eventCount('OpenSell')=eventCount('CloseSell'));
+CloseSell:= ShortExitSignal and (eventCount('OpenSell')>eventCount('CloseSell'));
+{2nd Set of Auto-Trading Variables}
+OpenBuy2:= Long2EntrySignal and (eventCount('OpenBuy2')=eventCount('CloseBuy2'));
+CloseBuy2:= Long2ExitSignal and (eventCount('OpenBuy2')>eventCount('CloseBuy2'));
+OpenSell2:= Short2EntrySignal and (eventCount('OpenSell2')=eventCount('CloseSell2'));
+CloseSell2:= Short2ExitSignal and (eventCount('OpenSell2')>eventCount('CloseSell2'));
+5. In the Output Bookmark, create the following variables:
+[New] button...
+Var Name: _ATR
+Name: ATR
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: blue
+Line Width: slightly thicker
+Line Style: solid
+Placement: Additional Frame 1
+[OK] button...
+[New] button...
+Var Name: RSIndex
+Name: RSI
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: dark green
+Line Width: slightly thicker
+Line Style: solid
+Placement: Additional Frame 2
+[OK] button...
+[New] button...
+Var Name: RSIOB
+Name: RSI OverBought Level
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: red
+Line Width: thin
+Line Style: dashed
+Placement: Additional Frame 2
+[OK] button...
+[New] button...
+Var Name: RSIUp
+Name: RSI Up Level
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: grey
+Line Width: thin
+Line Style: dashed
+Placement: Additional Frame 2
+[OK] button...
+[New] button...
+Var Name: RSIML
+Name: RSI Middle Level
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: grey
+Line Width: thin
+Line Style: dashed
+Placement: Additional Frame 2
+[OK] button...
+[New] button...
+Var Name: RSIDown
+Name: RSI Down Level
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: grey
+Line Width: thin
+Line Style: dashed
+Placement: Additional Frame 2
+[OK] button...
+[New] button...
+Var Name: RSIOS
+Name: RSI OverSold Level
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: red
+Line Width: thin
+Line Style: dashed
+Placement: Additional Frame 2
+[OK] button...
+[New] button...
+Var Name: LongEntryInitialStop
+Name: Long Entry Initial Stoploss
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: blue
+Line Width: thin
+Line Style: dashed
+Placement: Price Frame
+[OK] button...
+[New] button...
+Var Name: ShortEntryInitialStop
+Name: Short Entry Initial Stoploss
+* Checkmark: Indicator Output
+Select Indicator Output Bookmark
+Color: red
+Line Width: thin
+Line Style: dashed
+Placement: Price Frame
+[OK] button...
+[New] button...
+Var Name: LongEntrySignal
+Name: LongEntrySignal
+Description: Long Entry Signal Alert
+* Checkmark: Graphic Enabled
+* Checkmark: Alerts Enabled
+Select Graphic Bookmark
+Font [...]: Up Arrow
+Size: Medium
+Color: Blue
+Symbol Position: Below price plot
+Select Alerts Bookmark
+Alerts Message: Long Entry Signal!
+Choose sound for audible alert
+[OK] button...
+[New] button...
+Var Name: LongExitSignal
+Name: LongExitSignal
+Description: Long Exit Signal Alert
+* Checkmark: Graphic Enabled
+* Checkmark: Alerts Enabled
+Select Graphic Bookmark
+Font [...]: Exit Sign
+Size: Medium
+Color: Blue
+Symbol Position: Above price plot
+Select Alerts Bookmark
+Alerts Message: Long Exit Signal!
+Choose sound for audible alert
+[OK] button...
+[New] button...
+Var Name: ShortEntrySignal
+Name: ShortEntrySignal
+Description: Short Entry Signal Alert
+* Checkmark: Graphic Enabled
+* Checkmark: Alerts Enabled
+Select Graphic Bookmark
+Font [...]: Down Arrow
+Size: Medium
+Color: Red
+Symbol Position: Above price plot
+Select Alerts Bookmark
+Alerts Message: Short Entry Signal!
+Choose sound for audible alert
+[OK] button...
+[New] button...
+Var Name: ShortExitSignal
+Name: ShortExitSignal
+Description: Short Exit Signal Alert
+* Checkmark: Graphic Enabled
+* Checkmark: Alerts Enabled
+Select Graphic Bookmark
+Font [...]: Exit Sign
+Size: Medium
+Color: Red
+Symbol Position: Below price plot
+Select Alerts Bookmark
+Alerts Message: Short Exit Signal!
+Choose sound for audible alert
+[OK] button...
+[New] button...
+Var Name: Long2EntrySignal
+Name: Long2EntrySignal
+Description: Long Entry Signal 2 Alert
+* Checkmark: Graphic Enabled
+Select Graphic Bookmark
+Font [...]: Up Arrow
+Size: Small
+Color: Dark Blue
+Symbol Position: Below price plot
+[OK] button...
+[New] button...
+Var Name: Long2ExitSignal
+Name: Long2ExitSignal
+Description: Long Exit Signal 2 Alert
+* Checkmark: Graphic Enabled
+Select Graphic Bookmark
+Font [...]: Exit Sign
+Size: Small
+Color: Dark Blue
+Symbol Position: Above price plot
+[OK] button...
+[New] button...
+Var Name: Short2EntrySignal
+Name: Short2EntrySignal
+Description: Short Entry Signal 2 Alert
+* Checkmark: Graphic Enabled
+Select Graphic Bookmark
+Font [...]: Down Arrow
+Size: Small
+Color: Dark Red
+Symbol Position: Above price plot
+[OK] button...
+[New] button...
+Var Name: Short2ExitSignal
+Name: Short2ExitSignal
+Description: Short Exit Signal 2 Alert
+* Checkmark: Graphic Enabled
+Select Graphic Bookmark
+Font [...]: Exit Sign
+Size: Small
+Color: Dark Red
+Symbol Position: Below price plot
+[OK] button...
+[New] button...
+Var Name: OpenBuy
+Name: OpenBuy
+Description: Automated Open Buy Trade Command
+* Checkmark: Trading Enabled
+Select Trading Bookmark
+Trade Action: Buy
+Traders Range: 5
+Hedge: no checkmark
+EachTick Count: 1
+[OK] button...
+[New] button...
+Var Name: CloseBuy
+Name: CloseBuy
+Description: Automated Close Buy Trade Command
+* Checkmark: Trading Enabled
+Select Trading Bookmark
+Trade Action: Sell
+Traders Range: 5
+Hedge: no checkmark
+EachTick Count: 1
+[OK] button...
+[New] button...
+Var Name: OpenSell
+Name: OpenSell
+Description: Automated Open Sell Trade Command
+* Checkmark: Trading Enabled
+Select Trading Bookmark
+Trade Action: Sell
+Traders Range: 5
+Hedge: no checkmark
+EachTick Count: 1
+[OK] button...
+[New] button...
+Var Name: CloseSell
+Name: CloseSell
+Description: Automated Close Sell Trade Command
+* Checkmark: Trading Enabled
+Select Trading Bookmark
+Trade Action: Buy
+Traders Range: 5
+Hedge: no checkmark
+EachTick Count: 1
+[OK] button...
+[New] button...
+Var Name: OpenBuy2
+Name: OpenBuy2
+Description: Automated Open Buy 2 Trade Command
+* Checkmark: Trading Enabled
+Select Trading Bookmark
+Trade Action: Buy
+Traders Range: 5
+Hedge: no checkmark
+EachTick Count: 1
+[OK] button...
+[New] button...
+Var Name: CloseBuy2
+Name: CloseBuy2
+Description: Automated Close Buy 2 Trade Command
+* Checkmark: Trading Enabled
+Select Trading Bookmark
+Trade Action: Sell
+Traders Range: 5
+Hedge: no checkmark
+EachTick Count: 1
+[OK] button...
+[New] button...
+Var Name: OpenSell2
+Name: OpenSell2
+Description: Automated Open Sell 2 Trade Command
+* Checkmark: Trading Enabled
+Select Trading Bookmark
+Trade Action: Sell
+Traders Range: 5
+Hedge: no checkmark
+EachTick Count: 1
+[OK] button...
+[New] button...
+Var Name: CloseSell2
+Name: CloseSell2
+Description: Automated Close Sell 2 Trade Command
+* Checkmark: Trading Enabled
+Select Trading Bookmark
+Trade Action: Buy
+Traders Range: 5
+Hedge: no checkmark
+EachTick Count: 1
+[OK] button...
+6. Click the "Save" icon to finish building this trading system. To attach this trading system
+   to a chart right-click with the mouse within the chart window, select "Add Trading System" ->
+   TASC - 08/2006 - "Going Beyond 70 and 30 In Forex" from the list. Once attached to the chart
+   the parameters can be customized by right-clicking with the mouse over the displayed trading
+   system label and selecting "Edit Trading Systems Properties".

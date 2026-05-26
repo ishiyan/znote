@@ -1,0 +1,74 @@
+1. Navigator Window>Tools>Indicator Builder>[New] button
+2. In the Indicator Bookmark, type the following text for each field:
+Name: Swiss Army Knife Indicator
+Short Name: vt-SWAK
+Label Mask: Swiss Army Knife Indicator (%Price%, %Period%, Delta: %_Delta%, Filter:
+ %FilterType:ls%)
+Placement: New Frame
+Inspect Alias: Swiss Army Knife Indicator
+3. In the Input Bookmark, create the following variables:
+[New] button... Name: Price , Display Name: Price , Type: price , Default: Median Price
+[New] button... Name: Period , Display Name: Periods , Type: integer , Default: 20
+[New] button... Name: _Delta , Display Name: Delta , Type: float , Default: 0.0100
+[New] button... Name: FilterType , Display Name: Filter Type , Type: Enumeration ,
+ Default: click [...] button, [New] button, then create the following entries: Default,
+ EMA, SMA, Gauss, Butter, Smooth, HighPass, TwoPole_HighPass, Bandpass, Band_stop; then,
+ click [OK] button
+Default: Bandpass (chosen from list created)
+4. In the Output Bookmark, create the following variables:
+[New] button...
+Var Name: Filt_SWAK
+Name: Filter
+Line Color: dark blue
+Line Width: slightly thicker
+Line Type: solid line
+5. In the Formula Bookmark, copy and paste the following formula:
+{Provided By: Visual Trading Systems, LLC (c) Copyright 2006}
+{Description: Swiss Army Knife Indicator by John F. Ehlers}
+{Notes: January 2006 Issue - The MacGyver of Indicators - Swiss Army Knife Indicator}
+{SWAK Version 1.0}
+Num:= if(FilterType=2,
+      if(Period=0,1,Period), 0);
+_Beta:= if(FilterType=3 or FilterType=4 OR FilterType=7, 2.415 * (1-Cos(360/Period)),
+        if(FilterType=8 or FilterType=9, Cos(360/Period),
+        0));
+_Gamma:= if(FilterType=8 or FilterType=9, 1 / Cos(720 * _Delta / Period),
+         0);
+Alpha:= if(FilterType=1 OR FilterType=6, (Cos(360/Period) + Sin(360/Period)-1)/Cos(360/Period),
+        if(FilterType=3 or FilterType=4 OR FilterType=7, -_Beta + Sqrt(_Beta * _Beta + 2 * _Beta),
+        if(FilterType=8 OR FilterType=9, _Gamma - Sqrt(_Gamma * _Gamma - 1),
+        0)));
+c0:= if(FilterType=3, alpha * alpha,
+     if(FilterType=4, alpha * alpha / 4,
+     if(FilterType=5, 1/4,
+     if(FilterType=6 OR FilterType=8,(1 - alpha) / 2,
+     if(FilterType=7,(1 - alpha / 2) * (1 - alpha / 2),
+     if(FilterType=9,(1 + alpha) / 2,
+     1))))));
+c1:= if(FilterType=2 OR FilterType=10, 1/Num, 0);
+b0:= if(FilterType=1, Alpha ,
+     if(FilterType=2, 1/Num, 1));
+b1:= if(FilterType=4 OR FilterType=5, 2,
+     if(FilterType=6, -1,
+     if(FilterType=7, -2,
+     if(FilterType=9, -2 * _Beta,
+     0))));
+b2:= if(FilterType=4 OR FilterType=5 OR FilterType=7 OR FilterType=9, 1,
+     if(FilterType=8, -1,
+     0));
+a1:= if(FilterType=1, 1 - alpha,
+     if(FilterType=2 OR FilterType=10, 1,
+     if(FilterType=3 OR FilterType=4 OR FilterType=7, 2 * (1 - alpha),
+     if(FilterType=8, _Beta * (1 - alpha),
+     if(FilterType=9, _Beta * (1 + alpha),
+     0)))));
+a2:= if(FilterType=3 OR FilterType=4 OR FilterType=7 , -(1 - alpha) * (1 - alpha),
+     if(FilterType=5, -(1 - alpha) * (1 - alpha),
+     if(FilterType=8 OR FilterType=9, -alpha,
+     0)));
+Filt:= if(prev=NULL, if(FilterType=6 OR FilterType=7, 0, Price),
+       c0 * (b0 * Price + b1 * ref(Price,-1) + b2 * ref(Price,-2)
+       + a1 * PREV + a2 * ref(PREV,-1) - c1 * ref(Price,- Num)));
+ 
+Filt_SWAK:= if(CUM(1)<=Period, NULL, Filt);
+6. Click the "Save" icon to finish building the Swak indicator.

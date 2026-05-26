@@ -1,0 +1,481 @@
+Indicator:  EhlersSpectrum
+inputs:
+    Price( MedianPrice ),
+    ShowDC( false ) ;
+variables:
+    alpha1( 0 ),
+    alpha1Plus1( 0 ),
+    Log10( 0 ),
+    HP( 0 ),
+    SmoothHP( 0 ),
+    EhlersDelta( 0.1 ),
+    EhlersBeta( 0 ),
+    Cos720Delta( 0 ),
+    EhlersGamma( 0 ),
+    alpha( 0 ),
+    OneMinusAlpha( 0 ),
+    OnePlusAlpha( 0 ),
+    N( 0 ),
+    TwoPi( 6.2831854 ),
+    MaxAmpl( 0 ),
+    Num( 0 ),
+    Denom( 0 ),
+    DC( 0 ),
+    DomCyc( 0 ),
+    Cos720DeltaDom( 0 ),
+    CycleLine1( 0 ),
+    CycleLine2( 0 ),
+    Color1( 0 ),
+    Color2( 0 ),
+    PlotColor( 0 ) ;
+arrays:
+    EhlersI[50]( 0 ),
+    OldI[50]( 0 ),
+    OlderI[50]( 0 ),
+    Q[50]( 0 ),
+    OldQ[50]( 0 ),
+    OlderQ[50]( 0 ),
+    Real[50]( 0 ),
+    OldReal[50]( 0 ),
+    OlderReal[50]( 0 ),
+    Imag[50]( 0 ),
+    OldImag[50]( 0 ),
+    OlderImag[50]( 0 ),
+    Ampl[50]( 0 ),
+    OldAmpl[50]( 0 ),
+    DB[50]( 0 ) ;
+if CurrentBar = 1 then
+    begin
+     { 360 / 40 = 9 }
+    alpha1 = ( 1 - Sine( 9 ) ) / Cosine( 9 ) ;
+    alpha1Plus1 = alpha1 + 1 ;
+    Log10 = Log( 10 ) ;
+    end ;
+HP = 0.5 * alpha1Plus1 * ( Price - Price[1] ) +
+ alpha1 * HP[1] ;
+SmoothHP = ( HP + 2 * HP[1] + 3 * HP[2] + 3 * HP[3] +
+ 2 * HP[4] + HP[5] ) / 12 ;
+if CurrentBar = 1 then
+    SmoothHP = 0
+else if CurrentBar  6 then
+    begin
+    for N = 8 to 50
+        begin
+        EhlersBeta = Cosine( 360 / N ) ;
+        Cos720Delta = Cosine( 720 * EhlersDelta / N ) ;
+        if Cos720Delta <> 0 then
+            EhlersGamma = 1 / Cos720Delta ;
+        alpha = EhlersGamma -
+         SquareRoot( Square( EhlersGamma ) - 1 ) ;
+        OneMinusAlpha = 1 - alpha ;
+        OnePlusAlpha = 1 + alpha ;
+        Q[N] = ( N / TwoPi ) * ( SmoothHP -
+         SmoothHP[1] ) ;
+        EhlersI[N] = SmoothHP ;
+        Real[N] = 0.5 * OneMinusAlpha * ( EhlersI[N] -
+         OlderI[N] ) + EhlersBeta * OnePlusAlpha *
+         OldReal[N] - alpha * OlderReal[N] ;
+        Imag[N] = 0.5 * OneMinusAlpha * ( Q[N] -
+         OlderQ[N] ) + EhlersBeta * OnePlusAlpha *
+         OldImag[N] - alpha * OlderImag[N] ;
+        Ampl[N] = ( Square( Real[N] ) +
+         Square( Imag[N] ) ) ;
+        end ;
+    end ;
+for N = 8 to 50
+    begin
+    OlderI[N] = OldI[N] ;
+    OldI[N] = EhlersI[N] ;
+    OlderQ[N] = OldQ[N] ;
+    OldQ[N] = Q[N] ;
+    OlderReal[N] = OldReal[N] ;
+    OldReal[N] = Real[N] ;
+    OlderImag[N] = OldImag[N] ;
+    OldImag[N] = Imag[N] ;
+    OldAmpl[N] = Ampl[N] ;
+    end ;
+MaxAmpl = Ampl[10] ;
+for N = 8 to 50
+    begin
+    if Ampl[N] > MaxAmpl then
+        MaxAmpl = Ampl[N] ;
+    end ;
+for N = 8 to 50
+    begin
+    if MaxAmpl <> 0 and ( Ampl[N] / MaxAmpl ) > 0 then
+        DB[N] = -10 * Log( 0.01 / ( 1 - .99 * Ampl[N] /
+         MaxAmpl ) ) / Log10 ;
+    if DB[N] > 20 then
+        DB[N] = 20 ;
+    end ;
+Num = 0 ;
+Denom = 0 ;
+for N = 10 to 50
+    begin
+    if DB[N]  0 then
+        DC = Num / Denom ;
+    end ;
+DomCyc = Median( DC, 10 ) ;
+if ShowDC = true then
+    Plot1( DomCyc, "DC", RGB( 0, 0, 255 ), 0, 2 ) ;
+for N = 8 to 50
+    begin
+    if DB[N]  10 then
+        begin
+        Color1 = 255 * ( 2 - DB[N] / 10 ) ;
+        Color2 = 0 ;
+        end ;
+    PlotColor = RGB( Color1, Color2, 0 ) ;
+    if CurrentBar > 10 then
+        begin
+        switch N
+            begin
+            case 8:
+                Plot8( N, "S8", PlotColor, 0, 5 ) ;
+            case 9:
+                Plot9( N, "S9", PlotColor, 0, 5 ) ;
+            case 10:
+                Plot10( N, "S10", PlotColor, 0, 5 ) ;
+            case 11:
+                Plot11( N, "S11", PlotColor, 0, 5 ) ;
+            case 12:
+                Plot12( N, "S12", PlotColor, 0, 5 ) ;
+            case 13:
+                Plot13( N, "S13", PlotColor, 0, 5 ) ;
+            case 14:
+                 Plot14( N, "S14", PlotColor, 0, 5 ) ;
+            case 15:
+                Plot15( N, "S15", PlotColor, 0, 5 ) ;
+            case 16:
+                Plot16( N, "S16", PlotColor, 0, 5 ) ;
+            case 17:
+                 Plot17( N, "S17", PlotColor, 0, 5 ) ;
+            case 18:
+                Plot18( N, "S18", PlotColor, 0, 5 ) ;
+            case 19:
+                Plot19( N, "S19", PlotColor, 0, 5 ) ;
+            case 20:
+                Plot20( N, "S20", PlotColor, 0, 5 ) ;
+            case 21:
+                 Plot21( N, "S21", PlotColor, 0, 5 ) ;
+            case 22:
+                Plot22( N, "S22", PlotColor, 0, 5 ) ;
+            case 23:
+                 Plot23( N, "S23", PlotColor, 0, 5 ) ;
+            case 24:
+                Plot24( N, "S24", PlotColor, 0, 5 ) ;
+            case 25:
+                Plot25( N, "S25", PlotColor, 0, 5 ) ;
+            case 26:
+                 Plot26( N, "S26", PlotColor, 0, 5 ) ;
+            case 27:
+                 Plot27( N, "S27", PlotColor, 0, 5 ) ;
+            case 28:
+                 Plot28( N, "S28", PlotColor, 0, 5 ) ;
+            case 29:
+                 Plot29( N, "S29", PlotColor, 0, 5 ) ;
+            case 30:
+                 Plot30( N, "S30", PlotColor, 0, 5 ) ;
+            case 31:
+                 Plot31( N, "S31", PlotColor, 0, 5 ) ;
+            case 32:
+                 Plot32( N, "S32", PlotColor, 0, 5 ) ;
+            case 33:
+                 Plot33( N, "S33", PlotColor, 0, 5 ) ;
+            case 34:
+                 Plot34( N, "S34", PlotColor, 0, 5 ) ;
+            case 35:
+                 Plot35( N, "S35", PlotColor, 0, 5 ) ;
+            case 36:
+                 Plot36( N, "S36", PlotColor, 0, 5 ) ;
+            case 37:
+                 Plot37( N, "S37", PlotColor, 0, 5 ) ;
+            case 38:
+                 Plot38( N, "S38", PlotColor, 0, 5 ) ;
+            case 39:
+                 Plot39( N, "S39", PlotColor, 0, 5 ) ;
+            case 40:
+                 Plot40( N, "S40", PlotColor, 0, 5 ) ;
+            case 41:
+                 Plot41( N, "S41", PlotColor, 0, 5 ) ;
+            case 42:
+                 Plot42( N, "S42", PlotColor, 0, 5 ) ;
+            case 43:
+                Plot43( N, "S43", PlotColor, 0, 5 ) ;
+            case 44:
+                 Plot44( N, "S44", PlotColor, 0, 5 ) ;
+            case 45:
+                 Plot45( N, "S45", PlotColor, 0, 5 ) ;
+            case 46:
+                 Plot46( N, "S46", PlotColor, 0, 5 ) ;
+            case 47:
+                Plot47( N, "S47", PlotColor, 0, 5 ) ;
+            case 48:
+                 Plot48( N, "S48", PlotColor, 0, 5 ) ;
+            case 49:
+                 Plot49( N, "S49", PlotColor, 0, 5 ) ;
+            case 50:
+                Plot50( N, "S50", PlotColor, 0, 5 ) ;
+            end ;
+           end ;
+    end ;
+Indicator:  EhlersDominantCycle
+inputs:
+    Price( MedianPrice ) ;
+variables:
+    alpha1( 0 ),
+    alpha1Plus1( 0 ),
+    Log10( 0 ),
+    HP( 0 ),
+    SmoothHP( 0 ),
+    EhlersDelta( 0.1 ),
+    EhlersBeta( 0 ),
+    Cos720Delta( 0 ),
+    EhlersGamma( 0 ),
+    alpha( 0 ),
+    OneMinusAlpha( 0 ),
+    OnePlusAlpha( 0 ),
+    N( 0 ),
+    TwoPi( 6.2831854 ),
+    MaxAmpl( 0 ),
+    Num( 0 ),
+    Denom( 0 ),
+    DC( 0 ),
+    DomCyc( 0 ),
+    Cos720DeltaDom( 0 ),
+    SineLine( 0 ),
+    CosineLine( 0 ) ;
+arrays:
+    EhlersI[50]( 0 ),
+    OldI[50]( 0 ),
+    OlderI[50]( 0 ),
+    Q[50]( 0 ),
+    OldQ[50]( 0 ),
+    OlderQ[50]( 0 ),
+    Real[50]( 0 ),
+    OldReal[50]( 0 ),
+    OlderReal[50]( 0 ),
+    Imag[50]( 0 ),
+    OldImag[50]( 0 ),
+    OlderImag[50]( 0 ),
+    Ampl[50]( 0 ),
+    OldAmpl[50]( 0 ),
+    DB[50]( 0 ) ;
+if CurrentBar = 1 then
+    begin
+     { 360 / 40 = 9 }
+    alpha1 = ( 1 - Sine( 9 ) ) / Cosine( 9 ) ;
+    alpha1Plus1 = alpha1 + 1 ;
+    Log10 = Log( 10 ) ;
+    end ;
+HP = 0.5 * alpha1Plus1 * ( Price - Price[1] ) +
+ alpha1 * HP[1] ;
+SmoothHP = ( HP + 2 * HP[1] + 3 * HP[2] + 3 * HP[3] +
+ 2 * HP[4] + HP[5] ) / 12 ;
+if CurrentBar = 1 then
+    SmoothHP = 0
+else if CurrentBar  6 then
+    begin
+    for N = 8 to 50
+        begin
+        EhlersBeta = Cosine( 360 / N ) ;
+        Cos720Delta = Cosine( 720 * EhlersDelta / N ) ;
+        if Cos720Delta <> 0 then
+            EhlersGamma = 1 / Cos720Delta ;
+        alpha = EhlersGamma -
+         SquareRoot( Square( EhlersGamma ) - 1 ) ;
+        OneMinusAlpha = 1 - alpha ;
+        OnePlusAlpha = 1 + alpha ;
+        Q[N] = ( N / TwoPi ) * ( SmoothHP -
+         SmoothHP[1] ) ;
+        EhlersI[N] = SmoothHP ;
+        Real[N] = 0.5 * OneMinusAlpha * ( EhlersI[N] -
+         OlderI[N] ) + EhlersBeta * OnePlusAlpha *
+         OldReal[N] - alpha * OlderReal[N] ;
+        Imag[N] = 0.5 * OneMinusAlpha * ( Q[N] -
+         OlderQ[N] ) + EhlersBeta * OnePlusAlpha *
+         OldImag[N] - alpha * OlderImag[N] ;
+        Ampl[N] = ( Square( Real[N] ) +
+         Square( Imag[N] ) ) ;
+        end ;
+    end ;
+for N = 8 to 50
+    begin
+    OlderI[N] = OldI[N] ;
+    OldI[N] = EhlersI[N] ;
+    OlderQ[N] = OldQ[N] ;
+    OldQ[N] = Q[N] ;
+    OlderReal[N] = OldReal[N] ;
+    OldReal[N] = Real[N] ;
+    OlderImag[N] = OldImag[N] ;
+    OldImag[N] = Imag[N] ;
+    OldAmpl[N] = Ampl[N] ;
+    end ;
+MaxAmpl = Ampl[10] ;
+for N = 8 to 50
+    begin
+    if Ampl[N] > MaxAmpl then
+        MaxAmpl = Ampl[N] ;
+    end ;
+for N = 8 to 50
+    begin
+    if MaxAmpl <> 0 and ( Ampl[N] / MaxAmpl ) > 0 then
+        DB[N] = -10 * Log( 0.01 / ( 1 - .99 * Ampl[N] /
+         MaxAmpl ) ) / Log10 ;
+    if DB[N] > 20 then
+        DB[N] = 20 ;
+    end ;
+Num = 0 ;
+Denom = 0 ;
+for N = 10 to 50
+    begin
+    if DB[N]  0 then
+        DC = Num / Denom ;
+    end ;
+DomCyc = Median( DC, 10 ) ;
+if DomCyc  0 then
+    EhlersGamma = 1 / Cos720DeltaDom ;
+alpha = EhlersGamma - SquareRoot( Square( EhlersGamma )
+ - 1 ) ;
+SineLine = 0.5 * ( 1 - alpha ) * ( SmoothHP -
+ SmoothHP[1] ) + EhlersBeta * ( 1 + alpha ) *
+ SineLine[1] - alpha * SineLine[2] ;
+CosineLine = ( DomCyc / TwoPi ) * ( SineLine -
+ SineLine[1] ) ;
+if CurrentBar > 10 then
+    begin
+    Plot1( SineLine, "Sine", Red, default, 2 ) ;
+    Plot2( CosineLine, "Cosine", Cyan, default, 2 ) ;
+    end ;
+Strategy:  EhlerBandPassStrat
+inputs:
+    Price( MedianPrice ) ;
+variables:
+    alpha1( 0 ),
+    alpha1Plus1( 0 ),
+    Log10( 0 ),
+    HP( 0 ),
+    SmoothHP( 0 ),
+    EhlersDelta( 0.1 ),
+    EhlersBeta( 0 ),
+    Cos720Delta( 0 ),
+    EhlersGamma( 0 ),
+    alpha( 0 ),
+    OneMinusAlpha( 0 ),
+    OnePlusAlpha( 0 ),
+    N( 0 ),
+    TwoPi( 6.2831854 ),
+    MaxAmpl( 0 ),
+    Num( 0 ),
+    Denom( 0 ),
+    DC( 0 ),
+    DomCyc( 0 ),
+    Cos720DeltaDom( 0 ),
+    SineLine( 0 ),
+    CosineLine( 0 ) ;
+arrays:
+    EhlersI[50]( 0 ),
+    OldI[50]( 0 ),
+    OlderI[50]( 0 ),
+    Q[50]( 0 ),
+    OldQ[50]( 0 ),
+    OlderQ[50]( 0 ),
+    Real[50]( 0 ),
+    OldReal[50]( 0 ),
+    OlderReal[50]( 0 ),
+    Imag[50]( 0 ),
+    OldImag[50]( 0 ),
+    OlderImag[50]( 0 ),
+    Ampl[50]( 0 ),
+    OldAmpl[50]( 0 ),
+    DB[50]( 0 ) ;
+ 
+if CurrentBar = 1 then
+    begin
+     { 360 / 40 = 9 }
+    alpha1 = ( 1 - Sine( 9 ) ) / Cosine( 9 ) ;
+    alpha1Plus1 = alpha1 + 1 ;
+    Log10 = Log( 10 ) ;
+    end ;
+HP = 0.5 * alpha1Plus1 * ( Price - Price[1] ) +
+ alpha1 * HP[1] ;
+SmoothHP = ( HP + 2 * HP[1] + 3 * HP[2] + 3 * HP[3] +
+ 2 * HP[4] + HP[5] ) / 12 ;
+ 
+if CurrentBar = 1 then
+    SmoothHP = 0
+else if CurrentBar  6 then
+    begin
+    for N = 8 to 50
+        begin
+        EhlersBeta = Cosine( 360 / N ) ;
+        Cos720Delta = Cosine( 720 * EhlersDelta / N ) ;
+        if Cos720Delta <> 0 then
+            EhlersGamma = 1 / Cos720Delta ;
+        alpha = EhlersGamma -
+         SquareRoot( Square( EhlersGamma ) - 1 ) ;
+        OneMinusAlpha = 1 - alpha ;
+        OnePlusAlpha = 1 + alpha ;
+        Q[N] = ( N / TwoPi ) * ( SmoothHP -
+         SmoothHP[1] ) ;
+        EhlersI[N] = SmoothHP ;
+        Real[N] = 0.5 * OneMinusAlpha * ( EhlersI[N] -
+         OlderI[N] ) + EhlersBeta * OnePlusAlpha *
+         OldReal[N] - alpha * OlderReal[N] ;
+        Imag[N] = 0.5 * OneMinusAlpha * ( Q[N] -
+         OlderQ[N] ) + EhlersBeta * OnePlusAlpha *
+         OldImag[N] - alpha * OlderImag[N] ;
+        Ampl[N] = ( Square( Real[N] ) +
+         Square( Imag[N] ) ) ;
+        end ;
+    end ;
+for N = 8 to 50
+    begin
+    OlderI[N] = OldI[N] ;
+    OldI[N] = EhlersI[N] ;
+    OlderQ[N] = OldQ[N] ;
+    OldQ[N] = Q[N] ;
+    OlderReal[N] = OldReal[N] ;
+    OldReal[N] = Real[N] ;
+    OlderImag[N] = OldImag[N] ;
+    OldImag[N] = Imag[N] ;
+    OldAmpl[N] = Ampl[N] ;
+    end ;
+MaxAmpl = Ampl[10] ;
+for N = 8 to 50
+    begin
+    if Ampl[N] > MaxAmpl then
+        MaxAmpl = Ampl[N] ;
+    end ;
+for N = 8 to 50
+    begin
+    if MaxAmpl <> 0 and ( Ampl[N] / MaxAmpl ) > 0 then
+        DB[N] = -10 * Log( 0.01 / ( 1 - .99 * Ampl[N] /
+         MaxAmpl ) ) / Log10 ;
+    if DB[N] > 20 then
+        DB[N] = 20 ;
+    end ;
+Num = 0 ;
+Denom = 0 ;
+for N = 10 to 50
+    begin
+    if DB[N]  0 then
+        DC = Num / Denom ;
+    end ;
+DomCyc = Median( DC, 10 ) ;
+if DomCyc  0 then
+    EhlersGamma = 1 / Cos720DeltaDom ;
+alpha = EhlersGamma - SquareRoot( Square( EhlersGamma )
+ - 1 ) ;
+SineLine = 0.5 * ( 1 - alpha ) * ( SmoothHP -
+IndicatorIndicator SmoothHP[1] ) + EhlersBeta * ( 1 + alpha ) *
+ SineLine[1] - alpha * SineLine[2] ;
+CosineLine = ( DomCyc / TwoPi ) * ( SineLine -
+ SineLine[1] ) ;
+if CurrentBar > 10 then
+    begin
+    if CosineLine crosses over SineLine then
+        Buy next bar market
+    else if CosineLine crosses under SineLine then
+        Sell short next bar at market ;
+    end ;

@@ -1,0 +1,152 @@
+Indicator:  EhlersFractalDimIn
+inputs: 
+	Price( MedianPrice ), 
+	Threshold( 1.4 ),
+	N( 30 ) ; { N must be an even number } 
+
+variables: 
+	HalfN( 0 ),
+	NMinus1( 0 ),
+	HalfNMinus1( 0 ),
+	Log2( 0 ),
+	Smooth( 0 ), 
+	N3( 0 ), 
+	HH( 0 ), 
+	LL( 0 ), 
+	Count( 0 ), 
+	N1( 0 ), 
+	N2( 0 ), 
+	Ratio( 0 ), 
+	Dimen( 0 ) ;
+
+Once
+	begin
+	if Mod( N, 2 ) <> 0 or N = 0 then
+		RaiseRuntimeError( "The input N must be an" +
+	 	 " even number." ) ;
+	HalfN = 0.5 * N ;
+	NMinus1 = N - 1 ;
+	HalfNMinus1 = HalfN - 1 ;
+	Log2 = Log( 2 ) ;
+	end ;
+
+Smooth = ( Price + 2 * Price[1] + 2 * Price[2] +
+ Price[3] ) / 6 ; 
+N3 = ( Highest( Smooth, N ) - Lowest( Smooth, N ) ) /
+ N ;  
+HH = Smooth ; 
+LL = Smooth ; 
+
+for Count = 0 to HalfNMinus1 
+	begin 
+	if Smooth[Count] > HH then
+		HH = Smooth[Count] ; 
+	if Smooth[Count] < LL then
+		LL = Smooth[Count] ; 
+	end ;
+ 
+N1 = ( HH - LL ) / HalfN ; 
+HH = Smooth[HalfN] ; 
+LL = Smooth[HalfN] ; 
+
+for Count = HalfN to NMinus1 
+	begin 
+	if Smooth[Count] > HH then
+ 		HH = Smooth[Count] ;
+    if Smooth[Count] < LL then
+		LL = Smooth[Count] ; 
+	end ;
+ 
+N2 = ( HH - LL ) / HalfN ; 
+
+if N1 > 0 and N2 > 0 and N3 > 0 then 
+	Ratio = 0.5 * ( ( Log( N1 + N2 ) - Log( N3 ) ) /
+	 Log2 + Dimen[1] ) ; 
+
+Dimen = Average( Ratio, 20 ) ; 
+
+Plot1( Dimen, "Dimen" ) ; 
+Plot2( 1.6, "1.6", Blue ) ; 
+Plot3( Threshold, "Trigger", Blue ) ; 
+
+
+Strategy: 
+inputs: 
+	Price( MedianPrice ), 
+	Threshold( 1.4 ),
+	N( 30 ), { N must be an even number } 
+	TrendLength( 10 ),
+	StopLossPct( 5 ) ;
+
+variables: 
+	HalfN( 0 ),
+	NMinus1( 0 ),
+	HalfNMinus1( 0 ),
+	Log2( 0 ),
+	Smooth( 0 ), 
+	N3( 0 ), 
+	HH( 0 ), 
+	LL( 0 ), 
+	Count( 0 ), 
+	N1( 0 ), 
+	N2( 0 ), 
+	Ratio( 0 ), 
+	Dimen( 0 ) ;
+
+Once
+	begin
+	if Mod( N, 2 ) <> 0 or N = 0 then
+		RaiseRuntimeError( "The input N must be an" +
+	 	 " even number." ) ;
+	HalfN = 0.5 * N ;
+	NMinus1 = N - 1 ;
+	HalfNMinus1 = HalfN - 1 ;
+	Log2 = Log( 2 ) ;
+	end ;
+
+Smooth = ( Price + 2 * Price[1] + 2 * Price[2] +
+ Price[3] ) / 6 ; 
+N3 = ( Highest( Smooth, N ) - Lowest( Smooth, N ) ) /
+ N ;  
+HH = Smooth ; 
+LL = Smooth ; 
+
+for Count = 0 to HalfNMinus1 
+	begin 
+	if Smooth[Count] > HH then
+		HH = Smooth[Count] ; 
+	if Smooth[Count] < LL then
+		LL = Smooth[Count] ; 
+	end ;
+
+N1 = ( HH - LL ) / HalfN ; 
+HH = Smooth[HalfN] ; 
+LL = Smooth[HalfN] ; 
+
+for Count = HalfN to NMinus1 
+	begin 
+	if Smooth[Count] > HH then
+ 		HH = Smooth[Count] ;
+    if Smooth[Count] < LL then
+		LL = Smooth[Count] ; 
+	end ;
+ 
+N2 = ( HH - LL ) / HalfN ; 
+
+if N1 > 0 and N2 > 0 and N3 > 0 then 
+	Ratio = 0.5 * ( ( Log( N1 + N2 ) - Log( N3 ) ) /
+	 Log2 + Dimen[1] ) ; 
+
+Dimen = Average( Ratio, 20 ) ; 
+
+if Dimen crosses under Threshold then
+	begin
+	if Close > Average( Close, TrendLength ) then
+		Buy next bar market 
+	else 
+		Sell short next bar at market ;
+	end ;
+
+SetStopShare ;
+SetDollarTrailing( iff( EntryPrice > 0, EntryPrice,
+ Close ) * 0.01 * StopLossPct ) ;

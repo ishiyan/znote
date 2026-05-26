@@ -1,0 +1,171 @@
+_Ehlers_SuperSmoother Filter (Indicator)
+
+variables:
+	a1( 0 ), 
+	b1( 0 ), 
+	c1( 0 ), 
+	c2( 0 ), 
+	c3( 0 ),
+	Filt( 0 ) ; 
+
+a1 = ExpValue( -1.414 * 3.14159 / 10 ) ;
+b1 = 2 * a1 * Cosine( 1.414 * 180 / 10 ) ;
+c2 = b1 ;
+c3 = -a1 * a1 ;
+c1 = 1 - c2 - c3 ;
+Filt = c1 * ( Close + Close[1] ) 
+	/ 2 + c2 * Filt[1] + c3 * Filt[2] ;
+
+Plot1( Filt, "SuperSmooth" ) ;
+
+
+_Ehlers_Roofing Filter (Indicator)
+
+variables:
+	alpha1( 0 ), 
+	HP( 0 ), 
+	a1( 0 ), 
+	b1( 0 ), 
+	c1( 0 ), 
+	c2( 0 ), 
+	c3( 0 ),
+	Filt( 0 ) ; 
+	
+alpha1 = ( Cosine( .707 * 360 / 48 ) 
+	+ Sine ( .707 * 360 / 48 ) - 1 )
+	/ Cosine( .707 * 360 / 48 ) ;
+	
+HP = ( 1 - alpha1 / 2 ) * ( 1 - alpha1 / 2 )
+	* ( Close - 2 * Close[1] + Close[2] ) 
+	+ 2 * ( 1 - alpha1 ) * HP[1] - ( 1 - alpha1 ) 
+	* ( 1 - alpha1 ) * HP[2] ;
+
+a1 = ExpValue( -1.414 * 3.14159 / 10 ) ;
+b1 = 2 * a1 * Cosine( 1.414 * 180 / 10 ) ;
+c2 = b1 ;
+c3 = -a1 * a1 ;
+c1 = 1 - c2 - c3 ;
+Filt = c1 *( HP + HP[1] ) / 2 
+	+ c2 * Filt[1] + c3 * Filt[2] ;	
+
+Plot1( Filt, "SS Filter" ) ;
+Plot2( 0, "Zero Line" ) ;
+
+
+_Ehlers_SuperSmoothStoch (Indicator)
+
+inputs:
+	Length( 20 ), 
+	OBLevel( .8 ), 
+	OSLevel( .2 ) ;
+		
+variables:
+	alpha1( 0 ), 
+	HP( 0 ), 
+	a1( 0 ), 
+	b1( 0 ), 
+	c1( 0 ), 
+	c2( 0 ), 
+	c3( 0 ),
+	Filt( 0 ), 
+	HighestC( 0 ), 
+	LowestC( 0 ), 
+	count( 0 ), 
+	Stoc( 0 ), 
+	MyStochastic( 0 ) ;
+
+alpha1 = ( Cosine( .707 * 360 / 48 ) 
+	+ Sine ( .707 * 360 / 48 ) - 1 )
+	/ Cosine( .707 * 360 / 48 ) ;
+	
+HP = ( 1 - alpha1 / 2 ) * ( 1 - alpha1 / 2 )
+	* ( Close - 2 * Close[1] + Close[2] ) 
+	+ 2 * ( 1 - alpha1 ) * HP[1] - ( 1 - alpha1 ) 
+	* ( 1 - alpha1 ) * HP[2] ;
+
+a1 = ExpValue( -1.414 * 3.14159 / 10 ) ;
+b1 = 2 * a1 * Cosine( 1.414 * 180 / 10 ) ;
+c2 = b1 ;
+c3 = -a1 * a1 ;
+c1 = 1 - c2 - c3 ;
+Filt = c1 *( HP + HP[1] ) / 2 
+	+ c2 * Filt[1] + c3 * Filt[2] ;
+
+HighestC = Filt ;
+LowestC = Filt ;
+
+For count = 0 to Length - 1 
+	begin
+	if Filt[count] > HighestC then 
+		HighestC = Filt[count] ;
+	if Filt[count] < LowestC then 
+		LowestC = Filt[count] ;
+	end;
+
+Stoc = ( Filt - LowestC ) / ( HighestC - LowestC ) ;
+MyStochastic = c1 * ( Stoc + Stoc[1] ) / 2 +
+	c2 * MyStochastic[1] + c3 * MyStochastic[2] ;
+
+Plot1( MyStochastic, "Stoch" ) ;
+Plot2( OBLevel, "OverBought" ) ;
+Plot6( OSLevel, "OverSold" ) ;
+
+
+_Ehlers_SuperSmoothStoch (Strategy)
+
+inputs:
+	Length( 20 ), 
+	OBLevel( .8 ), 
+	OSLevel( .2 ) ;
+		
+variables:
+	alpha1( 0 ), 
+	HP( 0 ), 
+	a1( 0 ), 
+	b1( 0 ), 
+	c1( 0 ), 
+	c2( 0 ), 
+	c3( 0 ),
+	Filt( 0 ), 
+	HighestC( 0 ), 
+	LowestC( 0 ), 
+	count( 0 ), 
+	Stoc( 0 ), 
+	MyStochastic( 0 ) ;
+
+alpha1 = ( Cosine( .707 * 360 / 48 ) 
+	+ Sine ( .707 * 360 / 48 ) - 1 )
+	/ Cosine( .707 * 360 / 48 ) ;
+	
+HP = ( 1 - alpha1 / 2 ) * ( 1 - alpha1 / 2 )
+	* ( Close - 2 * Close[1] + Close[2] ) 
+	+ 2 * ( 1 - alpha1 ) * HP[1] - ( 1 - alpha1 ) 
+	* ( 1 - alpha1 ) * HP[2] ;
+
+a1 = ExpValue( -1.414 * 3.14159 / 10 ) ;
+b1 = 2 * a1 * Cosine( 1.414 * 180 / 10 ) ;
+c2 = b1 ;
+c3 = -a1 * a1 ;
+c1 = 1 - c2 - c3 ;
+Filt = c1 *( HP + HP[1] ) / 2 
+	+ c2 * Filt[1] + c3 * Filt[2] ;
+
+HighestC = Filt ;
+LowestC = Filt ;
+
+For count = 0 to Length - 1 
+	begin
+	if Filt[count] > HighestC then 
+		HighestC = Filt[count] ;
+	if Filt[count] < LowestC then 
+		LowestC = Filt[count] ;
+	end;
+
+Stoc = ( Filt - LowestC ) / ( HighestC - LowestC ) ;
+MyStochastic = c1 * ( Stoc + Stoc[1] ) / 2 +
+	c2 * MyStochastic[1] + c3 * MyStochastic[2] ;
+
+if MyStochastic crosses over ObLevel then
+	SellShort next bar at Market 
+else if MyStochastic crosses under OsLevel then
+	Buy next bar at Market ;

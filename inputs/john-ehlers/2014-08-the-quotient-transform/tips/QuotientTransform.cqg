@@ -1,0 +1,23 @@
+CQG code for the study 
+
+/*Early-Onset Trend Indicator by John F. Ehlers*/
+Parameters:
+LPPeriod(15);
+K(.95);
+/*Highpass filter cyclic components whose periods are shorter than 100 bars*/
+alpha1:= (Cos(.707*360/100) + Sin(.707*360/100) -1) / Cos(.707*360/100);
+HP:=(1 - alpha1 /2)*(Close(@) - 2*Close(@)[-1] + Close(@)[-2])+ 2*(1 - alpha1)*HP[-1] - (1 -alpha1)*(1 - 
+alpha1)*HP[-2];
+/*SuperSmoother Filter*/
+a1:= Exponential(-1.414*3.14159/LPPeriod); 
+b1:= 2* a1* Cos(1.414*180/LPPeriod); 
+c2:= b1; 
+c3:= -a1*a1; 
+c1:= 1 - c2 - c3; 
+Filt:= c1*(HP + HP[-1]) / 2 + c2*Filt[-1]+ c3*Filt[-2];
+/*Fast Attack - Slow Decay Algorithm*/
+Peak:= if(Abs(Filt) > Peak[-1], Abs(Filt),Peak[-1] * .991);
+/*Normalized Roofing Filter*/
+X:=Filt/Peak;
+Quotient:= (X + K) / (K*X + 1);
+quotient

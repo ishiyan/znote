@@ -1,0 +1,50 @@
+!PUTTING A STOP TO IT
+!Author: David Garrard, TASC May 2011
+!Coded by: Richard Denning 2/14/2012
+!www.TradersEdgesystems.com
+
+!NOTE: ALL STOPS ARE FOR END OF DAY TRADING WHERE THE EXIT 
+!      OCCURS NEXT DAY AT OPEN AFTER EXIT CONDITION IS TRUE
+!      ***THESE STOPS ONLY WORK IN BACKTESTING***
+!      ***THE STOP VALUES CANNOT BE DISPLAYED IN A REPORT***
+
+
+!ABREVIATIONS:
+C is [close].
+C1 is valresult(C,1).
+O is [open].
+H is [high].
+L is [low].
+PEP is {position entry price}. !returns entry price
+PHP is {position high price}.  !returns highest close of position so far
+PLP is {position low price}.   !returns lowest close of position so far
+PD is {position days}.         !returns number of bars position held
+				
+!INPUTS:
+SLP is 7.
+SLATR is 2. 
+TSP is 20.
+TSATR is 4.
+ATRlen is 20.
+
+!AVERAGE TRUE RANGE
+HD if hasdatafor(ATRlen+20) >= ATRlen.
+TR is Max(H - L,max(abs(C1 - L),abs(C1 - H))). 
+ATR is iff(HD,simpleavg(TR,ATRlen),0).
+ATRsig is valresult(ATR,PD).    !value of ATR on signal bar
+
+!!FOR EXITING LONG POSITIONS:
+!StopLoss Longs:
+    StopLossLongs if C / PEP <= (1 - SLP/100). 
+    StopLossATRlongs if PEP - C >= SLATR * ATRsig.
+!Trailing Stops Longs:
+    TrailStopLongs if C / PHP <= (1 - TSP/100).
+    TrailStopATRlongs if PHP - C >= TSATR * ATRsig.
+
+!!FOR EXITING SHORT POSITIONS:
+!StopLoss Shorts:
+    StopLossShorts if C / PEP >= (1 + SLP/100).
+    StopLossATRshorts if C - PEP >= SLATR * ATRsig.
+!TrailingStop Shorts:
+    TrailStopShorts if C / PLP >= (1 + TSP/100). 
+    TrailStopATRshorts if C - PLP >= TSATR * ATRsig.

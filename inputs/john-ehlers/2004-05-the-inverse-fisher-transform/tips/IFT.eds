@@ -1,0 +1,16 @@
+! INVERSE FISHER TRANSFORM OF RSI
+! Coded by Richard Denning 3/5/04
+! FIVE DAY WILDER RSI
+U  is [close]-val([close],1).
+D  is val([close],1)-[close].
+AvgU  is ExpAvg(iff(U>0,U,0),9).
+AvgD  is ExpAvg(iff(D>=0,D,0),9).
+RSI  is 100-(100/(1+(AvgU/AvgD))).
+! IFISHER OF RSI
+Value1  is 0.1 * (RSI - 50).
+Value2  is expavg(Value1,9).
+! Exponential average substituted for weighted averaging.
+! The author has indicated that either is acceptable for smoothing.
+IFish is  (Exp(2 * Value2) - 1) / (Exp(2 * Value2) + 1) * 100.
+! Ehlers' amount x 100 for ease of plotting
+! Plot IFish as a custom indicator with upper and lower supports of +50 and - 50

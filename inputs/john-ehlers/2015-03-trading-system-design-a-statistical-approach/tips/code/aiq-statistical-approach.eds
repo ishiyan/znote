@@ -1,0 +1,41 @@
+!TRADING SYSTEM DESIGN: A STATISTICAL APPROACH
+
+!Author: John Ehlers, TASC March 2015
+
+!Coded by: Richard Denning 1/12/2015
+
+!www.TradersEdgeSystems.com
+
+
+
+!STOCHASTIC TRADING SYSTEM FROM ARTICLE:
+
+
+
+!INPUTS:
+
+StocLength is 8.
+
+Threshold is 0.3.
+
+TradeLength is 14.
+
+PctLoss is 3.8.
+
+
+
+!SYSTEM CODE:
+
+HiC is Highresult([Close], StocLength, 0).
+
+LoC is Lowresult([Close], StocLength, 0).
+
+Stoc is ([Close] - LoC) / (HiC - LoC).
+
+Buy if Stoc < Threshold and valrule(Stoc >= Threshold,1).
+
+PD is {position days}.
+
+PEP is {position entry price}.
+
+ExitLong if PD - 1 >= TradeLength or [Low] < PEP*(1-PctLoss/100).

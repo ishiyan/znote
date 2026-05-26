@@ -1,0 +1,134 @@
+'INTRODUCING SWAMI CHARTS
+'Authors: John Ehlers and Ric Way, TASC March 2012
+'Coded by: Richard Denning 1/15/2012
+'www.TradersEdgeSystems.com
+
+Function RSI_SWAMI_3_FUN()
+Dim myRSI2,myRSI3,myRSI5,myRSI8,myRSI13,myRSI21,myRSI34
+Dim entryLvlA,entryLvlB,exitLvlA,exitLvlB,exitLvlC
+Dim sig2 As BarArray
+Dim sig3 As BarArray
+Dim sig5 As BarArray
+Dim sig8 As BarArray
+Dim sig13 As BarArray
+Dim sig21 As BarArray
+Dim sig34 As BarArray
+
+entryLvlA = 10
+entryLvlB = 20
+exitLvlA = 0
+exitLvlB = 5
+exitLvlC = 10
+
+myRSI2 = rsi(C,2,0) 
+myRSI3 = rsi(C,3,0) 
+myRSI5 = rsi(C,5,0) 
+myRSI8 = rsi(C,8,0) 
+myRSI13 = rsi(C,13,0) 
+myRSI21 = rsi(C,21,0)
+myRSI34 = rsi(C,34,0) 
+
+If myRSI2 < 50 - entryLvlA Then sig2 = 1
+If myRSI2 > 50 + entryLvlA Then sig2 = -1
+
+If myRSI3 < 50 - entryLvlA Then sig3 = 1
+If myRSI3 > 50 + entryLvlA Then sig3 = -1
+
+If myRSI5 < 50 - entryLvlA Then sig5 = 1
+If myRSI5 > 50 + entryLvlA Then sig5 = -1
+
+If myRSI8 < 50 - entryLvlA Then sig8 = 1
+If myRSI8 > 50 + entryLvlA Then sig8 = -1
+
+If myRSI13 < 50 - entryLvlA Then sig13 = 1
+If myRSI13 > 50 + entryLvlA Then sig13 = -1
+
+If myRSI21 < 50 - entryLvlA Then sig21 = 1
+If myRSI21 > 50 + entryLvlA Then sig21 = -1
+
+If myRSI34 < 50 - entryLvlB Then sig34 = 1
+If myRSI34 > 50 + entryLvlB Then sig34 = -1
+
+RSI_SWAMI_3_FUN = sig2 + sig3 + sig5 + sig8 + sig13 + sig21 + sig34
+
+End Function
+'---------------------------------------------------------------------
+
+'indicator plot:
+
+Sub RSI_SWAMI_3_IND()
+plot1(RSI_SWAMI_3_FUN())
+plot2(7)
+plot3(-7)
+End Sub
+'---------------------------------------------------------------------
+
+'INTRODUCING SWAMI CHARTS
+'Authors: John Ehlers and Ric Way, TASC March 2012
+'System author: Richard Denning 1/15/2012
+'Coded by: Richard Denning 1/15/2012
+'www.TradersEdgeSystems.com
+
+'trading system (not part of article):
+
+Sub RSI_SWAMI_3()
+Dim myRSI2,myRSI3,myRSI5,myRSI8,myRSI13,myRSI21,myRSI34
+Dim entryLvlA,entryLvlB,exitLvlA,exitLvlB,exitLvlC
+
+entryLvlA = 10  'when rsi is < 40 (longs) or > 60 (shorts)
+entryLvlB = 20  'when rsi is < 30 (longs) or > 70 (shorts)
+exitLvlA = 0    'see exit formula-has not effect when = 0
+exitLvlB = 5    'see exit formula-allows exits when before reversing level is reached
+exitLvlC = 10   'see exit formula-allows exits when before reversing level is reached
+
+'use Fibonacci series for multiple lengths on the RSI incidator
+myRSI2 = rsi(C,2,0) 
+myRSI3 = rsi(C,3,0) 
+myRSI5 = rsi(C,5,0) 
+myRSI8 = rsi(C,8,0) 
+myRSI13 = rsi(C,13,0) 
+myRSI21 = rsi(C,21,0)
+myRSI34 = rsi(C,34,0) 
+
+tradesallowed = SameDirectDiffSignals
+exitsallowed = SameDirectDiffSignals
+
+'for each length that has a new signal, trade one contract
+'when not applying sizing, maximum contracts will be 7 
+
+If myRSI2 < 50 - entryLvlA Then Buy("LE2",1,0,Market,Day)
+If exitLvlA > 0 And myRSI2 > 50 + entryLvlA - exitLvlA Then ExitLong("LX2","LE2",1,0,Market,Day)
+If myRSI2 > 50 + entryLvlA Then Sell("SE2",1,0,Market,Day)
+If exitLvlA > 0 And myRSI2 < 50 - entryLvlA + exitLvlA Then ExitShort("SX2","SE2",1,0,Market,Day)
+
+If myRSI3 < 50 - entryLvlA Then Buy("LE3",1,0,Market,Day)
+If exitLvlA > 0 And myRSI3 > 50 + entryLvlA - exitLvlA Then ExitLong("LX3","LE3",1,0,Market,Day)
+If myRSI3 > 50 + entryLvlA Then Sell("SE3",1,0,Market,Day)
+If exitLvlA > 0 And myRSI3 < 50 - entryLvlA + exitLvlA Then ExitShort("SX3","SE3",1,0,Market,Day)
+
+If myRSI5 < 50 - entryLvlA Then Buy("LE5",1,0,Market,Day)
+If exitLvlA > 0 And myRSI5 > 50 + entryLvlA - exitLvlA Then ExitLong("LX5","LE5",1,0,Market,Day)
+If myRSI5 > 50 + entryLvlA Then Sell("SE5",1,0,Market,Day)
+If exitLvlA > 0 And myRSI5 < 50 - entryLvlA + exitLvlA Then ExitShort("SX5","SE5",1,0,Market,Day)
+
+If myRSI8 < 50 - entryLvlA Then Buy("LE8",1,0,Market,Day)
+If exitLvlB > 0 And myRSI8 > 50 + entryLvlA - exitLvlB Then ExitLong("LX8","LE8",1,0,Market,Day)
+If myRSI8 > 50 + entryLvlA Then Sell("SE8",1,0,Market,Day)
+If exitLvlB > 0 And myRSI8 < 50 - entryLvlA + exitLvlB Then ExitShort("SX8","SE8",1,0,Market,Day)
+
+If myRSI13 < 50 - entryLvlA Then Buy("LE13",1,0,Market,Day)
+If exitLvlC > 0 And myRSI13 > 50 + entryLvlA - exitLvlC Then ExitLong("LX13","LE13",1,0,Market,Day)
+If myRSI13 > 50 + entryLvlA Then Sell("SE13",1,0,Market,Day)
+If exitLvlC > 0 And myRSI13 < 50 - entryLvlA + exitLvlC Then ExitShort("SX13","SE13",1,0,Market,Day)
+
+If myRSI21 < 50 - entryLvlA Then Buy("LE21",1,0,Market,Day)
+If exitLvlC > 0 And myRSI21 > 50 + entryLvlA - exitLvlC Then ExitLong("LX21","LE21",1,0,Market,Day)
+If myRSI13 > 50 + entryLvlA Then Sell("SE21",1,0,Market,Day)
+If exitLvlC > 0 And myRSI13 < 50 - entryLvlA + exitLvlC Then ExitShort("SX21","SE21",1,0,Market,Day)
+
+If myRSI34 < 50 - entryLvlB Then Buy("LE34",1,0,Market,Day)
+If exitLvlA > 0 And myRSI34 > 50 + entryLvlB - exitLvlA Then ExitLong("LX34","LE34",1,0,Market,Day)
+If myRSI34 > 50 + entryLvlB Then Sell("SE34",1,0,Market,Day)
+If exitLvlA > 0 And myRSI34 < 50 - entryLvlB + exitLvlA Then ExitShort("SX34","SE34",1,0,Market,Day)
+End Sub
+'----------------------------------------------------------------------------------------

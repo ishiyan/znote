@@ -1,0 +1,85 @@
+! FLAT BASE BREAKOUT
+! From the article named "The Search for Your Trading Style"
+! Author: Donald Pendergast, TASC January 2010
+! Coded by: Richard Denning 1/09/10
+! www.TradersEdgeSystems.com
+
+! Use built-in stops:
+  ! Trailing set to 80%
+  ! Profit protect set to protect 90% over 5%
+  ! Also use trailing ATR exit rule below "ExitLong"
+! Pricing:
+  ! Entry pricing - "user defined = EntryPr and Current"
+  ! Exit pricing - "Default (Next Period Open)"
+
+! INPUTS
+baseLen is 55.
+bsATR	is 5.
+stpATR	is 3.
+atrLen	is 7.
+cmfLen	is 100.
+minPrice	is 5.
+minVme	is 3000. 
+	
+! ABBREVIATIONS:
+C 	is [close].
+C1 	is val([close],1).
+O	is [open].	
+H	is [high].
+L	is [low].
+Name	is description().
+OSD	is offSetToDate(month(),day(),year()).
+PD 	is {Position days}.
+
+! AVERAGE TRUE RANGE
+TR 	is Max(H - L,max(abs(C1 - L),abs(C1- H))). 
+ATR	is simpleavg(TR,atrLen).
+ATRpct	is simpleavg(TR / C,atrLen) * 100.
+
+! BASE INDICATORS
+HHbase	is highresult(H,baseLen,1).
+HHdte	is scanany(H=^HHbase,baseLen+1).
+HHos	is scanany(H=^HHbase,baseLen+1) then OSD.
+LLbase	is lowresult(L,baseLen,1).
+LLdte	is scanany(L=^LLbase,baseLen+1).
+LLos	is scanany(L=^LLbase,baseLen+1) then OSD.
+baseATR is (HHbase - LLbase) / ATR.
+avgV	is simpleavg([volume],baseLen).
+
+! CHAIKIN MONEY FLOW
+AD	is [volume] * (C - O) / (H - L).
+CMF	is sum(AD,cmfLen) / sum([volume],cmfLen).
+
+! PRICE VOLUME AND DATA FILTER	
+PVD	if C > minPrice and avgV > minVme 
+	and hasdatafor(cmfLen+10) > baseLen.
+
+! BREAKOUT RULE
+BO	if H >  HHbase  and PVD.
+
+! FLAT BASE RULE
+FlatBase if (HHbase - LLbase) / ATR < bsATR and PVD.
+
+! DECLINING VOLATILITY FILTER
+VolaDwn	if slope2(ATR,baseLen) < 0 and PVD.
+
+! INCREASING MONEYFLOW FILTER
+MFup	if slope2(CMF,baseLen) > 0 and PVD.
+
+! ENTRY RULE
+Buy 	if  (HHbase - LLbase) / ATR < bsATR
+	and H >  HHbase
+	and slope2(ATR,baseLen) < 0
+	and slope2(CMF,baseLen) > 0
+	and PVD.
+
+! ENTRY RULE RESTRICTED TO FIRST BREAK OUT IN LAST 10 BARS
+FirstBUY if Buy and countof(BO,10) = 1.
+
+! ENTRY PRICE
+EntryPr	is max(O,HHbase).
+
+! TRAILING EXIT
+stop 	is L - ATR * stpATR.
+stopVal	is highresult(stop,PD,1).
+ExitLong if C < stopVal.

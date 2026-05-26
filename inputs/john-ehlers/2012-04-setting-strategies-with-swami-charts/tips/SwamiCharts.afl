@@ -1,0 +1,50 @@
+PI = 3.1415926; 
+
+function BandPass( input, period, delta ) 
+{ 
+ beta = cos( 2 * PI / period ); 
+ gamma = 1 / cos( 4 * delta / period ); 
+ alpha = gamma - sqrt( gamma * gamma - 1 ); 
+
+ bp = 0; 
+
+ mom = input - Ref( input, -2 ); 
+
+ for( i = 2; i < BarCount; i++ ) 
+  bp[ i ] = 0.5 * ( 1 - alpha ) * mom[ i ] 
+  + beta * ( 1 + alpha ) * bp[ i - 1 ] 
+  - alpha * bp[ i - 2 ]; 
+
+ return bp; 
+} 
+
+delta = 0.5; 
+fraction = Param("fraction", 0.1, 0, 1, 0.01 ); 
+
+for ( period = 10; period < 50; period++ ) 
+{ 
+ bp = BandPass( ( H + L )/2, period, delta ); 
+
+ mean = MA( bp, 2 * period ); 
+
+ bp1 = Ref( bp, -1 ); 
+ bp2 = Ref( bp, -2 ); 
+
+ pk = ValueWhen( bp1 > bp AND bp1 > bp2, bp1 ); 
+ Vl = ValueWhen( bp1 < bp AND bp1 < bp2, bp1 ); 
+
+ AvgPk = MA( pk, 50 ); 
+ AvgVl = MA( Vl, 50 ); 
+
+ amp = ( AvgPk - AvgVl ); 
+ i3 = mean / ( fraction * amp ); 
+
+ indicator = 1 + Min( 1, Max( -1, i3 ) ); 
+
+ Color = ColorHSB( 32 * indicator, 255, 255 ); 
+ N = period; 
+ PlotOHLC( N, N+1, N, N, "", Color, styleCloud | styleNoLabel ); 
+
+} 
+
+Title = "Market Mode Swami chart";

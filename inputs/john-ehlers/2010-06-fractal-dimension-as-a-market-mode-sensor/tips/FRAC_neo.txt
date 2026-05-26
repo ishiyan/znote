@@ -1,0 +1,16 @@
+LISTING 1 
+myprice := fml(data1, param1);
+$N := param2;
+' force N divide by 2 into integer when N input is not a even number
+$half_N := if(mod($N, 2) > 0, round($N/2), $N/2);
+smooth := (myprice + 2*myprice(1) + 2*myprice(2) + myprice(3))/4;
+$N3 := safediv((hhv(smooth,$N) - llv(smooth,$N)),$N,0);
+$N1 := safediv((hhv(smooth,$half_N) - llv(smooth, $half_N)),$half_N,0);
+$N2 := safediv((hhv($half_N,smooth,$half_N)-llv($half_N,smooth,$half_N)),$half_N,0);
+Ratio := if(($N1>0) and ($N2>0) and ($N3>0),
+         0.5*(log10($N1+$N2) - log10($N3))/(log10(2) + $dimen), 0);
+$dimen := average(Ratio, 20);
+plot1 := $dimen;
+plot2 := 1.6;
+plot3 := 1.4;
+success1 := if(mod($N, 2) > 0, 0, 1);

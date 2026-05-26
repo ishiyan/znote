@@ -1,0 +1,481 @@
+_BandPassFilter_JE (Indicator)
+
+{ TASC, April, 2012 }
+{ John Ehlers, Ric Way }
+{ Band Pass Filter }
+	
+inputs:
+	Price(( High + Low ) / 2 ),
+	Period( 20 ),
+	BPDdelta( 0.1 ) ;
+
+variables:
+	BPGamma( 0 ),
+	BPAlpha( 0 ),
+	BPBeta( 0 ),
+	BP( 0 ) ;
+
+BPBeta = Cosine( 360 / Period ) ;
+
+BPGamma = 1 / Cosine( 720 * BPDdelta / Period ) ;
+BPAlpha = BPGamma - 
+ SquareRoot( BPGamma * BPGamma - 1 ) ;
+
+BP = 0.5 * ( 1 - BPAlpha ) * ( Price - Price[2] ) +
+ BPBeta * ( 1 + BPAlpha ) * BP[1] - BPAlpha * BP[2] ;
+
+Plot1( BP ) ;
+Plot2( 0 ) ;
+
+{ From "Empirical Mode Decomposition,"
+March 2010 Stocks & Commodities }
+
+
+_CoronaSwingPos_JE (Indicator)
+
+{ TASC, April, 2012 }
+{ John Ehlers, Ric Way }
+
+{
+Corona Chart Swing Position written by 
+John F. Ehlers copyright (c) 2008
+
+The swing position indicator shows the phasing of 
+the data within the dominant cycle. A value of -5
+means the cycle is at its valley, while a value of
++5 means the cycle is at its peak.  In a pure cycle,
+the swing position will trace out the shape of
+a sine wave.
+}
+
+inputs:
+	Price( ( High + Low ) / 2 ),
+	LineR( 180 ),
+	LineG( 255 ),
+	LineB( 210 ),
+	FuzzR( 0 ),
+	FuzzG( 172 ),
+	FuzzB( 64 ) ;
+
+variables:
+	BPDelta( 0.1 ),
+	BPGamma( 0 ),
+	alpha( 0 ),
+	BPBeta( 0 ),
+	N( 0 ),
+	Period( 0 ),
+	MaxAmpl( 0 ),
+	Num( 0 ),
+	Denom( 0 ),
+	DC( 0 ),
+	DomCyc( 0 ),
+	Color1( 0 ),
+	Color2( 0 ),
+	Color3( 0 ),
+	alpha1( 0 ),
+	HP( 0 ),
+	SmoothHP( 0 ),
+	gamma2( 0 ),
+	alpha2( 0 ),
+	beta2( 0 ),
+	delta2( 0.1 ),
+	BP2( 0 ),
+	Q2( 0 ),
+	Lead60( 0 ),
+	HL( 0 ),
+	LL( 0 ),
+	count( 0 ),
+	Psn( 0 ),
+	Width( 0 ) ;
+
+arrays:
+	IArray[60]( 0 ),
+	OldI[60]( 0 ),
+	OlderI[60]( 0 ),
+	Q[60]( 0 ),
+	OldQ[60]( 0 ),
+	OlderQ[60]( 0 ),
+	Real[60]( 0 ),
+	OldReal[60]( 0 ),
+	OlderReal[60]( 0 ),
+	Imag[60]( 0 ),
+	OldImag[60]( 0 ),
+	OlderImag[60]( 0 ),
+	Ampl[60]( 0 ),
+	OldAmpl[60]( 0 ),
+	DB[60]( 0 ),
+	OldDB[60]( 0 ),
+	Raster[50]( 0 ),
+	OldRaster[50]( 0 ) ;
+
+alpha1 = ( 1 - Sine( 360 / 30 ) ) / Cosine( 360 / 30 );
+HP = 0.5 * ( 1 + alpha1 ) * ( Price - Price[1] ) + 
+	alpha1 * HP[1] ;
+SmoothHP = ( HP + 2 * HP[1] + 3 * HP[2] + 3 * HP[3] + 
+	2 * HP[4] +
+ HP[5] ) / 12 ;
+
+if CurrentBar < 7 then 
+ 	SmoothHP = Price - Price[1] ;
+
+if CurrentBar = 1 then
+	SmoothHP = 0 ;
+
+BPDelta = -0.015 * CurrentBar + 0.5 ;
+
+if BPDelta < 0.1 then 
+	BPDelta = 0.1 ;
+
+if CurrentBar > 12 then
+	begin
+	for N = 12 to 60 
+		begin
+		BPBeta = Cosine( 720 / N ) ;
+		BPGamma = 1 / Cosine( 1440 * BPDelta / N ) ;
+		alpha = BPGamma - 
+			SquareRoot( BPGamma * BPGamma - 1 ) ;
+		Q[N] = ( 0.5 * N / 6.28318 ) * 
+			( SmoothHP - SmoothHP[1] ) ;
+		IArray[N] = SmoothHP ;
+		Real[N] = 0.5 * ( 1 - alpha ) * ( IArray[N] 
+			- OlderI[N] ) + BPBeta * ( 1 +
+		 alpha ) * OldReal[N] - alpha * OlderReal[N] ;
+		Imag[N] = 0.5 * ( 1 - alpha ) * ( Q[N] - 
+			OlderQ[N] ) + BPBeta * ( 1 +
+		 alpha )* OldImag[N] - alpha * OlderImag[N] ;
+		Ampl[N] = ( Real[N] * Real[N] + 
+			Imag[N] * Imag[N] ) ;
+		end ;
+	end ;
+
+for N = 12 to 60 
+	begin
+	OlderI[N] = OldI[N] ;
+	OldI[N] = IArray[N] ;
+	OlderQ[N] = OldQ[N] ;
+	OldQ[N] = Q[N] ;
+	OlderReal[N] = OldReal[N] ;
+	OldReal[N] = Real[N] ;
+	OlderImag[N] = OldImag[N] ;
+	OldImag[N] = Imag[N] ;
+	OldAmpl[N] = Ampl[N] ;
+	OldDB[N] = DB[N] ;
+	end;
+
+for N = 1 to 50 
+	begin
+	OldRaster[N] = Raster[N] ;
+	end ;
+
+MaxAmpl = Ampl[12] ;
+
+for N = 12 to 60 
+	begin
+	if Ampl[N] > MaxAmpl then 
+		MaxAmpl = Ampl[N] ;
+	end;
+
+for N = 12 to 60 
+	begin
+	if MaxAmpl <> 0 and (Ampl[N] / MaxAmpl) > 0 then 
+		DB[N] = -10 * Log( 0.01 / ( 1 - 0.99 * 
+		 Ampl[N] / MaxAmpl ) ) / Log( 10 ) ;
+	DB[N] = 0.33 * DB[N] + 0.67 * OldDB[N] ;
+	if DB[N] > 20 then 
+		DB[N] = 20 ;
+	end ;
+
+Num = 0 ;
+Denom = 0 ;
+
+for N = 12 to 60 
+	begin
+	if DB[N] <= 6 then 
+		begin
+		Num = Num + N * ( 20 - DB[N] ) ;
+		Denom = Denom + ( 20 - DB[N] ) ;
+		end ;
+	if Denom <> 0 then 
+		DC = 0.5 * Num / Denom ;
+	end ;
+
+DomCyc = Median( DC, 5 ) ;
+
+if DomCyc < 6 then 
+	DomCyc = 6 ;
+beta2 = Cosine( 360 / DomCyc ) ;
+gamma2 = 1 / Cosine( 720 * delta2 / DomCyc ) ;
+alpha2 = gamma2 - SquareRoot( gamma2 * gamma2 - 1 ) ;
+BP2 = 0.5 * ( 1 - alpha2 ) * ( Price - Price[2] ) + 
+	beta2 * ( 1 + alpha2 ) * BP2[1] - alpha2 * BP2[2] ;
+Q2 = ( DomCyc / 6.28318 ) * ( BP2 - BP2[1] ) ;
+Lead60 = 0.5 * BP2 + 0.866 * Q2 ;
+HL = Lead60 ;
+LL = Lead60 ;
+
+for count = 0 to 50 
+	begin
+	if Lead60[count] > HL then 
+		HL = Lead60[count] ;
+	if Lead60[count] < LL then 
+		LL = Lead60[count] ;
+	end ;
+
+Psn = ( Lead60 - LL ) / ( Hl - LL ) ;
+HL = Psn ;
+LL = Psn ;
+
+for count = 0 to 20 
+	begin
+	if Psn[count] > HL then 
+		HL = Psn[count] ;
+	if Psn[count] < LL then 
+		LL = Psn[count] ;
+	end ;
+
+if HL - LL > .85 then 
+	Width =  .01 
+else 
+	Width = 0.15 * ( HL - LL ) ;
+
+for N = 1 to 50 
+	begin
+	Raster[N] = 20 ;
+	if N < Round( 50 * Psn, 0 ) then 
+		Raster[N] = 0.5 * ( Power( ( 20 * Psn - 
+		 0.4 * N ) / Width, 0.95 ) 
+		 + 0.5 * OldRaster[N] ) ;
+	if N > Round( 50 * Psn, 0 ) then 
+		Raster[N] = 0.5 * ( Power( ( -20 * Psn + 
+		0.4 * N ) / Width, 0.95 ) + 
+		 0.5 * OldRaster[N] ) ;
+	if N = Round( 50 * Psn, 0 ) then 
+		Raster[N] = 0.5 * OldRaster[N] ;
+	if Raster[N] < 0 then 
+		Raster[N] = 0 ;
+	if Raster[N] > 20 then 
+		Raster[N] = 20 ;
+	if HL - LL > 0.8 then 
+		Raster[N] = 20 ;
+	OldRaster[N] = Raster[N] ;
+	end ;
+
+Plot1( 10 * Psn - 5, "S51", RGB( LineR, LineG, 
+	LineB ), 0, 2 ) ;
+
+for N = 1 to 50 
+	begin
+	if Raster[N] <= 10 then 
+		begin
+		Color1 = LineR + Raster[N]*
+			(FuzzR - LineR) / 10 ;
+		Color2 = LineG + Raster[N]*
+			(FuzzG - LineG) / 10 ;
+		Color3 = LineB + Raster[N]*
+			(FuzzB - LineB) / 10 ;
+		END;
+	if Raster[N] > 10 then 
+		begin
+		Color1 = FuzzR*(2 - Raster[N] / 10);
+		Color2 = FuzzG*(2 - Raster[N] / 10);
+		Color3 = FuzzB*(2 - Raster[N] / 10);
+		END;
+	
+	if N = 2 then 
+		Plot2( 0.2 * N - 5, "S2", RGB( Color1, Color2, 
+		Color3 ), 0, 5 ) ;
+	if N = 3 then 
+		Plot3( 0.2 * N - 5, "S3", RGB( Color1, Color2, 
+		Color3 ), 0, 5 ) ;
+	if N = 4 then 
+		Plot4( 0.2 * N - 5, "S4", RGB( Color1, Color2, 
+		Color3 ), 0, 5 ) ;
+	if N = 5 then 
+		Plot5( 0.2 * N - 5, "S5", RGB( Color1, Color2, 
+		Color3 ), 0, 5 ) ;
+	if N = 6 then 
+		Plot6( 0.2 * N - 5, "S6", RGB( Color1, Color2, 
+		Color3 ), 0, 5 ) ;
+	if N = 7 then 
+		Plot7( 0.2 * N - 5, "S7", RGB( Color1, Color2, 
+		Color3 ), 0, 5 ) ;
+	if N = 8 then 
+		Plot8( 0.2 * N - 5, "S8", RGB( Color1, Color2, 
+		Color3 ), 0, 5 ) ;
+	if N = 9 then 
+		Plot9( 0.2 * N - 5, "S9", RGB( Color1, Color2, 
+		Color3 ), 0, 5 ) ;
+	if N = 10 then 
+		Plot10( 0.2 * N - 5, "S10", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 11 then 
+		Plot11( 0.2 * N - 5, "S11", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 12 then 
+		Plot12( 0.2 * N - 5, "S12", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 13 then 
+		Plot13( 0.2 * N - 5, "S13", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 14 then 
+		Plot14( 0.2 * N - 5, "S14", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 15 then 
+		Plot15( 0.2 * N - 5, "S15", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 16 then 
+		Plot16( 0.2 * N - 5, "S16", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 17 then 
+		Plot17( 0.2 * N - 5, "S17", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 18 then 
+		Plot18( 0.2 * N - 5, "S18", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 19 then 
+		Plot19( 0.2 * N - 5, "S19", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 20 then 
+		Plot20( 0.2 * N - 5, "S20", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 21 then 
+		Plot21( 0.2 * N - 5, "S21", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 22 then 
+		Plot22( 0.2 * N - 5, "S22", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 23 then 
+		Plot23( 0.2 * N - 5, "S23", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 24 then 
+		Plot24( 0.2 * N - 5, "S24", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 25 then 
+		Plot25( 0.2 * N - 5, "S25", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 26 then 
+		Plot26( 0.2 * N - 5, "S26", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 27 then 
+		Plot27( 0.2 * N - 5, "S27", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 28 then 
+		Plot28( 0.2 * N - 5, "S28", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 29 then 
+		Plot29( 0.2 * N - 5, "S29", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 30 then 
+		Plot30( 0.2 * N - 5, "S30", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	If N = 31 then 
+		Plot31( 0.2 * N - 5, "S31", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	If N = 32 then 
+		Plot32( 0.2 * N - 5, "S32", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 33 then 
+		Plot33( 0.2 * N - 5, "S33", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 34 then 
+		Plot34( 0.2 * N - 5, "S34", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 35 then 
+		Plot35( 0.2 * N - 5, "S35", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 36 then 
+		Plot36( 0.2 * N - 5, "S36", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 37 then 
+		Plot37( 0.2 * N - 5, "S37", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 38 then 
+		Plot38( 0.2 * N - 5, "S38", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 39 then 
+		Plot39( 0.2 * N - 5, "S39", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 40 then 
+		Plot40( 0.2 * N - 5, "S40", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 41 then 
+		Plot41( 0.2 * N - 5, "S41", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 42 then 
+		Plot42( 0.2 * N - 5, "S42", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 43 then 
+		Plot43( 0.2 * N - 5, "S43", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 44 then 
+		Plot44( 0.2 * N - 5, "S44", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 45 then 
+		Plot45( 0.2 * N - 5, "S45", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 46 then 
+		Plot46( 0.2 * N - 5, "S46", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 47 then 
+		Plot47( 0.2 * N - 5, "S47", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 48 then 
+		Plot48( 0.2 * N - 5, "S48", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 49 then 
+		Plot49( 0.2 * N - 5, "S49", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	if N = 50 then 
+		Plot50( 0.2 * N - 5, "S50", 
+		RGB( Color1, Color2, Color3 ), 0, 5 ) ;
+	end ;
+
+
+_MarketMode_JE (Indicator)
+
+{ TASC, April, 2012 }
+{ John Ehlers, Ric Way }
+
+inputs:
+	Price( ( High + Low )  /2 ),
+	Period( 20 ),
+	BPDelta( 0.5 ),
+	Fraction( 0.1 ) ;
+
+variables:
+	BPAlpha( 0 ),
+	BPBeta( 0 ),
+	BPGamma( 0 ),
+	BP( 0 ),
+	MeanCalc( 0 ),
+	Peak( 0 ),
+	Valley( 0 ),
+	AvgPeak( 0 ),
+	AvgValley( 0 ) ; 
+
+BPBeta = Cosine( 360 / Period ) ;
+BPGamma = 1 / Cosine( 720 * BPDelta / Period ) ;
+
+BPAlpha = BPGamma - 
+ SquareRoot( BPGamma * BPGamma - 1 ) ;
+
+BP = 0.5 * ( 1 - BPAlpha ) * ( Price - Price[2] )
+ + BPBeta * ( 1 + BPAlpha ) * BP[1] - BPAlpha * BP[2] ;
+
+MeanCalc = Average( BP, 2 * Period ) ;
+Peak = Peak[1] ;
+Valley = Valley[1] ;
+
+if BP[1] > BP and BP[1] > BP[2] then
+	Peak = BP[1] ;
+if BP[1] < BP and BP[1] < BP[2] then
+	Valley = BP[1] ;
+
+AvgPeak = Average( Peak, 50 ) ;
+AvgValley = Average( Valley, 50 ) ;
+
+Plot1( MeanCalc, "Mean" ) ;
+Plot2( Fraction * AvgPeak, "Peak" ) ;
+Plot6( Fraction * AvgValley, "Valley" ) ;
+
+{ From "Empirical Mode Decomposition" S&C March }

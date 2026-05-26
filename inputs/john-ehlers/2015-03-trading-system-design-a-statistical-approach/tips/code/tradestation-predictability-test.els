@@ -1,0 +1,116 @@
+Indicator: _Ehlers Event Predictability
+
+{ 
+_Ehlers Event Predictability Indicator
+
+For application see..
+Technical Analysis of Stocks and Commodities
+March 2015 
+
+}
+
+variables:
+	Event( false ),
+	FuturePrice( 0 ),
+	j( 0 ),
+	CG( 0 ),
+	Denom( 0 ) ;
+arrays:
+	PredictBin[100]( 0 );
+
+
+//>>>>>>>>>> Start Event Code
+inputs:
+	StocLength( 10 ) ;
+variables:
+	HiC( 0 ),
+	LoC( 0 ),
+	Stoc( 0 ) ;
+HiC = Highest( Close, StocLength ) ;
+LoC = Lowest( Close, StocLength ) ;
+Stoc = ( Close - LoC ) / ( HiC - LoC );
+if Stoc[9] crosses under 0.2 then 
+	Event = true 
+else 
+	Event = false ;
+//<<<<<<<<<<<< End Event Code
+
+
+If Event then 
+	begin
+	FuturePrice = 100 * ( Close - Close[9] ) / Close[9] ; 
+	//Future is referenced to 10 bars back
+
+	If FuturePrice < -10 then 
+		FuturePrice = -10 ; //Limits lower price to -10%
+
+	If FuturePrice > 10 then 
+		FuturePrice = 10 ; //Limits higher price to +10%
+
+	FuturePrice = 5 * ( FuturePrice + 10 ) ; 
+	//scale -10% to +10% to be 0 - 100
+	end ;
+
+//Place the FuturePrices into one of 100 bins
+If FuturePrice <> FuturePrice[1] then 
+	begin
+	For j = 1 to 100 
+		begin
+		If FuturePrice > j - 1 and FuturePrice <= j then 
+			PredictBin[j] = PredictBin[j] + 1 ;
+		end;
+	end;
+
+//Measure Center of Gravity as a quick estimate
+CG = 0 ;
+Denom = 0 ;
+For j = 1 to 100 
+	begin
+	CG = CG + j * PredictBin[j] ;
+	Denom = Denom + PredictBin[j] ;
+	end ;
+
+CG = (CG/Denom-50)/5; 
+
+Plot1( CG, "CG" );
+
+if LastBarOnChartEx then 
+	begin
+	For j = 0 to 100 
+		begin
+		Print( File( "C:\PDFTest\PDF.CSV" ), 
+		.2*j - 10, ",", PredictBin[j] ) ;
+		end ;
+	end ;
+
+
+Strategy: _Ehlers Stochastic Strategy
+
+{
+_Ehlers Stochastic Strategy
+Technical Analysis of Stocks and Commodities
+March 2015
+}
+
+inputs:
+	StocLength( 8 ),
+	Threshold( .3 ),
+	TradeLength( 14 ),
+	PctLoss( 3.8 ) ;
+
+variables:
+	HiC( 0 ),
+	LoC( 0 ),
+	Stoc( 0 ) ;
+
+HiC = Highest( Close, StocLength ) ;
+LoC = Lowest( Close, StocLength ) ;
+
+Stoc = ( Close - LoC ) / ( HiC - LoC ) ;
+
+If Stoc crosses under Threshold then 
+	Buy next bar on Open ;
+If Barssinceentry >= TradeLength then 
+	Sell next bar on Open ;
+If Low < EntryPrice * ( 1 - PctLoss / 100 ) then 
+	Sell next bar on Open ;

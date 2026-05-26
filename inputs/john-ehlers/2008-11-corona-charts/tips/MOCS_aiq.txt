@@ -1,0 +1,29 @@
+!! RELATIVE STRENGTH AS A SELLING TOOL
+! Author: Michael J. Carr, CMT, TASC Aug 2008
+! Coded by: Richard Denning 9/15/08
+! www.TradersEdgeSystems.com
+
+C is [close].
+
+! MOMENTUM OF COMPARATIVE STRENGTH (MOCS)
+RSspx is C / tickerUDF("SPX",C)*100000.
+RSema12 is expavg(RSspx,12).
+RSema26 is expavg(RSspx,26).
+
+! MACD FORMULA APPLIED TO RS
+MOCS is RSema12 - RSema26.
+sigMOCS is expavg(MOCS,9).
+
+difMOCS is  MOCS - sigMOCS.
+
+! ENTRY RULES FOR TESTING EXITS:
+LE1 if C > highresult(C,30,1) and difMOCS > 0 and MOCS > 0.
+LE2 if LE1.
+LE3 if LE1.
+LE4 if LE1.
+
+! VARIOUS EXITS USING MOCS:
+LX1 if difMOCS < 0.
+LX2 if  MOCS < 0.       
+LX3 if MOCS < 0 or countof(difMOCS < 0,6)=6 .
+LX4 if MOCS < 0 and countof(difMOCS < 0,6)=6 .

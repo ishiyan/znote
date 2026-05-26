@@ -1,0 +1,15 @@
+Title = "SwamiStochastics"; 
+
+for( N = 6; N <= 48; N++ ) 
+{ 
+ // Replace this line with the indicator of your choice, like RSI( N )
+ indicator = StochK( N, 4 ) / 100; 
+
+ red = IIf( indicator >= 0.5, 255 * ( 2 - 2 * indicator ), 255 ); 
+ green = IIf( indicator < 0.5, 255 * 2 * indicator, 255 ); 
+ blue = 0; 
+
+ Color = ColorRGB( red, green, blue ); 
+
+ PlotOHLC( N, N+1, N, N, "", Color, styleCloud | styleNoLabel ); 
+}

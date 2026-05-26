@@ -1,0 +1,58 @@
+LISTING 1
+function frama()
+Const Filt = 0
+      N    = 1
+dim myhhv, myllv, myprice
+   myhhv = itself.makeindicator ("hhv1", "hhv", Array("1.h"), _
+                                 Array(params("N").str))
+   myllv = itself.makeindicator ("llv1", "llv", Array("1.l"), _
+                                 Array(params("N").str))
+   myprice = itself.makeindicator ("price1", "fml", Array("1"), _
+                                 Array(params("Price").str))
+   if heap.size = 0 then
+      heap.allocate(2)
+      heap.value(Filt) = 0
+      heap.value(N) = params("N").int
+   end if
+   if data1.barsnum(0) < (heap.value(N)+1) then
+      itself.success = false
+      heap.value(Filt) = myprice.value(0)
+      exit function
+   end if
+   if (heap.value(N) mod 2) <> 0 then
+      ntlib.debug("N must be even number, calculation abort")
+      itself.success = false
+      exit function
+   end if
+   N3 = (myhhv.value(0)-myllv.value(0))/heap.value(N)
+   HH = data1.high(0)
+   LL = data1.low(0)
+   for i=0 to heap.value(N)/2-1
+      if data1.high(i) > HH then
+         HH = data1.high(i)
+      end if
+      if data1.low(i) < LL then
+         LL = data1.low(i)
+      end if
+   next
+   N1 = (HH-LL)/(heap.value(N)/2)
+   HH = data1.high(heap.value(N)/2)
+   LL = data1.low(heap.value(N)/2)
+   for i=heap.value(N)/2 to heap.value(N)-1
+      if data1.high(i) > HH then
+         HH = data1.high(i)
+      end if
+      if data1.low(i) < LL then
+         LL = data1.low(i)
+      end if
+   next
+   N2 = (HH-LL)/(heap.value(N)/2)
+   if N1>0 and N2>0 and N3>0 then
+      Dimen = (ntlib.ln(N1+N2) - ntlib.ln(N3))/ntlib.ln(2)
+      alpha = ntlib.exp(-4.6*(Dimen-1))
+   end if
+   if alpha<0.01 then alpha = 0.01
+   if alpha>1 then alpha = 1
+   frama = alpha*myprice.value(0)+(1-alpha)*heap.value(Filt)
+   heap.value(Filt) = frama
+end function

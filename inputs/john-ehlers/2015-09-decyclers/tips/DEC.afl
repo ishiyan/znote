@@ -1,0 +1,56 @@
+AMIBROKER CODE LISTING.
+SetBarsRequired( sbrAll ); 
+
+function HighPass( input, alpha ) 
+{ 
+    output = input; 
+
+    for( i = 2; i < BarCount; i++ ) 
+    { 
+      output[ i ] = ( 1 - alpha/2 ) ^ 2 * 
+                    ( input[ i ] - 2 * input[ i - 1 ] + input[ i -2 ] ) + 
+                    2 * ( 1 - alpha ) * output[ i - 1 ] - 
+                   ( 1 - alpha ) ^ 2 * output[ i - 2 ]; 
+    } 
+    
+    return output; 
+} 
+
+// newest version of AMiBroker (6.0) may use built-in IIR function instead 
+// - uncomment function below 
+/* 
+function HighPass( input, alpha ) 
+{ 
+   b0 = ( 1 - alpha/2 ) ^ 2; 
+   a1 = 2 * ( 1 - alpha ); 
+   a2 = - ( 1 - alpha ) ^ 2; 
+   return IIR( input, b0, a1, -2 * b0, a2, b0 ); 
+} 
+*/ 
+
+function DecycleOsc( HPPeriod, K ) 
+{ 
+    alpha1 = 0; 
+    alpha2 = 0; 
+    HP = 0; 
+    Decycle = 0; 
+
+    // hipass filter 
+    PI = 3.1415926; 
+
+    angle1 = 0.707 * 2 * PI / HPPeriod; 
+    angle2 = 0.707 * 2 * PI / ( 0.5 * HPPeriod ); 
+
+    alpha1 = ( cos( angle1 ) + sin( angle1 ) - 1 ) / cos( angle1 ); 
+    alpha2 = ( cos( angle2 ) + sin( angle2 ) - 1 ) / cos( angle2 ); 
+
+    HP = HighPass( Close, alpha1 ); 
+    Decycle = Close - HP; 
+    return 100 * K * HighPass( Decycle, alpha2 ); 
+} 
+
+Plot( DecycleOsc( 125, 1 )/Close, "DecycleOsc(125,1.0)",
+      colorRed, styleThick ); 
+Plot( DecycleOsc( 100, 1.2 )/Close, "DecycleOsc(100,1.2)", 
+      colorYellow, styleThick ); 
+      

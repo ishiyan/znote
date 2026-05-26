@@ -1,0 +1,69 @@
+'TRADING SYSTEM DESIGN: A STATISTICAL APPROACH
+
+'Author: John Ehlers, TASC March 2015
+
+'Coded by: Richard Denning 1/12/2015
+
+'www.TradersEdgeSystems.com
+
+
+
+'Stochastic trading system from article:
+
+Sub EHLERS_SYSTEMS(StocLength, Threshold, TradeLength, PctLoss)
+
+    Dim HiC As BarArray
+
+    Dim LoC As BarArray
+
+    Dim Stoc As BarArray
+
+
+
+    If BarNumber=FirstBar Then
+
+        'StocLength = 8
+
+        'Threshold = .3
+
+        'TradeLength = 14
+
+        'PctLoss = 3.8
+
+        HiC = 0
+
+        LoC = 0
+
+        Stoc = 0
+
+    End If
+
+
+
+    HiC = Highest(Close, StocLength, 0)
+
+    LoC = Lowest(Close, StocLength, 0)
+
+    Stoc = (Close - LoC) / (HiC - LoC)
+
+
+
+    If CrossesUnder(Stoc, Threshold) Then
+
+        Buy("LE", 1, 0, Market, Day)
+
+    End If
+
+    If BarsSinceEntry -1>= TradeLength Then
+
+        ExitLong("LX_time", "", 1, 0, Market, Day)
+
+    End If
+
+    If Low < EntryPrice*(1 - PctLoss /100) Then
+
+        ExitLong("LX_loss", "", 1, 0, Market, Day)
+
+    End If
+
+End Sub

@@ -1,0 +1,34 @@
+'|******************************************************************
+'|*** StockFinder RealCode Indicator - Version 5.0 www.worden.com 
+'|*** Copy and paste this header and code into StockFinder *********
+'|*** Indicator: Zero Lag - Error Correcting
+'|******************************************************************
+'# Length = UserInput.Integer = 20
+'# GainLimit = UserInput.Integer = 50
+Static alpha As Single
+Static EC(1) As Single
+Static EMA As Single
+If isFirstBar Then
+                alpha = 2 / (Length + 1)
+                EC(0) = Price.Last
+                EMA = Price.Last
+End If
+EC(1) = EC(0)
+EMA = alpha * Price.Last + (1 - alpha) * EMA
+Dim LeastErr As Single = Single.MaxValue
+Dim BestGain As Single
+For Value1 As Integer = -GainLimit To GainLimit
+                Dim Gain As Single = Value1 / 10
+                EC(0) = alpha * (EMA + Gain * (Price.Last - EC(1))) + (1 - alpha) * EC(1)
+                Dim Err As Single = Price.Last - EC(0)
+                If System.Math.Abs(Err) < LeastErr Then
+                                LeastErr = System.Math.Abs(Err)
+                                BestGain = Gain
+                End If
+Next
+EC(0) = alpha * (EMA + BestGain * (Price.Last - EC(1))) + (1 - alpha) * EC(1)
+OpenValue = EMA
+HighValue = System.Math.Max(EMA, EC(0))
+LowValue = System.Math.Min(EMA, EC(0))
+Plot = EC(0)
+

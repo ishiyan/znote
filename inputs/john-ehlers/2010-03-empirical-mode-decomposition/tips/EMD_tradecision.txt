@@ -1,0 +1,119 @@
+BANDPASS FILTER indicator:
+input
+Price:"Enter the Price:", MedianPrice;
+Period:"Enter the Period:", 20;
+Delta:"Enter the Delta:", 0.1;
+end_input
+
+var
+gamma:=0;
+alpha:=0;
+beta:=0;
+BP1:=0;
+BP2:=0;
+BP:=0;
+end_var
+
+if HistorySize < period + 2 then return 0;
+
+beta:=Cos(360 / Period);
+gamma:=1 / Cos(720 * delta / Period);
+alpha:=gamma - SquareRoot(gamma * gamma - 1);
+BP1:=0.5 * (1 - alpha) * (Price - Price\2\);
+BP2:=BP1 + beta * (1 + alpha) * BP1\1\ ;
+BP:=BP2 - alpha * BP1\2\;
+
+return BP;
+
+EXTRACTING THE TREND indicator:
+input
+Price:"Enter the Price:", MedianPrice;
+Period:"Enter the Period:", 20;
+Delta:"Enter the Delta:", 0.1;
+end_input
+
+var
+gamma:=0;
+alpha:=0;
+beta:=0;
+BP1:=0;
+BP2:=0;
+BP:=0;
+Trend:=0;
+end_var
+
+if HistorySize < period + 2 then return 0;
+
+(360 / Period);
+gamma:=1 / Cos(720 * delta / Period);
+alpha:=gamma - SquareRoot(gamma * gamma - 1);
+BP1:=0.5 * (1 - alpha) * (Price - Price\2\);
+BP2:=BP1 + beta * (1 + alpha) * BP1\1\ ;
+BP:=BP2 - alpha * BP1\2\;
+Trend:=SMA(BP, 2 * Period);
+
+return Trend;
+
+EMPIRICAL MODE DECOMPOSITION PEAK indicator:
+input
+Price:"Enter the Price:", MedianPrice;
+Period:"Enter the Period:", 20;
+Delta:"Enter the Delta:", 0.5;
+Fraction:"Enter the Fraction:", 0.1;
+end_input
+
+var
+alpha:=0;
+beta:=0;
+gamma:=0;
+BP1:=0;
+BP2:=0;
+BP:=0;
+Peak:=0;
+AvgPeak:=0;
+end_var
+
+beta:=Cos(360 / Period);
+gamma:=1 / Cos(720 * delta / Period);
+alpha:=gamma - SquareRoot(gamma * gamma - 1);
+BP1:=0.5 * (1 - alpha) * (Price - Price\2\);
+BP2:=BP1 + beta * (1 + alpha) * BP1\1\ ;
+BP:=BP2 - alpha * BP1\2\;
+
+if BP\1\ > BP and BP\1\ > BP\2\ then Peak:=BP\1\;
+AvgPeak:=SMA(Peak, 50);
+
+return Fraction * AvgPeak;
+
+EMPIRICAL MODE DECOMPOSITION VALLEY indicator:
+input
+Price:"Enter the Price:", MedianPrice;
+Period:"Enter the Period:", 20;
+Delta:"Enter the Delta:", 0.5;
+Fraction:"Enter the Fraction:", 0.1;
+end_input
+
+var
+alpha:=0;
+beta:=0;
+gamma:=0;
+BP1:=0;
+BP2:=0;
+BP:=0;
+Valley:=0;
+AvgValley:=0;
+end_var
+
+if HistorySize < period + 2 then return 0;
+
+beta:=Cos(360 / Period);
+gamma:=1 / Cos(720 * delta / Period);
+alpha:=gamma - SquareRoot(gamma * gamma - 1);
+BP1:=0.5 * (1 - alpha) * (Price - Price\2\);
+BP2:=BP1 + beta * (1 + alpha) * BP1\1\ ;
+BP:=BP2 - alpha * BP1\2\;
+
+if BP\1\ < BP and BP\1\ < BP\2\ then Valley:=BP\1\;
+AvgValley:=SMA(Valley, 50);
+
+return Fraction * AvgValley;

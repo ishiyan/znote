@@ -1,0 +1,14 @@
+{Provided By: Visual Trading Systems, LLC & Capital Market Services, LLC (c) Copyright 2008}
+{Description: Angle of Ascent Indicator}
+{Notes: T.A.S.C., September 2007 - "The Angle of Ascent" by Martha Stokes}
+{vt_AofA Version 1.0}
+{Calculate Linear Regression Indicator}
+SmoothData:= mov(Price,SmoothPeriods,SmoothType);
+LRI:= linreg(SmoothData,RegPeriods);
+{Determine the Angle of Ascent of LRI}
+NormalizedDifferenceInPrice:= if(SymbolPoint()=0.0001,10000,100);
+Rise:= (LRI - ref(LRI,-slopeper)) * NormalizedDifferenceInPrice;
+Run:= slopeper;
+Slope:= Rise/Run;
+Angle:= atan(Slope);
+Degrees:= Angle * 180 / PI;

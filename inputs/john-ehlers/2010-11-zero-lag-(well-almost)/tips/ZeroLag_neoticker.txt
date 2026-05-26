@@ -1,0 +1,41 @@
+Listing 1
+
+function tasc_zerolag : double;
+Const TempVal = 10;
+      PrevEMA = 0;
+      PrevEC  = 1;
+var alpha, Gain : double;
+    BestGain, EC : double;
+    LeastError, Error, EMA : double;
+    Value1, NGainLimit, GainLimit : integer;
+begin
+  if itself.firstcall then
+  begin
+    heap.allocate(TempVal);
+    heap.fill (0, TempVal-1, 0);
+  end;
+  alpha := 2/(param1.int+1);
+  EMA := alpha*data1.close[0] + (1-alpha)*heap.value[PrevEMA];
+  LeastError := 1000000;
+  NGainLimit := -1*param2.int;
+  GainLimit := param2.int;
+  for Value1 := NGainLimit to GainLimit do
+  begin
+    Gain  := Value1/10;
+    EC    := alpha*(EMA+Gain*(data1.close[0]-heap.value[PrevEC])) +
+            (1-alpha)*heap.value[PrevEC];
+    Error := data1.close[0]-EC;
+    if NTLib.abs(Error) < LeastError then
+    begin
+      LeastError := ntlib.abs(Error);
+      BestGain := Gain;
+    end;
+  end;
+
+  itself.plot [1] := alpha*(EMA + BestGain*(data1.close[0]-heap.value[PrevEC])) +
+                     (1-alpha)*heap.value[PrevEC];
+  itself.plot [2] := EMA;
+  heap.value [PrevEMA] := EMA;
+  heap.value [PrevEC]  := EC;
+end;
+

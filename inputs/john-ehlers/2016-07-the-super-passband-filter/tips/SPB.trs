@@ -1,0 +1,59 @@
+'THE SUPER PASBAND FILTER
+'Author: John Ehlers, TASC July 2016
+'Coded by: Richard Denning 5/11/16 
+'TradersEdgeSystems.com
+
+'returns the Ehlers Super PassBand value:
+Function Ehlers_SPB(Period1, Period2)
+    Dim a1
+    Dim a2
+    Dim PB As BarArray
+    
+    a1 = 5 / Period1
+    a2 = 5 / Period2
+    PB = (a1 - a2)*Close + (a2*(1 - a1) - a1*(1 - a2))*Close[1] + ((1 - a1) + (1 - a2))*PB[1] - (1 - a1)*(1 - a2)*PB[2]
+    Ehlers_SPB = PB
+End Function
+'-----------------------------------------------------------------------------------------------------------------------
+'returns the Ehlers RMS value:
+Function Ehlers_RMS(Period1,Period2)
+    Dim PB As BarArray
+    Dim RMS As BarArray
+    Dim count
+    PB = Ehlers_SPB(Period1,Period2)
+
+RMS = 0
+    For count = 0 To 49
+        RMS = RMS + PB[count]*PB[count]
+    Next
+    RMS = Sqr(RMS / 50)
+Ehlers_RMS = RMS
+End Function
+'-----------------------------------------------------------------------------------------------------------------------
+'plots the Ehlers_SPB and RMS indicators:
+Sub Ehlers_SPB_Ind(Period1,Period2)
+   plot1(Ehlers_SPB(Period1,Period2))
+   plot2(Ehlers_RMS(Period1,Period2))
+   plot3(-Ehlers_RMS(Period1,Period2))
+   plot4(0)
+End Sub
+'------------------------------------------------------------------------------------------------------------------------
+'example system created by Richard Denning using the Ehlers SPB & RMS indicators:
+'Note the following system is not in the article but is an example
+'   of how the indicator might be used in a system
+Sub Ehlers_SPB_sys(Period1,Period2,TrendLen,longOnly)
+'default: Period1=40, Period2=60, longOnly=1
+   Dim myRMS As BarArray
+   Dim mySPB As BarArray
+   Dim NDX As BarArray
+   mySPB = Ehlers_SPB(Period1,Period2)
+   myRMS = Ehlers_RMS(Period1,Period2)
+   NDX = C Of independent1
+   If CrossesOver(mySPB,-myRMS)And C>Average(C,TrendLen) And NDX>Average(NDX,TrendLen) Then Buy("LE",1,0,Market,Day)
+   If CrossesUnder(mySPB,myRMS) Then ExitLong("LX","",1,0,Market,Day)
+   If CrossesUnder(mySPB,0) Then ExitLong("LX_SE","LE",1,0,Market,Day)
+   If CrossesUnder(mySPB,0) And longOnly<>1 And C<Average(C,TrendLen) And NDX<Average(NDX,TrendLen) Then Sell("SE",1,0,Market,Day)
+   If CrossesOver(mySPB,-myRMS) Then ExitShort("SX_myRMS","SE",1,0,Market,Day)
+   If CrossesOver(mySPB,0) Then ExitShort("SX_0","SE",1,0,Market,Day)
+End Sub
+'----------------------------------------------------------------------------------------------------------------------------------

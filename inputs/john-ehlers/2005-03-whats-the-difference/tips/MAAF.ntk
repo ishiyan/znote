@@ -1,0 +1,49 @@
+Listing 1
+function maa_filter : double;
+var ind_smooth : variant;
+    mylength, median_pos : integer;
+    myalpha, value1, value2, value3, threshold : double;
+    prev_value2 : double;
+    init_length, i, median_pos : integer;
+begin
+   threshold := param2.real;
+   init_length := 39;
+   mylength := 39;
+   value3 := 0.2;
+   prev_value2 := 0;
+   value2 := 0;
+   if heap.size = 0 then
+   begin
+      heap.allocate(mylength+1);
+      heap.fill(0, mylength, 0);
+   end;
+   itself.makeindicator('myprice', 'fml', ['1'], [param1.str]);
+   ind_smooth := itself.makeindicator('mysmooth', 'fml', ['myprice'],
+                        ['(data1+2*data1(1)+2*data1(2)+data1(3))/6']);
+   while value3>threshold do
+   begin
+      myalpha := 2/(mylength+1);
+      for i := 0 to mylength-1 do
+         heap.value[i] := ind_smooth.value[i];
+      heap.sort(0, mylength-1);
+      if (mylength mod 2) > 0 then
+      begin
+         median_pos := ntlib.trunc(mylength/2);
+         value1 := (heap.value[median_pos]+heap.value[median_pos+1])/2;
+      end
+      else
+      begin
+         median_pos := mylength/2;
+         value1 := heap.value[median_pos];
+      end;
+      prev_value2 := Value2;
+      value2 := myalpha*ind_smooth.value[0]+(1-myalpha)*prev_value2;
+      if value1<>0 then
+         value3 := ntlib.abs(value1-value2)/value1;
+      mylength := mylength-2;
+   end;
+   if mylength<3 then mylength := 3;
+   myalpha := 2/(mylength+1);
+   result := myalpha*ind_smooth.value[0]+(1-myalpha)*heap.value[init_length];
+   heap.value[init_length] := result;
+end;

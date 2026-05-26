@@ -1,0 +1,38 @@
+//*********************************************************
+// Fractal Dimension Indicator
+//*********************************************************
+Price = parameter("Price");
+N = parameter("Days");
+
+Smooth = (Price + 
+	2*ref(Price, -1) + 
+	2*ref(Price, -2) + 
+	ref(Price, -3)) / 6;
+N3 = (High(Smooth, N) - Low(Smooth, N)) / N;
+
+HH = Smooth;
+LL = Smooth;
+count = 0;
+while(count < N / 2) {
+	HH = if(ref(Smooth, -count) > HH, 
+		ref(Smooth, -count), HH);
+	LL = if(ref(Smooth, -count) < LL, 
+		ref(Smooth, -count), LL);
+	count+=1;
+};
+N1 = (HH - LL) / (N / 2);
+
+HH = ref(Smooth, -(N / 2));
+LL = ref(Smooth, -(N / 2));
+count = N / 2;
+while(count < N) {
+	HH = if(ref(Smooth, -count) > HH, 
+		ref(Smooth, -count), HH);
+	LL = if(ref(Smooth, -count) < LL, 
+		ref(Smooth, -count), LL);
+	count+=1;
+};
+N2 = (HH - LL)/(N / 2);
+
+Dimen = mov(0.5 * ((Log(N1 + N2) - Log(N3)) / 
+	Log(2) + $PREV), 20, simple);

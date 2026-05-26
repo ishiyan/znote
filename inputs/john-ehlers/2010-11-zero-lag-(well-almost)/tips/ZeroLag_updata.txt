@@ -1,0 +1,62 @@
+' the queryForParameters function needs to fill up the arrays that are passed in, and return the
+' number of parameters that the indicator refers to.
+' iRets - returns types of the variables required - eg PRICEVARIABLE, INDICATORVARIABLE
+' sNames - returns the short name for the parameter
+' sDescrips - returns the long descriptive text for the variable shown on the prompt dialog
+' defaults - returns the default value (must be of the correct type) for this parameter
+  
+public function queryForParameters(iRets() as Updata.VariableTypes, sNames() as String,sDescrips()
+ as String,defaults as object()) as integer 
+implements ICustomIndicator.queryForParameters
+iRets(0)=VariableTypes.PriceVariable
+sNames(0)="Average"
+sDescrips(0)="Exp. Mov. Avg. Period"
+defaults(0)=CType(32,Integer)
+iRets(1)=VariableTypes.PriceVariable
+sNames(1)="GainLimit"
+sDescrips(1)="Gain Limit"
+defaults(1)=CType(22,Integer)
+queryForParameters=2
+end function
+  
+' recalculateAll does the full recalculation of your indicator based on source data
+' you need to fill up the dRet double array with return values.
+' dSrc: the data of the main chart this is drawn on, first index=point, second=field, OHLCV
+' note that study lines may only return one point per field
+' oParams: returns the values of the parameters specified in queryForParameters, correctly formatted
+'note that lines and lists will be returned as price arrays, again OHLCV or just C if a study
+' dRet: The data to be returned, this has one Double()() for each line returned.
+'each Double()() is the same length as the source data, and each index in
+' the source data should match the same index in the dest data
+' iTradeTypes: return values from the tradetypes above, or ignore if not a system
+' dTradeOpenPrices: return price to open a new position at
+' dTradeClosePrices: return price to close a position at
+' iTradeAmount: return size of holding to place, leave blank to use defaults
+  
+public function recalculateAll(dSrc()() as Double,oParams() as object,dRet()()() as
+ Double,iTradeTypes()() as Integer,dTradeOpenPrices()() as Double,dTradeClosePrices()()
+  as Double,iTradeAmounr()() as Integer,dStopLevels()() as Double) as Boolean implements
+   ICustomIndicator.recalculateAll
+  
+dim SeriesLength As Integer=dRet(0).Length 
+dim Length As Integer=CType(oParams(0),Integer)
+dim GainLimit as Integer=CType(oParams(1),Integer) 
+dim alpha As Double
+dim Gain As Double
+dim BestGain As Double   
+dim EC(SeriesLength) As Double 
+dim ECTemp As Double
+dim iError As Double
+dim LeastError As Double
+dim EMA(SeriesLength) As Double
+dim Sum As Double 
+dim Close(SeriesLength) As Double  
+dim i As Integer
+dim j As Integer 
+ 
+FOR i=0 to SeriesLength-1
+  
+alpha=2/(Length+1)
+Close(i)=dSrc(i)(3)
+  
+If i

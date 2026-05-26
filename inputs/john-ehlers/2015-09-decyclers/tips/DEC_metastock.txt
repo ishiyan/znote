@@ -1,0 +1,22 @@
+Simple Decycler:
+
+ti:= 125;{time periods}
+alpha1:= (Cos(.707*360/ti) + Sin(.707*360/ti) -1)/Cos(.707*360/ti);
+HP:= (1-alpha1/2)*(1-alpha1/2)*(C - Ref(2*C,-1) + Ref(C,-2)) + 
+2*(1-alpha1)*PREV - (1-alpha1)*(1-alpha1)*Ref(PREV,-1);
+decycle:= C - hp;
+Decycle;
+1.005*decycle;
+0.995*decycle
+
+Decycle Oscillator:
+
+ti:= 125;{time periods}
+K:= 1;   {scaler}
+alpha1:= (Cos(.707*360/ti) + Sin(.707*360/ti) -1)/Cos(.707*360/ti);
+HP:= (1-alpha1/2)*(1-alpha1/2)*(C - Ref(2*C,-1) + Ref(C,-2)) + 
+2*(1-alpha1)*PREV - (1-alpha1)*(1-alpha1)*Ref(PREV,-1);
+decycle:= C - hp;
+alpha2:= (Cos(.707*360/(.5*ti)) + Sin(.707*360/(.5*ti)) -1)/Cos(.707*360/(.5*ti));
+DecycleOsc:= (1-alpha2/2)*(1-alpha2/2)*(decycle - Ref(2*decycle,-1) + Ref(decycle,-2)) + 2*(1-alpha2)*PREV - (1-alpha2)*(1-alpha2)*Ref(PREV,-1);
+100*k*DecycleOsc/C

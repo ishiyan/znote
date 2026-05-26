@@ -1,0 +1,16 @@
+{Provided By: Capital Market Services, LLC & Visual Trading Systems, LLC}
+{Copyright: 2010}
+{Description: TASC, March 2010 - "Cycle Vs. Trend Mode Detection - Empirical Mode Decomposition" by John F. Ehlers and Ric Way}
+{File: tasc_EMD.vtscr - Version 1.0}
+b:= cos(360/Period);
+g:= 1/cos(720*d/Period);
+a:= g-sqrt(g*g-1);
+BP:= if(IsDefined(BP)=0,0,BP);
+BP:= 0.5*(1-a)*(Price-ref(Price,-2))+b*(1+a)*ref(BP,-1)-a*ref(BP,-2);
+Mean:= mov(BP,2*Period,S);
+_Peak:= if(ref(BP,-1)>BP and ref(BP,-1)>ref(BP,-2),ref(BP,-1),PREV(0));
+_Valley:= if(ref(BP,-1)<BP and ref(BP,-1)<ref(BP,-2),ref(BP,-1),PREV(0));
+AvgPeak:= mov(_Peak,50,S);
+AvgValley:= mov(_Valley,50,S);
+Upper_Threshold:= Fraction*AvgPeak;
+Lower_Threshold:= Fraction*AvgValley;

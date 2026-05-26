@@ -1,0 +1,67 @@
+'WHITER IS BRIGHTER
+'Author: John Ehlers, TASC Jan 2015
+'Coded by: Richard Denning 11/11/2014
+'www.TradersEdgeSystems.com
+
+'Universal Oscillator
+'(c) 2014 John F. Ehlers
+Function EHLERS_UNIVERSAL_OSC(BandEdge)
+    Dim WhiteNoise As BarArray
+    Dim a1
+    Dim b1
+    Dim c1
+    Dim c2
+    Dim c3
+    Dim Filt As BarArray
+    Dim Peak As BarArray
+    Dim Universal
+
+    If BarNumber=FirstBar Then
+        'BandEdge = 20
+        WhiteNoise = 0
+        a1 = 0
+        b1 = 0
+        c1 = 0
+        c2 = 0
+        c3 = 0
+        Filt = 0
+        Peak = 0
+        Universal = 0
+    End If
+
+  'SuperSmoother Filter
+    WhiteNoise = (Close - Close[2]) / 2
+    a1 = Exp(-1.414*3.14159 / BandEdge)
+    b1 = 2*a1*Cos(1.414*180 / BandEdge)
+    c2 = b1
+    c3 = -a1*a1
+    c1 = 1 - c2 - c3
+    Filt = c1*(WhiteNoise + WhiteNoise [1]) / 2 + c2*Filt[1] + c3*Filt[2]
+    If CurrentBar - 1 = 1 Then
+        Filt = 0
+    End If
+    If CurrentBar - 1 = 2 Then
+        Filt = c1*0*(Close + Close[1])/2 + c2*Filt[1]
+    End If
+    If CurrentBar - 1 = 3 Then
+        Filt = c1*0*(Close + Close[1])/2 + c2*Filt[1] + c3*Filt[2]
+    End If
+    Peak = .991*Peak[1]
+    If CurrentBar - 1 = 1 Then
+        Peak = .0000001
+    End If
+    If Abs(Filt) > Peak Then
+        Peak = Abs(Filt)
+    End If
+    If Peak <> 0 Then
+        Universal = Filt / Peak
+    End If
+EHLERS_UNIVERSAL_OSC = Universal
+End Function
+'--------------------------------------------------------------------------
+' Indicator Plot:
+Sub EHLERS_UNIVERSAL_OSC_IND(BandEdge)
+plot1(EHLERS_UNIVERSAL_OSC(BandEdge))
+plot2(0)
+End Sub
+'--------------------------------------------------------------------------

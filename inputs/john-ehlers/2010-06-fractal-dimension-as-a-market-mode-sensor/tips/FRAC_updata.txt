@@ -1,0 +1,53 @@
+PARAMETER "N {N must be even}" #N=30 
+NAME "Fractal Dimension Indicator Of Length" #N
+DISPLAYSTYLE 3LINES
+INDICATORTYPE CHART 
+COLOUR RGB(255,0,0)
+COLOUR2 RGB(0,0,255)
+COLOUR3 RGB(0,0,255)
+@SMOOTH=0
+#COUNT=0
+@N1=0
+@N2=0
+@N3=0
+@HH=0
+@LL=0
+@RATIO=0
+@DIMEN=0
+@PRICE=0 
+ 
+FOR #CURDATE=0 TO #LASTDATE
+    
+    @PRICE=(HIGH+LOW)/2
+    @SMOOTH=(@PRICE+2*HIST(@PRICE,1)+2*HIST(@PRICE,2)+HIST(@PRICE,3))/6
+    @N3=(PHIGH(@SMOOTH,#N)-PLOW(@SMOOTH,#N))/#N 
+    @HH=@SMOOTH
+    @LL=@SMOOTH    
+    For #COUNT=0 TO (#N/2)-1
+       if HIST(@SMOOTH,#COUNT)>@HH
+          @HH=HIST(@SMOOTH,#COUNT)
+       elseif HIST(@SMOOTH,#COUNT)<@LL 
+          @LL=HIST(@SMOOTH,#COUNT)
+       endif 
+    Next
+    @N1=(@HH-@LL)/(#N/2)
+    @HH=HIST(@SMOOTH,#N/2)
+    @LL=HIST(@SMOOTH,#N/2)    
+    For #COUNT=(#N/2) TO (#N-1)
+       if HIST(@SMOOTH,#COUNT)>@HH
+          @HH=HIST(@SMOOTH,#COUNT)
+       elseif HIST(@SMOOTH,#COUNT)<@LL 
+          @LL=HIST(@SMOOTH,#COUNT)
+       endif 
+    Next
+    @N2=(@HH-@LL)/(#N/2)   
+    If @N1>0 AND @N2>0 AND @N3>0
+       @RATIO=0.5*((LN(@N1+@N2)-LN(@N3))/LN(2)+HIST(@DIMEN,1)) 
+    EndIf
+      
+    @DIMEN=SGNL(@RATIO,20,M) 
+    @PLOT=@DIMEN
+    @PLOT2=1.6
+    @PLOT3=1.4  
+   
+NEXT

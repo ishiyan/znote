@@ -1,0 +1,33 @@
+LISTING 1
+$Length := param2;
+MyPrice := fml(data1, param1);
+$SMA := average(MyPrice, $Length);
+Slope := MO(MyPrice, $Length);
+$SmoothSlope := (Slope + 2*Slope(1) + 2*Slope(2) + Slope(3))/6;
+plot1 := $SMA+0.5*$SmoothSlope;
+LISTING 2
+$Length := param2;
+myPrice := fml(data1, param1);
+$alpha := frac((1-sin(360/$Length))/cos(360/$Length));
+HP := 0.5*(1+$alpha)*(myPrice-myPrice(1))+$alpha*HP(1);
+$SmoothHP := (HP+2*HP(1)+2*HP(2)+HP(3))/6;
+plot1 := choose(CurrentBar=1, 0,
+                CurrentBar<4, MyPrice-MyPrice(1), $SmoothHP);
+LISTING 3
+$Length := param2;
+myPrice := fml(data1, param1);
+$mySMA := average(myPrice, $Length);
+mySlope := myPrice - myPrice(1);
+$SmoothSlope := (mySlope + 2*mySlope(1) + 2*mySlope(2) + mySlope(3))/6;
+$ITrend := $mySMA + $SmoothSlope;
+$myalpha := frac((1-sin(360/$Length))/cos(360/$Length));
+HP := 0.5*(1+$myalpha)*(myPrice - myPrice(1))+$myalpha*HP(1);
+$SmoothHP := choose(Currentbar(0) = 1, 0, Currentbar(1) < 4,
+             myPrice-myPrice(1), (HP+2*HP(1)+2*HP(2)+HP(3))/6);
+plot1 := $ITrend;
+plot2 := $SmoothHP;
+plot3 := $ITrend + $SmoothHP;
+LISTING 4
+Long Entry: xabove(tasc_instantTL(1,data1,"(h+l)/2",20), tasc_instantTL(0,data1,"(h+l)/2",20))
+Short Entry: xbelow (tasc_instantTL(1,data1,"(h+l)/2",20),
+tasc_instantTL(0,data1,"(h+l)/2",20))

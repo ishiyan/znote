@@ -1,0 +1,135 @@
+Strategy:  Ehlers DFT
+inputs:
+ Price( MedianPrice ),
+ Window( 50 ), { maximum Window = 50 }
+ OverBought( 70 ),
+ OverSold( 30 ),
+ Frac( 0.5 ) ;
+variables:
+ HP( 0 ),
+ CleanedData( 0 ),
+ Per( 0 ),
+ CosPer( 0 ),
+ CycPer( 0 ),
+ Alpha1( 0 ),
+ Period( 0 ),
+ n( 0 ),
+ MaxPwr( 0 ),
+ Num( 0 ),
+ Denom( 0 ),
+ ThreeMinus( 0 ),
+ DominantCycle( 0 ),
+ Change( 0 ),
+ AbsChange( 0 ),
+ Count( 0 ),
+  DFT_RSI( 0 ) ;
+{ arrays are sized for a maximum period of 50 bars }
+arrays:
+ CosinePart[50]( 0 ),
+ SinePart[50]( 0 ),
+ Pwr[50]( 0 ),
+ DB[50]( 0 ),
+ SF[50]( 0 ),
+ NetChgAvg[50]( 0 ),
+ TotchgAvg[50]( 0 ),
+ RSIArray[50]( 0 ) ;
+{ detrend data by high-pass filtering with a 40 period
+  cut-off }
+if CurrentBar <= 5 then
+ begin
+ HP = Price ;
+ CleanedData = Price ;
+ end
+else if CurrentBar > 5 then
+ begin
+ Per = 360 / 40 ;
+ CosPer = Cosine( Per ) ;
+ if CosPer <> 0 then
+  Alpha1 = ( 1 - Sine( Per ) ) / CosPer ;
+ HP = 0.5 * ( 1 + Alpha1 ) * ( Price - Price[ 1 ] ) +
+  Alpha1 * HP[1] ;
+ CleanedData = ( HP + 2 * HP[1] + 3 * HP[2] + 3 *
+  HP[3] + 2 * HP[4] + HP[5] ) / 12 ;
+ end ;
+{ calculate DFT }
+for Period = 8 to 50
+ begin
+ CosinePart[Period] = 0 ;
+ SinePart[Period] = 0 ;
+ for n = 0 to Window - 1
+  begin
+  CycPer = ( 360 * n ) / Period ;
+  CosinePart[Period] = CosinePart[Period] +
+    CleanedData[n] * Cosine( CycPer ) ;
+  SinePart[Period] = SinePart[Period] +
+    CleanedData[n] * Sine( CycPer ) ;
+  end ;
+ Pwr[Period] = Square( CosinePart[Period] ) +
+  Square( SinePart[Period] ) ;
+ end ;
+{ find maximum power level for normalization }
+MaxPwr = Pwr[8] ;
+for Period = 8 to 50
+ begin
+ if Pwr[Period] > MaxPwr then
+  MaxPwr = Pwr[Period] ;
+ end ;
+{ normalize power levels and convert to decibels }
+for Period = 8 to 50
+ begin
+ if MaxPwr > 0 and Pwr[Period] > 0 then
+  DB[Period] = -10 * log( 0.01 / ( 1 - 0.99 *
+   Pwr[Period] / MaxPwr ) ) / log( 10 ) ;
+ if DB[Period] > 20 then
+  DB[Period] = 20 ;
+ end ;
+{ find dominant cycle using CG algorithm }
+Num = 0 ;
+Denom = 0 ;
+for Period = 8 to 50
+ begin
+ if DB[Period] < 3 then
+  begin
+  ThreeMinus = 3 - DB[Period] ;
+  Num = Num + Period * ThreeMinus ;
+  Denom = Denom + ThreeMinus ;
+  end ;
+ end ;
+if Denom <> 0 then
+ DominantCycle = Num / Denom ;
+Change = Price - Price[1] ;
+AbsChange = AbsValue( Change ) ;
+for Count = 1 to Window
+ begin
+ if CurrentBar = 1 then
+  begin
+  SF[Count] = 1 / Count ;
+  NetChgAvg[Count] = ( Price - Price[Count] ) /
+   Count ;
+  TotChgAvg[Count] = Average( AbsChange, Count ) ;
+  end
+ else
+  begin
+  NetChgAvg[Count] = NetChgAvg[Count][1] +
+   SF[Count] * ( Change - NetChgAvg[Count][1] ) ;
+  TotChgAvg[Count] = TotChgAvg[Count][1] +
+   SF[Count] * ( AbsChange -
+    TotChgAvg[Count][1] ) ;
+  if TotChgAvg[Count] <> 0 then
+   RSIArray[Count] = ( 50 *
+    ( NetChgAvg[Count] / TotChgAvg[Count] +
+      1 ) )
+  else
+   RSIArray[Count] = 50 ;
+  end ;
+ end ;
+DFT_RSI = RSIArray[ iff( Frac * DominantCycle < 50,
+ Frac * DominantCycle, 50 ) ] ;
+{ CB > 1 check used to avoid spurious cross confirmation at CB = 1 }
+if Currentbar > 1 then
+ begin
+ if DFT_RSI crosses over OverSold then
+  Buy ( "RSI-LE" ) next bar at market ;
+ if DFT_RSI crosses under OverBought then
+  Sell Short ( "RSI-SE" ) next bar at market ;
+ end ;

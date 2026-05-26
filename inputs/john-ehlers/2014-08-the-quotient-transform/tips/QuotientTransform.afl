@@ -1,0 +1,38 @@
+SetBarsRequired( sbrAll ); 
+
+function Quotient( LPPeriod, K ) 
+{ 
+    PI = 3.1415926; 
+    angle = 0.707 * 2 * PI / 100; 
+    alpha1 = ( cos( angle ) + sin( angle ) - 1 ) / cos( angle ); 
+
+    a1 = exp( -1.414 * PI / LPPeriod ); 
+    b1 = 2 * a1 * cos( 1.414 * PI / LPPeriod ); 
+    c2 = b1; 
+    c3 = -a1 * a1; 
+    c1 = 1 - c2 - c3; 
+
+    HP = Close; 
+    Filt = HP; 
+    Pk = Filt; 
+
+    for( i = 2 ; i < BarCount; i++ ) 
+    { 
+       HP[ i ] = ( ( 1 - alpha1 / 2 ) ^ 2 ) * 
+               ( Close[ i ] - 2 * Close[ i -1 ] + Close[ i - 2 ] ) + 
+               2 * ( 1 - alpha1 ) * HP[ i - 1 ] - 
+               HP[ i -2 ] * ( 1 - alpha1 ) ^ 2; 
+
+       Filt[ i ] = c1 * ( HP[ i ] + HP[ i - 1 ] )/2 + 
+                c2 * Filt[ i - 1 ] + 
+                c3 * Filt[ i - 2 ]; 
+
+       Pk[ i ] = Max( 0.991 * Pk[ i - 1 ], abs( Filt[ i ] ) ); 
+    } 
+
+    x = Nz( Filt / Pk ); 
+    return ( X + K ) / ( K * X + 1 ); 
+} 
+
+Plot( Quotient( 20, 0.9 ), "Quotient(20, 0.9)", colorRed, styleThick ); 
+Plot( Quotient( 20, 0.4 ), "Quotient(20, 0.4)", colorLightBlue, styleThick );

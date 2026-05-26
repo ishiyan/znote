@@ -1,0 +1,83 @@
+Function Name: Swiss Army Knife Indicator
+Short Name: SWAK
+Inputs: Price, c0, c1, N, b0, b1, b2, a1, a2, Initial Value
+If (GT (Bar# (), N), Add (Mult (c0, Add (Mult (b0, Price), Add (Mult (b1, Lag (Price, 1)),
+ Mult (b2, Lag (Price, 2))))), Add (Mult (a1, Prev (1)), Sub (Mult (a2, Prev (2)), Mult
+ (c1, Lag (Price, N))))), Initial Value)
+Function Name: SWAK Alpha for One-Pole Filter
+Short Name: SWAK_OnePoleAlpha
+Inputs: Period
+Div (Add (Cos (DtoR (Div (360,Period))),Sub (Sin (DtoR (Div (360,Period))),1)),Cos (DtoR
+ (Div (360,Period))))
+
+Function Name: SWAK Exponential Moving Average
+Short Name: SWAK_EMA
+Inputs: Price, Period
+SWAK (Price,1,0,0,SWAK_OnePoleAlpha (Period),0,0,Sub (1,SWAK_OnePoleAlpha (Period)),0,Price)
+
+Function Name: SWAK Simple Moving Average
+Short Name: SWAK_SMA
+Inputs: Price, Period
+SWAK (Price,1,Div (1,Period),Period,Div (1,Period),0,0,1,0,Price)
+
+Function Name: SWAK Beta for Two-Pole Filter
+Short Name: SWAK_TwoPoleBeta
+Inputs: Period
+Mult (2.415, Sub (1, Cos (DtoR (Div (360, Period)))))
+
+Function Name: SWAK Alpha for Two-Pole Filter
+Short Name: SWAK_TwoPoleAlpha
+Inputs: Period
+Sub (Sqrt (Add (Pow (SWAK_TwoPoleBeta (Period),2),Mult (2,SWAK_TwoPoleBeta (Period)))),
+ SWAK_TwoPoleBeta (Period))
+
+Function Name: SWAK Two-Pole Gaussian Filter
+Short Name: SWAK_Gauss
+Inputs: Price, Period
+SWAK (Price,Pow (SWAK_TwoPoleAlpha (Period),2),0,0,1,0,0,Mult (2,Sub (1,SWAK_TwoPoleAlpha
+ (Period))),Negate (Pow (Sub (1,SWAK_TwoPoleAlpha (Period)),2)),Price)
+
+Function Name: SWAK Two-Pole Butterworth Filter
+Short Name: SWAK_Butter
+Inputs: Price, Period
+SWAK (Price,Div (Pow (SWAK_TwoPoleAlpha (Period),2),4),0,0,1,2,1,0,0,Price)
+
+Function Name: SWAK High-Pass Filter
+Short Name: SWAK_HP
+Inputs: Price, Period
+SWAK (Price,Sub (1,SWAK_OnePoleAlpha (Period)),0,0,1,-1,0,Sub (1,SWAK_OnePoleAlpha (Period)),0,0)
+
+Function Name: SWAK Two-Pole High-Pass Filter
+Short Name: SWAK_2PHP
+Inputs: Price, Period
+SWAK (Price,Pow (Sub (1,Div (SWAK_TwoPoleAlpha (Period),2)),2),0,0,1,-2,1,Mult (2,Sub (1,
+ SWAK_TwoPoleAlpha (Period))),Negate (Pow (Sub (1,SWAK_TwoPoleAlpha (Period)),2)),0)
+
+Function Name: SWAK Beta for Bandpass Filter
+Short Name: SWAK_BandpassBeta
+Inputs: Period
+Cos (DtoR (Div (360,Period)))
+
+Function Name: SWAK Gamma for Bandpass Filter
+Short Name: SWAK_BandpassGamma
+Inputs: Period, delta
+Div (1,Cos (DtoR (Div (Mult (720,delta),Period)))
+
+Function Name: SWAK Alpha for Bandpass Filter
+Short Name: SWAK_BandpassAlpha
+Inputs: Period, delta
+Sub (SWAK_BandpassGamma (Period,delta),Sqrt (Sub (Pow (SWAK_BandpassGamma (Period,delta),2),1)))
+
+Function Name: SWAK Bandpass Filter
+Short Name: SWAK_BP
+Inputs: Price, Period, delta
+SWAK (Price,Div (Sub (1,SWAK_BandpassAlpha (Period,delta)),2),0,0,1,0,-1,Mult (SWAK_BandpassBeta
+ (Period), Add (1,SWAK_BandpassAlpha (Period,delta))), Negate (SWAK_BandpassAlpha (Period, delta)),
+ Price)
+
+Function Name: SWAK Band_Stop Filter
+Short Name: SWAK_BS
+Inputs: Price, Period, delta
+SWAK (Price,Div (Sub (1,SWAK_BandpassAlpha (Period,delta)),2),0,0,1,Mult (-2,SWAK_BandpassBeta
+ (Period)),1,Mult (SWAK_BandpassBeta (Period),Add (1,SWAK_BandpassAlpha (Period,delta))), Negate
+ (SWAK_BandpassAlpha (Period,delta)),Price)

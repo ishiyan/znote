@@ -1,0 +1,31 @@
+1. boxcount:
+@ boxcount computes the boxcount each day for
+@John Ehlers' Fractal Adaptive Moving Average
+@syntax is 'n boxcount dataset' (n even)
+N: #L
+DS: #R
+HH: N MOVMAX HIGH DS
+LL: N MOVMIN LOW DS
+(HH-LL)/N
+Example: 10 BOXCOUNT IBM
+2. fracdim:
+@fracdim computes the fractal dimension each day
+@for John Ehlers' Fractal Adaptive Moving Average
+@syntax is 'n fracdim dataset' (n even)
+N: #L
+DS: #R
+N3: N BOXCOUNT DS
+N2: (N/2) BOXCOUNT DS
+N1: (N/2) BOXCOUNT DS  BACK N/2
+((LOG (N1 + N2)) -LOG N3)/LOG 2
+Example: 10 FRACDIM IBM
+3. frama:
+@John Ehlers' Fractal Adaptive Moving Average
+@syntax is 'n frama dataset'
+N: #L
+DS: #R
+H: HIGH DS
+L: LOW DS
+ALPHA: EXP (-4.6 * (-1 + N FRACDIM DS ))
+ALPHA EXPAVE (H + L)/2
+Example: 10 FRAMA IBM

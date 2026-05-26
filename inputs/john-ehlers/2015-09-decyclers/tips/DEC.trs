@@ -1,0 +1,87 @@
+
+'DECYCLERS
+
+'Author: John F. Ehlers, TASC, Sept 2015
+
+'Coded by: Richard Denning, 7/12/15
+
+'www.TradersEdgeSystems.com
+
+
+
+'HIGHPASS FILTER
+
+Function EHLERS_DECYCLER(HPPeriod)
+
+'HPPeriod=125
+
+Dim alpha1
+
+Dim HP As BarArray
+
+If Cos(DegToRad(0.707*360/HPPeriod)) <> 0 Then
+
+   alpha1 = (Cos(DegToRad(0.707*360/HPPeriod))+Sin(DegToRad(0.707*360/HPPeriod))-1)/Cos(DegToRad(0.707*360/HPPeriod))
+
+End If
+
+HP = (1-alpha1/2)*(1-alpha1/2)*(C-2*C[1]+C[2])+2*(1-alpha1)*HP[1]-(1-alpha1)*(1-alpha1)*HP[2]
+
+EHLERS_DECYCLER = C - HP
+
+End Function
+
+'-----------------------------------------------------------------------------------------------
+
+Sub EHLERS_DECYCLER_IND(HPPeriod)
+
+Dim Decycle As BarArray
+
+Decycle = EHLERS_DECYCLER(HPPeriod)
+
+Plot1(Decycle)
+
+Plot2(1.005*Decycle)
+
+Plot3(0.995*Decycle)
+
+End Sub
+
+'------------------------------------------------------------------------------------------------
+
+function EHLERS_DECYCLER_OSC(HPPeriod)
+
+'HPPeriod=125,K=1
+
+Dim Decycle As BarArray
+
+Dim alpha2 As BarArray
+
+Dim DecycleOsc As BarArray
+
+Decycle = EHLERS_DECYCLER(HPPeriod)
+
+alpha2=(Cos(DegToRad(0.707*360/(0.5*HPPeriod)))+Sin(DegToRad(0.707+360/(0.5*HPPeriod))-1))/Cos(DegToRad(0.707-360/(0.5*HPPeriod)))
+
+DecycleOsc=(1-alpha2/2)*(1-alpha2/2)*(Decycle-2*Decycle[1]+Decycle[2])+2*(1-alpha2)*DecycleOsc[1]-(1-alpha2)*(1-alpha2)*DecycleOsc[2]
+
+EHLERS_DECYCLER_OSC=DecycleOsc
+
+End Function
+
+'--------------------------------------------------------------------------------------------------
+
+sub EHLERS_DECYCLER_OSC_IND(HPPeriod,K)
+
+Dim DecycleOsc As BarArray
+
+DecycleOsc = EHLERS_DECYCLER_OSC(HPPeriod)
+
+Plot1(100*K*DecycleOsc/C)
+
+Plot2(0)
+
+End Sub
+
+'--------------------------------------------------------------------------------------------------
+

@@ -1,0 +1,262 @@
+/***************************************
+Provided By : eSignal (c) Copyright 2005
+Description:  Swiss Army Knife - by John F. Ehlers
+
+Version 1.0  11/08/2005
+
+Notes:
+January 2006 Issue of Stocks and Commodities Magazine
+
+* Study requires version 7.9 or higher.
+
+
+Formula Parameters:                 Defaults:
+Price                               HL/2
+    [Open, High, Low, Close, HL/2, HLC/3, OHLC/4]
+Type                                BP
+    [EMA, SMA, Gauss, Butter, HP, 2PHP, BP, BS]
+N                                   0
+Period                              20
+Delta                               .1
+***************************************/
+
+
+function preMain() {
+    setStudyTitle("SWAK ");
+    //setShowTitleParameters(false);
+    setCursorLabelName("Filt", 0);
+    setDefaultBarThickness(2, 0);
+    
+    var fp1 = new FunctionParameter("sPrice", FunctionParameter.STRING);
+        fp1.setName("Price");
+        fp1.addOption("Open");
+        fp1.addOption("High");
+        fp1.addOption("Low");
+        fp1.addOption("Close");
+        fp1.addOption("HL/2");
+        fp1.addOption("HLC/3");
+        fp1.addOption("OHLC/4");
+        fp1.setDefault("HL/2");
+    var fp2 = new FunctionParameter("sType", FunctionParameter.STRING);
+        fp2.setName("Type");
+        fp2.addOption("EMA");
+        fp2.addOption("SMA");
+        fp2.addOption("Gauss");
+        fp2.addOption("Butter");
+        fp2.addOption("HP");
+        fp2.addOption("2PHP");
+        fp2.addOption("BP");
+        fp2.addOption("BS");
+        fp2.setDefault("BP");
+    var fp3 = new FunctionParameter("nN", FunctionParameter.NUMBER);
+        fp3.setName("N");
+        fp3.setLowerLimit(0);
+        fp3.setDefault(0);
+    var fp4 = new FunctionParameter("nPeriod", FunctionParameter.NUMBER);
+        fp4.setName("Period");
+        fp4.setLowerLimit(0);
+        fp4.setDefault(20);
+    var fp5 = new FunctionParameter("nDelta", FunctionParameter.NUMBER);
+        fp5.setName("Delta");
+        fp5.setDefault(.1);
+}
+
+var bVersion = null;
+var nBarCount = 0;
+
+var bInit = false;
+var Filt = null;
+var Filt_0 = null;
+var Filt_1 = null;
+var Filt_2 = null;
+var xPrice = null;
+
+var c0 = 1;
+var c1 = 0;
+var b0 = 1;
+var b1 = 0;
+var b2 = 0;
+var a1 = 0;
+var a2 = 0;
+var alpha = 0;
+var beta1 = 0;
+var gamma1 = 0;
+var delta1 = .1
+
+function main(sPrice, sType, nN, nPeriod, nDelta) {    
+
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;    
+
+    if (bInit == false) {
+        switch (sPrice) {
+            case "Open" :
+                xPrice = open();
+                break;
+            case "High" :
+                xPrice = high();
+                break;
+            case "Low" :
+                xPrice = low();
+                break;
+            case "Close" :
+                xPrice = close();
+                break;
+            case "HL/2" :
+                xPrice = hl2();
+                break;
+            case "HLC/3" :
+                xPrice = hlc3();
+                break;
+            case "OHLC/4" :
+                xPrice = ohlc4();
+                break;
+            default: xPrice = hl2();
+        }
+        delta1 = nDelta;
+        bInit = true;
+    }
+
+    if (getCurrentBarCount() > nN) {
+        Filt = efsInternal("calcFilt", sType, nPeriod, nN, getSeries(xPrice));
+        return Filt.getValue(0);
+    } else {
+        return;
+    }
+}
+
+
+/***** Support Functions *****/
+
+function calcFilt(type, Period, N, Price) {
+    if (getBarState() == BARSTATE_NEWBAR) {
+        nBarCount++;
+        Filt_2 = Filt_1;
+        Filt_1 = Filt_0;
+    }
+    
+    switch (type) {
+        case "EMA" :
+            if (nBarCount <= N) {
+                Filt_0 = Price.getValue(0);
+                return Filt_0;
+            }
+            alpha = (Math.cos((2*Math.PI)/Period) + Math.sin((2*Math.PI)/Period)
+                     - 1) / Math.cos((2*Math.PI)/Period);            
+            b0 = alpha;
+            a1 = 1 - alpha;
+            break;
+        case "SMA" :
+            if (nBarCount <= N) {
+                Filt_0 = Price.getValue(0);
+                return Filt_0;
+            }
+            if (N == 0) N = 1;
+            c0 = 1;
+            c1 = 1 / N;
+            b0 = 1 / N;
+            b1 = 0;
+            b2 = 0;
+            a1 = 1;
+            a2 = 0;
+            break;
+        case "Gauss" :
+            if (nBarCount <= N) {
+                Filt_0 = Price.getValue(0);
+                return Filt_0;
+            }
+            beta1 = 2.415*(1 - Math.cos((2*Math.PI) / Period));
+            alpha = -beta1 + Math.sqrt(beta1*beta1 + 2*beta1);
+            c0 = alpha*alpha;
+            a1 = 2*(1 - alpha);
+            a2 = -(1 - alpha)*(1 - alpha);
+            break;
+        case "Butter" :
+            if (nBarCount <= N) {
+                Filt_0 = Price.getValue(0);
+                return Filt_0;
+            }
+            beta1 = 2.415*(1 - Math.cos((2*Math.PI) / Period));
+            alpha = -beta1 + Math.sqrt(beta1*beta1 + 2*beta1);
+            c0 = alpha*alpha / 4;
+            b1 = 2;
+            b2 = 1;
+            break;
+        case "HP" :
+            if (nBarCount <= N) {
+                Filt_0 = 0;
+                return Filt_0;
+            }
+            alpha = (Math.cos((2*Math.PI)/Period) + Math.sin((2*Math.PI)/Period)
+                     - 1) / Math.cos((2*Math.PI)/Period);
+            c0 = 1 - alpha / 2;
+            b1 = -1;
+            a1 = 1 - alpha;
+            break;
+        case "2PHP" :
+            if (nBarCount <= N) {
+                Filt_0 = 0;
+                return Filt_0;
+            }
+            beta1 = 2.415*(1 - Math.cos((2*Math.PI) / Period));
+            alpha = -beta1 + Math.sqrt(beta1*beta1 + 2*beta1);
+            c0 = (1 - alpha / 2)*(1 - alpha / 2);
+            b1 = -2;
+            b2 = 1;
+            a1 = 2*(1 - alpha);
+            a2 = -(1 - alpha)*(1 - alpha);
+           break;
+        case "BP" :
+            if (nBarCount <= N+4) {
+                Filt_0 = 0;
+                return Filt_0;
+            }
+            beta1 = Math.cos((2*Math.PI) / Period);
+            gamma1 = 1 / Math.cos((((2*Math.PI)+(2*Math.PI))*delta1) / Period);
+            alpha = gamma1 - Math.sqrt(gamma1*gamma1 - 1);
+            c0 = (1 - alpha) / 2;
+            b2 = -1;
+            a1 = beta1*(1 + alpha);
+            a2 = -alpha;
+            break;
+        case "BS" :
+            if (nBarCount <= N+4) {
+                Filt_0 = 0;
+                return Filt_0;
+            }
+            beta1 = Math.cos((2*Math.PI) / Period);
+            gamma1 = 1 / Math.cos((((2*Math.PI)+(2*Math.PI))*delta1) / Period);
+            alpha = gamma1 - Math.sqrt(gamma1*gamma1 - 1);
+            c0 = (1 + alpha) / 2;
+            b1 = -2*beta1;
+            b2 = 1;
+            a1 = beta1*(1 + alpha);
+            a2 = -alpha;
+            break;
+    }
+    
+    Filt_0 = c0*(b0*Price.getValue(0) + b1*Price.getValue(-1) + b2*Price.getValue(-2))
+              + a1*Filt_1 + a2*Filt_2 - c1*Price.getValue(-N);
+    return Filt_0;
+}
+
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 700) {
+        drawTextAbsolute(5, 35, "This study requires version 7.9 or later.", Color.white,
+            Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT, null,
+            13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to
+            upgrade.@URL=https://www.esignal.com/download/default.asp", Color.white, Color.blue,
+            Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT, null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    
+    return b;
+}
+--Jason Keck
+eSignal, a division of Interactive Data Corp.
+800 815-8256, www.esignalcentral.com

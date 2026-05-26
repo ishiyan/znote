@@ -1,0 +1,16 @@
+!EXPANSIONS & CONTRACTIONS
+!Author: Dirk Vandycke, TASC March 2014
+!Coded by: Richard Denning 6/11/2014
+!www.TradersEdgeSystems.com
+
+C is [close].
+C1 is valresult(C,1).
+H is [high].
+L is [low].
+O is [open].
+TH is max(C1,H).
+TL is min(C1,L).
+TR is TH - TL.
+ATR is simpleavg(TR,20).
+RCL is (C-TL) / TR.
+EU is (C-O) / TR.

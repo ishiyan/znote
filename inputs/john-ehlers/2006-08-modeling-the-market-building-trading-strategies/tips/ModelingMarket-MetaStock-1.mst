@@ -1,0 +1,29 @@
+Name: Instantaneous Trendline
+Formula:
+pr:=MP();
+len:=20;
+sma:=Mov(pr,len,S);
+sl:=pr-Ref(pr,-(len-1));
+ssl:= (sl+(2*Ref(sl,-1))+(2*Ref(sl,-2))+Ref(sl,-3))/6;
+sma+(0.5*ssl)
+Name: cyclic component
+Formula:
+pr:=MP();
+len:=20;
+a:=(1-Sin(360/len))/Cos(360/len);
+hp:=(0.5*(1+a)*(pr-Ref(pr,-1)))+(a*PREV);
+shp:=
+(hp+(2*Ref(hp,-1))+(2*Ref(hp,-2))+Ref(hp,-3))/6;
+shp
+Name: Modeling the Market
+Formula:
+pr:=MP();
+len:=20;
+sma:=Mov(pr,len,S);
+sl:=pr-Ref(pr,-(len-1));
+ssl:= (sl+(2*Ref(sl,-1))+(2*Ref(sl,-2))+Ref(sl,-3))/6;
+a:=(1-Sin(360/len))/Cos(360/len);
+hp:=(0.5*(1+a)*(pr-Ref(pr,-1)))+(a*PREV);
+shp:=
+(hp+(2*Ref(hp,-1))+(2*Ref(hp,-2))+Ref(hp,-3))/6;
+sma+(0.5*ssl)+shp

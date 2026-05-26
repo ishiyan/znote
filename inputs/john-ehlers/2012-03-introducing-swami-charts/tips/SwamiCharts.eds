@@ -1,0 +1,33 @@
+!INTRODUCING SWAMI CHARTS
+!Authors: John Ehlers and Ric Way, TASC March 2012
+!System author: Richard Denning 1/15/2012
+!Coded by: Richard Denning 1/15/2012
+!www.TradersEdgeSystems.com
+
+!INPUTS:
+buyLvl is 4.
+exitBuyLvl is -4.
+sellLvl is -3.
+exitSellLvl is 0.
+
+C is [close].
+sma10 is simpleavg(C,10).
+sma20 is simpleavg(C,20).
+sma50 is simpleavg(C,50).
+sma100 is simpleavg(C,100).
+sma200 is simpleavg(C,200).
+
+sig10 is iff(C > sma10,1,-1).
+sig20 is iff(C > sma20,1,-1).
+sig50 is iff(C > sma50,1,-1).
+sig100 is iff(C > sma100,1,-1).
+sig200 is iff(C > sma200,1,-1).
+
+SMA_SWAMI is sig10 + sig20 + sig50 + sig100 + sig200.
+
+BarsAbove is countof(C > sma10,20).
+
+buy if SMA_SWAMI >= buyLvl and valrule(SMA_SWAMI < buyLvl,1).
+exitBuy if SMA_SWAMI < exitBuyLvl.
+sell if SMA_SWAMI <= sellLvl.
+exitSell if SMA_SWAMI > exitSellLvl.

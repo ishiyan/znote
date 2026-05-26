@@ -1,0 +1,35 @@
+Inputs:
+Price((H+L)/2),
+Period(20),
+delta(.5),
+Fraction(.1);
+Vars:
+alpha(0),
+beta(0),
+gamma(0),
+BP(0),
+I(0),
+Mean(0),
+Peak(0),
+Valley(0),
+AvgPeak(0),
+AvgValley(0);
+beta = Cosine(360 / Period);
+gamma = 1 / Cosine(720*delta /
+Period);
+alpha = gamma -SquareRoot(gamma*gamma - 1);
+BP = .5*(1 - alpha)*(Price - Price[2])
++ beta*(1 + alpha)*BP[1] -
+alpha*BP[2];
+Mean = Average(BP, 2*Period);
+Peak = Peak[1];
+Valley = Valley[1];
+If BP[1] > BP and BP[1] > BP[2] Then
+Peak = BP[1];
+If BP[1] < BP and BP[1] < BP[2] Then
+Valley = BP[1];
+AvgPeak = Average(Peak, 50);
+AvgValley = Average(Valley, 50);
+Plot1(Mean);
+Plot2(Fraction*AvgPeak);
+Plot6(Fraction*AvgValley);

@@ -1,0 +1,214 @@
+/*********************************
+Provided By:  
+    Interactive Data Corporation (Copyright В	� 2014) 
+    All rights reserved. This sample eSignal Formula Script (EFS)
+    is for educational purposes only. Interactive Data Corporation
+    reserves the right to modify and overwrite this EFS file with 
+    each new release. 
+
+Description:        
+    The Quotient Transform by John F. Ehlers 
+
+Formula Parameters:                     Default:
+LPPeriod                                30
+K                                       0.85 
+
+Version:            1.00  09/06/2014
+
+Notes:
+    The related article is copyrighted material. If you are not a subscriber
+    of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+var fpArray = new Array();
+
+function preMain()
+{   
+    setStudyTitle("EarlyOnsetTrendIndicator");
+    setDefaultBarFgColor(Color.red);   
+    
+    addBand(0, PS_SOLID, 1, Color.grey);
+    
+    var x = 0;
+
+    fpArray[x] = new FunctionParameter("fpLPPeriod", FunctionParameter.NUMBER);
+    with(fpArray[x++])
+    {
+        setName("LPPeriod");
+        setDefault(30);
+        setLowerLimit(1);
+    }
+
+    fpArray[x] = new FunctionParameter("fpK", FunctionParameter.NUMBER);
+    with(fpArray[x++])
+    {
+        setName("K");
+        setDefault(0.85);
+        setLowerLimit(-1);
+        setUpperLimit(1);
+    }
+}
+
+var bInit = false;
+var bVersion = null;
+
+xHP = null;
+xFilt = null;
+xPeak = null;
+xX = null;
+xQuotient = null;
+
+function main(fpLPPeriod, fpK) 
+{
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    
+    if (!bInit)
+    {      
+        xHP = efsInternal("Calc_HP");
+        xFilt = efsInternal("Calc_Filt", xHP, fpLPPeriod);
+        xPeak = efsInternal("Calc_Peak", xFilt);
+        xX = efsInternal("Calc_X", xPeak, xFilt);
+        xQuotient = getSeries(efsInternal("Calc_Quotient", xX, fpK));
+   
+        bInit = true;
+    }
+  
+    return xQuotient;
+}
+
+var xClose = null;
+var nAlpha1 = 0;
+
+function Calc_HP()
+{
+    if (getBarState() == BARSTATE_ALLBARS)
+    {
+        xClose = close();
+
+        nAlpha1 = (Math.cos((0.707 * 360 / 100) * (Math.PI / 180)) +
+                   Math.sin((0.707 * 360 / 100) * (Math.PI / 180))  - 1) / 
+                   Math.cos((0.707 * 360 / 100) * (Math.PI / 180));
+
+    } 
+
+    var nClose_0 = xClose.getValue(0);
+    var nClose_1 = xClose.getValue(-1);
+    var nClose_2 = xClose.getValue(-2);
+
+    if (nClose_0 == null || nClose_1 == null || nClose_2 == null)
+        return;
+
+    var arrRefHP = ref(-1, -2);
+
+    var nHP_1 = arrRefHP[0];
+    var nHP_2 = arrRefHP[1];   
+
+    var nReturnValue = (1 - nAlpha1 / 2) * (1 - nAlpha1 / 2) * (nClose_0 - 2 * nClose_1 + nClose_2) +
+                       2 * (1 - nAlpha1) * nHP_1 -
+                       (1 - nAlpha1) * (1 - nAlpha1) * nHP_2;
+          
+    return nReturnValue;
+}
+
+var nA1 = 0;
+var nB1 = 0;
+var nC1 = 0;
+var nC2 = 0;
+var nC3 = 0;
+
+function Calc_Filt(xHP, nLPPeriod)
+{
+    if (getBarState() == BARSTATE_ALLBARS)
+    {
+        nA1 = Math.exp(-1.414 * 3.14159 / nLPPeriod);
+        nB1 = 2 * nA1 * Math.cos((1.414 * 180 / nLPPeriod) * (Math.PI / 180));
+        nC2 = nB1;
+        nC3 = -nA1 * nA1;
+        nC1 = 1 - nC2 - nC3; 
+    } 
+
+    var nHP_0 = xHP.getValue(0);
+    var nHP_1 = xHP.getValue(-1);
+
+    if (nHP_0 == null || nHP_1 == null)
+        return;
+
+    var arrRefFilt = ref(-1, -2);
+
+    var nFilt_1 = arrRefFilt[0];
+    var nFilt_2 = arrRefFilt[1];   
+
+    var nReturnValue = nC1 * (nHP_0 + nHP_1) / 2 + nC2 * nFilt_1 + nC3 * nFilt_2;
+          
+    return nReturnValue;
+}
+
+function Calc_Peak(xFilt)
+{
+    var nFilt = xFilt.getValue(0);
+
+    if (nFilt == null)
+        return;
+
+    var nPeak_1 = ref(-1);
+    
+    var nPeak = 0.991 * nPeak_1;
+
+    if (Math.abs(nFilt) > nPeak)
+        nPeak = Math.abs(nFilt);
+
+    var nReturnValue = nPeak;
+
+    return nReturnValue;
+}
+
+function Calc_X(xPeak, xFilt)
+{
+    var nPeak = xPeak.getValue(0);
+    var nFilt = xFilt.getValue(0);
+
+    if (nPeak == null || nFilt == null)
+        return;
+    
+    var nReturnValue = 0;
+     
+    if (nPeak != 0)
+        nReturnValue = nFilt / nPeak; 
+
+    return nReturnValue;
+}
+
+function Calc_Quotient(xX, nK)
+{
+    var nX = xX.getValue(0);
+   
+    if (nX == null)
+        return;
+    
+    var nReturnValue = (nX + nK) / (nK * nX + 1);
+
+    return nReturnValue;
+}
+
+function verify() 
+{
+    var b = false;
+    if (getBuildNumber() < 779) 
+    {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else 
+    {
+        b = true;
+    }
+
+    return b;
+}

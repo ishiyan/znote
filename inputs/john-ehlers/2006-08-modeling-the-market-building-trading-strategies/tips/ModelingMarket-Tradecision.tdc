@@ -1,0 +1,60 @@
+Cyclic component
+Input
+     Price: "Price", (H + l) / 2;
+     Length: "Length", 20;
+end_input
+var
+   Alpha := (1 ? Sin (360 / Length)) / Cos (360 / Length);
+   HP := 0;
+   SmoothHP := 0;
+end_var
+if (HistorySize > 1) then
+   HP := 0.5 * (1 + alpha) * (Price - Price\1\) + Alpha * HP\1\;
+else
+   HP := 0;
+if (HistorySize + 1) < 4 then
+   SmoothHP := Price - Price\1\;
+else
+   SmoothHP := (HP + 2 * HP\1\ + 2 * HP\2\ + HP\3\) / 6;
+ 
+if HistorySize = 0 then
+   SmoothHP := 0;
+return SmoothHP;
+Instantaneous Trendline
+Input
+     Price: "Price", (H + l) / 2;
+     Length: "Length", 20;
+end_input
+var
+   SMA := SMA(Price, Length);
+   Slope := Price - Price\Length - 1\;
+   SmoothSlope := (Slope + 2 * Slope\1\ + 2 * Slope\2\ + Slope\3\) / 6;
+   ITrend := SMA + 0.5 * SmoothSlope;
+end_var
+return ITrend;
+Market Model
+Input
+     Price: "Price",(H +l) /2 ;
+     Length: "Length", 20;
+end_input
+var
+   Sma := SMA(Price, Length);
+   Slope := Price - Price\Length - 1\;
+   SmoothSlope := (Slope + 2 * Slope\1\ + 2 * Slope\2\ + Slope\3\) / 6;
+   ITrend := SMA + 0.5 * SmoothSlope;
+   Alpha := (1 - Sin(360 / Length)) / Cos(360 / Length);
+   HP := 0;
+   SmoothHP := 0;
+end_var
+if (HistorySize > 1) then
+   HP := 0.5 * (1 + alpha) * (Price - Price\1\) + Alpha * HP\1\;
+else
+   HP := 0;
+if (HistorySize + 1) < 4 then
+   SmoothHP := Price - Price\1\;
+else
+   SmoothHP := (HP + 2 * HP\1\ + 2 * HP\2\ + HP\3\) / 6;
+ 
+if HistorySize = 0 then
+   SmoothHP := 0;
+return ITrend + SmoothHP;

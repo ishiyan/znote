@@ -1,0 +1,437 @@
+/*********************************
+
+Provided By:  
+
+    Interactive Data Corporation (Copyright © 2015) 
+
+    All rights reserved. This sample eSignal Formula Script (EFS)
+
+    is for educational purposes only. Interactive Data Corporation
+
+    reserves the right to modify and overwrite this EFS file with 
+
+    each new release. 
+
+
+
+Description:        
+
+    Trading System Design: A Statistical Approach by John F. Ehlers and Ric Way
+
+    
+
+Version:            1.00  01/12/2015
+
+
+
+Formula Parameters:                     Default:
+
+Stoc Length                             8
+
+Threshold                               0.3
+
+Trade Length                            14
+
+Percent Loss                            3.8
+
+Entry Position Color                    lime
+
+Exit Position Color                     red
+
+
+
+Notes:
+
+    The related article is copyrighted material. If you are not a subscriber
+
+    of Stocks & Commodities, please visit www.traders.com.
+
+
+
+**********************************/
+
+
+
+var fpArray = new Array(); 
+
+
+
+function preMain(){
+
+    
+
+    setStudyTitle("SimpleStocTrSystem");
+
+    setPriceStudy(true);
+
+    
+
+    var x = 0;
+
+
+
+    fpArray[x] = new FunctionParameter("fpLength", FunctionParameter.NUMBER);
+
+    with(fpArray[x++]){
+
+        setName("Stoc Length");
+
+        setLowerLimit(1);
+
+        setDefault(8);
+
+    }
+
+
+
+    fpArray[x] = new FunctionParameter("fpThreshold", FunctionParameter.NUMBER);
+
+    with(fpArray[x++]){
+
+        setName("Threshold");
+
+        setLowerLimit(0);
+
+        setUpperLimit(1); 
+
+        setDefault(0.3);
+
+    }
+
+
+
+    fpArray[x] = new FunctionParameter("fpTradeLength", FunctionParameter.NUMBER);
+
+    with(fpArray[x++]){
+
+        setName("Trade Length");
+
+        setLowerLimit(0);    
+
+        setDefault(14);
+
+    } 
+
+    
+
+    fpArray[x] = new FunctionParameter("fpPctLoss", FunctionParameter.NUMBER);
+
+    with(fpArray[x++]){
+
+        setName("Percent Loss");    
+
+        setLowerLimit(0);
+
+        setUpperLimit(100); 
+
+        setDefault(3.8);
+
+    }
+
+
+
+    fpArray[x] = new FunctionParameter("fpEntryColor", FunctionParameter.COLOR);
+
+    with(fpArray[x++]){
+
+        setName("Entry Position Color");    
+
+        setDefault(Color.lime);
+
+    }
+
+
+
+    fpArray[x] = new FunctionParameter("fpExitColor", FunctionParameter.COLOR);
+
+    with(fpArray[x++]){
+
+        setName("Exit Position Color");    
+
+        setDefault(Color.red);
+
+    }
+
+}
+
+
+
+var bInit = false;
+
+var bVersion = null;
+
+
+
+var xClose = null;
+
+var xOpen = null;
+
+var xLow = null;
+
+
+
+var xStoc = null;
+
+
+
+var nBarsSinceEntry = null;
+
+var nEntryPrice = null;
+
+
+
+var nLotSize = null;
+
+
+
+function main(fpLength, fpThreshold, fpTradeLength, fpPctLoss, fpEntryColor, fpExitColor){
+
+    
+
+    if (bVersion == null) bVersion = verify();
+
+    if (bVersion == false) return;
+
+        
+
+    if (!bInit){
+
+        
+
+    	xClose = close();
+
+        xOpen = open();
+
+        xLow = low();
+
+        
+
+        xStoc = efsInternal("calc_Stoc", fpLength, xClose);
+
+        
+
+        nLotSize = Strategy.getDefaultLotSize();
+
+        
+
+        bInit = true; 
+
+    }
+
+    
+
+    if (getCurrentBarIndex() != 0){
+
+        
+
+        if (!Strategy.isInTrade() && crossUnder(xStoc, fpThreshold, fpLength)){
+
+            
+
+            nEntryPrice = xOpen.getValue(1);
+
+            
+
+            Strategy.doLong("Enter Long", Strategy.MARKET, Strategy.NEXTBAR);                                                                               
+
+            drawShapeRelative(1, BelowBar1, Shape.UPTRIANGLE, null, fpEntryColor, Text.PRESET, getCurrentBarIndex()+"Ent");
+
+            drawTextRelative(1, BelowBar2, "Enter Long", fpEntryColor, null, Text.PRESET|Text.CENTER, null, null, getCurrentBarIndex()+"Ent_Label"); 
+
+            drawTextRelative(1, BelowBar3, nLotSize + " @ " + formatPriceNumber(nEntryPrice), fpEntryColor, null, Text.PRESET|Text.CENTER, null, null, getCurrentBarIndex()+"Ent_Size");
+
+            
+
+            nBarsSinceEntry = getCurrentBarCount() + 1;
+
+            
+
+            return;
+
+        }
+
+        
+
+        if (Strategy.isLong()){
+
+            
+
+            var bExit = false;
+
+            var sLabel = "";
+
+            
+
+            var nCountEntry = getCurrentBarCount() - nBarsSinceEntry;
+
+            if (nCountEntry >= fpTradeLength){
+
+                bExit = true;
+
+                sLabel = "Exit Length";
+
+            }
+
+             
+
+            var nLow = xLow.getValue(0);
+
+            var nStopLevel = nEntryPrice * (1 - fpPctLoss / 100); 
+
+            if (nLow < nStopLevel){
+
+                bExit = true;
+
+                sLabel = "Exit Stop";
+
+            }
+
+                
+
+            if (bExit){
+
+                var nExitPrice = xOpen.getValue(1);
+
+            
+
+                Strategy.doSell("Exit Long", Strategy.MARKET, Strategy.NEXTBAR)
+
+                drawShapeRelative(1, AboveBar1, Shape.DOWNTRIANGLE, null, fpExitColor, Text.PRESET, getCurrentBarIndex()+"Ex");
+
+                drawTextRelative(1, AboveBar2, sLabel, fpExitColor, null, Text.PRESET|Text.CENTER, null, null, getCurrentBarIndex()+"Ex_Label"); 
+
+                drawTextRelative(1, AboveBar3, nLotSize + " @ " + formatPriceNumber(nExitPrice), fpExitColor, null, Text.PRESET|Text.CENTER, null, null, getCurrentBarIndex()+"Ex_Size");
+
+            }    
+
+        }
+
+    }
+
+}
+
+
+
+var xHignest = null;
+
+var xLowest = null;
+
+
+
+function calc_Stoc(nLength, xSource){
+
+    
+
+   if (getBarState() == BARSTATE_ALLBARS){
+
+       xHignest = highest(nLength, xSource);
+
+       xLowest = lowest(nLength, xSource);
+
+   }
+
+   
+
+   var nSource = xSource.getValue(0);
+
+   var nHighest = xHignest.getValue(0);
+
+   var nLowest = xLowest.getValue(0);
+
+
+
+   if (nSource == null || nHighest == null || nLowest == null)
+
+        return;
+
+    
+
+   var nReturnValue = (nSource - nLowest) / (nHighest - nLowest);
+
+   
+
+   return nReturnValue;
+
+}
+
+
+
+function crossUnder(xStoc, nThreshold, nStocLength){
+
+        
+
+    var nReturnValue = false;
+
+    
+
+    var nStoc = xStoc.getValue(0);
+
+       
+
+    if (nStoc < nThreshold){
+
+        for (var i = -1; i >= -(getCurrentBarCount() - nStocLength) ; i--){
+
+                
+
+            var nPrevStoc = xStoc.getValue(i);
+
+                
+
+            if (nPrevStoc != nThreshold){
+
+                if (nPrevStoc > nThreshold)
+
+                    nReturnValue = true; 
+
+                break;
+
+            }
+
+        } 
+
+    }
+
+    return nReturnValue;
+
+}
+
+
+
+function verify(){
+
+    
+
+    var b = false;
+
+    
+
+    if (getBuildNumber() < 779){
+
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+
+            null, 13, "error");
+
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+
+            null, 13, "upgrade");
+
+        return b;
+
+    } 
+
+    else{
+
+        b = true;
+
+    }
+
+
+
+    return b;
+
+}

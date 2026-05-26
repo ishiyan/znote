@@ -1,0 +1,35 @@
+FRACTAL DIMENSION INDICATOR IN EASYLANGUAGE
+Inputs:	Price((H + L)/2),
+	N(30); {N must be an even number}
+
+Vars:	Smooth(0),
+	count(0),
+	N1(0),
+	N2(0),
+	N3(0),
+	HH(0),
+	LL(0),
+	Ratio(0),
+	Dimen(0);
+
+Smooth = (Price + 2*Price[1] + 2*Price[2] + Price[3]) / 6;
+N3 = (Highest(Smooth, N) - Lowest(Smooth, N)) / N;
+HH = Smooth;
+LL = Smooth;
+For count = 0 to N / 2 - 1 begin
+	If Smooth[count] > HH then HH = Smooth[count];
+	If Smooth[count] < LL then LL = Smooth[count];
+End;
+N1 = (HH - LL) / (N / 2);
+HH = Smooth[N / 2];
+LL = Smooth[N / 2];
+For count = N / 2 to N - 1 begin
+	If Smooth[count] > HH then HH = Smooth[count];
+	If Smooth[count] < LL then LL = Smooth[count];
+End;
+N2 = (HH - LL)/(N / 2);
+If N1 > 0 and N2 > 0 and N3 > 0 then Ratio = .5*((Log(N1 + N2) - Log(N3)) / Log(2) + Dimen[1]);
+Dimen = Average(Ratio, 20);
+Plot1(Dimen);
+Plot2(1.6, �1.6�, Blue);
+Plot3(1.4, �1.4�, Blue);

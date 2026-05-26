@@ -1,0 +1,11 @@
+BP:
+BandPassFilter( Avg2( High, Low), 20, 0.5 )
+
+Trend:
+MovAvg ( BP, 40 )
+
+Upper threshold:
+Multiply2 ( 0.25 , MovAvg ( SelectiveLag ( Lag(BP,1) , And2( A>B( Lag(BP,1), BP ), A>B( Lag(BP,1), Lag(BP,2) ) ), 1 ), 50 ) )
+
+Lower threshold:
+Multiply2 ( 0.25 , MovAvg ( SelectiveLag ( Lag(BP,1) , And2( A<B( Lag(BP,1), BP ), A<B( Lag(BP,1), Lag(BP,2) ) ), 1 ), 50 ) )

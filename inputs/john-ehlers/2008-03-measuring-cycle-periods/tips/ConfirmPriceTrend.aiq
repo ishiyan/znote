@@ -1,0 +1,41 @@
+! CONFIRMING PRICE TREND
+! Author: Barbara Star, TASC Dec 2007
+! Coded by: Richard Denning 01/07/08
+C     is [close].
+C1    is valresult(C,1).
+C2    is valresult(C,2).
+C3    is valresult(C,3).
+C4    is valresult(C,4).
+C5    is valresult(C,5).
+C6    is valresult(C,6).
+C7    is valresult(C,7).
+C8    is valresult(C,8).
+C9    is valresult(C,9).
+C10    is valresult(C,10).
+C11    is valresult(C,11).
+C12    is valresult(C,12).
+C13    is valresult(C,13).
+C14    is valresult(C,14).
+C15    is valresult(C,15).
+C16    is valresult(C,16).
+C17    is valresult(C,17).
+C18    is valresult(C,18).
+C19    is valresult(C,19).
+! CONSTANTS FOR N = 20:
+! N        = 20.
+! SUM_X        = 210.
+! SUM_X*SUM_X      = 44100.
+! SUM_X2     = 2870.
+SUM_Y    is sum(C,20).
+SUM_XY    is C19 + 2*C18 + 3*C17 + 4*C16 + 5*C15 + 6*C14 + 7*C13
+          + 8*C12 + 9*C11 + 10*C10 + 11*C9 + 12*C8 + 13*C7 + 14*C6
+          + 15*C5 + 16*C4 + 17*C3 + 18*C2 + 19*C1 + 20*C.
+SUM_Y2    is sum(C*C,20).
+R    is ((20*SUM_XY-210*SUM_Y)
+       / sqrt((20*2870-44100)*(20*SUM_Y2-SUM_Y*SUM_Y))).
+R2    is R*R.
+! INDICATORS TO PLOT:
+   ! R2 TIMES 100:
+    PlotR2    is R2 * 100.
+   ! LINEAR REGRESSION SLOPE INDICATOR
+    LRS20     is slope2(C,20).

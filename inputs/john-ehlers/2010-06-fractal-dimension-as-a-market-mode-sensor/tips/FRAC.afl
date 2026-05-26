@@ -1,0 +1,39 @@
+LISTING 1
+
+Price = (H+L)/2; 
+
+N = Param("N", 30, 10, 100, 2 ); 
+
+Smooth = ( Price + 
+         2 * Ref( Price, -1 ) + 
+         2 * Ref( Price, -2 ) + 
+         Ref( Price, -3 ) ) / 6; 
+
+N3 = (HHV( Smooth, N ) - LLV( Smooth, N ))/N; 
+
+HH2 = HHV( Smooth, N/2 ); 
+LL2 = LLV( Smooth, N/2 ); 
+
+N1 = ( HH2 - LL2 )/(N/2); 
+
+N2 = Ref( HH2 - LL2, - N/2 )/(N/2); 
+
+Ratio = ( log( N1 + N2 ) - log( N3 ) )/log( 2 ); 
+
+dimen = Null; 
+
+for( i = 20+N; i < BarCount; i++ ) 
+{ 
+   ratio[ i ] += Nz( dimen[ i - 1 ] ); 
+   ratio[ i ] *= 0.5; 
+
+   for( sr = 0, k = 0; k < 20; k++ ) 
+     sr += ratio[ i - k ]; 
+
+   dimen[ i ] = sr / 20; 
+} 
+
+Plot( Dimen, "Fractal dimension", colorRed ); 
+
+PlotGrid( 1.6, colorBlue ); 
+PlotGrid( 1.4, colorBlue ); 

@@ -1,0 +1,69 @@
+'FRACTAL DIMENSION AS A MARKET MODE SENSOR
+'Author: John Ehlers, TASC June 2010
+'Coded by: Richard Denning
+'www.TradersEdgeSystems.com
+
+Function FRACTAL(fracLen)
+    'default value for fracLen = 30
+    Dim Price As BarArray
+    Dim Smooth As BarArray
+    Dim count 
+    Dim N1 As BarArray
+    Dim N2 As BarArray
+    Dim N3 As BarArray
+    Dim HH As BarArray
+    Dim LL As BarArray
+    Dim Ratio As BarArray
+    Dim Dimen As BarArray
+
+    If fracLen Mod 2 > 0 Then fracLen = fracLen + 1
+    Price = (H+L)/2
+    Smooth = (Price + 2*Price[1] + 2*Price[2] + Price[3]) / 6
+    
+    'N3 = the average median 'smooth' over entire N length bars:
+    N3 = (Highest(Smooth,fracLen,0)-Lowest(Smooth,fracLen,0))/fracLen
+    HH = Smooth
+    LL = Smooth
+    For count = 0 To fracLen / 2 - 1
+        If Smooth[count] > HH Then
+            HH = Smooth[count]
+        End If
+        If Smooth[count] < LL Then
+            LL = Smooth[count]
+        End If
+    Next
+    
+    'N1 = the average median 'smooth' over N/2 length bars:
+    N1 = (HH - LL) / (fracLen / 2)
+    HH = Smooth[fracLen / 2]
+    LL = Smooth[fracLen / 2]
+    For count = fracLen / 2 To fracLen - 1
+        If Smooth[count] > HH Then
+            HH = Smooth[count]
+        End If
+        If Smooth[count] < LL Then
+            LL = Smooth[count]
+        End If
+    Next
+    
+    'N2 = the average median 'smooth' over  N/2 length bars:
+    N2 = (HH - LL) / (fracLen / 2)
+    If N1 > 0 And N2 > 0 And N3 > 0 Then
+        Ratio = .5*((Log(N1 + N2) - Log(N3)) / Log(2) + Dimen[1])
+    End If
+    Dimen = Average(Ratio, 20, 0)
+    FRACTAL = Dimen
+End Function
+'--------------------------------------------------------------------
+'For plotting indicator on a chart:
+
+Sub FRACTAL_IND(fracLen,upperLine,lowerLine)
+    'default values:
+    'fracLen =30
+    'upperLine=1.6
+    'lowerLine=1.4
+    plot1(FRACTAL(fracLen))
+    plot2(upperLine)
+    plot3(lowerLine)
+End Sub
+'--------------------------------------------------------------------

@@ -1,0 +1,20 @@
+'-------------------------------------------------------------------
+
+'Trader's Tips June 2010
+'Fractal Dimension Indicator by John Ehlers
+'Code by Jez Liberty - Au.Tra.Sy
+'jez@automated-trading-system.com
+'https://www.automated-trading-system.com/
+
+Smooth = (PriceHL + 2*PriceHL[1] + 2*PriceHL[2] + PriceHL[3]) / 6
+'Calculate N1, N2 and N3 using Highest and Lowest values over different periods
+N3 = ( Highest(Smooth, Lookback, 0) - Lowest(Smooth, Lookback, 0) ) / Lookback
+N2 = 2*( Highest(Smooth, Lookback/2, 0) - Lowest(Smooth, Lookback/2, 0) ) / Lookback
+N1 = 2*( Highest(Smooth, Lookback/2, Lookback/2) - Lowest(Smooth, Lookback/2, Lookback/2) ) / Lookback
+
+if N1 > 0 and N2 > 0 and N3 > 0 then
+	Ratio = .5*((Log(N1 + N2) - Log(N3)) / Log(2) + Dimen[1])
+endif
+
+Dimen = Average(Ratio,20)
+'---------------------------------------------------------------------

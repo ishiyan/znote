@@ -1,0 +1,44 @@
+Name: TASC - 11/2010 - Zero-Lag Indicator
+Function Name Alias: tasc_ZLI
+Label Mask: TASC- 11/2010 - Zero-Lag Indicator (%Price%,%Periods%,%GainLimit%) = %EC%
+Placement: Price Frame
+Data Inspection Alias: Zero-Lag Ind.
+
+
+
+[New] button...
+Name: Price
+Display Name: Price
+Type: Price
+Default: Close
+
+[New] button...
+Name: Periods
+Display Name: Periods
+Type: integer
+Default: 20
+
+[New] button...
+Name: GainLimit
+Display Name: Gain Limit
+Type: float
+Default: 50
+
+
+
+[New] button...
+Var Name: EC	
+Name: (EC)
+Line Color: black
+Line Width: slightly thicker
+Line Type: solid
+
+
+
+{Provided By: Capital Market Services, LLC & Visual Trading Systems, LLC}
+{Copyright: 2010}
+{Description: TASC, November 2010 - "Zero Lag (Well, Almost)" by John Elhers and Ric Way}
+{File: tasc_ZLI.vtscr - Version 1.0}
+
+EC:= zli(Price,Periods,GainLimit);
+

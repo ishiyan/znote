@@ -1,0 +1,23 @@
+Macro: ifish
+c: cl #R
+v1: 0.1*(5 rsi #r) - 50
+v2: (1|9) wtave v1
+tanh v2
+
+Macro: ifish (flexible RSI length)
+c: cl #R
+n: #l
+v1: 0.1*(#l rsi #r) - 50
+v2: (1|9) wtave v1
+tanh v2
+
+Macro: cycle
+a: 0.07
+n1: 1 - .5*a
+n2: 1 - a
+price: midrange #r
+smooth: 1 2 2 1 wtave price
+dsmooth: 1 -2 1 wtsum smooth
+cycle: 1 -2 1 wtave price first 6
+cycle: ((n1^2) * dsmooth) + (2*n2*cycle back 1) - ((n2^2)*cycle back 2)
+cycle

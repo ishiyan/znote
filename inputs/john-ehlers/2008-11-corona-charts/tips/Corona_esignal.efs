@@ -1,0 +1,1052 @@
+eSignal code
+Corona Chart Trend Vigor EFS code:
+
+
+/*********************************
+Provided By:  
+    eSignal (Copyright c eSignal), a division of Interactive Data 
+    Corporation. 2008. All rights reserved. This sample eSignal 
+    Formula Script (EFS) is for educational purposes only and may be 
+    modified and saved under a new file name.  eSignal is not responsible
+    for the functionality once modified.  eSignal reserves the right 
+    to modify and overwrite this EFS file with each new release.
+   
+
+Description:        
+    Corona Chart Trend Vigor    
+
+Version:            1.0  9/10/2008
+
+Notes:
+    Once the dominant cycle period is known, the
+    instantaneous trend is just the momentum across the full
+    cycle period. This measurement is invariant with the
+    position within the cycle. The trend slope is the same
+    whether measured from cycle peak to cycle peak or cycle
+    valley to cycle valley. The trend slope is normalized to the
+    amplitude of the dominant cycle. A value of +2 means the
+    trend slope is twice the dominant cycle amplitude, and
+    therefore cautions you not to trade against the upslope.
+    Similarly, a value of -2 means the trend slope is down and
+    therefore cautions you not to buy against the downslope.
+    The related article is copyrighted material. If you are not
+    a subscriber of Stocks & Commodities, please visit www.traders.com.
+
+
+
+
+Formula Parameters:                     Default:
+    View Line Trend Vigor                 True
+**********************************/
+
+var fpArray = new Array();
+var bInit = false;
+var bVersion = null;
+
+
+function preMain() {
+
+    setPriceStudy(false);
+    setShowCursorLabel(false);
+    setShowTitleParameters( false );
+    setStudyTitle("Corona Chart Trend Vigor");
+
+    
+var x=0;
+
+    fpArray[x] = new FunctionParameter("ViewLine", FunctionParameter.BOOLEAN);
+    with(fpArray[x++]){
+        setName("View Line Trend Vigor");
+        setDefault(true);
+    }    
+}
+
+
+
+var     nLineR = 64;
+var     nLineG = 128;
+var     nLineB = 255;
+var     nFuzzR = 0;
+var     nFuzzG = 0;
+var     nFuzzB = 255;
+var     xPrice = null;
+
+
+var     nRef_Global = 0;
+var     ndelta = 0.1;
+var     ngamma = 0;
+var     nalpha = 0;
+var     nbeta = 0;
+var     nN = 0;
+var     nPeriod = 0;
+var     nMaxAmpl = 0;
+var     nNum = 0;
+var     nDenom = 0;
+var     nDC = 0;
+var     nDomCyc = 0;
+var     nColor1 = 0;
+var     nColor2 = 0;
+var     nColor3 = 0;
+var     nalpha1 = 0;
+var     xHP = null;
+var     nSmoothHP = 0;
+var     nSmoothHP1 = 0;
+var     ndelta1 = 0.1;
+var     ngamma1 = 0;
+var     nalpha2 = 0;
+var     nbeta1 = 0;
+var     nIP2 = 0;
+var     nIP1 = 0;
+var     nIP = 0;
+var     nQ1 = 0;
+var     nAmpl2 = 0;
+var     nTrend = 0;
+var     nRatio = 0;
+var     nRatio1 = 0;
+var     nTV = 0;
+var     nWidth = 0;
+
+
+var     xResultArray = new Array(52);
+
+var     aI = new Array(60);
+var     aOldI = new Array(60);
+var     aOlderI = new Array(60);
+var     aQ = new Array(60);
+var     aOldQ = new Array(60);
+var     aOlderQ = new Array(60);
+var     aReal = new Array(60);
+var     aOldReal = new Array(60);
+var     aOlderReal = new Array(60);
+var     aImag = new Array(60);
+var     aOldImag = new Array(60);
+var     aOlderImag = new Array(60);
+var     aAmpl = new Array(60);
+var     aOldAmpl = new Array(60);
+var     aDB = new Array(60);
+var     aOldDB = new Array(60);
+var     aDC = new Array(60);
+var     aRaster = new Array(50);
+var     aOldRaster = new Array(50);
+
+
+
+
+function main(ViewLine) {
+var nResCounter = 0;
+var nState = getBarState();
+var pi = 3.1415926;
+
+    
+    
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;   
+
+    
+    if (nState == BARSTATE_ALLBARS) {
+        resetGlobalVars();    
+    }
+    
+                  nalpha1 = (1 - (Math.sin(pi * (360 / 30) / 180)) / (Math.cos(pi * (360 / 30) / 180)));
+
+
+    if (nState == BARSTATE_NEWBAR) {
+        nSmoothHP1 = nSmoothHP;
+    }
+
+     
+    if ( bInit == false ) {
+        bShowDC  = ViewLine;
+        xPrice = hl2();
+        xHP = efsInternal("Calc_HP";, xPrice, nalpha1);
+        bInit = true; 
+        drawTextPixel( 10, 10,"Corona Chart Trend Vigor", Color.black, null,
+                       Text.RELATIVETOLEFT | Text.RELATIVETOTOP, "Name" ,10, -10 );         
+    } 
+
+    if (getCurrentBarCount()  12) {
+                for (nN = 12; nN  nMaxAmpl) nMaxAmpl = aAmpl[nN];
+        }
+
+     
+        for (nN = 12; nN  0) 
+                    aDB[nN] = (-10) * Math.log(0.01 / (1 - 0.99 * aAmpl[nN] / nMaxAmpl)) / Math.log(10);
+                aDB[nN] = 0.33 * aDB[nN] + 0.67 * aOldDB[nN];
+                if (aDB[nN] > 20) aDB[nN] = 20;
+        }
+
+        nNum = 0;
+        nDenom = 0;
+        for (nN = 12; nN  10) nRatio = 10;
+    if (nRatio  0.7) nWidth = 0.01;
+    if (nTV >= 0.3 && nTV  0.5 && nTV  Math.round(50 * nTV))
+                    aRaster[nN] = 0.8 * (Math.pow((-20 * nTV + 0.4 * nN) / nWidth, 0.85) + 0.2 * aOldRaster[nN]);
+                if (nN == Math.round(50 * nTV)) aRaster[nN] = 0.5 * aOldRaster[nN];
+                if (aRaster[nN]  20 || nTV  0.7) aRaster[nN] = 20;
+        }
+
+
+
+        
+     for (nN = 1; nN  10) {
+                        nColor1 = Math.round(nFuzzR * (2 - aRaster[nN] / 10));
+                        nColor2 = Math.round(nFuzzG * (2 - aRaster[nN] / 10));
+                        nColor3 = Math.round(nFuzzB * (2 - aRaster[nN] / 10));
+                }
+
+
+        
+        xResultArray[nResCounter++] = 0.4 * nN - 10;
+        setDefaultBarFgColor(Color.RGB(nColor1, nColor2, nColor3), nResCounter-1);
+        setDefaultBarThickness(5, nResCounter - 1);
+        }
+        
+    
+
+    if (bShowDC == true) {
+        xResultArray[nResCounter++] = (20 * nTV - 10);
+        setBarFgColor(Color.RGB(nLineR, nLineG, nLineB), nResCounter-1);
+        setBarThickness(3, nResCounter-1);
+    }    
+
+    
+     return xResultArray; 
+}
+
+
+function resetGlobalVars(){
+    nRef_Global = 0;
+    ndelta = 0.1;
+    ngamma = 0;
+    nalpha = 0;
+    nbeta = 0;
+    nN = 0;
+    nPeriod = 0;
+    nMaxAmpl = 0;
+    nNum = 0;
+    nDenom = 0;
+    nDC = 0;
+    nDomCyc = 0;
+    nColor1 = 0;
+    nColor2 = 0;
+    nColor3 = 0;
+    nalpha1 = 0;
+    
+    nSmoothHP = 0;
+    nSmoothHP1 = 0;
+    ndelta1 = 0.1;
+    ngamma1 = 0;
+    nalpha2 = 0;
+    nbeta1 = 0;
+    nIP2 = 0;
+    nIP1 = 0;
+    nIP = 0;
+    nQ1 = 0;
+    nAmpl2 = 0;
+    nTrend = 0;
+    nRatio = 0;
+    nRatio1 = 0;
+    nTV = 0;
+    nWidth = 0;
+
+    
+ for (var i = 0; i < 61; i++) {
+        if (i <= 52) xResultArray[i] = null;
+        aI[i] = 0;
+        aOldI[i] = 0;
+        aOlderI[i] = 0;
+        aQ[i] = 0;
+        aOldQ[i] = 0;
+        aOlderQ[i] = 0;
+        aReal[i] = 0;
+        aOldReal[i] = 0;
+        aOlderReal[i] = 0;
+        aImag[i] = 0;
+        aOldImag[i] = 0;
+        aOlderImag[i] = 0;
+        aAmpl[i] = 0;
+        aOldAmpl[i] = 0;
+        aDB[i] = 0;
+        aOldDB[i] = 0;
+        aDC[i] = 0;
+    }
+    
+    for (var i = 1; i < 51; i++) {
+        aRaster[i] = 0;
+        aOldRaster[i] = 0;
+    }   
+}
+
+
+
+// calcHP globals
+var nPrevHP = null;
+var nCurrHP = null;
+
+function Calc_HP(x, nAlpha1) {
+    var nHP = null;
+    
+    if (getCurrentBarCount() <= 5 ) {
+        nCurrHP = x.getValue(0);
+        return nCurrHP;
+    } else {
+        if (x.getValue(-1) == null) return null;
+        if (getBarState() == BARSTATE_NEWBAR) nPrevHP = nCurrHP;
+        nCurrHP = ( 0.5*(1 + nAlpha1)*(x.getValue(0) - x.getValue(-1)) + nAlpha1*nPrevHP );
+        return nCurrHP;
+    }
+
+}
+
+
+function Median(myArray, Length) {
+    var aArray = new Array(Length);
+    var nMedian = null;
+
+    for (var i = 0; i < Length; i++) {
+        aArray[i] = myArray[i];
+    }
+
+    
+    aArray = aArray.sort(compareNumbers);
+    nMedian = aArray[Math.round((Length-1)/2)];
+    return nMedian;
+}
+
+
+function compareNumbers(a, b) {
+   return a - b
+}
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}
+
+
+
+/*********************************
+Provided By:  
+    eSignal (Copyright c eSignal), a division of Interactive Data 
+    Corporation. 2008. All rights reserved. This sample eSignal 
+    Formula Script (EFS) is for educational purposes only and may be 
+    modified and saved under a new file name.  eSignal is not responsible
+    for the functionality once modified.  eSignal reserves the right 
+    to modify and overwrite this EFS file with each new release.
+   
+
+Description:        
+    Corona Chart Swing Position
+
+Version:            1.0  9/10/2008
+
+Notes:
+    The swing position indicator shows the phasing of
+    the data within the dominant cycle. A value of -5 means the
+    cycle is at its valley. A value of +5 means the cycle is at its
+    peak. In a pure cycle the Swing Position will trace out the
+    shape of a sine wave.
+    The related article is copyrighted material. If you are not
+    a subscriber of Stocks & Commodities, please visit www.traders.com.
+
+
+
+Formula Parameters:                     Default:
+    View Line                            True
+**********************************/
+
+var fpArray = new Array();
+var bInit = false;
+var bVersion = null;
+
+
+
+function preMain() {
+
+    setPriceStudy(false);
+    setShowCursorLabel(false);
+    setShowTitleParameters( false );
+    setStudyTitle("Corona Chart Swing Position");
+    setDefaultBarThickness(3, 50);
+
+    
+    var x=0;
+
+    fpArray[x] = new FunctionParameter("ViewLine", FunctionParameter.BOOLEAN);
+    with(fpArray[x++]){
+        setName("View Line");
+        setDefault(true);
+    }    
+
+}
+
+
+var     nLineR = 180;
+var     nLineG = 255;
+var     nLineB = 210;
+var     nFuzzR = 0;
+var     nFuzzG = 172;
+var     nFuzzB = 64;
+var     xPrice = null;
+
+var     nRef_Global = 0;
+var     ndelta = 0.1;
+var     ngamma = 0;
+var     nalpha = 0;
+var     nbeta = 0;
+var     nN = 0;
+var     nPeriod = 0;
+var     nMaxAmpl = 0;
+var     nNum = 0;
+var     nDenom = 0;
+var     nDC = 0;
+var     nDomCyc = 0;
+var     nColor1 = 0;
+var     nColor2 = 0;
+var     nColor3 = 0;
+var     nalpha1 = 0;
+var     xHP = null;
+var     nSmoothHP = 0;
+var     nSmoothHP1 = 0;
+var     ngamma2 = 0;
+var     nalpha2 = 0;
+var     nbeta2 = 0;
+var     ndelta2 = 0.1;
+var     nBP2 = 0;
+var     nBP2_1 = 0;
+var     nBP2_2 = 0;
+var     nQ2 = 0;
+var     nHL = 0;
+var     nLL = 0;
+var     ncount = 0;
+var     nWidth = 0;
+var     nCalc_HP_Ref = 0;
+
+
+
+var     xResultArray = new Array(51);
+
+var     aI = new Array(61);
+var     aOldI = new Array(61);
+var     aOlderI = new Array(61);
+var     aQ = new Array(61);
+var     aOldQ = new Array(61);
+var     aOlderQ = new Array(61);
+var     aReal = new Array(61);
+var     aOldReal = new Array(61);
+var     aOlderReal = new Array(61);
+var     aImag = new Array(61);
+var     aOldImag = new Array(61);
+var     aOlderImag = new Array(61);
+var     aAmpl = new Array(61);
+var     aOldAmpl = new Array(61);
+var     aDB = new Array(61);
+var     aOldDB = new Array(61);
+var     aDC = new Array(61);
+var     aPsn = new Array(61);
+
+
+var     aRaster = new Array(51);
+var     aOldRaster = new Array(51);
+var     aLead60 = new Array(51);
+
+
+
+function main(ViewLine) {
+    var nResCounter = 0;
+    var nState = getBarState();
+    var pi = 3.1415926;
+    var nCounter = 0;
+
+    
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;   
+
+
+    if (nState == BARSTATE_ALLBARS) {
+        resetVars();
+    }
+    
+        nalpha1 = (1 - (Math.sin(pi * (360 / 30) / 180)) / (Math.cos(pi * (360 / 30) / 180)));
+
+     
+    if ( bInit == false ) {
+        bShowDC  = ViewLine;
+        xPrice = hl2();
+        xHP = efsInternal("Calc_HP", xPrice, nalpha1);
+        bInit = true; 
+        drawTextPixel( 10, 10,"J Corona Chart Swing Position", Color.black, null,
+                       Text.RELATIVETOLEFT | Text.RELATIVETOTOP, "Name" ,10, -10 );             
+    } 
+    
+    if (getCurrentBarCount()  12) {
+                                 for (nN = 12; nN  nMaxAmpl) nMaxAmpl = aAmpl[nN];
+        }
+
+     
+        
+    for (nN = 12; nN  0) 
+                    aDB[nN] = (-10) * Math.log(0.01 / (1 - 0.99 * aAmpl[nN] / nMaxAmpl)) / Math.log(10);
+                aDB[nN] = 0.33 * aDB[nN] + 0.67 * aOldDB[nN];
+                if (aDB[nN] > 20) aDB[nN] = 20;
+        }
+
+        
+   nNum = 0;
+        nDenom = 0;
+        for (nN = 12; nN  nHL) nHL =aLead60[ncount];
+                if (aLead60[ncount]  nHL)  nHL = aPsn[ncount];
+                if (aPsn[ncount]  0.85) { nWidth = 0.01 } else  { nWidth = 0.15 * (nHL - nLL);}
+
+
+        
+for (nN = 1; nN  Math.round(50 * aPsn[0])) 
+                    aRaster[nN] = 0.5 * (Math.pow((((-20) * aPsn[0] + 0.4 * nN) / nWidth), 0.95)
+                    + 0.5 * aOldRaster[nN]);
+                if (nN == Math.round(50 * aPsn[0]))  aRaster[nN] = 0.5 * aOldRaster[nN];
+                if (aRaster[nN]  20) aRaster[nN] = 20;
+                if (nHL - nLL > 0.8) aRaster[nN] = 20;
+                aOldRaster[nN] = aRaster[nN];
+        }
+
+
+        
+for (nN = 1; nN  10) {
+                        nColor1 = Math.round(nFuzzR * (2 - aRaster[nN] / 10));
+                        nColor2 = Math.round(nFuzzG * (2 - aRaster[nN] / 10));
+                        nColor3 = Math.round(nFuzzB * (2 - aRaster[nN] / 10));
+                }
+
+        
+        xResultArray[nResCounter++] = 0.2 * nN - 5;
+        setBarFgColor(Color.RGB(nColor1, nColor2, nColor3), nResCounter-1);
+        setPlotType(PLOTTYPE_LINE, nResCounter-1); 
+        setBarThickness(5, nResCounter-1);        
+        }
+
+
+    
+     if (bShowDC == true) {
+        xResultArray[nResCounter++] = (10 * aPsn[0] - 5);
+        setBarFgColor(Color.RGB(nLineR, nLineG, nLineB), nResCounter-1);
+    }    
+
+
+    
+    return xResultArray; 
+}
+
+function resetVars() {
+    nRef_Global = 0;
+    ndelta = 0.1;
+    ngamma = 0;
+    nalpha = 0;
+    nbeta = 0;
+    nN = 0;
+    nPeriod = 0;
+    nMaxAmpl = 0;
+    nNum = 0;
+    nDenom = 0;
+    nDC = 0;
+    nDomCyc = 0;
+    nColor1 = 0;
+    nColor2 = 0;
+    nColor3 = 0;
+    nalpha1 = 0;
+    
+    nSmoothHP = 0;
+    nSmoothHP1 = 0;
+    ngamma2 = 0;
+    nalpha2 = 0;
+    nbeta2 = 0;
+    ndelta2 = 0.1;
+    nBP2 = 0;
+    nBP2_1 = 0;
+    nBP2_2 = 0;
+    nQ2 = 0;
+    nHL = 0;
+    nLL = 0;
+    ncount = 0;
+    nWidth = 0;
+    nCalc_HP_Ref = 0;
+
+
+    
+for (var i = 0; i < 61; i++) {
+        if (i < 51) xResultArray[i] = null;
+        aI[i] = 0;
+        aOldI[i] = 0;
+        aOlderI[i] = 0;
+        aQ[i] = 0;
+        aOldQ[i] = 0;
+        aOlderQ[i] = 0;
+        aReal[i] = 0;
+        aOldReal[i] = 0;
+        aOlderReal[i] = 0;
+        aImag[i] = 0;
+        aOldImag[i] = 0;
+        aOlderImag[i] = 0;
+        aAmpl[i] = 0;
+        aOldAmpl[i] = 0;
+        aDB[i] = 0;
+        aOldDB[i] = 0;
+        aDC[i] = 0;
+        aPsn[i] = 0;
+    }
+    
+    for (var i = 0; i < 51; i++) {
+        aRaster[i] = 0;
+        aOldRaster[i] = 0;
+        aLead60[i] = 0;
+    }   
+
+    
+return;
+}
+
+
+// calcHP globals
+var nPrevHP = null;
+var nCurrHP = null;
+
+
+function Calc_HP(x, nAlpha1) {
+    var nHP = null;
+    
+    if (getCurrentBarCount() <= 5 ) {
+        nCurrHP = x.getValue(0);
+        return nCurrHP;
+    } else {
+        if (x.getValue(-1) == null) return null;
+        if (getBarState() == BARSTATE_NEWBAR) nPrevHP = nCurrHP;
+        nCurrHP = ( 0.5*(1 + nAlpha1)*(x.getValue(0) - x.getValue(-1)) + nAlpha1*nPrevHP );
+        return nCurrHP;
+    }
+
+}
+
+
+
+function Median(myArray, Length) {
+    var aArray = new Array(Length);
+    var nMedian = null;
+
+    
+    for (var i = 0; i < Length; i++) {
+        aArray[i] = myArray[i];
+    }
+
+    aArray = aArray.sort(compareNumbers);
+    nMedian = aArray[Math.round((Length-1)/2)];
+    return nMedian;
+}
+
+
+function compareNumbers(a, b) {
+   return a - b
+}
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}
+
+
+
+/*********************************
+Provided By:  
+    eSignal (Copyright ï¿½ eSignal), a division of Interactive Data 
+    Corporation. 2008. All rights reserved. This sample eSignal 
+    Formula Script (EFS) is for educational purposes only and may be 
+    modified and saved under a new file name.  eSignal is not responsible
+    for the functionality once modified.  eSignal reserves the right 
+    to modify and overwrite this EFS file with each new release.
+   
+
+Description:        
+    Corona Chart Signal To Noise Ratio
+
+
+Version:            1.0  9/10/2008
+
+Notes:
+    The amplitude of the dominant cycle is normalized
+    to the amplitude of the noise. Noise is defined as the
+    average daily trading range. The Signal to Noise Ratio is
+    measured in decibels (dB). Unless the cycle amplitude is at
+    least 3 dB greater than the noise, the use of cycle-based
+    entries and oscillators should be avoided because the
+    uncertainty of getting a good entry and exit point during day
+    can negate any potential profit realized from the cyclic
+    swing. A Signal to Noise ratio in excess of 6 dB signals a
+    strong cyclic component relative to the noise.  
+    The related article is copyrighted material. If you are not
+    a subscriber of Stocks & Commodities, please visit www.traders.com.
+
+
+
+
+Formula Parameters:                     Default:
+    View Line Signal To Noise Ratio      True
+**********************************/
+
+
+
+
+var fpArray = new Array();
+var bInit = false;
+var bVersion = null;
+
+function preMain() {
+
+    setPriceStudy(false);
+    setShowCursorLabel(false);
+    setShowTitleParameters( false );
+    setStudyTitle("Corona Chart Signal To Noise Ratio");
+
+    var x=0;
+
+    fpArray[x] = new FunctionParameter("ViewLine", FunctionParameter.BOOLEAN);
+    with(fpArray[x++]){
+        setName("View Line Signal To Noise Ratio");
+        setDefault(true);
+    }    
+    
+
+}
+
+
+var xResultArray = new Array(50);
+
+var     nLineR = 220;
+var     nLineG = 255;
+var     nLineB = 255;
+var     nFuzzR = 0;
+var     nFuzzG = 190;
+var     nFuzzB = 190;
+var     xPrice = null;
+
+
+var     nRef_Global = 0;
+var     ndelta = 0.1;
+var     ngamma = 0;
+var     nalpha = 0;
+var     nbeta = 0;
+var     nN = 0;
+var     nPeriod = 0;
+var     nMaxAmpl = 0;
+var     nNum = 0;
+var     nDenom = 0;
+var     nDC = 0;
+var     nDomCyc = 0;
+var     nColor1 = 0;
+var     nColor2 = 0;
+var     nColor3 = 0;
+var     nalpha1 = 0;
+var     xHP = null;
+var     nSmoothHP = 0;
+var     nSmoothHP1 = 0;
+var     nAvg1 = 0;
+var     nAvg = 0;
+var     nSignal = 0;
+var     nSignal1 = 0;
+var     nNoise = 0;
+var     nNoise1 = 0;
+var     nSNR = 0;
+var     nWidth = 0;
+
+
+
+var     aI = new Array(60);
+var     aOldI = new Array(60);
+var     aOlderI = new Array(60);
+var     aQ = new Array(60);
+var     aOldQ = new Array(60);
+var     aOlderQ = new Array(60);
+var     aReal = new Array(60);
+var     aOldReal = new Array(60);
+var     aOlderReal = new Array(60);
+var     aImag = new Array(60);
+var     aOldImag = new Array(60);
+var     aOlderImag = new Array(60);
+var     aAmpl = new Array(60);
+var     aOldAmpl = new Array(60);
+var     aDB = new Array(60);
+var     aOldDB = new Array(60);
+var     aDC = new Array(60);
+var     aRaster = new Array(50);
+var     aOldRaster = new Array(50);
+
+
+
+
+function main(ViewLine) {
+var nResCounter = 0;
+var nState = getBarState();
+var pi = 3.1415926;
+var nCounter = 0;
+
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;   
+    
+    if (nState == BARSTATE_ALLBARS) {
+        resetVars();
+    }
+ 
+        nalpha1 = (1 - (Math.sin(pi * (360 / 30) / 180)) / (Math.cos(pi * (360 / 30) / 180)));
+
+
+    if (nState == BARSTATE_NEWBAR) {
+        nSmoothHP1 = nSmoothHP;
+        nAvg1 = nAvg;
+        nSignal1 = nSignal;
+        nNoise1 = nNoise;
+    }
+
+     
+    if ( bInit == false ) {
+        bShowDC  = ViewLine;
+        xPrice = hl2();
+        xHP = efsInternal("Calc_HP", xPrice, nalpha1);
+        bInit = true; 
+        drawTextPixel( 10, 10,"Corona Chart Signal To Noise Ratio", Color.black, null,
+                       Text.RELATIVETOLEFT | Text.RELATIVETOTOP, "Name" ,10, -10 );         
+    } 
+
+    if (getCurrentBarCount()  12) {
+                for (nN = 12; nN  nMaxAmpl) nMaxAmpl = aAmpl[nN];
+        //aOldDB[nN] = aDB[nN];
+        }
+
+     
+        for (nN = 12; nN  0) 
+                    aDB[nN] = (-10) * Math.log(0.01 / (1 - 0.99 * aAmpl[nN] / nMaxAmpl)) / Math.log(10);
+                aDB[nN] = 0.33 * aDB[nN] + 0.67 * aOldDB[nN];
+                if (aDB[nN] > 20) aDB[nN] = 20;
+        }
+
+        nNum = 0;
+        nDenom = 0;
+        for (nN = 12; nN  0) nSignal = 0.2 * Math.sqrt(nMaxAmpl) + 0.9 * nSignal1;
+        if (nAvg != 0 && getCurrentBarCount() > 5) nNoise = 0.1 * Median2(5) + 0.9 * nNoise1;
+        if (nSignal != 0 && nNoise != 0) nSNR = 20 * Math.log(nSignal / nNoise) / Math.log(10) + 3.5;
+        if (nSNR  11) nSNR = 10;
+
+        nSNR = 0.1 * nSNR;
+        nWidth = (-0.4) * nSNR + 0.2;
+        if (nSNR > 0.5) nWidth = 0;
+
+        for (nN = 1; nN  Math.round(50 * nSNR) && (0.4 * nN - 20 * nSNR) / nWidth > 1)
+                    aRaster[nN] = 0.5 * (Math.pow(((-20) * nSNR + 0.4 * nN)/ nWidth, 0.8) + aOldRaster[nN]) ;
+                if (nN == Math.round(50 * nSNR)) aRaster[nN] = 0 + 0.5 * aOldRaster[nN];
+                if (aRaster[nN]  20) aRaster[nN] = 20;
+                if (nSNR > 0.5) aRaster[nN] = 20;
+        }
+
+        for (nN = 1; nN  10) {
+                        nColor1 = Math.round(nFuzzR * (2 - aRaster[nN] / 10));
+                        nColor2 = Math.round(nFuzzG * (2 - aRaster[nN] / 10));
+                        nColor3 = Math.round(nFuzzB * (2 - aRaster[nN] / 10));
+                }
+
+        xResultArray[nResCounter++] = 0.2 * nN + 1;
+        setBarFgColor(Color.RGB(nColor1, nColor2, nColor3), nResCounter-1);
+        setPlotType(PLOTTYPE_LINE, nResCounter-1); 
+        setBarThickness(5, nResCounter-1);
+
+        }
+
+    if (bShowDC == true) {
+        xResultArray[nResCounter++] = 10 * nSNR + 1;
+        setBarFgColor(Color.RGB(nLineR, nLineG, nLineB), nResCounter-1);
+        setBarThickness(3, nResCounter-1);
+    }
+
+    return xResultArray; 
+}
+
+
+function resetVars(){   
+    nRef_Global = 0;
+    ndelta = 0.1;
+    ngamma = 0;
+    nalpha = 0;
+    nbeta = 0;
+    nN = 0;
+    nPeriod = 0;
+    nMaxAmpl = 0;
+    nNum = 0;
+    nDenom = 0;
+    nDC = 0;
+    nDomCyc = 0;
+    nColor1 = 0;
+    nColor2 = 0;
+    nColor3 = 0;
+    nalpha1 = 0;
+    nSmoothHP = 0;
+    nSmoothHP1 = 0;
+    nAvg1 = 0;
+    nAvg = 0;
+    nSignal = 0;
+    nSignal1 = 0;
+    nNoise = 0;
+    nNoise1 = 0;
+    nSNR = 0;
+    nWidth = 0;
+        
+    
+    for (var i = 0; i  12) {
+                for (nN = 12; nN  nMaxAmpl) nMaxAmpl = aAmpl[nN];
+        }
+
+     
+        for (nN = 12; nN  0) 
+                    aDB[nN] = (-10) * Math.log(0.01 / (1 - 0.99 * aAmpl[nN] / nMaxAmpl)) / Math.log(10);
+                aDB[nN] = 0.33 * aDB[nN] + 0.67 * aOldDB[nN];
+                if (aDB[nN] > 20) aDB[nN] = 20;
+        }
+
+        nNum = 0;
+        nDenom = 0;
+        for (nN = 12; nN  10) {
+                        nColor1 = Math.round(nFuzzR * (2 - aDB[nN] / 10));
+                        nColor2 = Math.round(nFuzzG * (2 - aDB[nN] / 10));
+                        nColor3 = Math.round(nFuzzB * (2 - aDB[nN] / 10));
+                }
+
+                if (nN >= 12) {
+            xResultArray[nResCounter++] = nN/2;
+            setBarFgColor(Color.RGB(nColor1, nColor2, nColor3), nResCounter-1);
+            setPlotType(PLOTTYPE_LINE, nResCounter-1); 
+            setDefaultBarThickness(5, nResCounter-1);
+        }    
+        }
+
+
+
+    
+    return xResultArray; 
+}
+
+function resetVars() {    
+    nRef_Global = 0;
+    ndelta = 0.1;
+    ngamma = 0;
+    nalpha = 0;
+    nbeta = 0;
+    nN = 0;
+    nPeriod = 0;
+    nMaxAmpl = 0;
+    nNum = 0;
+    nDenom = 0;
+    nDC = 0;
+    nDomCyc = 0;
+    nColor1 = 0;
+    nColor2 = 0;
+    nColor3 = 0;
+    nalpha1 = 0;
+
+    nSmoothHP = 0;
+    nSmoothHP1 = 0;
+    
+    
+    for (var i = 0; i < 61; i++) {
+        xResultArray[i] = null;
+        aI[i] = 0;
+        aOldI[i] = 0;
+        aOlderI[i] = 0;
+        aQ[i] = 0;
+        aOldQ[i] = 0;
+        aOlderQ[i] = 0;
+        aReal[i] = 0;
+        aOldReal[i] = 0;
+        aOlderReal[i] = 0;
+        aImag[i] = 0;
+        aOldImag[i] = 0;
+        aOlderImag[i] = 0;
+        aAmpl[i] = 0;
+        aOldAmpl[i] = 0;
+        aDB[i] = 0;
+        aOldDB[i] = 0;
+        aDC[i] = 0;
+    }
+    xResultArray[61] = null;
+    
+    return;
+}
+
+
+// calcHP globals
+var nPrevHP = null;
+var nCurrHP = null;
+
+function Calc_HP(x, nAlpha1) {
+    var nHP = null;
+    
+    if (getCurrentBarCount() <= 5 ) {
+        nCurrHP = x.getValue(0);
+        return nCurrHP;
+    } else {
+        if (x.getValue(-1) == null) return null;
+        if (getBarState() == BARSTATE_NEWBAR) nPrevHP = nCurrHP;
+        nCurrHP = ( 0.5*(1 + nAlpha1)*(x.getValue(0) - x.getValue(-1)) + nAlpha1*nPrevHP );
+        return nCurrHP;
+    }
+
+}
+
+
+function Median(myArray, Length) {
+    var aArray = new Array(Length);
+    var nMedian = null;
+
+    for (var i = 0; i < Length; i++) {
+        aArray[i] = myArray[i];
+    }
+
+    aArray = aArray.sort(compareNumbers);
+    nMedian = aArray[Math.round((Length-1)/2)];
+    return nMedian;
+}
+
+function compareNumbers(a, b) {
+   return a - b
+}
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}

@@ -1,0 +1,6 @@
+N3:  Divide( Subtract( PriceRange( High, Low, n ), n )
+N1:  Divide( Subtract( PriceRange( High, Low, n/2 ), n/2 )
+N2:  Lag( N1, n/2 )
+Dimen :  Divide( Subtract( Log( Add2( N1, N2 ), Log(N3), Log(2) )
+Alpha:  Min2( Max2( Exp ( Multiply ( -4.6, Subtract ( Dimen, 1 ) ) ), .01), 1 )
+Filt: AdaptiveExpAvg* ( Avg2( High, Low ), Alpha )

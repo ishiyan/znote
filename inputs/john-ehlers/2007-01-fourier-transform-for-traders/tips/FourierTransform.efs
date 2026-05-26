@@ -1,0 +1,173 @@
+/***************************************
+Provided By : eSignal (c) Copyright 2006
+Description:  Fourier Transform for Traders
+              by John Ehlers
+Version 1.0  11/02/2006
+Notes:
+* Jan 2007 Issue of Stocks and Commodities Magazine
+* Study requires version 8.0 or later.
+Formula Parameters:                     Default:
+Show Dominant Cycle                     false
+Dominant Cycle Color                    blue
+Dominant Cycle Size                     2
+*****************************************************************/
+function preMain() {
+    setStudyTitle("Transformed DFT ");
+    setShowCursorLabel(false);
+    setShowTitleParameters(false);
+    // Dominant Cycle properties
+    setPlotType(PLOTTYPE_CIRCLE, 51);
+    var fp1 = new FunctionParameter("bShowDC", FunctionParameter.BOOLEAN);
+        fp1.setName("Show Dominant Cycle");
+        fp1.setDefault(false);
+    var fp2 = new FunctionParameter("nDC_color", FunctionParameter.COLOR);
+        fp2.setName("Dominant Cycle Color");
+        fp2.setDefault(Color.blue);
+    var fp3 = new FunctionParameter("nDC_thick", FunctionParameter.NUMBER);
+        fp3.setName("Dominant Cycle Size");
+        fp3.setLowerLimit(1);
+        fp3.setDefault(2);
+}
+// Global Variables
+var bVersion  = null;    // Version flag
+var bInit     = false;   // Initialization flag
+var xPrice = null;
+var xHP = null;
+var xCleanData = null;
+var nWindow = 50;
+var nAlpha = (1 - Math.sin((2*Math.PI)/40)) / Math.cos((2*Math.PI)/40);
+var aCosinePart = new Array(51);
+var aSinePart = new Array(51);
+var aPwr = new Array(51);
+var aDB = new Array(51);
+var aReturn = new Array(52);  // return array
+function main(bShowDC, nDC_color, nDC_thick) {
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    var nPeriod = 0;
+    var n = 0;
+    var nMaxPwr = 0;
+    var nNum = 0;
+    var nDenom = 0;
+    var nDominantCycle = 0;
+    var Color1 = null;
+    var Color2 = null;
+    //Initialization
+    if (bInit == false) {
+        setDefaultBarFgColor(nDC_color, 51);
+        setDefaultBarThickness(nDC_thick, 51);
+        xPrice = hl2();
+        xHP = efsInternal("calcHP", xPrice);
+        xCleanData = efsInternal("calcCleanData", xHP);
+        bInit = true;
+    }
+    var nHP = xHP.getValue(0);
+    var nCleanData = xCleanData.getValue(-nWindow);
+    if (nHP == null || nCleanData == null) return;
+    //This is the DFT
+    nPeriod = 8;
+    n = 0;
+    for (nPeriod = 8; nPeriod <= 50; nPeriod++) {
+        aCosinePart[nPeriod] = 0;
+        aSinePart[nPeriod] = 0;
+        for (n = 0; n <= nWindow; n++) {
+            var nCD = xCleanData.getValue(-n);
+            aCosinePart[nPeriod] = aCosinePart[nPeriod] +
+                nCD*Math.cos((2*Math.PI)*n/nPeriod);
+            aSinePart[nPeriod] = aSinePart[nPeriod] +
+                nCD*Math.sin((2*Math.PI)*n/nPeriod);
+        }
+        aPwr[nPeriod] = aCosinePart[nPeriod]*aCosinePart[nPeriod] +
+            aSinePart[nPeriod]*aSinePart[nPeriod];
+    }
+    //Find Maximum Power Level for Normalization
+    nPeriod = 8;
+    nMaxPwr = aPwr[nPeriod];
+    for (nPeriod = 8; nPeriod <= 50; nPeriod++) {
+        if (aPwr[nPeriod] > nMaxPwr) nMaxPwr = aPwr[nPeriod];
+    }
+    //Normalize Power Levels and Convert to Decibels
+    nPeriod = 8;
+    for (nPeriod = 8; nPeriod <= 50; nPeriod++) {
+        if (nMaxPwr > 0 && aPwr[nPeriod] > 0) {
+            aDB[nPeriod] = -10*Math.log(.01 /
+                (1 - .99*aPwr[nPeriod] / nMaxPwr))/Math.log(10);
+        }
+        if (aDB[nPeriod] > 20) aDB[nPeriod] = 20;
+    }
+    //Find Dominant Cycle using CG algorithm
+    nPeriod = 8;
+    for (nPeriod = 8; nPeriod <= 50; nPeriod++) {
+        if (aDB[nPeriod] < 3) {
+            nNum += nPeriod*(3 - aDB[nPeriod]);
+            nDenom += (3 - aDB[nPeriod]);
+        }
+    }
+    if (nDenom != 0) {
+        nDominantCycle = nNum/nDenom;
+        if (bShowDC == true) {
+            // Dominant Cycle
+            aReturn[51] = nDominantCycle;
+        }
+    }
+    //Plot the Spectrum as a Heatmap
+    nPeriod = 8;
+    for (nPeriod = 8; nPeriod <= 50; nPeriod++) {
+        //Convert Decibels to RGB Color for Display
+        if (aDB[nPeriod] > 10) {
+            Color1 = Math.round(255*(2 - aDB[nPeriod]/10));
+            Color2 = 0;
+        } else if (aDB[nPeriod] <= 10) {
+            Color1 = 255;
+            Color2 = Math.round(255*(1 - aDB[nPeriod]/10));
+        }
+        aReturn[nPeriod] = nPeriod;
+        setDefaultBarFgColor(Color.RGB(Color1 , Color2, 0), nPeriod);
+        setDefaultBarThickness(4, nPeriod);
+    }
+    //  aReturn[51]  // contains the Dominant Cycle value
+    return aReturn;
+}
+// calcHP globals
+var nPrevHP = null;
+var nCurrHP = null;
+function calcHP(x) {
+    if (getCurrentBarCount() <= 5 ) {
+        nCurrHP = x.getValue(0);
+        return nCurrHP;
+    } else {
+        if (x.getValue(-1) == null) return null;
+        if (getBarState() == BARSTATE_NEWBAR) nPrevHP = nCurrHP;
+        nCurrHP = ( 0.5*(1 + nAlpha)*(x.getValue(0) - x.getValue(-1)) + nAlpha*nPrevHP );
+        return nCurrHP;
+    }
+}
+function calcCleanData(x) {
+//Get a detrended version of the data by High Pass Filtering
+//with a 40 Period cutoff
+    if (getCurrentBarCount() <= 5 ) {
+        return x.getValue(0);
+    } else {
+        return (  x.getValue(0) +
+                  2*x.getValue(-1) +
+                  3*x.getValue(-2) +
+                  3*x.getValue(-3) +
+                  2*x.getValue(-4) +
+                  x.getValue(-5)    ) / 12;
+    }
+}
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.",
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp",
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}

@@ -1,0 +1,34 @@
+Indicator:  Ehlers_EmpiricalModeDecomposition
+input:price( (high+low)/2 ), period(20), delta(0.1), fraction(0.1), color(red), threshcolor(blue);
+ 
+# initialization block 
+if (barnum == barsback) {
+    bp, peak, valley=0;
+} 
+
+#compute trend
+beta = cos(360/period);
+gamma = 1/cos(720*delta/period);   
+alpha = gamma - sqrt(gamma*gamma - 1);   
+bp=0.5*(1-alpha)*(price-price[2])  +  beta*(1+alpha)*bp[1]  -  alpha*bp[2];
+mean=average(bp, 2*period);   
+    
+# compute thresholds  
+peak = peak[1];
+valley = valley[1];   
+if (bp[1]>bp and bp[1]>bp[2]) peak = bp[1];
+if (bp[1]<bp and bp[1]<bp[2]) valley = bp[1];
+avgpeak = average(peak, 50);
+avgvalley = average(valley, 50);
+   
+# plot it
+plot1 = mean;       
+color1 = color;       
+plot2 = fraction*avgpeak;
+plot3 = fraction*avgvalley; 
+color2, color3 = threshcolor;
+style2, style3 = ps_dot; 
+
+# colorbars
+if (mean>fraction*avgpeak) colorbar(barnum, blue, 1);
+if (mean<fraction*avgvalley) colorbar(barnum, red, 1);

@@ -1,0 +1,170 @@
+Indicator:  BandPassFilter
+inputs:
+	Price( 0.5 * ( High + Low ) ),
+	Period( 20 ),
+	Delta1( 0.1 ) ;
+
+variables:
+	Beta1( 0 ),
+	Gamma1( 0 ),
+	Alpha( 0 ),
+	HalfAlphaDiff( 0 ),
+	Beta1OnePlusAlpha( 0 ),
+	BP( 0 ) ;
+
+Beta1 = Cosine( 360 / Period ) ;
+Gamma1 = 1 / Cosine( 720 * Delta1 / Period ) ;
+Alpha = Gamma1 - SquareRoot( Square( Gamma1 ) - 1 ) ;
+HalfAlphaDiff = 0.5 * ( 1 - Alpha ) ;
+Beta1OnePlusAlpha = Beta1 * ( 1 + Alpha ) ;
+BP = HalfAlphaDiff * ( Price - Price[2] ) +
+ Beta1OnePlusAlpha * BP[1] - Alpha * BP[2] ;
+
+Plot1( BP, "BandPass" ) ;
+Plot2( 0, "Zero" ) ;
+
+Indicator:  TrendExtractor
+inputs:
+	Price( 0.5 * ( High + Low ) ),
+	Period( 20 ),
+	Delta1( 0.1 ) ;
+
+variables:
+	Beta1( 0 ),
+	Gamma1( 0 ),
+	Alpha( 0 ),
+	HalfAlphaDiff( 0 ),
+	Beta1OnePlusAlpha( 0 ),
+	BP( 0 ),
+	Trend( 0 ) ;
+
+Beta1 = Cosine( 360 / Period ) ;
+Gamma1 = 1 / Cosine( 720 * Delta1 / Period ) ;
+Alpha = Gamma1 - SquareRoot( Square( Gamma1 ) - 1 ) ;
+HalfAlphaDiff = 0.5 * ( 1 - Alpha ) ;
+Beta1OnePlusAlpha = Beta1 * ( 1 + Alpha ) ;
+BP = HalfAlphaDiff * ( Price - Price[2] ) +
+ Beta1OnePlusAlpha * BP[1] - Alpha * BP[2] ;
+Trend = Average( BP, 2 * Period ) ;
+
+Plot1( Trend, "Trend" ) ;
+Plot2( 0, "Zero" ) ;
+
+Indicator:  EmpiricalMode
+inputs:
+	Price( 0.5 * ( High + Low ) ),
+	Period( 20 ),
+	Delta1( 0.5 ),
+	Fraction( 0.1 ) ;
+
+variables:
+	Beta1( 0 ),
+	Gamma1( 0 ),
+	Alpha( 0 ),
+	HalfAlphaDiff( 0 ),
+	Beta1OnePlusAlpha( 0 ),
+	BP( 0 ),
+	Trend( 0 ),
+	Peak( 0 ),
+	Valley( 0 ),
+	AvgPeak( 0 ),
+	FracAvgPeak( 0 ),
+	AvgValley( 0 ),
+	FracAvgValley( 0 ) ;
+
+Beta1 = Cosine( 360 / Period ) ;
+Gamma1 = 1 / Cosine( 720 * Delta1 / Period ) ;
+Alpha = Gamma1 - SquareRoot( Square( Gamma1 ) - 1 ) ;
+HalfAlphaDiff = 0.5 * ( 1 - Alpha ) ;
+Beta1OnePlusAlpha = Beta1 * ( 1 + Alpha ) ;
+BP = HalfAlphaDiff * ( Price - Price[2] ) +
+ Beta1OnePlusAlpha * BP[1] - Alpha * BP[2] ;
+Trend = Average( BP, 2 * Period ) ;
+
+if BP[1] > BP and BP[1] > BP[2] then 
+	Peak = BP[1]
+else if BP[1] < BP and BP[1] < BP[2] then 
+	Valley = BP[1] ;
+
+AvgPeak = Average( Peak, 50 ) ;
+FracAvgPeak = Fraction * AvgPeak ;
+AvgValley = Average( Valley, 50 ) ;
+FracAvgValley = Fraction * AvgValley ;
+
+Plot1( Trend, "Trend" ) ;
+Plot2( FracAvgPeak, "AvgPeak" ) ;
+Plot3( FracAvgValley, "AvgValley" ) ;
+
+Strategy:  ModeTrader
+inputs:
+	TradingMode( 1 { 1 = Trend, 2 = Cycle } ),
+	Price( 0.5 * ( High + Low ) ),
+	Period( 20 ),
+	Delta1( 0.5 ),
+	Fraction( 0.1 ),
+	PctTrail( 3 ),
+	NumDevs( 2 ) ;
+
+variables:
+	Beta1( 0 ),
+	Gamma1( 0 ),
+	Alpha( 0 ),
+	HalfAlphaDiff( 0 ),
+	Beta1OnePlusAlpha( 0 ),
+	BP( 0 ),
+	Trend( 0 ),
+	Peak( 0 ),
+	Valley( 0 ),
+	AvgPeak( 0 ),
+	FracAvgPeak( 0 ),
+	AvgValley( 0 ),
+	FracAvgValley( 0 ),
+	LowerBand( 0 ),
+	UpperBand( 0 ) ;
+
+Once
+	if TradingMode <> 1 and TradingMode <> 2 then
+		RaiseRunTimeError( "TradingMode must be 1" +
+	 	 " or 2." ) ;
+
+Beta1 = Cosine( 360 / Period ) ;
+Gamma1 = 1 / Cosine( 720 * Delta1 / Period ) ;
+Alpha = Gamma1 - SquareRoot( Square( Gamma1 ) - 1 ) ;
+HalfAlphaDiff = 0.5 * ( 1 - Alpha ) ;
+Beta1OnePlusAlpha = Beta1 * ( 1 + Alpha ) ;
+BP = HalfAlphaDiff * ( Price - Price[2] ) +
+ Beta1OnePlusAlpha * BP[1] - Alpha * BP[2] ;
+Trend = Average( BP, 2 * Period ) ;
+
+if BP[1] > BP and BP[1] > BP[2] then 
+	Peak = BP[1]
+else if BP[1] < BP and BP[1] < BP[2] then 
+	Valley = BP[1] ;
+
+AvgPeak = Average( Peak, 50 ) ;
+FracAvgPeak = Fraction * AvgPeak ;
+AvgValley = Average( Valley, 50 ) ;
+FracAvgValley = Fraction * AvgValley ;
+
+if TradingMode = 1 then
+	if Trend crosses over FracAvgPeak then 
+		Buy next bar market
+	else if Trend crosses under FracAvgValley then
+		Sell Short next bar at market ;
+
+LowerBand = BollingerBand( Price, Period, - NumDevs ) ;
+UpperBand = BollingerBand( Price, Period, NumDevs ) ;
+
+if CurrentBar > 1 
+	and TradingMode = 2 
+	and Trend > FracAvgValley 
+	and Trend < FracAvgPeak
+then 
+	if Price crosses over LowerBand then
+		Buy ( "BBandLE" ) next bar LowerBand stop 
+	else if Price crosses under UpperBand then
+		SellShort ( "BBandSE" ) next bar at UpperBand
+		 stop ;
+
+SetStopShare ;
+SetDollarTrailing( Price * PctTrail * 0.01 ) ;

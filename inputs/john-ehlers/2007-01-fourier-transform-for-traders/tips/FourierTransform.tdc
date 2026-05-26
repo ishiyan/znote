@@ -1,0 +1,67 @@
+Input
+     Price :"Price" ,((H+L)/2);
+     Window:"Window",50;
+     ShowDC:"ShowDC",false;
+     Peridq:"Period",30,1,50;
+end_input
+var
+alpha1:=0;
+HP:=0;
+CleanedData:=0;
+Period:=0;
+n:=0;
+MaxPwr:=0;
+Num:=0;
+Denom:=0;
+DominantCycle:=0;
+array:CosinePart[50]:=0;
+array:SinePart[50]:=0;
+array:Pwr[50]:=0;
+array:DB[50]:=0;
+end_var
+{Get a detrended version of the data by High Pass Filtering with
+a 40 Period cutoff}
+If HISTORYSIZE <= 5 Then Begin
+   HP := Price;
+   CleanedData := Price;
+End; else Begin
+    alpha1 := (1 - Sin(360/40))/Cos(360/40);
+    HP := 0.5*(1 + alpha1)*(Price - Price\1\) + alpha1*HP\1\;
+    CleanedData := (HP + 2*HP\1\ + 3*HP\2\ + 3*HP\3\ + 2*HP\4\ +   HP\5\)/12;
+End;
+{This is the DFT}
+For Period := 8 to 50 do Begin
+    CosinePart[Period] := 0;
+    SinePart[Period] := 0;
+    For n := 0 to Window - 1 do Begin
+CosinePart[Period] := CosinePart[Period] + CleanedData\n\*Cos(360*n/Period);
+      SinePart[Period] := SinePart[Period] + CleanedData\n\*Sin(360*n/Period);
+    End;
+    Pwr[Period] := CosinePart[Period]*CosinePart[Period] +
+                   SinePart[Period]*SinePart[Period];
+End;
+{Find Maximum Power Level for Normalization}
+MaxPwr := Pwr[8];
+For Period := 8 to 50 do Begin
+    If Pwr[Period] > MaxPwr Then MaxPwr := Pwr[Period];
+End;
+{Normalize Power Levels and Convert to Decibels}
+For Period := 8 to 50 do Begin
+    IF MaxPwr > 0 and Pwr[Period] > 0 Then DB[Period] := -
+    10* LogN(0.01 / (1 - 0.99*Pwr[Period] / MaxPwr))/LogN(10);
+    If DB[Period] > 20 then DB[Period] := 20;
+End;
+If ShowDC = True then Begin
+{Find Dominant Cycle using CG algorithm}
+Num := 0;Denom := 0;
+For Period := 8 to 50 do  Begin
+      If DB[Period] < 3 Then Begin
+         Num := Num + Period*(3 - DB[Period]);
+             Denom := Denom + (3 - DB[Period]);
+      End;
+End;
+If Denom <> 0 then DominantCycle := Num/Denom;
+this:=DominantCycle;
+End;
+Else this :=DB[Peridq];
+return this;

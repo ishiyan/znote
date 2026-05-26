@@ -1,0 +1,465 @@
+If outputType = 1 Then = DomCyc
+If outputType = 2 Then = SPP
+If outputType = 3 Then = Color1
+If outputType = 4 Then = Color2
+If outputType = 5 Then = Color3
+If < 1 or > 5 then = CSN (default)
+
+If plotType = 1 displays the dominant cycle
+If plotType = 2 displays SPP
+If plotTypw = 3 displays the three-color numbers RGB
+
+If outputType = 1 then = Mean
+If outputType = 2 then = Fraction*AvgPeak
+If outputType = 3 then = Fraction*AvgValley
+
+'SETTING STRATEGIES WITH SWAMI CHARTS
+'Author: John Ehlers, TASC April 2012
+'Coded by: Richard Denning 2/12/2012
+'www.TradersEdgeSystems.com
+
+Function EHLERS_CORONA_SWING(outputType)
+    'If outputType = 1 Then = DomCyc
+    'If outputType = 2 Then = CSN
+    'If outputType = 3 Then = Color1
+    'If outputType = 4 Then = Color2
+    'If outputType = 5 Then = Color3
+    'If < 1 or > 5 then = CSN (default)
+    Dim Price As BarArray
+    Dim LineR,LineG,LineB
+    Dim FuzzR,FuzzG, FuzzB
+    Dim delta As BarArray
+    Dim gamma As BarArray
+    Dim alpha As BarArray
+    Dim beta As BarArray
+    Dim Period As BarArray
+    Dim MaxAmpl As BarArray
+    Dim Num As BarArray
+    Dim Denom As BarArray
+    Dim DC As BarArray
+    Dim DomCyc As BarArray
+    Dim Color1 As BarArray
+    Dim Color2 As BarArray
+    Dim Color3 As BarArray
+    Dim alpha1 As BarArray
+    Dim HP As BarArray
+    Dim SmoothHP As BarArray
+    Dim gamma2 As BarArray
+    Dim alpha2 As BarArray
+    Dim beta2 As BarArray
+    Dim delta2 As BarArray
+    Dim BP2 As BarArray
+    Dim Q2 As BarArray
+    Dim Lead60 As BarArray
+    Dim HL As BarArray
+    Dim LL As BarArray
+    Dim Psn As BarArray
+    Dim CSN As BarArray
+    Dim Width, Count
+    Dim N, TScurrentBar
+    
+    Dim I As Array
+    Dim OldI As Array
+    Dim OlderI As Array
+    Dim Q As Array
+    Dim OldQ As Array
+    Dim OlderQ As Array
+    Dim Real As Array
+    Dim OldReal As Array
+    Dim OlderReal As Array
+    Dim Imag As Array
+    Dim OldImag As Array
+    Dim OlderImag As Array
+    Dim Ampl As Array
+    Dim OldAmpl As Array
+    Dim DB As Array
+    Dim OldDB As Array
+    Dim Raster As Array
+    Dim OldRaster As Array
+    Dim adc As Array
+    
+    
+    Price = H+L/2
+    LineR = 180
+    LineG = 255
+    LineB = 210
+    FuzzR = 0
+    FuzzG = 172
+    FuzzB = 64
+    delta = 0.1
+    delta2 = 0.1
+    TScurrentBar = CurrentBar + 1
+    
+    ReDim (I, 61)
+    ReDim (OldI, 61)
+    ReDim (OlderI, 61)
+    ReDim (Q, 61)
+    ReDim (OldQ, 61)
+    ReDim (OlderQ, 61)
+    ReDim (Real, 61)
+    ReDim (OldReal, 61)
+    ReDim (OlderReal, 61)
+    ReDim (Imag, 61)
+    ReDim (OldImag, 61)
+    ReDim (OlderImag, 61)
+    ReDim (Ampl, 61)
+    ReDim (OldAmpl, 61)
+    ReDim (DB, 61)
+    ReDim (OldDB, 61)
+    ReDim (Raster, 51)
+    ReDim (OldRaster, 51)
+    ReDim (adc, 5)
+    
+    If BarNumber=FirstBar Then
+        gamma = 0
+        alpha = 0
+        beta = 0
+        N = 0
+        MaxAmpl = 0
+        Num = 0
+        Denom = 0
+        DC = 0
+        DomCyc = 0
+        alpha1 = 0
+        HP = 0
+        SmoothHP = 0
+        For N = 0 To 60
+            I[N] = 0
+            OldI[N] = 0
+            OlderI[N] = 0
+            Q[N] = 0
+            OldQ[N] = 0
+            OlderQ[N]=0
+            Real[N] = 0
+            OldReal[N] = 0
+            OlderReal[N] = 0
+            Imag[N] = 0
+            OldImag[N] = 0
+            OlderImag[N] = 0
+            Ampl[N] = 0
+            OldAmpl[N] = 0
+            DB[N] = 0
+            OldDB[N] = 0
+        Next
+        For N = 0 To 50
+            Raster[N] = 0
+            OldRaster[N] = 0
+        Next
+        For N = 0 To 4
+            adc[N] = 0
+        Next
+    End If
+        
+    I = GValue501
+    OldI = GValue502
+    OlderI = GValue503
+    Q = GValue504
+    OldQ = GValue505
+    OlderQ = GValue506
+    Real = GValue507
+    OldReal = GValue508
+    OlderReal = GValue509
+    Imag = GValue510
+    OldImag = GValue511
+    OlderImag = GValue512
+    Ampl = GValue513
+    OldAmpl = GValue514
+    DB = GValue515
+    OldDB = GValue516
+    Raster = GValue517
+    OldRaster = GValue518
+
+    alpha1 = (1 - Sin(DegToRad(360/30))) / Cos(DegToRad(360/30))
+    HP = .5*(1 + alpha1)*(Price - Price[1]) + alpha1*HP[1]
+    SmoothHP = (HP + 2*HP[1] + 3*HP[2] + 3*HP[3] + 2*HP[4] + HP[5]) / 12
+    If TScurrentBar < 7 Then
+        SmoothHP = Price - Price[1]
+    End If
+    If TScurrentBar = 1 Then
+        SmoothHP = 0
+    End If
+    delta = -.015 * (TScurrentBar) + .5
+    If delta < .1 Then  delta = .1
+    
+If TScurrentBar > 12 Then
+        For N = 12 To 60
+            beta = Cos(DegToRad(720 / N))
+            gamma = 1 / Cos(DegToRad(1440*delta / N))
+            alpha = gamma - Sqr(gamma*gamma - 1)
+            Q[N] = (.5*N / 6.28318)*(SmoothHP - SmoothHP[1])
+            I[N] = SmoothHP
+            Real[N] = .5*(1 - alpha)*(I[N] - OlderI[N]) + beta*(1 + alpha)*OldReal[N] - alpha*OlderReal[N]
+            Imag[N] = .5*(1 - alpha)*(Q[N] - OlderQ[N]) + beta*(1 + alpha)*OldImag[N] - alpha*OlderImag[N]
+            Ampl[N] = (Real[N]*Real[N] + Imag[N]*Imag[N])
+        Next
+
+    For N = 12 To 60
+        OlderI[N] = OldI[N]
+        OldI[N] = I[N]
+        OlderQ[N] = OldQ[N]
+        OldQ[N] = Q[N]
+        OlderReal[N] = OldReal[N]
+        OldReal[N] = Real[N]
+        OlderImag[N] = OldImag[N]
+        OldImag[N] = Imag[N]
+        OldAmpl[N] = Ampl[N]
+        OldDB[N] = DB[N]
+    Next
+    For N = 1 To 50
+        OldRaster[N] = Raster[N]
+    Next
+    
+    MaxAmpl = Ampl[12]
+    
+    For N = 12 To 60
+        If Ampl[N] > MaxAmpl Then
+            MaxAmpl = Ampl[N]
+        End If
+    Next
+    Dim myWatch1
+    Dim myWatch2
+    Dim myWatch3
+    For N = 12 To 60
+        'Assert(False)
+        myWatch1 = DB[N]
+        myWatch2 = Ampl[N]
+        myWatch3 = OldDB[N]
+        If MaxAmpl <> 0 And (Ampl[N] / MaxAmpl) > 0 Then
+            DB[N] = -10*Log(.01 / (1 - .99*Ampl[N] / MaxAmpl)) / Log(10)
+        End If
+        DB[N] = 0.33 * DB[N] + 0.67 * OldDB[N]
+        If DB[N] > 20 Then DB[N] = 20
+    Next
+       
+    Num = 0
+    Denom = 0
+    For N = 12 To 60
+        If DB[N] <= 6 Then
+            Num = Num + N*(20 - DB[N])
+            Denom = Denom + (20 - DB[N])
+        End If
+        If Denom <> 0 Then
+            DC = .5*Num / Denom
+        End If
+    Next
+    For N = 0 To 4
+        adc[N] = DC[N]
+    Next
+    DomCyc = Median(adc)
+    
+    If DomCyc < 6 Then
+        DomCyc = 6
+    End If
+    'EhlersDomCyc = DomCyc
+
+If DomCyc > 0 Then    
+    beta2 = Cos(DegToRad(360 / DomCyc))
+    gamma2 = 1 / Cos(DegToRad(720*delta2 / DomCyc))
+    alpha2 = gamma2 - Sqr(gamma2*gamma2 - 1)
+    BP2 = .5*(1 - alpha2)*(Price - Price[2]) + beta2*(1 + alpha2)*BP2[1] - alpha2*BP2[2]
+    Q2 = (DomCyc / 6.28318)*(BP2 - BP2[1])
+    Lead60 = .5*BP2 + .866*Q2
+    HL = Lead60
+    LL = Lead60
+    For Count = 0 To 50
+        If Lead60[Count] > HL Then
+            HL = Lead60[Count]
+        End If
+        If Lead60[Count] < LL Then
+            LL = Lead60[Count]
+        End If
+    Next
+    Psn = (Lead60 - LL) / (HL - LL)
+    CSN = 10*Psn-5
+    
+    
+    HL = Psn
+    LL = Psn
+    For Count = 0 To 20
+        If Psn[Count] > HL Then
+            HL = Psn[Count]
+        End If
+        If Psn[Count] < LL Then
+            LL = Psn[Count]
+        End If
+    Next
+    If HL - LL > .85 Then
+        Width = .01
+    Else
+        Width = .15*(HL - LL)
+    End If
+    For N = 1 To 50
+        Raster[N] = 20
+        If N < Round(50*Psn,0) And Width <> 0 Then
+            Raster[N] = 0.5*( ((20*Psn - .4*N)/ Width)^0.95 + 0.5*OldRaster[N])
+        End If
+        If N > Round(50*Psn,0) And Width <> 0 Then
+            Raster[N] = 0.5*( ((-20*Psn + .4*N)/ Width)^0.95 + 0.5*OldRaster[N])
+        End If
+        If N = Round(50*Psn,0) Then
+            Raster[N] = 0.5*OldRaster[N]
+        End If
+        If Raster[N] < 0 Then
+            Raster[N] = 0
+        End If
+        If Raster[N] > 20 Then
+            Raster[N] = 20
+        End If
+        If HL - LL > .8 Then
+            Raster[N] = 20
+        End If
+        OldRaster[N] = Raster[N]
+    Next
+      
+    For N = 1 To 50
+        If Raster[N] <= 10 Then
+            Color1 = LineR + Raster[N]*(FuzzR - LineR) / 10
+            Color2 = LineG + Raster[N]*(FuzzG - LineG) / 10
+            Color3 = LineB + Raster[N]*(FuzzB - LineB) / 10
+        End If
+        If Raster[N] > 10 Then
+            Color1 = FuzzR*(2 - Raster[N] / 10)
+            Color2 = FuzzG*(2 - Raster[N] / 10)
+            Color3 = FuzzB*(2 - Raster[N] / 10)
+        End If
+    Next
+End If
+End If     
+    
+If outputType = 1 Then 
+    EHLERS_CORONA_SWING = DomCyc
+Else If outputType = 2 Then
+    EHLERS_CORONA_SWING = CSN
+Else If outputType = 3 Then
+    EHLERS_CORONA_SWING = Color1
+Else If outputType = 4 Then
+    EHLERS_CORONA_SWING = Color2
+Else If outputType = 5 Then
+    EHLERS_CORONA_SWING = Color3
+Else
+    EHLERS_CORONA_SWING = CSN
+End If
+End If
+End If
+End If
+End If
+
+    GValue501 = I
+    GValue502 = OldI
+    GValue503 = OlderI
+    GValue504 = Q
+    GValue505 = OldQ
+    GValue506 = OlderQ
+    GValue507 = Real
+    GValue508 = OldReal
+    GValue509 = OlderReal
+    GValue510 = Imag
+    GValue511 = OldImag
+    GValue512 = OlderImag
+    GValue513 = Ampl
+    GValue514 = OldAmpl
+    GValue515 = DB
+    GValue516 = OldDB
+    GValue517 = Raster
+    GValue518 = OldRaster
+End Function
+'--------------------------------------------------------------
+Sub EHLERS_CORONA_SWING_IND(plotType)
+'If plotType = 1 displays the Dominant Cycle
+'If plotType = 2 displays SPP
+'If plotTypw = 3 displays the three color numbers R G B
+Dim DomCyc As BarArray
+Dim SPP As BarArray
+Dim Color1 As BarArray
+Dim Color2 As BarArray
+Dim Color3 As BarArray
+DomCyc = EHLERS_CORONA_SWING(1)
+SPP = EHLERS_CORONA_SWING(2) 
+Color1 = EHLERS_CORONA_SWING(3)
+Color2 = EHLERS_CORONA_SWING(4)
+Color3 = EHLERS_CORONA_SWING(5)
+
+If plotType = 1 Then 
+    plot1(DomCyc)
+    plot2(25)
+    plot3(25)
+Else If plotType = 2 Then
+    plot1(SPP)
+    plot2(0)
+    plot3(0)
+Else If plotType = 3 Then 
+    plot1(Color1)
+    plot2(Color2)
+    plot3(Color3)
+End If
+End If
+End If
+End Sub
+'-------------------------------------------------------------
+
+Function EHLERS_MARKET_MODE(outputType)
+    'If outputType = 1 then = Mean
+    'If outputType = 2 then = Fraction*AvgPeak
+    'If outputType = 3 then = Fraction*AvgValley
+    Dim Period, delta, Fraction
+    Dim alpha As BarArray
+    Dim beta As BarArray
+    Dim gamma As BarArray
+    Dim BP As BarArray
+    Dim Mean As BarArray
+    Dim Peak As BarArray
+    Dim Valley As BarArray
+    Dim AvgPeak As BarArray
+    Dim AvgValley As BarArray
+    Dim Price As BarArray 
+    Period = 85
+    delta = .4
+    Fraction = .1
+    Price = (H+L)/2
+    If  Period > 0 And Price > 0 And Price[1] > 0 And Price[2] > 0 Then
+        beta = Cos(DegToRad(360 / Period))
+        If Cos(DegToRad(720*delta / Period)) <> 0 Then
+             gamma = 1 / Cos(DegToRad(720*delta / Period))
+        Else
+            gamma = gamma[1]
+        End If
+        If gamma*gamma-1 > 0 Then 
+            alpha = gamma - Sqr(gamma*gamma - 1)
+        Else
+            alpha = alpha[1]
+        End If
+        BP = 0.5*(1 - alpha)*(Price - Price[2]) + beta*(1 + alpha)*BP[1] - alpha*BP[2]
+        'Print FormatDateTime(Date), " ", BP, "", BP[1]
+        Assert(BP <> Empty)
+        Mean = Average(BP, 2*Period, 0)
+        'Print FormatDateTime(Date), " ", Mean
+        Peak = Peak[1]
+        Valley = Valley[1]
+        If BP[1] > BP And BP[1] > BP[2] Then Peak = BP[1]
+        If BP[1] < BP And BP[1] < BP[2] Then Valley = BP[1]
+        AvgPeak = Average(Peak, 50, 0)
+        AvgValley = Average(Valley, 50, 0)
+        If outputType =1 Then
+            EHLERS_MARKET_MODE = Mean
+        Else If outputType = 2 Then
+            EHLERS_MARKET_MODE = Fraction*AvgPeak
+        Else If outputType = 3 Then
+            EHLERS_MARKET_MODE = Fraction*AvgValley
+        Else
+            EHLERS_MARKET_MODE = Mean
+        End If
+        End If
+        End If
+    End If
+End Function
+'-------------------------------------------------------------------------------------------
+Sub EHLERS_MARKET_MODE_IND()
+ Dim Mean As BarArray,fAvgPeak As BarArray,fAvgValley As BarArray
+ Mean = EHLERS_MARKET_MODE(1)
+ fAvgPeak = EHLERS_MARKET_MODE(2)
+ fAvgValley = EHLERS_MARKET_MODE(3)
+ Plot1(Mean)
+ Plot2(fAvgPeak)
+ Plot3(fAvgValley)
+ End Sub
+'------------------------------------------------------------------

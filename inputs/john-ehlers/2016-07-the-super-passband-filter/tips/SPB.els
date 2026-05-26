@@ -1,0 +1,87 @@
+//Super Passband Filter
+// (c) 2016 John F. Ehlers
+// TASC JUL 2016
+inputs:
+	Period1( 40 ),
+	Period2( 60 ) ;
+variables:
+	a1( 0 ),
+	a2( 0 ),
+	PB( 0 ),
+	count( 0 ),
+	RMS( 0 ) ;
+
+a1 = 5 / Period1 ;
+a2 = 5 / Period2 ;
+
+PB = (a1 - a2) * Close + (a2*(1 - a1) - a1 * (1 - a2))
+	* Close[1] + ((1 - a1) + (1 - a2))*PB[1] - (1 - a1)
+	* (1 - a2)*PB[2] ;
+
+RMS = 0;
+for count = 0 to 49 
+	begin
+	RMS = RMS + PB[count]*PB[count] ;
+	end ;
+
+RMS = SquareRoot( RMS / 50 ) ;
+
+Plot1( PB, "Super PB" ) ;
+Plot2( 0, "Zero Line" ) ;
+Plot3( RMS, "+RMB" ) ;
+Plot7(-RMS, "-RMS" ) ;
+
+
+Strategy: Super Passband Filter
+
+//Super Passband Filter
+// (c) 2016 John F. Ehlers
+// TASC JUL 2016
+inputs:
+	Period1( 40 ),
+	Period2( 60 ),
+	UseZeroLineTarget( true ),
+	UseReversalStop( true );
+
+variables:
+	a1( 0 ),
+	a2( 0 ),
+	PB( 0 ),
+	count( 0 ),
+	RMS( 0 ) ;
+
+a1 = 5 / Period1 ;
+a2 = 5 / Period2 ;
+
+PB = (a1 - a2) * Close + (a2*(1 - a1) - a1 * (1 - a2))
+	* Close[1] + ((1 - a1) + (1 - a2))*PB[1] - (1 - a1)
+	* (1 - a2)*PB[2] ;
+
+RMS = 0;
+for count = 0 to 49 
+	begin
+	RMS = RMS + PB[count]*PB[count] ;
+	end ;
+
+RMS = SquareRoot( RMS / 50 ) ;
+
+if PB crosses over -RMS then
+	Buy next bar at Market 
+else if PB crosses under RMS then
+	Sell Short next bar at Market ;	
+
+if UseZeroLineTarget then
+	begin
+	if PB crosses over 0 then
+		Sell next bar at Market 
+	else if PB crosses under 0 then
+		Buy to cover next bar at Market ;
+	end ;
+
+If UseReversalStop then
+	begin	
+	if PB crosses under -RMS then
+		Sell next bar at Market 
+	else if PB crosses over RMS then
+		Buy to cover next bar at Market ;	
+	end ;	

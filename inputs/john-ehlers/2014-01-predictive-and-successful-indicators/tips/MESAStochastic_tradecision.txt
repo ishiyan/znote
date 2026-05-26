@@ -1,0 +1,93 @@
+
+SuperSmoother filter code:
+var
+a1:=0;
+b1:=0;
+c1:=0;
+c2:=0;
+c3:=0;
+Filt:=0;
+end_var
+if HISTORYSIZE < 2 then return 0;
+
+a1:=Exp(-1.414 * 3.14159 / 10);
+b1:=2 * a1 * Cos(1.414 * 180 / 10);
+c2:=b1;
+c3:=-a1 * a1;
+c1:=1 - c2 - c3;
+Filt:=c1 * (Close + Close\1\) / 2 + c2 * Filt\1\ + c3 * Filt\2\;
+
+return Filt;
+
+Roofing filter code:
+var
+a1:=0;
+b1:=0;
+c1:=0;
+c2:=0;
+c3:=0;
+alpha1:=0;
+HP:=0;
+Filt:=0;
+end_var
+
+if HISTORYSIZE < 2 then return 0;
+
+alpha1:=(Cos(0.707 * 360 / 48) + Sin(0.707 * 360 / 48) - 1) / Cos(0.707 * 360 / 48);
+HP:=(1 - alpha1 / 2) * (1 - alpha1 / 2) * (Close - 2 * Close\1\ + Close\2\) + 2 * (1 - alpha1) * HP\1\ - (1 - alpha1) * (1 - alpha1) * HP\2\;
+
+a1:=Exp(-1.414 * 3.14159 / 10);
+b1:=2 * a1 * Cos(1.414 * 180 / 10);
+c2:=b1;
+c3:=-a1 * a1;
+c1:=1 - c2 - c3;
+Filt:=c1 * (HP + HP\1\) / 2 + c2 * Filt\1\ + c3 * Filt\2\;
+
+return Filt;
+
+
+MESA Stochastic indicator code:
+input
+Length:"Enter the length:", 20;
+end_in
+var
+a1:=0;
+b1:=0;
+c1:=0;
+c2:=0;
+c3:=0;
+alpha1:=0;
+HP:=0;
+Filt:=0;
+HighestC:=0;
+LowestC:=0;
+count:=0;
+Stoc:=0;
+MESAStochastic:=0;
+end_var
+
+if HISTORYSIZE < 2 then return 0;
+
+alpha1:=(Cos(0.707 * 360 / 48) + Sin(0.707 * 360 / 48) - 1) / Cos(0.707 * 360 / 48);
+HP:=(1 - alpha1 / 2) * (1 - alpha1 / 2) * (Close - 2 * Close\1\ + Close\2\) + 2 * (1 - alpha1) * HP\1\ - (1 - alpha1) * (1 - alpha1) * HP\2\;
+
+a1:=Exp(-1.414 * 3.14159 / 10);
+b1:=2 * a1 * Cos(1.414 * 180 / 10);
+c2:=b1;
+c3:=-a1 * a1;
+c1:=1 - c2 - c3;
+Filt:=c1 * (HP + HP\1\) / 2 + c2 * Filt\1\ + c3 * Filt\2\;
+
+HighestC:=Filt;
+LowestC:=Filt;
+for count:=0 to Length - 1 do begin
+	if Filt\count\ >HighestC then
+		HighestC:=Filt\count\;
+	if Filt\count\ < LowestC then
+		LowestC:=Filt\count\;
+end;
+
+Stoc:=(Filt - LowestC) / (HighestC - LowestC);
+MESAStochastic:=c1 * (Stoc + Stoc\1\) / 2 + c2 * MESAStochastic\1\ + c3 * MESAStochastic\2\;
+return MESAStochastic;
+

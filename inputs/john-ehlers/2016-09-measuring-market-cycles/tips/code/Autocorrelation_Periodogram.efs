@@ -1,0 +1,309 @@
+/*********************************
+Provided By:  
+eSignal (Copyright c eSignal), a division of Interactive Data 
+Corporation. 2016. All rights reserved. This sample eSignal 
+Formula Script (EFS) is for educational purposes only and may be 
+modified and saved under a new file name.  eSignal is not responsible
+for the functionality once modified.  eSignal reserves the right 
+to modify and overwrite this EFS file with each new release.
+
+Description:        
+    Measuring Market Cycles by John F. Ehlers
+
+Version:            1.00  07/12/2016
+
+Formula Parameters:                     Default:
+Enhance Resolution                      false
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+var fpArray = new Array()
+
+function preMain(){
+    setPriceStudy(false);
+    setShowCursorLabel(false);
+    
+    for (var i = 0; i<41; i++)
+        setDefaultBarThickness(4,i);
+    
+    var x = 0;
+    fpArray[x] = new FunctionParameter("EnhanceRes", FunctionParameter.BOOLEAN)
+    with(fpArray[x++]){
+        setName("Enhance Resolution");
+        setDefault(false);
+    }
+    
+}
+
+var bInit = false;
+var bVersion = null;
+
+var nAvgLength = 3;
+
+
+var alpha1 = 0;
+var HP = 0;
+var HP_1 = 0;
+var HP_2 = 0;
+var a1 = null;
+var b1 = null;
+var c1 = null;
+var c2 = null;
+var c3 = null;
+var Period = null;
+var DominantCycle = null;
+var DominantCycle_1 = 0;
+var ColorR = 0;
+var ColorG = 0;
+var ColorB = 0;
+
+var xClose = null;
+var xRoof = null;
+var R = new Array(70);
+var Pwr = new Array(70);
+var retVal = new Array(42);
+var Corr = new Array(70);
+function main(EnhanceRes){
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    
+    if (getBarState() == BARSTATE_ALLBARS){
+        bInit = false;
+    }
+
+    if(!bInit){
+        _vars_Reset();
+        _init_Array();
+        xClose = close();
+        xRoof = efsInternal("Calc_Roof", xClose);
+        bInit = true;
+    }
+    var b = Calc_Spectrum(xRoof, Corr);
+    var MaxPwr = 0;
+    for (Period = 8; Period <= 48; Period++){
+        if (R[Period] > MaxPwr)
+            MaxPwr = R[Period];
+
+    }
+
+    for (Period = 8; Period <= 48; Period++){
+        Pwr[Period] = R[Period] / MaxPwr;
+    }
+    if(EnhanceRes){
+        for (Period = 8; Period <= 48; Period++)
+            Pwr[Period] = Math.pow(Pwr[Period],3);
+    }
+
+    
+    DominantCycle = 0;
+    var PeakPwr = 0;
+    
+    for (Period = 8; Period <= 48; Period++){
+        if (Pwr[Period] > PeakPwr)
+            PeakPwr = Pwr[Period];
+    }
+
+    var Spx = 0;
+    var Sp = 0;
+
+    for (Period = 8; Period <= 48; Period++){
+        if (PeakPwr >= 0.25 && Pwr[Period] >= 0.25){
+            Spx += Period * Pwr[Period];
+            Sp += Pwr[Period];
+        }
+    }
+
+    if (Sp != 0) DominantCycle = Spx / Sp;
+    if (Sp < 0.25) DominantCycle = DominantCycle_1;
+
+    
+    DominantCycle_1 = DominantCycle;
+    for (Period = 8; Period <= 48; Period++){
+        if (Pwr[Period] > 0.5){
+            ColorR = 255;
+            ColorG = 255 * ((2 * Pwr[Period]) - 1);
+        }
+        else{
+            ColorR = 2 * 255 * Pwr[Period];
+            ColorG = 0;
+        }
+			
+        setBarFgColor(Color.RGB(ColorR, ColorG, ColorB), Period-8);
+    }
+
+
+    retVal[42] = DominantCycle;
+    return retVal;
+}
+
+var bSecondInit = false;
+
+function Calc_Roof(xClose){
+    Filt_1 = ref(-1);
+    Filt_2 = ref(-2);
+    Filt_3 = ref(-3);
+    if(Filt_3 == null) Filt_3 = 0;
+    if(Filt_2 == null) Filt_2 = 0;
+    if(Filt_1 == null) Filt_1 = 0;
+    
+    if (xClose.getValue(-2) == null) return;
+
+    alpha1 = (1 - Math.sin((360/48)/180*Math.PI))/Math.cos((360/48)/180*Math.PI);
+
+    HP = 0.5 * (1 + alpha1) * (xClose.getValue(0) - xClose.getValue(-1)) + 
+                                                            alpha1 * HP_1;
+    
+    a1 = Math.exp((-Math.SQRT2) * Math.PI / 8);
+    b1 = 2 * a1 * Math.cos(Math.SQRT2 * Math.PI / 8/180*Math.PI);
+    c2 = b1;
+    c3 = (- a1) * a1;
+    c1 = 1 - c2 - c3;
+     
+    Filt = (c1 * (HP + HP_1) / 2) + c2 * Filt_1 + c3 * Filt_2;
+    HP_2 = HP_1;
+    HP_1 = HP;
+    return Filt;
+}
+
+function Calc_Spectrum(Filt,Corr){
+    
+    var SqSum = new Array(70);
+    var test = new Array(70);
+    var Sx = 0;
+    var Sy = 0;
+    var Sxx = 0;
+    var Syy = 0;
+    var Sxy = 0;
+    var X = 0;
+    var Y = 0;
+    var M = 0;
+    var N = 0;
+    var temp = 0;
+    var x1 = 0;
+    var y1 = 0;
+    var xy1 = 0;
+    for (var i = 0; i < 70; i++){
+        
+        SqSum[i] = 0;
+        test[i] = 0;
+
+    }
+    
+    var Lag = 0;
+    var count = 0;
+    for(Lag = 8; Lag <= 48; Lag++){
+        M = nAvgLength;
+        if(nAvgLength == 0) M = Lag;
+        Sx = 0;
+        Sy = 0;
+        Sxx = 0;
+        Syy = 0;
+        Sxy = 0;
+        
+        for(count = 0; count < M; count++){
+            X = Filt.getValue(-count);
+            Y = Filt.getValue(-(Lag+count));
+            if (Y == null) Y = 0;
+            if (X == null) X = 0;
+            Sx = Sx + X;
+            Sy = Sy + Y;
+            Sxx = Sxx + X * X;
+            Sxy = Sxy + X * Y ;
+            Syy = Syy + Y * Y;
+        }
+
+        temp =(M * Sxx - Sx * Sx) * (M * Syy - Sy * Sy);
+    
+        if (temp > 0.000000000001)
+            Corr[Lag] = (M * Sxy - Sx * Sy) / Math.sqrt(temp);
+     }
+
+    var CosinePart = 0;
+    var SinePart = 0;
+
+    for (Period = 8; Period <= 48; Period++){
+        CosinePart = 0;
+        SinePart = 0;
+        
+        for (N = 3; N <= 48; N++){
+            CosinePart += Corr[N] * Math.cos((360 * N / Period)/180*Math.PI);
+            SinePart += Corr[N] * Math.sin((360 * N / Period)/180*Math.PI);
+         
+        }
+        SqSum[Period] = Math.pow((CosinePart * CosinePart) + 
+                            (SinePart * SinePart), 2);
+    }
+
+    AMA(SqSum);
+    
+}
+
+function AMA(SqSum){
+    for (Period = 8; Period <= 48; Period++){
+        R[Period] = R[Period-1] + 0.2 * (SqSum[Period] - R[Period-1]);
+    }
+}
+
+function _init_Array(){
+    var i = 0, j = 0;
+
+    
+    for (i = 0; i < 70; i++){
+        Pwr[i] = 0;
+        R[i] = 0;
+        Corr[i] = 0;
+
+    }
+
+    for (i = 0; i<41; i++)
+        retVal[i] = i + 8;
+}
+
+function _vars_Reset(){
+    nAvgLength = 3;
+
+    alpha1 = 0;
+    HP = 0;
+    HP_1 = 0;
+    HP_2 = 0;
+    a1 = null;
+    b1 = null;
+    c1 = null;
+    c2 = null;
+    c3 = null;
+    Period = null;
+    DominantCycle = null;
+    DominantCycle_1 = 0;
+    ColorR = 0;
+    ColorG = 0;
+    ColorB = 0;
+
+    xClose = null;
+    xRoof = null;
+    R = new Array(70);
+    Pwr = new Array(70);
+    retVal = new Array(42);
+}
+
+  function verify(){
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 12.1 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=http://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}  

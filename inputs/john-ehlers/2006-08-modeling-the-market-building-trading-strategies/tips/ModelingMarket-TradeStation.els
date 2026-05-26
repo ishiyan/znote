@@ -1,0 +1,113 @@
+Strategy:  Ehlers-InstTrend
+inputs:
+ Price( MedianPrice ),
+ Length( 20 ),
+ Delay( 2 ) ;
+variables:
+ SMA( 0 ),
+ Mom( 0 ),
+ SmoothMom( 0 ),
+ ITrend( 0 ) ;
+SMA = Average( Price, Length ) ;
+Mom = Momentum( Price, Length - 1 ) ;
+SmoothMom = ( Mom + 2 * Mom[1] + 2 * Mom[2] +
+ Mom[3] ) / 6 ;
+ITrend = SMA + 0.5 * SmoothMom ;
+if ITrend crosses over ITrend[Delay] then
+ Buy next bar market
+else if ITrend crosses under ITrend[Delay] then
+ Sell short next bar at market ;
+Strategy:  Ehlers-StoRSIModel
+inputs:
+ Price( MedianPrice ),
+ Length( 20 ),
+ RSILen( 8 ),
+ StochLen( 8 ),
+ WAveLen( 5 ) ;
+variables:
+ SMA( 0 ),
+ Mom( 0 ),
+ SmoothMom( 0 ),
+ ITrend( 0 ),
+ DegPerBar( 0 ),
+ CosineValue( 0 ),
+ Alpha( 0 ),
+ OneBarDiff( 0 ),
+ HP( 0 ),
+ SmoothHP( 0 ),
+ Synth( 0 ),
+ CU( 0 ),
+ CD( 0 ),
+ Count( 0 ),
+ CntPlus1( 0 ),
+ CUAve( 0 ),
+ CDAve( 0 ),
+ RSI0( 0 ),
+ RSILenLess1( 0 ),
+ HiR( 0 ),
+ LoR( 0 ),
+ StochR( 0 ),
+ StochRSI( 0 ),
+ StochRSIDiv( 0 ),
+ Trigger( 0 ) ;
+SMA = Average( Price, Length ) ;
+Mom = Momentum( Price, Length - 1 ) ;
+SmoothMom = ( Mom + 2 * Mom[1] + 2 * Mom[2] +
+ Mom[3] ) / 6 ;
+ITrend = SMA + 0.5 * SmoothMom ;
+DegPerBar = 360 / Length ;
+CosineValue = Cosine( DegPerBar ) ;
+if CosineValue <> 0 then
+ Alpha = ( 1 - Sine ( DegPerBar ) ) / CosineValue ;
+OneBarDiff = Price - Price[1] ;
+HP = 0.5 * ( 1 + Alpha ) * OneBarDiff +
+ Alpha * HP[1] ;
+SmoothHP = ( HP + 2 * HP[1] + 2 * HP[2] + HP[3] ) / 6 ;
+if CurrentBar = 1 then
+ SmoothHP = 0
+else if CurrentBar < 4 then
+ SmoothHP = OneBarDiff ;
+Synth = ITrend + SmoothHP ;
+CU = 0 ;
+CD = 0 ;
+for Count = 0 to RSILen - 1
+ begin
+ CntPlus1 = Count + 1 ;
+ if Synth[Count] > Synth[CntPlus1] then
+  CU = CU + Synth[Count] - Synth[CntPlus1]
+ else if Synth[Count] < Synth[CntPlus1] then
+  CD = CD + Synth[CntPlus1] - Synth[Count] ;
+ end ;
+CU = CU / RSILen ;
+CD = CD / RSILen ;
+CUAve = CU ;
+CDAve = CD ;
+if CUAve <> -CDAve then
+ RSI0 = CUAve / ( CUAve + CDAve ) ;
+if CurrentBar > 1 then
+ begin
+ RSILenLess1 = RSILen - 1 ;
+ CUAve = ( CUAve[1] * RSILenLess1 + CU ) / RSILen ;
+ CDAve = ( CDAve[1] * RSILenLess1 + CD ) / RSILen ;
+ end ;
+if CUAve <> -CDAve then
+ RSI0 = CUAve / ( CUAve + CDAve ) ;
+HiR = Highest( RSI0, StochLen ) ;
+LoR = Lowest( RSI0, StochLen ) ;
+if HiR <> LoR then
+ StochR = ( RSI0 - LoR ) / ( HiR - LoR ) ;
+StochRSI = 0 ;
+StochRSIDiv = 0 ;
+for Count = 0 to WAveLen - 1
+ begin
+ StochRSI = StochRSI + ( WAveLen - Count ) *
+  StochR[Count] ;
+ StochRSIDiv = StochRSIDiv + Count + 1 ;
+ end ;
+if StochRSIDiv <> 0 then
+ StochRSI = StochRSI / StochRSIDiv ;
+Trigger = 0.05 + 0.9 * StochRSI[1] ;
+if StochRSI crosses over Trigger then
+ Buy next bar market
+else if StochRSI crosses under Trigger then
+ Sell short next bar at market ;

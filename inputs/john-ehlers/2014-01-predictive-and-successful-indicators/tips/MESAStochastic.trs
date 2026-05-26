@@ -1,0 +1,88 @@
+'PREDICTIVE INDICATORS FOR EFFECTIVE TRADING STRATEGIES
+'Author: John Ehlers, TASC January 2014
+'Coded by: Richard Denning 11/02/2013
+'www.TradersEdgeSystems.com
+
+'SuperSmoother filter
+' 2013 John F. Ehlers
+Function SUPSMO(Price As BarArray)
+Dim a1, b1, c1, c2, c3, Filt As BarArray
+a1 = Exp(-1.414*3.14159 / 10)
+b1 = 2*a1*Cos(DegToRad(1.414*180 / 10))
+c2 = b1
+c3 = -a1*a1
+c1 = 1 - c2 - c3
+Filt = c1*(Price + Price[1]) / 2 + c2*Filt[1] + c3*Filt[2]
+SUPSMO = Filt
+End Function
+'----------------------------------------------------------
+'Roofing filter
+' 2013 John F. Ehlers
+Function ROOF(Price As BarArray)
+Dim alpha1
+Dim HP As BarArray
+'Highpass filter cyclic components whose periods are shorter than 48 bars
+  alpha1 = (Cos(DegToRad(.707*360 / 48) + Sin(DegToRad(.707*360 / 48) - 1))) /Cos(DegToRad(.707*360 / 48))
+  HP = (1 - alpha1 / 2)*(1 - alpha1 /2)*(Price - 2*Price[1] + Price[2]) + 2*(1 - alpha1)*HP[1] - (1 - alpha1)*(1 - alpha1)*HP[2]
+'Smooth with a Super Smoother Filter
+  'assert(false)
+  ROOF = SUPSMO(HP)
+  End Function
+'----------------------------------------------------------
+'MesaStochastic Indicator
+' 2013 John F. Ehlers
+Function MESASTOC(Price as bararray,stoLen)
+  Dim count  
+  Dim HighestC As BarArray
+  Dim LowestC As BarArray
+  Dim stoc As BarArray
+  Dim filtSmoPrice As BarArray
+  Dim myStochastic As BarArray
+
+'Highpass filter cyclic components whose periods are shorter than 48 bars 
+' then smooted with a super smother filter
+  filtSmoPrice = ROOF(Price)
+  HighestC = filtSmoPrice
+  LowestC = filtSmoPrice
+  For count = 0 To stoLen - 1 
+    If filtSmoPrice[count] > HighestC Then HighestC = filtSmoPrice[count]
+    If filtSmoPrice[count] < LowestC Then LowestC = filtSmoPrice[count]
+  Next
+  stoc = (filtSmoPrice - LowestC) / (HighestC - LowestC)
+'Smooth with a Super Smoother Filter
+  myStochastic = SUPSMO(stoc)
+MESASTOC = myStochastic
+End Function
+'----------------------------------------------------------
+'Indicator plot for SuperSmoother Filter
+Sub EHLERS_SUPSMO_IND()
+Plot1(SUPSMO(Close))
+End Sub
+'-----------------------------------------------------------
+'Indicator plot for Roofing Filter
+Sub EHLERS_ROOF_IND()
+plot1(ROOF(Close))
+plot2(0)
+End Sub
+'------------------------------------------------------------
+'MesaStochastic Indicator Plot
+' 2013 John F. Ehlers
+Sub EHLERS_MESASTOC_IND(stoLen)
+  Plot1(MesaStoc(Close,stoLen))
+  Plot2(.8)
+  Plot3(.2)
+End Sub
+'-----------------------------------------------------------
+'Example of how one micht use Ehler's MesaStochastic Indicator in a system (long only)
+Sub EHLERS_MESASTOC_SYS(stoLen,upperVal,lowerVal,trndLen)
+  'default parameter values: stoLen=20,upperVal=0.8,lowerVal=0.2,trndLen=25
+  Dim smoFiltSto
+  Dim smoFiltClose As BarArray
+  smoFiltSto = MESASTOC(Close,stoLen)
+  smoFiltClose = SUPSMO(Close)
+  'buy and exit rules (long only system)
+    If CrossesOver(smoFiltSto , lowerVal) And smoFiltClose > smoFiltClose[trndLen] Then Buy("LE",1,0,Market,Day)
+    If CrossesOver(smoFiltSto, upperVal) Then ExitLong("LXob","",1,0,Market,Day)
+End Sub
+
+'------------------------------------------------------------

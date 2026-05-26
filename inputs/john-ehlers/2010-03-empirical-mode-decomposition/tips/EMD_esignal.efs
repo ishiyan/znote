@@ -1,0 +1,201 @@
+/*********************************
+Provided By:
+   eSignal (Copyright c eSignal), a division of Interactive Data
+   Corporation. 2010. All rights reserved. This sample eSignal
+   Formula Script (EFS) is for educational purposes only and
+   may be modified and saved under a new file name. eSignal
+   is not responsible for the functionality once modified. eSignal
+   reserves the right to modify and overwrite this EFS file with
+   each new release.
+
+Description:
+    Empirical Mode Decomposition
+
+Version:            1.00  01/08/2010
+
+Formula Parameters:                     Default:
+    Length                              20
+    Delta                               0.5
+    Fraction                            0.1
+    Price                               hl2
+
+Notes:
+   The related article is copyrighted material. If you are not a
+   subscriber of Stocks & Commodities, please visit
+   www.traders.com.
+
+**********************************/
+var fpArray = new Array();
+var bInit = false;
+var bVersion = null;
+
+function preMain() {
+    setPriceStudy(false);
+    setShowCursorLabel(true);
+    setShowTitleParameters(false);
+    setStudyTitle("Empirical Mode Decomposition");
+    setCursorLabelName("Mean", 0);
+    setDefaultBarFgColor(Color.red, 0);
+    setPlotType(PLOTTYPE_LINE, 0);
+    setDefaultBarThickness(2, 0);
+    setCursorLabelName("Peak", 1);
+    setDefaultBarFgColor(Color.blue, 1);
+    setPlotType(PLOTTYPE_LINE, 1);
+    setDefaultBarThickness(2, 1);
+    setCursorLabelName("Valley", 2);
+    setDefaultBarFgColor(Color.blue, 2);
+    setPlotType(PLOTTYPE_LINE, 2);
+    setDefaultBarThickness(2, 2);
+    var x=0;
+    fpArray[x] = new FunctionParameter("Length", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Length");
+        setLowerLimit(1);
+        setDefault(20);
+    }
+    fpArray[x] = new FunctionParameter("Delta", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Delta");
+        setLowerLimit(0.00001);
+        setDefault(0.5);
+    }
+    fpArray[x] = new FunctionParameter("Fraction", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("Fraction");
+        setLowerLimit(0.00001);
+        setDefault(0.1);
+    }
+	fpArray[x] = new FunctionParameter("Price", FunctionParameter.STRING);
+	with(fpArray[x++]){
+        setName("Price Source");
+        addOption("open");
+        addOption("high");
+        addOption("low");
+        addOption("close");
+        addOption("hl2");
+        addOption("hlc3");
+        addOption("ohlc4");
+        setDefault("hl2");
+    }
+}
+
+var xEmpiricalModeDecomposition_Mean = null;
+var xEmpiricalModeDecomposition_Peak = null;
+var xEmpiricalModeDecomposition_Valley = null;
+
+function main(Length, Delta, Fraction, Price) {
+var nBarState = getBarState();
+var nEmpiricalModeDecomposition_Mean = 0;
+var nEmpiricalModeDecomposition_Peak = 0;
+var nEmpiricalModeDecomposition_Valley = 0;
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    if (nBarState == BARSTATE_ALLBARS) {
+        if (Length == null) Length = 20;
+        if (Delta == null) Delta = 0.5;
+        if (Fraction == null) Fraction = 0.1;
+        if (Price == null) Price = "hl2";
+    }
+    if (bInit == false) {
+        xEmpiricalModeDecomposition_Mean = efsInternal("Calc_EmpiricalModeDecomposition", Length, Delta, Fraction, Price);
+        xEmpiricalModeDecomposition_Peak = getSeries(xEmpiricalModeDecomposition_Mean, 1);
+        xEmpiricalModeDecomposition_Valley = getSeries(xEmpiricalModeDecomposition_Mean, 2);
+        bInit = true;
+    }
+    nEmpiricalModeDecomposition_Mean = xEmpiricalModeDecomposition_Mean.getValue(0);
+    nEmpiricalModeDecomposition_Peak = xEmpiricalModeDecomposition_Peak.getValue(0);
+    nEmpiricalModeDecomposition_Valley = xEmpiricalModeDecomposition_Valley.getValue(0);
+    if (nEmpiricalModeDecomposition_Mean == null ||
+        nEmpiricalModeDecomposition_Peak == null ||
+        nEmpiricalModeDecomposition_Valley == null) return;
+    return new Array(nEmpiricalModeDecomposition_Mean, nEmpiricalModeDecomposition_Peak, nEmpiricalModeDecomposition_Valley);
+}
+
+var bSecondInit = false;
+var xMean = null;
+var xAvrPeak = null;
+var xAvrValley = null;
+
+function Calc_EmpiricalModeDecomposition(Length, Delta, Fraction, Price) {
+var nMean = 0;
+var nAvrPeak = 0;
+var nAvrValley = 0;
+    if (bSecondInit == false) {
+        xMean = efsInternal("Calc_Mean_Peak_Valley", Length, Delta, Price);
+        xAvrPeak = sma(50, getSeries(xMean, 1));
+        xAvrValley = sma(50, getSeries(xMean, 2));
+        bSecondInit = true;
+    }
+    nMean = xMean.getValue(0);
+    nAvrPeak = xAvrPeak.getValue(0);
+    nAvrValley = xAvrValley.getValue(0);
+    if (nMean == null || nAvrPeak == null || nAvrValley == null) return;
+    nAvrPeak = Fraction * nAvrPeak;
+    nAvrValley = Fraction * nAvrValley;
+    return new Array(nMean, nAvrPeak, nAvrValley);
+}
+
+var bMPVInit = false;
+var nPeak = 0;
+var nValley = 0;
+
+function Calc_Mean_Peak_Valley(Length, Delta, Price) {
+var nMean = 0;
+var BP = 0;
+var BP1 = 0;
+var BP2 = 0;
+    if (bMPVInit == false) {
+        xBandpassFilter = efsInternal("Calc_BandpassFilter", Length, Delta, Price);
+        xMean = sma(2 * Length, xBandpassFilter);
+        bMPVInit = true;
+    }
+    nMean = xMean.getValue(0);
+    BP = xBandpassFilter.getValue(0);
+    BP1 = xBandpassFilter.getValue(-1);
+    BP2 = xBandpassFilter.getValue(-2);
+    if (BP1 > BP && BP1 > BP2) {
+        nPeak = BP1;
+    }
+    if (BP1 < BP && BP1 < BP2) {
+        nValley = BP1;
+    }
+    return new Array(nMean, nPeak, nValley);
+}
+
+var bThirdInit = false;
+var xPrice = null;
+
+function Calc_BandpassFilter(Length, Delta, Price) {
+var gamma = 0;
+var alpha = 0;
+var beta = 0;
+var BP = 0;
+var BP1 = ref(-1);
+var BP2 = ref(-2);
+    if (bThirdInit == false) {
+        xPrice = eval(Price)();
+        bThirdInit = true;
+    }
+    if (xPrice.getValue(-2) == null) return;
+    beta = Math.cos(Math.PI * (360 / Length) / 180);
+    gamma = 1 / Math.cos(Math.PI * (720 * Delta / Length) / 180);
+    alpha = gamma - Math.sqrt(gamma * gamma - 1);
+    BP = 0.5 * (1 - alpha) * (xPrice.getValue(0) - xPrice.getValue(-2)) + beta * (1 + alpha) * BP1 - alpha * BP2;
+    return BP;
+}
+
+function verify() {
+    var b = false;
+    if (getBuildNumber() < 779) {
+        drawTextAbsolute(5, 35, "This study requires version 8.0 or later.",
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=https://www.esignal.com/download/default.asp",
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } else {
+        b = true;
+    }
+    return b;
+}

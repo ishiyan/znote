@@ -1,0 +1,45 @@
+LISTING 1.
+// John F. Ehlers' Universal Oscillator 
+// January 2015 S&C Traders' Tips 
+// 
+// AFL implementation - TJ 
+SetBarsRequired( 100 ); 
+
+BandEdge = Param("BandEdge", 20, 2, 100, 1 ); 
+
+WhiteNoise = ( Close - Ref( Close, -2 ) ) / 2; 
+
+// SuperSmoother filter 
+// note: in AFL angles are in radians 
+pi = 3.1415926; 
+r2 = sqrt( 2 ); 
+a1 = exp( - r2 * pi / BandEdge ); 
+b1 = 2 * a1 * cos( r2 * pi / BandEdge ); 
+c2 = b1; 
+c3 = - a1 * a1; 
+c1 = 1 - c2 - c3; 
+
+pk = 0.0000001; 
+universal = 0; 
+
+input = Nz( WhiteNoise + Ref( WhiteNoise, -1 ) ) / 2; 
+Filt = input; 
+
+// IIR+AGC loop 
+for( i = 2; i < BarCount; i++ ) 
+{ 
+ Filt[ i ] = c1 * input[ i ]  + 
+             c2 * Filt[ i - 1 ] + 
+             c3 * Filt[ i - 2 ]; 
+
+ pk = 0.991 * pk; 
+             
+ af = abs( Filt[ i ] ); 
+
+ if( af > pk ) pk = af; 
+
+ universal[ i ] = Filt[ i ] / pk; 
+} 
+
+Plot( universal, "Universal" + _PARAM_VALUES(), colorRed, styleThick ); 
+Plot( 0, "", colorBlue, styleNoLabel );

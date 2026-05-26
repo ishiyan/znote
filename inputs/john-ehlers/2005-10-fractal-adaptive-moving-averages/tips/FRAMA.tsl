@@ -1,0 +1,16 @@
+This code can be entered into TradingSolutions as follows:
+Name: FRAMA Boxes
+Inputs: High, Low, Period, Maximum Period
+Div (Sub (HighestVL (High, Period, Maximum Period), LowestVL (Low, Period,
+ Maximum Period)), Period)
+Name: FRAMA Dimension
+Inputs: High, Low, Period
+Div (Sub (Log10 (Add (FRAMABoxes (High, Low, Div (Period, 2),Period), LagVL
+ (FRAMABoxes (High, Low, Div (Period, 2), Period),Div (Period, 2), Period))),
+ Log10 (FRAMABoxes (High, Low, Ident (Period), Period))), Log10 (2))
+Name: FRAMA Alpha
+Inputs: High, Low, Period
+Max (Min (Exp (Mult (-4.6, Sub (FRAMADimension (High, Low, Period),1))),1),0.01)
+Name: FRAMA
+Inputs: High, Low, Period
+EMA%% (Avg (High, Low), FRAMAAlpha (High, Low, Period))

@@ -1,0 +1,73 @@
+Passband Filter
+p1:= Input("short time periods", 1, 100, 40);
+p2:= Input("long time periods", 2, 200, 60);
+a1:= 5/p1;
+a2:= 5/p2;
+PB:= (a1-a2)*C + (a2*(1-a1)-a1*(1-a2))*Ref(C,-1) +
+((1-a1) + (1-a2))*PREV - (1-a1)*(1-a2)*Ref(PREV,-1);
+RMSa:= Sum( pb*pb, 50);
+RMS:= Sqrt(RMSa/50);
+pb;
+0;
+RMS;
+-RMS
+
+
+Enter Long:
+p1:= 40;
+p2:= 60;
+a1:= 5/p1;
+a2:= 5/p2;
+PB:= (a1-a2)*C + (a2*(1-a1)-a1*(1-a2))*Ref(C,-1) +
+((1-a1) + (1-a2))*PREV - (1-a1)*(1-a2)*Ref(PREV,-1);
+RMSa:= Sum( pb*pb, 50);
+RMS:= Sqrt(RMSa/50);
+el:= Cross(pb,-RMS);
+xl:= pb < Ref(pb, -1);
+trade:= If(el, 1, If(xl, 0, PREV));
+Cross(trade, 0.5)
+
+
+Exit Long:
+p1:= 40;
+p2:= 60;
+a1:= 5/p1;
+a2:= 5/p2;
+PB:= (a1-a2)*C + (a2*(1-a1)-a1*(1-a2))*Ref(C,-1) +
+((1-a1) + (1-a2))*PREV - (1-a1)*(1-a2)*Ref(PREV,-1);
+RMSa:= Sum( pb*pb, 50);
+RMS:= Sqrt(RMSa/50);
+el:= Cross(pb,-RMS);
+xl:= pb < Ref(pb, -1);
+trade:= If(el, 1, If(xl, 0, PREV));
+Cross(0.5,trade)
+
+
+Enter Short:
+p1:= 40;
+p2:= 60;
+a1:= 5/p1;
+a2:= 5/p2;
+PB:= (a1-a2)*C + (a2*(1-a1)-a1*(1-a2))*Ref(C,-1) +
+((1-a1) + (1-a2))*PREV - (1-a1)*(1-a2)*Ref(PREV,-1);
+RMSa:= Sum( pb*pb, 50);
+RMS:= Sqrt(RMSa/50);
+es:= Cross(RMS,pb);
+xs:= pb > Ref(pb, -1);
+trade:= If(es, 1, If(xs, 0, PREV));
+Cross(trade, 0.5)
+
+
+Exit Short:
+p1:= 40;
+p2:= 60;
+a1:= 5/p1;
+a2:= 5/p2;
+PB:= (a1-a2)*C + (a2*(1-a1)-a1*(1-a2))*Ref(C,-1) +
+((1-a1) + (1-a2))*PREV - (1-a1)*(1-a2)*Ref(PREV,-1);
+RMSa:= Sum( pb*pb, 50);
+RMS:= Sqrt(RMSa/50);
+es:= Cross(RMS,pb);
+xs:= pb > Ref(pb, -1);
+trade:= If(es, 1, If(xs, 0, PREV));
+Cross(0.5, trade)

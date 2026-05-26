@@ -1,0 +1,26 @@
+Function Name: Ehlers Smoothing
+Short Name: ESmoothing
+Inputs: Data
+Div (Add (Data, Add (Mult (2, Lag (Data, 1)), Add (Mult (2, Lag (Data, 2)), Lag (Data, 3)))), 6)
+Function Name: Ehlers Slope
+Short Name: ESlope
+Inputs: Data, Period, Maximum Period
+Sub (Data, LagVL (Data, Sub (Period, 1), Maximum Period))
+Function Name: Ehlers Instantaneous Trendline
+Short Name: EITrend
+Inputs: Data, Period, Maximum Period
+Add (MAVL (Data, Period, Maximum Period), Mult (0.5, ESmoothing (ESlope (Data, Period, Maximum Period))))
+Function Name: Ehlers Cyclic Component HP
+Short Name: ECycleHP
+Inputs: Data, Period
+Add (Mult (0.5, Mult (Add (1, Div (Sub (1, Sin (DtoR (Div (360, Period)))),
+ Cos (DtoR (Div (360, Period))))), Change (Data,1))), Mult (Div (Sub (1,
+ Sin (DtoR (Div (360, Period)))), Cos (DtoR (Div (360, Period)))), Prev (1)))
+Function Name: Ehlers Cyclic Component SmoothHP
+Short Name: ESmoothHP
+Inputs: Data, Period
+If (EQ (Bar# ( ), 1), 0, If (LT (Bar# ( ), 4), Change (Data, 1), ESmoothing (ECycleHP (Data, Period))))
+Function Name: Ehlers Model
+Short Name: EModel
+Inputs: Data, Period, Maximum Period
+Add (EITrend (Data, Period, Maximum Period), ESmoothHP (Data, Period))

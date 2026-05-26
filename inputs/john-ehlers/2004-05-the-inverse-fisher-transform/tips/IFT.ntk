@@ -1,0 +1,25 @@
+LISTING 1
+Value1 := 0.1*(RSIndexMod(0,data1,5)-50);
+Value2 := waverage(0,Value1,9);
+plot1 := (exp(2*Value2)-1)/(exp(2*Value2)+1);
+plot2 := 0.5;
+plot3 := -0.5;
+
+LISTING 2
+myprice := fml(0,data1,param1);
+myalpha := param2;
+mycounter := mycounter+1;
+Smooth := (myprice+2*myprice(1)+2*myprice(2)+2*myprice(3))/6;
+'Cycle values when greater than and equal to 7
+Cycle_ge_7 := (1-0.5*myalpha)*(1-0.5*myalpha)*
+              (Smooth-2*Smooth(1)+Smooth(2))+
+              2*(1-myalpha)*Cycle_ge_7(1)-
+              (1-myalpha)*(1-myalpha)*Cycle_ge_7(2);
+'Cycle values when less than 7
+Cycle_lt_7 := (myPrice-2*myPrice(1)+myPrice(2))/4;
+'determine which cycle value to return
+Cycle := if(mycounter < 7, Cycle_lt_7, Cycle_ge_7);
+plot1 := (exp(2*Cycle)-1)/(exp(2*Cycle)+1); 'ICycle
+Plot2 := Cycle;
+Plot3 := 0.5; 'Sell Ref
+Plot4 := -0.5; 'Buy Ref

@@ -1,0 +1,22 @@
+!!! MODELING THE MARKET, TASC August 2006
+!!  Author: John F. Ehlers
+!!  Coded by: Richard Denning 6/08/06
+!! INSTANANEOUS TRENDLINE
+C is [close].
+H is [high].
+L is [low].
+Price is (H+L)/2.
+LL is 20.
+SMA is simpleavg(Price,LL).
+Slope is Price - valresult(Price,LL - 1).
+sSlope is (Slope + 2 * valresult(Slope,1)
+       + 2 * valresult(Slope,3) + valresult(Slope,3)) / 6.
+ITrend is SMA + 0.5 * sSlope.
+!! CYCLIC COMPONENT
+SS is 2 * LL +1.
+Alpha is (1 - sin(360 / LL)) / cos(360 / LL).
+HP is expavg((1 + alpha) * (Price - valresult(Price,1)),SS).
+sHP is (HP + 2 * valresult(HP,1)
+      + 2 * valresult(HP,2) + valresult(HP,3)) / 6.
+!! MODELING THE MARKET
+Model is ITrend + sHP.

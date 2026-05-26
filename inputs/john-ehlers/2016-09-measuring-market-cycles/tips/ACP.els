@@ -1,0 +1,151 @@
+Strategy: AutoLength CCI
+
+// Auto Length CCI Strategy
+// based on Dr. John Ehler's
+// Autocorrelation Periodogram
+// TASC SEP 2016
+
+
+inputs: 
+	OverBoughtLevel( 80 ), OverSoldLevel( 20 ),
+	EnhanceResolution( false ) ;
+variables: 
+	AvgLength( 3 ), M( 0 ), N( 0 ), X( 0 ),
+	Y( 0 ), alpha1( 0 ), HP( 0 ), a1( 0 ),b1( 0 ),
+	c1( 0 ), c2( 0 ), c3( 0 ), Filt( 0 ), Lag( 0 ),
+	count( 0 ), Sx( 0 ), Sy( 0 ), Sxx( 0 ), 
+	Syy( 0 ), Sxy( 0 ), Period( 0 ), Sp( 0 ),
+	Spx( 0 ), MaxPwr( 0 ), PeakPwr( 0 ),
+  	DominantCycle( 0 ), CCIValue( 0 ) ;
+
+arrays: Corr[70]( 0 ), CosinePart[70]( 0 ),
+	SinePart[70]( 0 ),SqSum[70]( 0 ),
+	R[70, 2]( 0 ), Pwr[70]( 0 ) ;
+
+//Highpass Filter and SuperSmoother 
+//Filter together form a Roofing Filter
+//Highpass Filter
+alpha1 = ( 1 - Sine ( 360 / 48 ) ) 
+	/ Cosine( 360 / 48 ) ;
+HP = .5 * ( 1 + alpha1 ) 
+	* ( Close - Close[1] ) + alpha1 * HP[1] ;
+
+//Smooth with a SuperSmoother Filter
+a1 = ExpValue( -1.414 * 3.14159 / 8 ) ;
+b1 = 2 * a1 * Cosine( 1.414 * 180 / 8 ) ;
+c2 = b1 ;
+c3 = -a1 * a1 ;
+c1 = 1 - c2 - c3 ;
+Filt = c1 * ( HP + HP[1] ) / 2 
+	+ c2 * Filt[1] + c3 * Filt[2] ;
+
+//Pearson correlation for each value of lag
+for Lag = 0 to 48 
+	begin
+	//Set the averaging length as M
+	M = AvgLength ;
+	If AvgLength = 0 then 
+		M = Lag ;
+	Sx = 0 ;
+	Sy = 0 ;
+	Sxx = 0 ;
+	Syy = 0 ;
+	Sxy = 0 ;
+	for count = 0 to M - 1 
+		begin
+		X = Filt[count] ;
+		Y = Filt[Lag + count] ;
+		Sx = Sx + X ;
+		Sy = Sy + Y ;
+		Sxx = Sxx + X * X ;
+		Sxy = Sxy + X * Y ;
+		Syy = Syy + Y * Y ;
+		end ;
+	if ( M * Sxx - Sx * Sx ) * ( M * Syy - Sy * Sy ) > 0 then 
+		Corr[Lag] = ( M * Sxy - Sx * Sy ) 
+			/ SquareRoot( ( M * Sxx - Sx * Sx ) 
+			* ( M * Syy - Sy * Sy ) ) ;
+	end ;
+
+//Compute the Fourier Transform for each Correlation
+for Period = 8 to 48 
+	begin
+	CosinePart[Period] = 0;
+	SinePart[Period] = 0;
+	For N = 3 to 48 
+		Begin
+		CosinePart[Period] = CosinePart[Period] +
+		Corr[N]*Cosine(360*N / Period);
+		SinePart[Period] = SinePart[Period] 
+			+ Corr[N]*Sine(360*N / Period);
+		End;
+	SqSum[Period] = CosinePart[Period]*CosinePart[Period] 
+		+ SinePart[Period]*SinePart[Period];
+	End ;
+
+For Period = 8 to 48 
+	Begin
+	R[Period, 2] = R[Period, 1];
+	R[Period, 1] = .2*SqSum[Period]*SqSum[Period] 
+		+ .8*R[Period,2];
+	End;
+
+//Find Maximum Power Level for Normalization
+MaxPwr = 0;
+For Period = 8 to 48 
+	begin
+	If R[Period, 1] > MaxPwr then 
+		MaxPwr = R[Period, 1];
+	End;
+For Period = 8 to 48 
+	Begin
+	Pwr[Period] = R[Period, 1] / MaxPwr;
+	End;
+
+//Optionally increase Display Resolution 
+//by raising the NormPwr to a higher 
+//mathematically power (since the maximum 
+//amplitude is unity, cubing all 
+//amplitudes further reduces the smaller ones).
+If EnhanceResolution = True then 
+	Begin
+	For Period = 8 to 48 
+		Begin
+		Pwr[Period] = Power(Pwr[Period], 3);
+		End;
+	End;
+
+//Compute the dominant cycle using 
+//the CG of the spectrum
+DominantCycle = 0;
+PeakPwr = 0;
+For Period = 8 to 48 
+	Begin
+	If Pwr[Period] > PeakPwr then 
+		PeakPwr = Pwr[Period];
+	End;
+Spx = 0;
+Sp = 0;
+For Period = 8 to 48 
+	Begin
+	If PeakPwr >= .25 and Pwr[Period] >= .25 then 
+		Begin
+		Spx = Spx + Period*Pwr[Period];
+		Sp = Sp + Pwr[Period];
+		End;
+	End;
+If Sp <> 0 then 
+	DominantCycle = Spx / Sp;
+If Sp < .25 then 
+	DominantCycle = DominantCycle[1];
+
+if DominantCycle < 1 then DominantCycle = 1 ;
+
+CCIValue = CCI( Ceiling( DominantCycle ) );
+
+if CCIValue crosses under OverBoughtLevel then
+	Buy next bar at Market 
+else if CCIValue crosses over OverSoldLevel then
+	SellShort next bar at Market ;	
+
+Print( Bardatetime.ToString(), " | ", Ceiling( DominantCycle ) ) ;

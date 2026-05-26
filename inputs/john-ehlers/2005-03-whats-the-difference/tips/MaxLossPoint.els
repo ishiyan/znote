@@ -1,0 +1,105 @@
+Indicator: Max Loss Point (S) {for Option Pane}
+variables:
+ OIToStore( 0 ),
+ Sym( "" ),
+ SetTypeRtn( -1 ),
+ SetStrikeRtn( -1 ),
+ SetOIRtn( -1 ) ;
+if CurrentOpenInt <> 0 then
+ OIToStore = CurrentOpenInt
+else
+ OIToStore = PrevOpenInt ;
+Sym = Symbol ;
+SetTypeRtn = GVSetNamedInt(
+ Sym, OptionType of Option ) ;
+SetStrikeRtn = GVSetNamedFloat(
+ Sym + " Strike", Strike of Option ) ;
+SetOIRtn = GVSetNamedInt( Sym + " OI", OIToStore ) ;
+if SetTypeRtn < 0 or SetStrikeRtn < 0 or
+ SetOIRtn < 0
+then
+ RaiseRunTimeError(
+  Sym + ":  Error setting named variable!" ) ;
+Plot1( SetTypeRtn, "SetTypeRtn" ) ;
+Indicator: Max Loss Point {for Asset Pane}
+variables:
+ Index( 0 ),
+ Counter( 0 ),
+ Sym( "" ),
+ ErrorString( "Error!" ),
+ NumOpts( 0 ),
+ CounterOuter( 0 ),
+ StrikeOuter( 0 ),
+ CounterInner( 0 ),
+ OptTypeInner( 0 ),
+ StrikeInner( 0 ),
+ OpenIntInner( 0 ),
+ MaxLossStrike( 0 ),
+ MaxLossAmt( 0 ),
+ IntErrorCode( -999 ),
+ FltErrorCode( -999.99 ) ;
+arrays:
+ OptionTypes[200]( 0 ),
+ OptionStrikes[200]( 0 ),
+ OptionOI[200]( 0 ),
+ CallDollarVal[200]( 0 ),
+ PutDollarVal[200]( 0 ),
+ MaxLossAmts[200]( 0 ) ;
+ 
+Index = 0 ;
+Counter = 0 ;
+Sym = GVGetIntNameByNum( Index, ErrorString ) ;
+while Sym <> ErrorString
+ begin
+ OptionTypes[Counter] = GVGetNamedInt(
+  Sym, IntErrorCode ) ;
+ OptionStrikes[Counter] = GVGetNamedFloat(
+  Sym + " Strike", FltErrorCode ) ;
+ OptionOI[Counter] = GVGetNamedInt(
+  Sym + " OI", IntErrorCode ) ;
+ Counter = Counter + 1 ;
+ Index = Index + 2 ;
+ Sym = GVGetIntNameByNum( Index, ErrorString ) ;
+ end ;
+NumOpts = Counter ;
+for CounterOuter = 0 to NumOpts - 1
+ begin
+ StrikeOuter = OptionStrikes[CounterOuter] ;
+ CallDollarVal[CounterOuter] = 0 ;
+ PutDollarVal[CounterOuter] = 0 ;
+ MaxLossAmts[CounterOuter] = 0 ;
+ CounterInner = 0 ;
+ for CounterInner = 0 to NumOpts - 1
+  begin
+  OptTypeInner = OptionTypes[CounterInner] ;
+  StrikeInner = OptionStrikes[CounterInner] ;
+  OpenIntInner = OptionOI[CounterInner] ;
+  if StrikeInner < StrikeOuter and
+   OptTypeInner = Call
+  then
+    CallDollarVal[CounterOuter] =
+    CallDollarVal[CounterOuter] +
+    ( StrikeOuter - StrikeInner ) *
+    OpenIntInner
+  else if StrikeInner > StrikeOuter and
+   OptTypeInner = Put then
+   PutDollarVal[CounterOuter] =
+   PutDollarVal[CounterOuter] + ( StrikeInner
+   - StrikeOuter ) * OpenIntInner ;
+  end ;
+ MaxLossAmts[CounterOuter] =
+  CallDollarVal[CounterOuter] +
+  PutDollarVal[CounterOuter] ;
+ end ;
+MaxLossStrike = OptionStrikes[0] ;
+MaxLossAmt = MaxLossAmts[0] ;
+for Counter = 1 to NumOpts - 1
+ begin
+ if MaxLossAmts[Counter] < MaxLossAmt then
+  begin
+  MaxLossAmt = MaxLossAmts[Counter] ;
+  MaxLossStrike = OptionStrikes[Counter] ;
+  end ;
+ end ;
+Plot1( MaxLossStrike, "MaxLossStrk" ) ;
+Plot2( MaxLossAmt, "MaxLossAmt" ) ;

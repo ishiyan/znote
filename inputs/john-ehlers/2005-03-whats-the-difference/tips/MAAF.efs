@@ -1,0 +1,100 @@
+/*****************************************************************
+
+Provided By : eSignal (c) Copyright 2005
+
+Description:  Median-Average Adaptive Filter - by John F. Ehlers
+
+Version 1.0  1/7/2005
+
+Notes:
+
+March 2005 Issue - "The Secret Behind The Filter: What's The Difference?"
+
+Formula Parameters:       Defaults:
+
+Thickness                           2
+
+Color                               Red
+
+*****************************************************************/
+
+function preMain() {
+    setPriceStudy(true);
+    setStudyTitle("Median-Average Adaptive Filter ");
+    setCursorLabelName("MAAF", 0);
+ 
+    setShowTitleParameters(false);
+ 
+    // Study Parameters
+    var sp1 = new FunctionParameter("nThick", FunctionParameter.NUMBER);
+        sp1.setName("Thickness");
+        sp1.setDefault(2);
+    var sp2 = new FunctionParameter("cColor", FunctionParameter.COLOR);
+        sp2.setName("Color");
+        sp2.setDefault(Color.red);
+}
+
+var bEdit = true;
+var Price = new Array(4);
+var Smooth = new Array(39);
+var nFilter = null;
+var nFilter_1 = 0;
+var Value2 = 0;
+var Value2_1 = 0;
+var nThreshold = 0.002
+
+function main(nThick, cColor) {
+    if (bEdit == true) {
+        setDefaultBarThickness(nThick);
+        setDefaultBarFgColor(cColor);
+        bEdit = false;
+    }
+ 
+    var nState = getBarState();
+    if (nState == BARSTATE_NEWBAR) {
+        nFilter_1 = nFilter;
+        Value2_1 = Value2;
+        Price.pop()
+        Price.unshift((high(0)+low(0))/2)
+        Smooth.pop();
+        Smooth.unshift(0);
+    }
+    Price[0] = (high(0)+low(0))/2;
+    if (Price[3] == null) return;
+ 
+    Smooth[0] = (Price[0] + (2 * Price[1]) + (2 * Price[2]) + Price[3]) / 6;
+    if (Smooth[38] == null) return;
+ 
+    var Length = 39;
+    var Value3 = .2;
+    var alpha, Value1;
+    while (Value3 > nThreshold) {
+        alpha = 2 / (Length + 1);
+        Value1 = Median(Length);
+        Value2 = alpha*Smooth[0] + (1 - alpha)*Value2_1;
+        if (Value1 != 0) Value3 = Math.abs(Value1 - Value2) / Value1;
+        Length = Length - 2;
+        if (Length <= 0) break;
+    }
+    if (Length < 3) Length = 3;
+    alpha = 2 / (Length + 1);
+    nFilter = (alpha*Smooth[0] + (1 - alpha)*nFilter_1);
+    return nFilter;
+}
+
+function Median(Length) {
+    var aArray = new Array(Length);
+    var nMedian = null;
+ 
+    for (var i = 0; i < Length; i++) {
+        aArray[i] = Smooth[i];
+    }
+ 
+    aArray = aArray.sort(compareNumbers);
+ 
+    nMedian = aArray[Math.round((Length-1)/2)];
+    return nMedian;
+}
+function compareNumbers(a, b) {
+   return a - b
+}

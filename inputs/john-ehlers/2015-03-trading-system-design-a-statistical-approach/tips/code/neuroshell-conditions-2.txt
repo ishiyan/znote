@@ -1,0 +1,2 @@
+BUY LONG CONDITIONS: 	Center of Gravity > Center of Gravity Trigger
+SELL LONG CONDITIONS: 	Center of Gravity < Center of Gravity Trigger

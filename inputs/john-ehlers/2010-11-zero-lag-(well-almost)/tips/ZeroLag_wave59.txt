@@ -1,0 +1,82 @@
+Indicator:  SC_Ehlers_Way
+input: length(20),gainlimit(50),EC_Color(Blue),EMA_Color(green),EC_thickness(2),EMA_Thickness(2);
+
+#Initialize variables on first bar
+if (barnumber==barsback)
+{
+   alpha=0;
+   gain=0;
+   bestgain=0;
+   ec=0;
+   error=0;
+   leasterror=0;
+   ema=0;
+}
+
+alpha = 2 /(length + 1);
+ema = alpha*close +(1 - alpha)*ema[1];
+leasterror = 1000000;
+for (value1 = -gainlimit to gainlimit by 1) 
+{
+   gain = value1 / 10;
+   ec = alpha*(ema + gain*(close - ec[1])) +(1 - alpha)*ec[1];
+   error = close - ec;
+   if (abs(error) < leasterror)  
+   {
+      leasterror = abs(error);
+      bestgain = gain;
+   }
+}
+ec = alpha*(ema + bestgain*(close - ec[1])) +(1 - alpha)*ec[1];
+
+If (barnum > barsback+(length*1.5))
+{
+plot1=ec;
+color1=ec_color;
+thickness1=ec_thickness;   
+
+plot2=ema;
+color2=ema_color;
+thickness2=ema_thickness;
+}                        
+
+System: SC_Ehlers_Way_System
+
+input: length(20),gainlimit(50),thresh(1);
+
+#Initialize variables on first bar
+if (barnumber==barsback)
+{
+   alpha=0;
+   gain=0;
+   bestgain=0;
+   ec=0;
+   error=0;
+   leasterror=0;
+   ema=0;
+}
+alpha = 2 /(length + 1);
+ema = alpha*close +(1 - alpha)*ema[1];
+leasterror = 1000000;
+for (value1 = -gainlimit to gainlimit by 1) 
+{
+   gain = value1 / 10;
+   ec = alpha*(ema + gain*(close - ec[1])) +(1 - alpha)*ec[1];
+   error = close - ec;
+   if (abs(error) < leasterror) 
+   {
+      leasterror = abs(error);
+      bestgain = gain;
+   }
+}
+ec = alpha*(ema + bestgain*(close - ec[1])) +(1 - alpha)*ec[1];   
+If (barnum > barsback+(length*1.5)) 
+{
+plot1=ec;
+plot2=ema;
+if ((ec crosses over ema) and (100*leasterror / close > thresh)) 
+buy(1,open,"nettopen","gtc");
+if ((ec crosses under ema) and (100*leasterror / close > thresh)) 
+sell(1,open,"nettopen","gtc");
+]
+

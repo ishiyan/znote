@@ -1,0 +1,1002 @@
+Light green = Strong signal with little or no fuzz
+Light yellow = Moderately strong signal with some fuzz
+      Yellow = Weaker signal with more fuzz
+      Yellow = Even weaker signal with even more fuzz
+         Red = Very weak signal with a high level of fuzz
+       White = No rating regarding signal strength
+TradersStudioCode DomCyc.txt
+
+Function EhlersDC(colorRGB)
+    Dim price As BarArray, DC As BarArray
+    Dim HP As BarArray, SmoothHP As BarArray
+    Dim delta As BarArray, gamma As BarArray
+    Dim alpha As BarArray, beta As BarArray
+    Dim alpha1 As BarArray, MaxAmpl As BarArray
+    Dim Num As BarArray, Denom As BarArray
+    Dim DomCyc As BarArray
+    
+    Dim fuzzRGB, lineRGB, maxColorRGB
+    Dim N, TScurrentBar, myDate   
+    
+    Dim I As Array, OldI As Array, OlderI As Array
+    Dim Q As Array, OldQ As Array, OlderQ As Array
+    Dim Real As Array, OldReal As Array, OlderReal As Array
+    Dim Imag As Array, OldImag As Array, OlderImag As Array
+    Dim Ampl As Array, OldAmpl As Array
+    Dim DB As Array, OldDB As Array
+    Dim aDC As Array, color As Array
+    
+    ReDim (I, 61)
+    ReDim (OldI, 61)
+    ReDim (OlderI, 61)
+    ReDim (Q, 61)
+    ReDim (OldQ, 61)
+    ReDim (OlderQ, 61)
+    ReDim (Real, 61)
+    ReDim (OldReal, 61)
+    ReDim (OlderReal, 61)
+    ReDim (Imag, 61)
+    ReDim (OldImag, 61)
+    ReDim (OlderImag, 61)
+    ReDim (Ampl, 61)
+    ReDim (OldAmpl, 61)
+    ReDim (DB, 61)
+    ReDim (OldDB, 61)
+    ReDim (aDC,5)
+    ReDim (color,61)
+    
+    If BarNumber=FirstBar Then
+        gamma = 0
+        alpha = 0
+        beta = 0
+        N = 0
+        MaxAmpl = 0
+        Num = 0
+        Denom = 0
+        DC = 0
+        DomCyc = 0
+        alpha1 = 0
+        HP = 0
+        SmoothHP = 0
+        For N = 0 To 60
+            I[N] = 0
+            OldI[N] = 0
+            OlderI[N] = 0
+            Q[N] = 0
+            OldQ[N] = 0
+            OlderQ[N]=0
+            Real[N] = 0
+            OldReal[N] = 0
+            OlderReal[N] = 0
+            Imag[N] = 0
+            OldImag[N] = 0
+            OlderImag[N] = 0
+            Ampl[N] = 0
+            OldAmpl[N] = 0
+            DB[N] = 0
+            OldDB[N] = 0
+            color[N] = 0
+        Next
+    End If
+    
+    price = (H+L)/2
+    delta = 0.1
+    fuzzRGB = 190
+    lineRGB = 255
+    TScurrentBar = CurrentBar + 1
+    myDate = FormatDateTime(Date)
+      
+    I = GValue201
+    OldI = GValue202
+    OlderI = GValue203
+    Q = GValue204
+    OldQ = GValue205
+    OlderQ = GValue206
+    Real = GValue207
+    OldReal = GValue208
+    OlderReal = GValue209
+    Imag = GValue210
+    OldImag = GValue211
+    OlderImag = GValue212
+    Ampl = GValue213
+    OldAmpl = GValue214
+    DB = GValue215
+    OldDB = GValue216
+
+    alpha1 = (1 - Sin(DegToRad(360/30))) / Cos(DegToRad(360/30))
+    HP = .5*(1 + alpha1)*(price - price[1]) + alpha1*HP[1]
+    SmoothHP = (HP + 2*HP[1] + 3*HP[2] + 3*HP[3] + 2*HP[4] + HP[5]) / 12
+    If TScurrentBar  12  Then
+    For N = 12 To 60
+        beta = Cos(DegToRad(720 / N))
+        gamma = 1 / Cos(DegToRad(1440 * delta / N))
+        alpha = gamma - Sqr(gamma * gamma - 1)
+        Q[N] = (.5*N / 6.28318)*(SmoothHP - SmoothHP[1])
+        I[N] = SmoothHP
+        Real[N] = .5*(1 - alpha)*(I[N] - OlderI[N]) + beta*(1 + alpha)*OldReal[N] - alpha*OlderReal[N]
+        Imag[N] = .5*(1 - alpha)*(Q[N] - OlderQ[N]) + beta*(1 + alpha)*OldImag[N] - alpha*OlderImag[N]
+        Ampl[N] = (Real[N]*Real[N] + Imag[N]*Imag[N])  
+    Next
+
+    For N = 12 To 60
+        OlderI[N] = OldI[N]
+        OldI[N] = I[N]
+        OlderQ[N] = OldQ[N]
+        OldQ[N] = Q[N]
+        OlderReal[N] = OldReal[N]
+        OldReal[N] = Real[N]
+        OlderImag[N] = OldImag[N]
+        OldImag[N] = Imag[N]
+        OldAmpl[N] = Ampl[N]
+        OldDB[N] = DB[N]
+    Next
+    
+    MaxAmpl = Ampl[12]
+    
+    For N = 12 To 60
+        If Ampl[N] > MaxAmpl Then MaxAmpl = Ampl[N]
+    Next
+    
+    For N = 12 To 60
+        If MaxAmpl <> 0 And (Ampl[N] / MaxAmpl) > 0 Then
+            DB[N] = -10*Log(.01 / (1 - .99*Ampl[N] / MaxAmpl)) / Log(10)
+        End If
+        DB[N] = .33*DB[N] + .67*OldDB[N]
+        If DB[N] > 20 Then DB[N] = 20
+    Next
+    
+    Num = 0
+    Denom = 0
+    
+    For N = 12 To 60
+        If DB[N]  0 Then DC = .5*Num / Denom
+     Next   
+    For N = 0 To 4
+        aDC[N] = DC[N]
+    Next
+    DomCyc = Median(aDC)
+   
+EhlersDC = DomCyc
+    
+    For N = 12 To 60 
+        If DB[N]  10 Then color[N] = fuzzRGB*(2 - DB[N] / 10)  
+        If color[N] > maxColorRGB Then maxColorRGB = color[N]
+    Next
+    
+colorRGB = maxColorRGB
+    
+End If
+
+    GValue201 = I
+    GValue202 = OldI
+    GValue203 = OlderI
+    GValue204 = Q
+    GValue205 = OldQ
+    GValue206 = OlderQ
+    GValue207 = Real
+    GValue208 = OldReal
+    GValue209 = OlderReal
+    GValue210 = Imag
+    GValue211 = OldImag
+    GValue212 = OlderImag
+    GValue213 = Ampl
+    GValue214 = OldAmpl
+    GValue215 = DB
+    GValue216 = OldDB
+
+End Function
+
+_________________________________________________________________________________________
+Sub EhlersDomCycle()
+Dim colorRGB
+Dim EDC As BarArray
+Dim myDate
+myDate = FormatDateTime(Date)
+EDC = EhlersDC(colorRGB)
+plot1(EDC)
+End Sub
+_________________________________________________________________________________________
+
+
+
+
+
+
+Function EhlersSP(byref colorRGB)
+    Dim price As BarArray, DC As BarArray
+    Dim HP As BarArray, SmoothHP As BarArray
+    Dim delta As BarArray, gamma As BarArray
+    Dim alpha As BarArray, beta As BarArray
+    Dim alpha1 As BarArray, MaxAmpl As BarArray
+    Dim Num As BarArray, Denom As BarArray
+    Dim DomCyc As BarArray, gamma2 As BarArray
+    Dim alpha2 As BarArray, beta2 As BarArray
+    Dim delta2 As BarArray, BP2 As BarArray
+    Dim Q2 As BarArray, Lead60 As BarArray
+    Dim HL As BarArray, LL As BarArray
+    Dim Psn As BarArray, Width As BarArray
+    
+    Dim fuzzRGB, lineRGB, maxColorRGB
+    Dim N, TScurrentBar, myDate, count  
+     
+    Dim I As Array, OldI As Array, OlderI As Array
+    Dim Q As Array, OldQ As Array, OlderQ As Array
+    Dim Real As Array, OldReal As Array, OlderReal As Array
+    Dim Imag As Array, OldImag As Array, OlderImag As Array
+    Dim Ampl As Array, OldAmpl As Array
+    Dim DB As Array, OldDB As Array
+    Dim Raster As Array, oldRaster As Array
+    
+
+    Dim aDC As Array, aRange As Array
+    Dim color As Array
+    
+    ReDim (I, 61)
+    ReDim (OldI, 61)
+    ReDim (OlderI, 61)
+    ReDim (Q, 61)
+    ReDim (OldQ, 61)
+    ReDim (OlderQ, 61)
+    ReDim (Real, 61)
+    ReDim (OldReal, 61)
+    ReDim (OlderReal, 61)
+    ReDim (Imag, 61)
+    ReDim (OldImag, 61)
+    ReDim (OlderImag, 61)
+    ReDim (Ampl, 61)
+    ReDim (OldAmpl, 61)
+    ReDim (DB, 61)
+    ReDim (OldDB, 61)
+    ReDim (Raster, 51)
+    ReDim (oldRaster, 51)
+    
+    ReDim (aDC,5)
+    ReDim (aRange,5)
+    ReDim (color,51)
+    
+    If BarNumber=FirstBar Then
+        gamma = 0
+        alpha = 0
+        beta = 0
+        N = 0
+        MaxAmpl = 0
+        Num = 0
+        Denom = 0
+        DC = 0
+        DomCyc = 0
+        alpha1 = 0
+        HP = 0
+        SmoothHP = 0
+        gamma2 = 0
+        alpha2 = 0
+        beta2 = 0
+        delta2 = 0
+        BP2 = 0
+        Q2 = 0
+        Lead60 = 0
+        HL = 0
+        LL = 0
+        Psn = 0
+        Width = 0
+        
+        For N = 0 To 60
+            I[N] = 0
+            OldI[N] = 0
+            OlderI[N] = 0
+            Q[N] = 0
+            OldQ[N] = 0
+            OlderQ[N]=0
+            Real[N] = 0
+            OldReal[N] = 0
+            OlderReal[N] = 0
+            Imag[N] = 0
+            OldImag[N] = 0
+            OlderImag[N] = 0
+            Ampl[N] = 0
+            OldAmpl[N] = 0
+            DB[N] = 0
+            OldDB[N] = 0
+         Next
+         
+        For N = 0 To 50
+            Raster[N] = 0
+            oldRaster[N] = 0
+            color[N] = 0
+        Next
+    End If
+    
+    price = (H+L)/2
+    delta = 0.1
+    delta2 = 0.1
+    fuzzRGB = 190
+    lineRGB = 255
+    TScurrentBar = CurrentBar + 1
+    myDate = FormatDateTime(Date)
+        
+    I = GValue301
+    OldI = GValue302
+    OlderI = GValue303
+    Q = GValue304
+    OldQ = GValue305
+    OlderQ = GValue306
+    Real = GValue307
+    OldReal = GValue308
+    OlderReal = GValue309
+    Imag = GValue310
+    OldImag = GValue311
+    OlderImag = GValue312
+    Ampl = GValue313
+    OldAmpl = GValue314
+    DB = GValue315
+    OldDB = GValue316
+    Raster = Gvalue317
+    oldRaster = Gvalue318  
+
+    alpha1 = (1 - Sin(DegToRad(360/30))) / Cos(DegToRad(360/30))
+    HP = .5*(1 + alpha1)*(price - price[1]) + alpha1*HP[1]
+    SmoothHP = (HP + 2*HP[1] + 3*HP[2] + 3*HP[3] + 2*HP[4] + HP[5]) / 12
+    If TScurrentBar  12  Then 'begin concdition A
+    For N = 12 To 60
+        beta = Cos(DegToRad(720 / N))
+        gamma = 1 / Cos(DegToRad(1440 * delta / N))
+        alpha = gamma - Sqr(gamma * gamma - 1)
+        Q[N] = (.5*N / 6.28318)*(SmoothHP - SmoothHP[1])
+        I[N] = SmoothHP
+        Real[N] = .5*(1 - alpha)*(I[N] - OlderI[N]) + beta*(1 + alpha)*OldReal[N] - alpha*OlderReal[N]
+        Imag[N] = .5*(1 - alpha)*(Q[N] - OlderQ[N]) + beta*(1 + alpha)*OldImag[N] - alpha*OlderImag[N]
+        Ampl[N] = (Real[N]*Real[N] + Imag[N]*Imag[N])
+    Next
+
+    For N = 12 To 60
+        OlderI[N] = OldI[N]
+        OldI[N] = I[N]
+        OlderQ[N] = OldQ[N]
+        OldQ[N] = Q[N]
+        OlderReal[N] = OldReal[N]
+        OldReal[N] = Real[N]
+        OlderImag[N] = OldImag[N]
+        OldImag[N] = Imag[N]
+        OldAmpl[N] = Ampl[N]
+        OldDB[N] = DB[N]
+    Next
+    
+    For N = 1 To 50 
+        oldRaster[N] = Raster[N]
+    Next
+    
+
+    MaxAmpl = Ampl[12]
+    
+    For N = 12 To 60
+        If Ampl[N] > MaxAmpl Then MaxAmpl = Ampl[N]
+    Next
+    
+    For N = 12 To 60
+        If MaxAmpl <> 0 And (Ampl[N] / MaxAmpl) > 0 Then
+            DB[N] = -10*Log(.01 / (1 - .99*Ampl[N] / MaxAmpl)) / Log(10)
+        End If
+        DB[N] = .33*DB[N] + .67*OldDB[N]
+        If DB[N] > 20 Then DB[N] = 20
+    Next
+    
+    Num = 0
+    Denom = 0
+    
+    For N = 12 To 60
+        If DB[N]  0 Then DC = .5*Num / Denom
+     Next   
+    For N = 0 To 4
+        aDC[N] = DC[N]
+    Next
+    DomCyc = Median(aDC)
+    If DomCyc  HL Then HL = Lead60[count]
+        If Lead60[count]  HL Then HL = Psn[count]
+        If Psn[count]  0.85 Then Width = 0.01 Else Width = 0.15*(HL - LL)
+
+EhlersSP = (10*Psn-5)  
+
+    For N = 1 To 50 
+        Raster[N] = 20 
+        If Width > 0 Then
+            If N  Round(50*Psn,0) Then Raster[N] = 0.5*((((-20*Psn + 0.4*N)/ Width) ^ 0.95) + 0.5*oldRaster[N]) 
+        End If
+        If N = Round(50*Psn,0) Then Raster[N] = 0.5*oldRaster[N] 
+        If Raster[N]  20 Then Raster[N] = 20 
+        If HL - LL > 0.8 Then Raster[N] = 20 
+        oldRaster[N] = Raster[N] 
+    Next
+
+ For N = 1 To 50 
+    If Raster[N]  10 Then 
+        color[N] = fuzzRGB*(2 - Raster[N] / 10)
+    End If
+    If color[N] > maxColorRGB Then maxColorRGB = color[N]  
+Next
+
+colorRGB = maxColorRGB   
+
+End If 'end condition A
+
+    GValue301 = I
+    GValue302 = OldI
+    GValue303 = OlderI
+    GValue304 = Q
+    GValue305 = OldQ
+    GValue306 = OlderQ
+    GValue307 = Real
+    GValue308 = OldReal
+    GValue309 = OlderReal
+    GValue310 = Imag
+    GValue311 = OldImag
+    GValue312 = OlderImag
+    GValue313 = Ampl
+    GValue314 = OldAmpl
+    GValue315 = DB
+    GValue316 = OldDB
+    Gvalue317 = Raster
+    Gvalue318 = oldRaster
+
+End Function
+__________________________________________________________________________________________
+Sub EhlersSwingPosition()
+Dim colorRGB
+Dim ESP As BarArray
+Dim myDate
+myDate = FormatDateTime(Date)
+ESP = EhlersSP(colorRGB)
+plot1(ESP)
+End Sub
+____________________________________________________________________________________________
+'
+
+
+
+
+
+
+
+
+Function EhlersTV(byref colorRGB)
+    Dim price As BarArray, DC As BarArray
+    Dim HP As BarArray, SmoothHP As BarArray
+    Dim delta As BarArray, gamma As BarArray
+    Dim alpha As BarArray, beta As BarArray
+    Dim alpha1 As BarArray, beta1 As BarArray
+    Dim gamma1 As BarArray, delta1 As BarArray
+    Dim alpha2 As BarArray, MaxAmpl As BarArray
+    Dim Num As BarArray, Denom As BarArray
+    Dim DomCyc As BarArray,IP As BarArray
+    Dim Q1 As BarArray, ampl2 As BarArray
+    Dim trend As BarArray, ratio As BarArray
+    Dim TV As BarArray, width As BarArray
+    Dim fuzzRGB, lineRGB, maxColorRGB
+    Dim  N, TScurrentBar, myDate   
+    
+    Dim I As Array, OldI As Array, OlderI As Array
+    Dim Q As Array, OldQ As Array, OlderQ As Array
+    Dim Real As Array, OldReal As Array, OlderReal As Array
+    Dim Imag As Array, OldImag As Array, OlderImag As Array
+    Dim Ampl As Array, OldAmpl As Array
+    Dim DB As Array, OldDB As Array
+    Dim Raster As Array, oldRaster As Array
+    Dim aDC As Array, color As Array
+    ReDim (I, 61)
+    ReDim (OldI, 61)
+    ReDim (OlderI, 61)
+    ReDim (Q, 61)
+    ReDim (OldQ, 61)
+    ReDim (OlderQ, 61)
+    ReDim (Real, 61)
+    ReDim (OldReal, 61)
+    ReDim (OlderReal, 61)
+    ReDim (Imag, 61)
+    ReDim (OldImag, 61)
+    ReDim (OlderImag, 61)
+    ReDim (Ampl, 61)
+    ReDim (OldAmpl, 61)
+    ReDim (DB, 61)
+    ReDim (OldDB, 61)
+    ReDim (Raster, 51)
+    ReDim (oldRaster, 51)
+    
+    ReDim (aDC,5)
+    ReDim (color,51)
+    
+    If BarNumber=FirstBar Then
+        gamma = 0
+        alpha = 0
+        beta = 0
+        delta = 0.1
+        alpha1 = 0
+        beta1 = 0
+        gamma1 = 0
+        delta1 = 0
+        alpha2 = 0    
+        N = 0
+        MaxAmpl = 0
+        Num = 0
+        Denom = 0
+        DC = 0
+        DomCyc = 0
+        alpha1 = 0
+        HP = 0
+        SmoothHP = 0
+        IP = 0
+        Q1 = 0
+        ampl2 = 0
+        trend = 0
+        ratio = 0
+        TV = 0
+        width = 0
+        For N = 0 To 60
+            I[N] = 0
+            OldI[N] = 0
+            OlderI[N] = 0
+            Q[N] = 0
+            OldQ[N] = 0
+            OlderQ[N]=0
+            Real[N] = 0
+            OldReal[N] = 0
+            OlderReal[N] = 0
+            Imag[N] = 0
+            OldImag[N] = 0
+            OlderImag[N] = 0
+            Ampl[N] = 0
+            OldAmpl[N] = 0
+            DB[N] = 0
+            OldDB[N] = 0
+        Next
+        For N = 0 To 50
+            Raster[N] = 0
+            oldRaster[N] = 0
+            color[N] = 0
+        Next
+    End If
+    
+    price = (H+L)/2
+    delta1 = 0.1
+    fuzzRGB = 190
+    lineRGB = 255
+    TScurrentBar = CurrentBar + 1
+    myDate = FormatDateTime(Date)
+        
+    I = GValue501
+    OldI = GValue502
+    OlderI = GValue503
+    Q = GValue504
+    OldQ = GValue505
+    OlderQ = GValue506
+    Real = GValue507
+    OldReal = GValue508
+    OlderReal = GValue509
+    Imag = GValue510
+    OldImag = GValue511
+    OlderImag = GValue512
+    Ampl = GValue513
+    OldAmpl = GValue514
+    DB = GValue515
+    OldDB = GValue516
+    Raster = Gvalue517
+    oldRaster = Gvalue518
+
+    alpha1 = (1 - Sin(DegToRad(360/30))) / Cos(DegToRad(360/30))
+    HP = .5*(1 + alpha1)*(price - price[1]) + alpha1*HP[1]
+    SmoothHP = (HP + 2*HP[1] + 3*HP[2] + 3*HP[3] + 2*HP[4] + HP[5]) / 12
+    If TScurrentBar  12  Then  'begin condition A
+    For N = 12 To 60
+        beta = Cos(DegToRad(720 / N))
+        gamma = 1 / Cos(DegToRad(1440 * delta / N))
+        alpha = gamma - Sqr(gamma * gamma - 1)
+        Q[N] = (.5*N / 6.28318)*(SmoothHP - SmoothHP[1])
+        I[N] = SmoothHP
+        Real[N] = .5*(1 - alpha)*(I[N] - OlderI[N]) + beta*(1 + alpha)*OldReal[N] - alpha*OlderReal[N]
+        Imag[N] = .5*(1 - alpha)*(Q[N] - OlderQ[N]) + beta*(1 + alpha)*OldImag[N] - alpha*OlderImag[N]
+        Ampl[N] = (Real[N]*Real[N] + Imag[N]*Imag[N])  
+    Next
+
+    For N = 12 To 60
+        OlderI[N] = OldI[N]
+        OldI[N] = I[N]
+        OlderQ[N] = OldQ[N]
+        OldQ[N] = Q[N]
+        OlderReal[N] = OldReal[N]
+        OldReal[N] = Real[N]
+        OlderImag[N] = OldImag[N]
+        OldImag[N] = Imag[N]
+        OldAmpl[N] = Ampl[N]
+        OldDB[N] = DB[N]
+    Next
+    
+    For N = 1 To 50 
+        oldRaster[N] = Raster[N]
+    Next
+    
+    MaxAmpl = Ampl[12]
+    
+    For N = 12 To 60
+        If Ampl[N] > MaxAmpl Then MaxAmpl = Ampl[N]
+    Next
+    
+    For N = 12 To 60
+        If MaxAmpl <> 0 And (Ampl[N] / MaxAmpl) > 0 Then
+            DB[N] = -10 * Log(0.01 / (1 - 0.99 * Ampl[N] / MaxAmpl)) / Log(10)
+        End If
+        DB[N] = .33*DB[N] + .67*OldDB[N]
+        If DB[N] > 20 Then DB[N] = 20
+    Next
+    
+    Num = 0
+    Denom = 0
+    
+    For N = 12 To 60
+        If DB[N]  0 Then DC = .5*Num / Denom
+    Next 
+ 
+    For N = 0 To 4
+        aDC[N] = DC[N]
+    Next
+
+    DomCyc = Median(aDC)
+    If DomCyc  0 And ampl2 <> 0 Then ratio = 0.33 * trend / ampl2 + 0.67 * ratio[1] 
+    If ratio > 10 Then ratio = 10 
+    If ratio  0.7 Then width = 0.01 
+    If TV >= 0.3 And TV  0.5 And TV  0 Then
+        If N  Round(50*TV,0) Then 
+            Raster[N] = 0.8*((((-20*TV + 0.4*N)/ width) ^ 0.85) + 0.2*oldRaster[N]) 
+        End If
+    End If
+    If N = Round(50*TV,0) Then Raster[N] = 0 + 0.5*oldRaster[N] 
+    If Raster[N]  20 Or TV  0.7 Then Raster[N] = 20 
+Next 
+
+For N = 1 To 50 
+    If Raster[N]  10 Then 
+        color[N] = fuzzRGB*(2 - Raster[N] / 10)
+    End If
+    If color[N] > maxColorRGB Then maxColorRGB = color[N]
+Next
+
+colorRGB = maxColorRGB
+    
+End If      'end condition A
+
+    GValue501 = I
+
+    GValue502 = OldI
+    GValue503 = OlderI
+    GValue504 = Q
+    GValue505 = OldQ
+    GValue506 = OlderQ
+    GValue507 = Real
+    GValue508 = OldReal
+    GValue509 = OlderReal
+    GValue510 = Imag
+    GValue511 = OldImag
+    GValue512 = OlderImag
+    GValue513 = Ampl
+    GValue514 = OldAmpl
+    GValue515 = DB
+    GValue516 = OldDB
+    Gvalue517 = Raster
+    Gvalue518 = oldRaster
+
+End Function
+__________________________________________________________________________________
+
+sub EhlersTrendVigor()
+Dim colorRGB
+Dim ETV As BarArray
+Dim myDate
+myDate = FormatDateTime(Date)
+ETV = EhlersTV(colorRGB)
+plot1(ETV)
+End Sub
+__________________________________________________________________________________
+
+
+
+
+
+
+Sub ColorSignalStrength()
+    
+    Dim color1, color2, color3,color4
+    Dim colorRGB1, colorRGB2, colorRGB3, colorRGB4
+    Dim EDC As BarArray, ESP As BarArray
+    Dim ESNR As BarArray, ETV As BarArray
+    Dim myDate
+    
+    myDate = FormatDateTime(Date)
+    EDC = EhlersDC(colorRGB1)
+    ESP = EhlersSP(colorRGB2)
+    ESNR = EhlersSNR(colorRGB3)
+    ETV = EhlersTV(colorRGB4)
+    
+    color1 = "white"
+    color2 = "white"
+    color3 = "white"
+    color4 = "white"
+    
+    'note Dominate Cycle does not have a color change;
+    ' it uses color1 and it will always be white
+    
+    If colorRGB2 >= 190 And colorRGB2 = 200 And colorRGB2 = 220  Then
+        color2 = "Red"
+    Else
+        color2 = "LightGreen"
+    End If
+    End If
+    End If  
+
+   If colorRGB3 >= 190 And colorRGB3 = 200 And colorRGB3 = 220  Then
+        color3 = "Red"
+    Else
+        color3 = "LightGreen"
+    End If
+    End If
+    End If  
+    
+    If colorRGB4 >= 190 And colorRGB4 = 200 And colorRGB4 = 220  Then
+        color4 = "Red"
+    Else
+        color4 = "LightGreen"
+    End If
+    End If
+    End If  
+    
+ColorReport("DominateCycle",CStr(Round(EDC,2)),color1) 
+ColorReport("SwingPosition",CStr(Round(ESP,2)), color2)
+ColorReport("SigToNoiseR",CStr(Round(ESNR,2)), color3)
+ColorReport("TrendVigor",CStr(Round(ETV,2)), color4)
+
+End Sub
+_______________________________________________________________________
+
+
+
+
+
+Function EhlersSNR(ByRef colorRGB)
+    Dim price As BarArray, DC As BarArray
+    Dim HP As BarArray, SmoothHP As BarArray
+    Dim delta As BarArray, gamma As BarArray
+    Dim alpha As BarArray, beta As BarArray
+    Dim alpha1 As BarArray, MaxAmpl As BarArray
+    Dim Num As BarArray, Denom As BarArray
+    Dim DomCyc As BarArray, avg1 As BarArray
+    Dim sigNR As BarArray, signal As BarArray
+    Dim noise As BarArray, width As BarArray
+    
+    Dim fuzzRGB, lineRGB, maxColorRGB
+    Dim N, TScurrentBar, myDate
+       
+    Dim I As Array, OldI As Array, OlderI As Array
+    Dim Q As Array, OldQ As Array, OlderQ As Array
+    Dim Real As Array, OldReal As Array, OlderReal As Array
+    Dim Imag As Array, OldImag As Array, OlderImag As Array
+    Dim Ampl As Array, OldAmpl As Array
+    Dim DB As Array, OldDB As Array
+    Dim Raster As Array, oldRaster As Array
+    Dim aDC As Array, aRange As Array
+    Dim color As Array
+    
+    ReDim (I, 61)
+    ReDim (OldI, 61)
+    ReDim (OlderI, 61)
+    ReDim (Q, 61)
+    ReDim (OldQ, 61)
+    ReDim (OlderQ, 61)
+    ReDim (Real, 61)
+    ReDim (OldReal, 61)
+    ReDim (OlderReal, 61)
+    ReDim (Imag, 61)
+    ReDim (OldImag, 61)
+    ReDim (OlderImag, 61)
+    ReDim (Ampl, 61)
+    ReDim (OldAmpl, 61)
+    ReDim (DB, 61)
+    ReDim (OldDB, 61)
+    ReDim (Raster, 51)
+    ReDim (oldRaster, 51)
+    
+    ReDim (aDC,5)
+    ReDim (aRange,5)
+    ReDim (color,51)
+    
+    If BarNumber=FirstBar Then
+        gamma = 0
+        alpha = 0
+        beta = 0
+        N = 0
+        MaxAmpl = 0
+        Num = 0
+        Denom = 0
+        DC = 0
+        DomCyc = 0
+        alpha1 = 0
+        HP = 0
+        SmoothHP = 0
+        avg1 = 0
+        signal = 0
+        noise = 0
+        sigNR = 0
+        width = 0
+        For N = 0 To 60
+            I[N] = 0
+            OldI[N] = 0
+            OlderI[N] = 0
+            Q[N] = 0
+            OldQ[N] = 0
+            OlderQ[N]=0
+            Real[N] = 0
+            OldReal[N] = 0
+            OlderReal[N] = 0
+            Imag[N] = 0
+            OldImag[N] = 0
+            OlderImag[N] = 0
+            Ampl[N] = 0
+            OldAmpl[N] = 0
+            DB[N] = 0
+            OldDB[N] = 0
+        Next
+        For N = 0 To 50
+            Raster[N] = 0
+            oldRaster[N] = 0
+            color[N] = 0
+        Next
+    End If
+    
+    price = (H+L)/2
+    delta = 0.1
+    fuzzRGB = 190
+    lineRGB = 255
+    TScurrentBar = CurrentBar + 1
+    myDate = FormatDateTime(Date)
+       
+    I = GValue401
+    OldI = GValue402
+    OlderI = GValue403
+    Q = GValue404
+    OldQ = GValue405
+    OlderQ = GValue406
+    Real = GValue407
+    OldReal = GValue408
+    OlderReal = GValue409
+    Imag = GValue410
+    OldImag = GValue411
+    OlderImag = GValue412
+    Ampl = GValue413
+    OldAmpl = GValue414
+    DB = GValue415
+    OldDB = GValue416
+    Raster = Gvalue417
+    oldRaster = Gvalue418
+
+    alpha1 = (1 - Sin(DegToRad(360/30))) / Cos(DegToRad(360/30))
+    HP = .5*(1 + alpha1)*(price - price[1]) + alpha1*HP[1]
+    SmoothHP = (HP + 2*HP[1] + 3*HP[2] + 3*HP[3] + 2*HP[4] + HP[5]) / 12
+    If TScurrentBar  12  Then  'begin condition A
+    For N = 12 To 60
+        beta = Cos(DegToRad(720 / N))
+        gamma = 1 / Cos(DegToRad(1440 * delta / N))
+        alpha = gamma - Sqr(gamma * gamma - 1)
+        Q[N] = (.5*N / 6.28318)*(SmoothHP - SmoothHP[1])
+        I[N] = SmoothHP
+        Real[N] = .5*(1 - alpha)*(I[N] - OlderI[N]) + beta*(1 + alpha)*OldReal[N] - alpha*OlderReal[N]
+        Imag[N] = .5*(1 - alpha)*(Q[N] - OlderQ[N]) + beta*(1 + alpha)*OldImag[N] - alpha*OlderImag[N]
+        Ampl[N] = (Real[N]*Real[N] + Imag[N]*Imag[N])
+    Next
+
+    For N = 12 To 60
+        OlderI[N] = OldI[N]
+        OldI[N] = I[N]
+        OlderQ[N] = OldQ[N]
+        OldQ[N] = Q[N]
+        OlderReal[N] = OldReal[N]
+        OldReal[N] = Real[N]
+        OlderImag[N] = OldImag[N]
+        OldImag[N] = Imag[N]
+        OldAmpl[N] = Ampl[N]
+        OldDB[N] = DB[N]
+    Next
+    
+    For N = 1 To 50 
+        oldRaster[N] = Raster[N]
+    Next
+    
+    MaxAmpl = Ampl[12]
+    
+    For N = 12 To 60
+        If Ampl[N] > MaxAmpl Then MaxAmpl = Ampl[N]
+    Next
+    
+    For N = 12 To 60
+        If MaxAmpl <> 0 And (Ampl[N] / MaxAmpl) > 0 Then
+            DB[N] = -10 * Log(0.01 / (1 - 0.99 * Ampl[N] / MaxAmpl)) / Log(10)
+        End If
+        DB[N] = .33*DB[N] + .67*OldDB[N]
+        If DB[N] > 20 Then DB[N] = 20
+    Next
+    
+    Num = 0
+    Denom = 0
+    
+    For N = 12 To 60
+        If DB[N]  0 Then DC = .5*Num / Denom
+    Next   
+    For N = 0 To 4
+        aDC[N] = DC[N]
+    Next
+    DomCyc = Median(aDC)
+    If DomCyc  0 And MaxAmpl > 0 Then signal = 0.2* Sqr(MaxAmpl) + 0.9 * signal[1] 
+    
+    For N = 0 To 4
+        aRange[N] = H[N]-L[N]
+    Next 
+       
+    If avg1 <> 0 And TScurrentBar > 5 Then noise = 0.1 * Median(aRange) + 0.9 * noise[1] 
+    If signal <> 0 And noise <> 0 Then sigNR = 20 * Log(signal / noise) / Log(10) + 3.5
+    If sigNR  11 Then sigNR = 10
+    sigNR = 0.1 * sigNR
+    width = -0.4 * sigNR + 0.2
+    If sigNR > 0.5 Then width = 0
+    
+    EhlersSNR = (10*sigNR+1) 
+         
+    For N = 1 To 50 
+        Raster[N] = 20 
+        If width > 0 Then
+            If N  Round(50*sigNR, 0) And (0.4*N - 20*sigNR) / width > 1 Then 
+                Raster[N] = 0.5*(  (  ( (-20*sigNR + .4*N)/width) ^ 0.8 ) + oldRaster[N]  ) 
+            end if
+        End If 
+        If N = Round(50*sigNR,0) Then Raster[N] = 0 + 0.5*oldRaster[N] 
+        If Raster[N]  20 Then Raster[N] = 20
+        If sigNR > 0.5 Then Raster[N] = 20  
+    Next
+     
+ For N = 1 To 50 
+    If Raster[N]  10 Then 
+        color[N] = fuzzRGB*(2 - Raster[N] / 10)
+    End If
+    If color[N] > maxColorRGB Then maxColorRGB = color[N]
+Next
+
+
+colorRGB = maxColorRGB
+  
+End If  'end condition A  
+ 
+    GValue401 = I
+    GValue402 = OldI
+    GValue403 = OlderI
+    GValue404 = Q
+    GValue405 = OldQ
+    GValue406 = OlderQ
+    GValue407 = Real
+    GValue408 = OldReal
+    GValue409 = OlderReal
+    GValue410 = Imag
+    GValue411 = OldImag
+    GValue412 = OlderImag
+    GValue413 = Ampl
+    GValue414 = OldAmpl
+    GValue415 = DB
+    GValue416 = OldDB
+    Gvalue417 = Raster
+    Gvalue418 = oldRaster
+
+End Function
+_______________________________________________________________________________________
+
+
+sub EhlersSigNoise()
+Dim colorRGB
+Dim ESNR As BarArray
+Dim myDate
+myDate = FormatDateTime(Date)
+ESNR = EhlersSNR(colorRGB)
+plot1(ESNR)
+End Sub
+
+_______________________________________________________________________________________

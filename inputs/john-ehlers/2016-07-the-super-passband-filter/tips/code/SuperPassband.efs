@@ -1,0 +1,136 @@
+/*********************************
+Provided By:  
+eSignal (Copyright c eSignal), a division of Interactive Data 
+Corporation. 2016. All rights reserved. This sample eSignal 
+Formula Script (EFS) is for educational purposes only and may be 
+modified and saved under a new file name.  eSignal is not responsible
+for the functionality once modified.  eSignal reserves the right 
+to modify and overwrite this EFS file with each new release.
+
+Description:        
+    The Super Passband Filter by John F. Ehlers
+
+Version:            1.00  05/05/2016
+
+Formula Parameters:                     Default:
+EMA Short Period                        40
+EMA Long Period                         60
+RMS Period                              50
+
+
+Notes:
+The related article is copyrighted material. If you are not a subscriber
+of Stocks & Commodities, please visit www.traders.com.
+
+**********************************/
+
+var fpArray = new Array();
+
+function preMain(){
+    
+    setPriceStudy(false);
+    setCursorLabelName("SuperPB", 0);
+    setDefaultBarFgColor(Color.RGB(0,148,255), 0);
+    setCursorLabelName("+ RMS", 1);
+    setDefaultBarFgColor(Color.RGB(255,155,0), 1);
+    setCursorLabelName("- RMS", 2);
+    setDefaultBarFgColor(Color.RGB(255,155,0), 2);
+    
+    var x=0;
+    fpArray[x] = new FunctionParameter("EMAShort", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("EMA Short Period");
+        setLowerLimit(1);		
+        setDefault(40);
+    }
+    fpArray[x] = new FunctionParameter("EMALong", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("EMA Long Period");
+        setLowerLimit(1);		
+        setDefault(60);
+    }
+    fpArray[x] = new FunctionParameter("RMSPeriod", FunctionParameter.NUMBER);
+	with(fpArray[x++]){
+        setName("RMS Period");
+        setLowerLimit(1);		
+        setDefault(50);
+    }
+}
+
+var bInit = false;
+var bVersion = null;
+var a1 = 0;
+var a2 = 0;
+var xClose = null;
+var xPB = null;
+var xRMS = null;
+
+function main(EMAShort, EMALong, RMSPeriod) {
+    
+    if (bVersion == null) bVersion = verify();
+    if (bVersion == false) return;
+    
+    if(getBarState() == BARSTATE_ALLBARS){
+        bInit = false;
+    }
+    
+    if (getCurrentBarCount() < EMALong) return;
+    
+    if (!bInit){
+        a1 = 5 / EMAShort;
+        a2 = 5 / EMALong;
+        xClose = close();
+        addBand(0, PS_DASH, 1, Color.RGB(96,96,96), 4);
+        xPB = efsInternal("Calc_PassBand", xClose, a1, a2);
+        xRMS = efsInternal("Calc_RMS",xPB, RMSPeriod);
+        bInit = true;
+    }
+
+    if (xPB.getValue(0) == null || xRMS.getValue(0) == null) return;
+    
+    return [xPB.getValue(0), xRMS.getValue(0), (-xRMS.getValue(0))];
+    
+}
+
+function Calc_PassBand(Close, a1, a2){
+    
+    var PB = null;
+    var PB_1 = ref(-1);
+    var PB_2 = ref(-2);
+    
+    PB = (a1 - a2) * Close.getValue(0)  
+        + (a2 * (1-a1) - a1 * (1 - a2)) * Close.getValue(-1) 
+        + ((1 - a1) + (1 - a2)) * PB_1 - (1 - a1)*(1 - a2) * PB_2;
+    
+    return PB;
+}
+
+function Calc_RMS(PB, Period){
+    
+    var RMS = null;
+    for (var i = 0; i < Period; i++){
+        RMS = RMS + PB.getValue(-i) * PB.getValue(-i);
+    }
+    RMS = Math.sqrt(RMS / Period);
+
+    return RMS;
+}
+
+function verify(){
+    
+    var b = false;
+    if (getBuildNumber() < 779){
+        
+        drawTextAbsolute(5, 35, "This study requires version 10.6 or later.", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "error");
+        drawTextAbsolute(5, 20, "Click HERE to upgrade.@URL=http://www.esignal.com/download/default.asp", 
+            Color.white, Color.blue, Text.RELATIVETOBOTTOM|Text.RELATIVETOLEFT|Text.BOLD|Text.LEFT,
+            null, 13, "upgrade");
+        return b;
+    } 
+    else
+        b = true;
+    
+    return b;
+}

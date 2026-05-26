@@ -1,0 +1,53 @@
+Strategy: InvFisher-RSI
+{INVERSE FISHER TRANSFORM OF RSI}
+inputs:
+ Price( ( High + Low ) / 2 ),
+ Alpha( 0.1 ),
+ RSILength( 5 ),
+ WAverageLen( 9 ),
+ BuyLine( 0.5 ),
+ SellLine( -0.5 ),
+ BuyLine2( -0.5 ),
+ SellLine2( 0.5 ) ;
+variables:
+ IFish( 0 ) ;
+Value1 = Alpha * ( RSI( Price, RSILength ) - 50 ) ;
+Value2 = WAverage( Value1, WAverageLen ) ;
+IFish = ( ExpValue( 2 * Value2 ) - 1 )
+ / ( ExpValue( 2 * Value2 ) + 1 ) ;
+if IFish crosses over BuyLine or IFish crosses over
+ BuyLine2 then
+ Buy next bar at market ;
+if IFish crosses under SellLine or IFish crosses under
+ SellLine2 then
+ SellShort next bar at market ;
+
+Strategy: InvFisher-CyberCycle
+{CYBER CYCLE WITH INVERSE FISHER TRANSFORM}
+inputs:
+ Price( ( H + L ) / 2 ),
+ Alpha( 0.07 ),
+ BuyLine1( 0.5 ),
+ BuyLine2( -0.5 ),
+ SellLine1( 0.5 ),
+ SellLine2( -0.5 ) ;
+variables:
+ Smooth( 0 ),
+ Cycle( 0 ),
+ ICycle( 0 ) ;
+Smooth = ( Price + 2 * Price[1] + 2 * Price[2]
+ + Price[3] ) / 6 ;
+Cycle = ( 1 - 0.5 * Alpha ) * ( 1 - 0.5 * Alpha )
+ * ( Smooth - 2 * Smooth[1] + Smooth[2] ) + 2
+ * ( 1 - Alpha ) * Cycle[1] - ( 1 - Alpha )
+ * ( 1 - Alpha ) * Cycle[2] ;
+if CurrentBar < 7 then
+ Cycle = ( Price - 2 * Price[1] + Price[2] ) / 4 ;
+ICycle = ( ExpValue( 2 * Cycle ) - 1 ) / ( ExpValue( 2
+ * Cycle ) + 1 ) ;
+if ICycle crosses over BuyLine1 or ICycle crosses over
+ BuyLine2 then
+ Buy next bar at market ;
+if ICycle crosses under SellLine1 or ICycle crosses
+ under SellLine2 then
+ SellShort next bar at market ;

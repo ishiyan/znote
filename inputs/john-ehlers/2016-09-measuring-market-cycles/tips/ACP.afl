@@ -1,0 +1,72 @@
+Data = Close; 
+PI = 3.1415926; 
+
+//Highpass Filter and SuperSmoother Filter together form a Roofing 
+HFPeriods = Param("HP filter cutoff", 48, 20, 100 ); 
+alpha1 = ( 1-sin( 2 * PI /HFPeriods) ) / cos( 2 * PI / HFPeriods ); 
+HP = AMA2( Data - Ref( Data, -1 ), 0.5 * ( 1 + alpha1 ), alpha1 ); 
+
+//Smooth with a SuperSmoother Filter 
+a1 = exp( -1.414 * PI / 8); 
+b1 = 2 * a1 * cos(1.414 * PI / 8); 
+c2 = b1; 
+c3 = - a1 * a1; 
+c1 = 0.5 * ( 1 - c2 - c3 ); 
+Filt = IIR( HP, c1, c2, c1, c3 ); 
+
+AvgLength = 3; 
+//Pearson correlation for each value of lag 
+x = 0; 
+for( lag = 1; lag <= 48; lag++ ) 
+{ 
+ //Set the averaging length as M 
+ M = IIf( AvgLength == 0, lag, AvgLength ); 
+
+ // calculate auto-correlation 
+ x = Correlation( Filt, Ref( Filt, -lag ), M ); 
+
+ VarSet("Corr"+ lag, x ); 
+} 
+
+MaxPwr = 0; 
+
+for( period = 8; period <= 48; period++ ) 
+{ 
+ cospart = 0; 
+ sinpart = 0; 
+
+ for( N = 3; N <= 48; N++ ) 
+ { 
+   corr = VarGet("Corr" + N ); 
+   cospart += corr * cos( 2 * PI * N / period ); 
+   sinpart += corr * sin( 2 * PI * N / period ); 
+ } 
+
+ sqsum = cospart * cospart + sinpart * sinpart; 
+
+ R = AMA( sqsum, 0.2 ); // periodogram smoothing 
+
+ MaxPwr = Max( R, MaxPwr ); 
+
+ VarSet( "Pwr" + period, R ); 
+} 
+
+// normalization & plot 
+
+for( period = 8; period <= 48; period++ ) 
+{ 
+ varname = "Pwr" + period; 
+ pwr = VarGet( varname ) / MaxPwr; 
+     
+ // optionally increase display resolution by raising to higher power 
+ pwr = pwr ^ 2; // can use ^ 3 too 
+     
+ VarSet( varname, pwr ); 
+
+ Red = IIf( pwr > 0.5, 255, 255 * 2 * pwr ); 
+ Green = IIf( pwr > 0.5, 255 * ( 2 * pwr - 1 ), 0 ); 
+    
+ N = period; 
+    
+ PlotOHLC( N, N, N-1, N-1, "", ColorRGB( Red, Green, 0 ), styleCloud | styleNoLabel); 
+} 

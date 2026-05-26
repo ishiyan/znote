@@ -1,0 +1,36 @@
+LISTING 1 - Bandpass Filter
+myprice := (h+l)/2;
+$period := param1;
+$delta := param2;
+$beta  := cos (deg2rad (360 / $period));
+$gamma := 1 / cos (deg2rad (720 * $delta / $period));
+$alpha := $gamma - sqrt ($gamma * $gamma - 1);
+BP := 0.5*(1-$alpha)*(myprice-myprice(2))+$beta*(1+$alpha)*BP(1)-$alpha*BP(2);
+plot1 := BP;
+plot2 := 0;
+
+LISTING 2 - Extracting the Trend
+myprice := (h+l)/2;
+$period := param1;
+$delta := param2;
+$beta  := cos (deg2rad (360 / $period));
+$gamma := 1 / cos (deg2rad (720 * $delta / $period));
+$alpha := $gamma - sqrt ($gamma * $gamma - 1);
+BP := 0.5*(1-$alpha)*(myprice-myprice(2))+$beta*(1+$alpha)*BP(1)-$alpha*BP(2);
+plot1 := average(BP, 2*$period);
+plot2 := 0;
+
+LISTING 3 - Empirical Mode Decomposition
+myprice := (h+l)/2;
+$period := param1;
+$delta := param2;
+$fraction := param3;
+$beta  := cos (deg2rad (360 / $period));
+$gamma := 1 / cos (deg2rad (720 * $delta / $period));
+$alpha := $gamma - sqrt ($gamma * $gamma - 1);
+BP := 0.5*(1-$alpha)*(data1-data1(2))+$beta*(1+$alpha)*BP(1)-$alpha*BP(2);
+Peak := if((BP(1) > BP) and (BP(1) > BP(2)), BP(1), Peak);
+Valley := if((BP(1) < BP) and (BP(1) < BP(2)), BP(1), Valley);
+plot1 := average(BP, 2*$period);
+plot2 := $fraction*average(Peak, 50);
+plot3 := $fraction*average(Valley, 50);

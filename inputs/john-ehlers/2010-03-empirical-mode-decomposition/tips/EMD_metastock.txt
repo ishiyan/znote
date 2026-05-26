@@ -1,0 +1,40 @@
+{ Bandpass }
+prd:=Input("number of periods",5,200,20);
+dlta:=Input("Delta",0.01,5,0.1);
+plot:=MP();
+
+beta:=Cos(360/prd);
+gam:=1/Cos((720*dlta)/prd);
+alpha:=gam-Sqrt(gam*gam-1);
+bp:=.5*(1-alpha)*(plot-Ref(plot,-2))+beta*(1+alpha)*PREV-alpha*Ref(PREV,-1);
+bp
+
+{ Extracting the Trend }
+prd:=Input("number of periods",5,200,20);
+dlta:=Input("Delta",0.01,5,0.1);
+plot:=MP();
+
+beta:=Cos(360/prd);
+gam:=1/Cos((720*dlta)/prd);
+alpha:=gam-Sqrt(gam*gam-1);
+bp:=.5*(1-alpha)*(plot-Ref(plot,-2))+beta*(1+alpha)*PREV-alpha*Ref(PREV,-1);
+Mov(bp,2*prd,S)
+
+{ Empirical Mode Decomposition }
+prd:=Input("number of periods",5,200,20);
+dlta:=Input("Delta",0.01,5,0.1);
+fra:=Input("fraction",0.01, 0.5, 0.1);
+plot:=MP();
+
+beta:=Cos(360/prd);
+gam:=1/Cos((720*dlta)/prd);
+alpha:=gam-Sqrt(gam*gam-1);
+bp:=.5*(1-alpha)*(plot-Ref(plot,-2))+beta*(1+alpha)*PREV-alpha*Ref(PREV,-1);
+pk:= If(Ref(bp,-1)>Max(bp,Ref(bp,-2)), Ref(bp,-1),PREV);
+va:= If(Ref(bp,-1)<Min(bp,Ref(bp,-2)), Ref(bp,-1),PREV);
+abp:=Mov(bp,2*prd,S);
+apk:=Mov(pk,50,S);
+ava:=Mov(va,50,S);
+abp;
+fra*apk;
+fra*ava

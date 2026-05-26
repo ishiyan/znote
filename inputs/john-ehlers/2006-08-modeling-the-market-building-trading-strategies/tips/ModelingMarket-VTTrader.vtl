@@ -1,0 +1,104 @@
+Instantaneous Trendline Indicator:
+1. Navigator Window>Tools>Indicator Builder>[New] button
+2. In the Indicator Bookmark, type the following text for each field:
+Name: TASC - 08/2006 - Ehlers Modeling The Market (Instantaneous Trendline)
+Short Name: vt_EhlersiTrend
+Label Mask: Ehlers Instantaneous Trendline (%Price%, %Periods%)
+Placement: Price Frame
+Inspect Alias: Ehlers Instantaneous Trendline
+3. In the Input Bookmark, create the following variables:
+[New] button... Name: Price , Display Name: Price , Type: price , Default: Median Price
+[New] button... Name: Periods , Display Name: Periods , Type: integer , Default: 20
+4. In the Output Bookmark, create the following variables:
+[New] button...
+Var Name: iTrend
+Name: (iTrend)
+Line Color: red
+Line Width: slightly thicker
+Line Type: solid line
+5. In the Formula Bookmark, copy and paste the following formula:
+{Provided By: Visual Trading Systems, LLC (c) Copyright 2006}
+{Description: Modeling The Market = Building Trading Strategies by John F. Ehlers}
+{Notes: August 2006 Issue - Modeling The Market = Building Trading Strategies}
+{vt_EhlersiTrend Version 1.0}
+SMA:= mov(Price,Periods,S);
+Slope:= Price - ref(Price,-(Periods-1));
+SmoothSlope:= (Slope + 2 * ref(Slope,-1) + 2 * ref(Slope,-2) + ref(Slope,-3)) / 6;
+iTrend:= SMA + 0.5 * SmoothSlope;
+6. Click the "Save" icon to finish building the Instantaneous Trendline indicator.
+To attach the iTrend indicator to a chart click the right mouse button within the chart window
+ and then select "Add Indicators" -> "TASC - 08/2006 - Ehlers Modeling The Market (Instantaneous
+ Trendline)" from the indicator list.
+Cyclic Component Indicator:
+1. Navigator Window>Tools>Indicator Builder>[New] button
+2. In the Indicator Bookmark, type the following text for each field:
+Name: TASC - 08/2006 - Ehlers Modeling The Market (Cyclic Component)
+Short Name: vt_EhlersCyclicComp
+Label Mask: Ehlers Cyclic Component (%Price%, %Periods%)
+Placement: New Frame
+Inspect Alias: Ehlers Cyclic Component
+3. In the Input Bookmark, create the following variables:
+[New] button... Name: Price , Display Name: Price , Type: price , Default: Median Price
+[New] button... Name: Periods , Display Name: Periods , Type: integer , Default: 20
+4. In the Output Bookmark, create the following variables:
+[New] button...
+Var Name: SmoothHP
+Name: (Cyclic Component)
+Line Color: dark green
+Line Width: slightly thicker
+Line Type: solid line
+5. In the Formula Bookmark, copy and paste the following formula:
+{Provided By: Visual Trading Systems, LLC (c) Copyright 2006}
+{Description: Modeling The Market = Building Trading Strategies by John F. Ehlers}
+{Notes: August 2006 Issue - Modeling The Market = Building Trading Strategies}
+{vt_EhlersCyclicComp Version 1.0}
+CurrentBar:= BarCount();
+alpha:= (Cos(360/Periods) + Sin(360/Periods)-1)/Cos(360/Periods);
+HP:= 0.5 * (1+alpha) * (Price - ref(Price,-1)) + alpha * PREV;
+SmoothHP:= if(CurrentBar=1,0,
+           if(CurrentBar<4,Price-ref(Price,-1),
+             (HP + 2 * ref(HP,-1) + ref(HP,-2) + ref(HP,-3)) / 6));
+6. Click the "Save" icon to finish building the Cyclic Component indicator.
+To attach the Cyclic Component indicator to a chart click the right mouse button within the
+ chart window and then select "Add Indicators" -> "TASC - 08/2006 - Ehlers Modeling The Market
+ (Cyclic Component)" from the indicator list.
+Model of the Market Indicator
+1. Navigator Window>Tools>Indicator Builder>[New] button
+2. In the Indicator Bookmark, type the following text for each field:
+Name: TASC - 08/2006 - Ehlers Modeling The Market (Model of the Market)
+Short Name: vt_EhlersMarketModel
+Label Mask: Ehlers Model of the Market (%Price%, %Periods%)
+Placement: Price Frame
+Inspect Alias: Ehlers Market Model
+3. In the Input Bookmark, create the following variables:
+[New] button... Name: Price , Display Name: Price , Type: price , Default: Median Price
+[New] button... Name: Periods , Display Name: Periods , Type: integer , Default: 20
+4. In the Output Bookmark, create the following variables:
+[New] button...
+Var Name: Model
+Name: (Model)
+Line Color: blue
+Line Width: slightly thicker
+Line Type: solid line
+5. In the Formula Bookmark, copy and paste the following formula:
+{Provided By: Visual Trading Systems, LLC (c) Copyright 2006}
+{Description: Modeling The Market = Building Trading Strategies by John F. Ehlers}
+{Notes: August 2006 Issue - Modeling The Market = Building Trading Strategies}
+{vt_EhlersMarketModel Version 1.0}
+{Ehlers Instantaneous Trendline}
+SMA:= mov(Price,Periods,S);
+Slope:= Price - ref(Price,-(Periods-1));
+SmoothSlope:= (Slope + 2 * ref(Slope,-1) + 2 * ref(Slope,-2) + ref(Slope,-3)) / 6;
+iTrend:= SMA + 0.5 * SmoothSlope;
+{Ehlers Cyclic Component}
+CurrentBar:= BarCount();
+alpha:= (Cos(360/Periods) + Sin(360/Periods)-1)/Cos(360/Periods);
+HP:= 0.5 * (1+alpha) * (Price - ref(Price,-1)) + alpha * PREV;
+SmoothHP:= if(CurrentBar=1,0,if(CurrentBar<4,Price-ref(Price,-1),
+           (HP + 2 * ref(HP,-1) + ref(HP,-2) + ref(HP,-3)) / 6));
+{Ehlers Model of the Market}
+Model:= iTrend + SmoothHP;
+6. Click the "Save" icon to finish building the Model of the Market indicator.
+To attach the Model of the Market indicator to a chart click the right mouse button within the
+ chart window and then select "Add Indicators" -> "TASC - 08/2006 - Ehlers Modeling The Market
+ (Model of the Market)" from the indicator list.

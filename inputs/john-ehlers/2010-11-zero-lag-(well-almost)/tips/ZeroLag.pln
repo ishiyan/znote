@@ -1,0 +1,81 @@
+
+Meta:
+	Subchart( False ),
+	Weblink("https://www.tradesignalonline.com/lexicon/default.aspx?name=John+Ehlers+Zero+Lag"),
+	Synopsis("Modified Exponential Moving Average. Developed by John Ehlers, published in Trades Tips 11/2010");
+	
+Inputs:
+	Length( 20 , 1 ),
+	GainLimit( 50 , 1 );
+	
+Vars:
+	alpha(0), Gain(0), BestGain(0), EC(0), Error(0), LeastError(0), EMA(0);
+	
+alpha = 2 / (Length + 1);
+EMA = alpha*Close + (1 - alpha)*EMA[1];
+LeastError = 1000000;
+
+For Value1 = -GainLimit to GainLimit 
+	Begin
+		Gain = Value1 / 10;
+		EC = alpha*(EMA + Gain*(Close - EC[1])) + (1 -
+		alpha)*EC[1];
+		Error = Close - EC;
+		
+		If AbsValue( Error ) < LeastError Then 
+			Begin
+				LeastError = AbsValue(Error);
+				BestGain = Gain;
+			End;
+	End;
+	
+EC = alpha*(EMA + BestGain*(Close - EC[1])) + (1 - alpha)*EC[1];
+
+DrawLIne( EC, "Zero Lag", StyleSolid, 1, Blue );
+DrawLine( EMA, "Ema", StyleSolid, 1, Red );
+
+
+
+
+Meta:
+	Subchart( False ),
+	Weblink("https://www.tradesignalonline.com/lexicon/default.aspx?name=John+Ehlers+Zero+Lag"),
+	Synopsis("Zero Lag Indicator. Developed by John Ehlers, published in Stocks & Commodities 11/2010");
+	
+Inputs:
+	Length( 20 , 1 ),
+	GainLimit( 50 , 1 ),
+	Thresh( 1.0 );
+	
+Vars:
+	alpha(0), Gain(0), BestGain(0), EC(0), Error(0), LeastError(0), EMA(0);
+	
+alpha = 2 / (Length + 1);
+EMA = alpha*Close + (1 - alpha)*EMA[1];
+LeastError = 1000000;
+
+For Value1 = -GainLimit to GainLimit 
+	Begin
+		Gain = Value1 / 10;
+		EC = alpha*(EMA + Gain*(Close - EC[1])) + (1 -
+		alpha)*EC[1];
+		Error = Close - EC;
+		
+		If AbsValue( Error ) < LeastError Then 
+			Begin
+				LeastError = AbsValue(Error);
+				BestGain = Gain;
+			End;
+	End;
+	
+EC = alpha*(EMA + BestGain*(Close - EC[1])) + (1 - alpha)*EC[1];
+
+DrawLIne( EC, "Zero Lag", StyleSolid, 1, blue );
+DrawLine( EMA, "Ema", StyleSolid, 1, Red );
+
+If EC Crosses Over EMA and 100 * LeastError / Close > Thresh 
+	Then Buy Next Bar at Market;
+	
+If EC Crosses Under EMA and 100 * LeastError / Close > Thresh Then 
+	Short Next Bar at Market;
+

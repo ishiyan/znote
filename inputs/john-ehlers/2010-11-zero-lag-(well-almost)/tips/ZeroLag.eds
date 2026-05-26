@@ -1,0 +1,47 @@
+! THE SPECIAL K INDICATOR
+! Author: Martin J. Pring, TASC Jan 2009
+! Coded by: Richard Denning 9/14/10
+! www.TradersEdgeSystems.com
+
+! INPUTS:
+len1 is 100.
+len2 is 100.
+
+! UDFs:
+C is [close].
+rc10 is (C / valresult(C,10)-1)*100.
+rc15 is (C / valresult(C,15)-1)*100.
+rc20 is (C / valresult(C,20)-1)*100.
+rc30 is (C / valresult(C,30)-1)*100.
+rc50 is (C / valresult(C,50)-1)*100.
+rc65 is (C / valresult(C,65)-1)*100.
+rc75 is (C / valresult(C,75)-1)*100. 
+rc100 is (C / valresult(C,100)-1)*100.
+rc195 is (C / valresult(C,195)-1)*100.
+rc265 is (C / valresult(C,265)-1)*100.
+rc390 is (C / valresult(C,390)-1)*100.
+rc530 is (C / valresult(C,530)-1)*100.
+
+SpecK is simpleavg(rc10,10)*1 + 
+	simpleavg(rc15,10)*2 + 
+	simpleavg(rc20,10)*3 + 
+	simpleavg(rc30,15)*4 + 
+	simpleavg(rc50,50)*1 + 
+	simpleavg(rc65,65)*2 + 
+	simpleavg(rc75,75)*3 + 
+	simpleavg(rc100,100)*4 + 
+	simpleavg(rc195,130)*1 + 
+	simpleavg(rc265,130)*2 + 
+	simpleavg(rc390,130)*3 + 
+	simpleavg(rc530,195)*4.   !Plot
+
+SpecKMA is simpleavg(simpleavg(SpecK,len1),len2). 
+
+HD if hasdatafor(550) >= 530.
+
+! PLOT THE FOLLOWING TWO UDFs 
+! AS A TWO LINE INDICATOR
+! WITH A ZERO LINE AS SUPPORT:
+   SKplot1 is iff(HD,SpecK,0).
+   SKplot2 is iff(HD,SpecKMA,0).
+

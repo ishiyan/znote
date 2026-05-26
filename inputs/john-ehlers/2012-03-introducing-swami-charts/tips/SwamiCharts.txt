@@ -1,0 +1,103 @@
+Imports System.Drawing
+Imports Updata
+ 
+Public Class Updata_TestIndicator
+    Implements ICustomIndicator
+ 
+    Public Sub init() Implements ICustomIndicator.init
+    End Sub
+ 
+    Public Function getLines(ByVal iLineStyles() As LineStyles, ByVal iChartStyles() As ChartStyles, ByVal sNames() As String, ByVal iColours() As Integer, ByVal iColours2() As Integer) As Integer Implements ICustomIndicator.getLines
+        iLineStyles(0) = LineStyles.Dot
+        iChartStyles(0) = ChartStyles.Chart
+        iColours(0) = Color.Red.ToArgb()
+        iColours2(0) = Color.Red.ToArgb()
+        sNames(0) = �Swami Chart�
+        getLines = 1
+    End Function
+    'Dialog prompt-not needed 
+    Public Function queryForParameters(ByVal iRets() As Updata.VariableTypes, ByVal sNames() As String, ByVal sDescrips() As String, ByVal defaults As Object()) As Integer Implements ICustomIndicator.queryForParameters
+        queryForParameters = 0
+    End Function
+    ' these global variables are maintained between the last calculation, and the current paint
+    ' all this information is required to plot the heatmap
+    Private Colour1(48, 1) As Integer
+    Private Colour2(48, 1) As Integer
+ 
+    Public Function recalculateAll(ByVal dSrc()() As Double, ByVal oParams() As Object, ByVal dRet()()() As Double, ByVal iTradeTypes()() As Integer, ByVal dTradeOpenPrices()() As Double, ByVal dTradeClosePrices()() As Double, ByVal iTradeAmounr()() As Integer, ByVal dStopLevels()() As Double) As Boolean Implements ICustomIndicator.recalculateAll
+       If dSrc.Length = 0 Then
+           recalculateAll = False
+       End If
+       dim HH as Integer
+       dim LL as Integer 
+       dim i,k,j,z As Integer
+       dim Stoc(48, dRet(0).Length) as Double
+       dim Num(48, dRet(0).Length) as Integer
+       dim Denom(48, dRet(0).Length) as Integer
+       ReDim Colour1(48, dRet(0).Length)
+       ReDim Colour2(48, dRet(0).Length)
+         For i = 50 To dRet(0).Length-1 
+            For j = 6 to 48 
+               HH = 0
+               LL = 1000000                
+               For k = 0 to j - 1 
+                  If dSrc(i-k)(3)>HH Then HH=dSrc(i-k)(3)
+                  If dSrc(i-k)(3)6
+                  Num(j,i)=0.5*(dSrc(i)(3)-LL)+0.5*Num(j,i-1)
+                  Denom(j,i)=0.5*(HH-LL)+0.5*Denom(j,i-1) 
+               Else
+                  Num(j,i)=0.5*(dSrc(i)(3)-LL) 
+                  Denom(j,i)=0.5*(HH-LL) 
+               End If               
+               If Denom(j,i) <> 0 Then Stoc(j,i) = 0.2*(Num(j,i)/Denom(j,i)) + 0.8*Stoc(j,i-1) 
+            Next j  
+             'Plot the Spectrum as a Heatmap   
+             For j = 6 To 48
+                 'Convert Stochastic to RGB Color for Display
+                 If Stoc(j,i)>0.5 Then
+                     Colour1(j,i) = System.Math.Max(255*(2-2*Stoc(j,i)),0)
+                     Colour2(j,i) = 255
+                 End If
+                 If Stoc(j, i)<0.5 Then
+                     Colour1(j,i) = 255
+                     Colour2(j,i) = System.Math.Max(255*2*Stoc(j,i),0)
+                 End If
+             Next j       
+            'force a 6 to 48 range
+            For z = 0 To dRet(0)(i).Length - 1
+                dRet(0)(i)(z) = 6
+                If i Mod 2 = 0 Then
+                    dRet(0)(i)(z) = 48
+                End If
+            Next z
+         Next i 
+        recalculateAll = True
+    End Function
+    ' reserved for future support
+    Public Function recalculateLast(ByVal dSrc()() As Double, ByVal oParams() As Object, ByVal dRet()()() As Double) As Boolean Implements ICustomIndicator.recalculateLast
+        recalculateLast = False
+    End Function 
+ 
+    Public Function paint(ByVal g As System.Drawing.Graphics, ByVal oParams() As Object, ByVal ds()()() As Double, ByVal iFirstVisible As Integer, ByVal iLastVisible As Integer, ByVal c As iGraphFunctions, ByVal iLineNum As Integer) As Boolean Implements ICustomIndicator.paint
+        If iLineNum = 1 Then
+            paint = False
+        Else
+            'Line Conditions
+            Dim x,y,y2,i,j As Integer
+            Dim pLastPoint As Point   
+            'checks to see it�s not just refreshing the last point
+            If (iFirstVisible iFirstVisible Then
+                            If y - y2 > 1 Then
+                                g.FillRectangle(brush,x,y2,x-pLastPoint.x+1,y-y2+1)
+                            Else
+                                g.FillRectangle(brush,x,y2,x-pLastPoint.x+1,1)
+                            End If
+                        End If
+                        pLastPoint=New Point(x,y)
+                    Next i
+                Next j
+            End Using
+            paint = True
+        End If
+    End Function 
+End Class

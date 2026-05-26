@@ -1,0 +1,42 @@
+!! ENTROPIC ANALYSIS OF EQUITY PRICES
+! Author: Ron McEwan TASC Nov 2006 p. 56
+! Coded by: Richard Denning 10/30/06
+N is 30.
+C is [close].
+C1 is val([close],1).
+EMA20 is expavg(C,20).
+SMA50 is simpleavg(C,50).
+LnRC1 is ln(C / C1).
+SMAn is simpleavg(LnRC1,N).
+RMS is sqrt((sum(LnRC1 * LnRC1,N)) / N).
+EP is (((SMAn / RMS) + 1) / 2) * 100.
+!! SYSTEM 1:
+! Long if above 50 for 2 day , exit long if less than or equal to 50
+LE if countof(EP > 50,2)=2 and countof(EP > 50,10,2)=0
+ and slope2(EMA20,5)>0 and hasdatafor(100)>=60.
+LX if countof(EP <= 50,2)=2.
+!! SYSTEM 2:
+! Set parameters for bands on EP:
+ Define L              20.
+ Define Factor1     2.
+ Define Factor2     2.5.
+! Standard Deviation of EP:
+ Variance  is Variance(EP,L).
+ StdDev  is Sqrt(Variance).
+! Middle EP Band
+ SMA  is simpleavg(EP,L).
+! Upper EP Bands
+ UpperEP1  is SMA + Factor1 * StdDev.
+ UpperEP2 is SMA + Factor2 * StdDev.
+! Lower EP Bands
+ LowerEP1  is SMA - Factor1 * StdDev.
+ LowerEP2  is SMA - Factor2 * StdDev.
+! Use bands on the EP indicatior to generate signals:
+LE1 if EP > LowerEP1 and valrule(EP < LowerEP1,1)
+ and  TickerRule("NDX",slope2(SMA50,5)>0)
+ and hasdatafor(100)>=60.
+LX1 if EP > UpperEP1 or slope2(SMA50,5)<0.
+SE1 if EP < UpperEP2 and valrule(EP > UpperEP2,1)
+ and  TickerRule("NDX",slope2(SMA50,5)<0)
+ and hasdatafor(100)>=60.
+SX1 if EP <LowerEP1 or slope2(SMA50,5)>0.

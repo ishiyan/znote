@@ -1,0 +1,33 @@
+
+SuperSmoother filter:
+a1:= Exp(-1.414 * 3.14159 / 10);
+b1:= 2*a1 * Cos(1.414*180 /10);
+c2:= b1;
+c3:= -a1 * a1;
+c1:= 1 - c2 - c3;
+c1 * (C + Ref(C, -1))/2 + c2*PREV + c3*Ref(PREV,-1)
+
+Roofing filter:
+alpha1:= (Cos(.707*360/48) + Sin(.707*360/48) -1)/Cos(.707*360/48);
+HP:= (1-alpha1/2)*(1-alpha1/2)*(C - Ref(2*C,-1) + Ref(C,-2)) + 
+2*(1-alpha1)*PREV - (1-alpha1)*(1-alpha1)*Ref(PREV,-1);
+a1:= Exp(-1.414 * 3.14159 / 10);
+b1:= 2*a1 * Cos(1.414*180 /10);
+c2:= b1;
+c3:= -a1 * a1;
+c1:= 1 - c2 - c3;
+c1 * (HP + Ref(HP, -1))/2 + c2*PREV + c3*Ref(PREV,-1)
+
+MESA Stochastic:
+alpha1:= (Cos(.707*360/48) + Sin(.707*360/48) -1)/Cos(.707*360/48);
+HP:= (1-alpha1/2)*(1-alpha1/2)*(C - Ref(2*C,-1) + Ref(C,-2)) + 
+2*(1-alpha1)*PREV - (1-alpha1)*(1-alpha1)*Ref(PREV,-1);
+a1:= Exp(-1.414 * 3.14159 / 10);
+b1:= 2*a1 * Cos(1.414*180 /10);
+c2:= b1;
+c3:= -a1 * a1;
+c1:= 1 - c2 - c3;
+filt:= c1 * (HP + Ref(HP, -1))/2 + c2*PREV + c3*Ref(PREV,-1);
+stoc:= (filt-LLV(filt,20))/(HHV(filt,20)-LLV(filt,20));
+c1 * (stoc + Ref(stoc, -1))/2 + c2*PREV + c3*Ref(PREV,-1);
+
