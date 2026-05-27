@@ -1545,9 +1545,6 @@ Extract all code listings and put them both as embedded listings and as external
 In tips.md mention:
 - Traders' Tips URL which should be embedded in .mhtml
 - Add bibtex for this traders' tips URL.
-
-update document-to-markdown/ skill with your findings
-
 ----------------------------------
 In inputs/john-ehlers/1997-11-cycle-measurements/ folder there is the
 tasc_v15_1997_11_pp505-509_John_Ehlers-Cycle_Measurements.pdf
@@ -1692,6 +1689,9 @@ Name converted markdown as content.md, place assets in assets/ folder.
 In content.md mention:
 - Article URL https://technical.traders.com/archive/article.asp?file=\V08\C04\PROFIT.pdf
 - Add bibtex for article.
+
+update document-to-markdown/ skill with your findings
+
 ----------------------------------
 In inputs/john-ehlers/1989-11-setting-stops-a-new-approach/ folder there is the
 tasc_v07_1989_11_pp408-410_John_Ehlers-Setting_stops_-_A_new_approach.pdf
