@@ -1,0 +1,73 @@
+A: DATE @TC2000(C:\TC2000V3\Data,DJ-30,Dow Jones Industrials,DB)
+
+B: HIGH
+
+C: LOW
+
+D: CLOSE
+
+E: OPEN
+
+F: VOL
+
+G: Length    4
+
+H: SRSIcalc  PROCEDURE(SRSI) 'CALL RSI PROCEDURE
+
+I:  RSI           @RSI(CLOSE,LENGTH) 'CACLULATE STANDARD RSI
+
+J: chart       @CHART(1) 'DISPLAY CHARTS
+
+K:           ' ==========End Spreadsheet Formulas
+
+'****************************************************
+
+'PROCEDURE SRSI
+
+'MESA SMOOTHED RELATIVE STRENGTH INDEX (SRSI)
+
+'*****************************************************}
+
+#NAME SMOOTH23 Z
+
+#NAME COUNT X$1
+
+#NAME CU23 X$2
+
+#NAME CD23 X$3
+
+#NAME SRSIX X$4
+
+CU23 = 0 'INITIALIZE VARIABLES
+
+CD23 = 0
+
+SRSIX=0
+
+SMOOTH23 = (CLOSE + 2*CLOSE[-1] + 2*CLOSE[-2] + CLOSE[-3])/6
+
+@FOR COUNT = 0 TO LENGTH - 1
+
+ @IF SMOOTH23[-COUNT] > SMOOTH23[-COUNT - 1] THEN
+
+  CU23 = CU23 + SMOOTH23[-COUNT] - SMOOTH23[-COUNT - 1]
+
+ ENDIF
+
+ @IF SMOOTH23[-COUNT] < SMOOTH23[-COUNT - 1] THEN
+
+  CD23 = CD23 + SMOOTH23[-COUNT - 1] - SMOOTH23[-COUNT]
+
+ ENDIF
+
+NEXT
+
+@IF CU23 + CD23 <> 0 THEN
+
+ SRSIX = CU23/(CU23 + CD23)
+
+ENDIF
+
+@RETURN(SRSIX) 'RETURN SMOOTHED RSI CALCULATION
+
+'END PROCEDURE

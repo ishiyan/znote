@@ -1,0 +1,75 @@
+inputs:
+
+ Price( Close ),
+
+ LagReduction( 1.5 ) ;
+
+variables:
+
+ Numerator( 0 ),
+
+ Denominator( 0 ),
+
+ Filter( 0 ) ;
+
+arrays:
+
+ Coeff[7]( 0 ) ;
+
+if CurrentBar = 1 then
+
+ begin
+
+ Coeff[1] = 1 ;
+
+ Coeff[2] = 2 + LagReduction ;
+
+ Coeff[3] = 3 + LagReduction ;
+
+ Coeff[4] = 3 ;
+
+ Coeff[5] = 2 - LagReduction ;
+
+ Coeff[6] = 1 - LagReduction ;
+
+ Coeff[7] = 0 - LagReduction ;
+
+ Denominator = SummationArray( Coeff, 7 ) ;
+
+ end ;
+
+Numerator = 0 ;
+
+for Value1 = 1 to 7
+
+ begin
+
+ Numerator =
+
+  Numerator + Coeff[Value1] * Price[ Value1 - 1 ] ;
+
+ end ;
+
+Filter = Numerator / Denominator ;
+
+Plot1( Filter ) ;
+
+inputs:
+
+ Price( numericseries ),
+
+ Length( numericsimple ) ;
+
+variables:
+
+ Length1( 0 ),
+
+ Length2( 0 ) ;
+
+Length1 = Floor( ( Length + 1 ) * .5 ) ;
+
+Length2 = Ceiling( ( Length + 1 ) * .5 ) ;
+
+TriAverage_gen =
+
+Average( Average( Price, Length1 ), Length2 ) ;

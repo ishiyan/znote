@@ -1,0 +1,5 @@
+LISTING 1
+
+Smooth23 := (close + 2*close (1) + 2*close (2) + close (3))/6;
+
+plot1 := RSIndex ( Smooth23, param1);

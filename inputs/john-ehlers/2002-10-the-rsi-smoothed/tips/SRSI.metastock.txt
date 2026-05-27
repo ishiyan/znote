@@ -1,0 +1,32 @@
+Smoothed Relative Strength Index ( Ehlers )
+
+Formula:
+
+len:=10;
+
+smooth23:=(C+(2*Ref(C,-1))+(2*Ref(C,-2))+Ref(C,-3))/6;
+
+change:= ROC(smooth23,1,$);
+
+cu23:=Sum(If(change>0,change,0),len);
+
+cd23:=Sum(If(change<0,Abs(change),0),len);
+
+cu23/(cu23+cd23)
+Smoothed Relative Strength Index ( with Wilder's smoothing )
+
+Formula:
+
+len:=10;
+
+smooth23:=(C+(2*Ref(C,-1))+(2*Ref(C,-2))+Ref(C,-3))/6;
+
+change:= ROC(smooth23,1,$);
+
+Z:=Wilders(If(change>0,change,0),len);
+
+Y:=Wilders(If(change<0,Abs(change),0),len);
+
+RS:=Z/Y;
+
+100-(100/(1+RS))

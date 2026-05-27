@@ -1,0 +1,139 @@
+LISTING 1
+function vband()
+   dim hv1, hv2, cr
+   dim vb
+   if not data1.valid (0) or not data2.valid (0) then
+      itself.successex (1) = false
+      itself.successex (2) = false
+      exit function
+   end if
+   itself.makeindicator "myhv1", "historical_vola", Array("1"), _
+                        Array(param1.str, "1")
+   hv1 = itself.indicator("myhv1")
+   itself.makeindicator "myhv2", "historical_vola", Array("2"), _
+                        Array(param1.str, "1")
+   hv2 = itself.indicator("myhv2")
+   itself.makeindicator "mycr", "correl", Array("1","2"), Array(param1.str)
+   cr = itself.indicator("mycr")
+   if not hv1.valid(0) or not hv2.valid(0) or not cr.valid(0) then
+      itself.successex (1) = false
+      itself.successex (2) = false
+      exit function
+   end if
+   vb = ( hv1.value(0) + hv2.value(0) ) * tq_sqrt(1/252) * (1-cr.value(0))
+   itself.answer(1) = vb
+   itself.answer(2) = -vb
+end function
+LISTING 2
+function xspread()
+   dim close1, close2
+   if not data1.valid (0) or not data2.valid(0) then
+      itself.success = false
+      exit function
+   end if
+   itself.makeindicator "myclose1", "prevDClose", Array("1"), Array("")
+   close1 = itself.indicator ("myclose1")
+   itself.makeindicator  "myclose2", "prevDClose", Array("2"), Array("")
+   close2 = itself.indicator ("myclose2")
+   if not close1.valid (0) or not close2.valid (0) then
+      itself.success = false
+      exit function
+   end if
+   xspread = (Data1.Value (0)/ close1.value(0)) - _
+             (data2.value (0)/ close2.value(0))
+end function
+LISTING 3
+function sys_spread()
+   dim vb, s
+   dim s0, s1, vb0
+   if heap.size = 0 then
+      heap.allocate 1
+      with trade
+         ' turn this option true for system monitor to track it
+         .monitor = true
+         ' turn this option true for real-time trading system that close
+         ' all open position at end of day
+         .closepositioneod = true
+         ' there are 3 basic types of fill
+         ' ftAverage, ftWorst, ftExact
+         .fillType = ftAverage
+         ' commission structure (per transaction)
+         ' cmFlatRate, cmPerUnit
+         .commissionType = cmFlatRate
+         .commissionBaseAmount = 15
+         ' per unit cost setting is not important for flat rate type
+         .commissionPerUnit = 0
+         ' initicalcapital
+         ' it is important for sharpe ratio and other
+         ' performance statistics calculations only
+         .initialcapital = 100000
+         ' the risk free interest rate
+         ' works with initial capital for statistics calculation
+         .interestrate = 5
+         ' pricemultiple is 1 for stock
+         ' 50 for sp emini index future, 250 for sp index future
+         ' 20 for nd emini index future, 100 for nd index future
+         .pricemultiple = 1
+      end with
+   end if
+   ' signal generation part
+   ' construct the necessary indicators
+   itself.makeindicator "myvb",  "vband", Array("3","4"), Array(param2.str)
+   itself.makeindicator "mys", "xspread", Array("1","2"), Array("")
+   ' setup for the condition checking
+   vb = itself.indicator("myvb")
+   s  = itself.indicator("mys")
+   s0  = s.value (0)
+   s1  = s.value (1)
+   vb0 = vb.value(0)
+   ' generate orders according to the current condition
+   if ((-vb0 < s0) and (-vb0 > s1)) and _
+      Trade.OpenPositionSizeEx(1) = 0 then    ' Long A Short B Entry
+      trade.BuyLimitEx 1, DataSeries(1).High(0)+param3.real, 1000, otfFillorKill, "Long Pair A"
+   end if
+   if ((vb0 < s1) and (vb0 > s0)) and _
+      Trade.OpenPositionSizeEx(1) = 0 then   ' Short A Long B Entry
+      trade.SellLimitEx 1, DataSeries(1).Low(0)-param3.real, 1000, otfFillorKill, "Short Pair A"
+   end if
+   if Trade.OpenPositionSizeEx(1) > 0 and _
+      Trade.OpenPositionSizeEx(2) = 0 then
+      Trade.SellAtMarketex 2, 1000, "Long Pair B"
+   end if
+   if Trade.OpenPositionSizeEx(1) < 0 and _
+      Trade.OpenPositionSizeEx(2) = 0 then
+      Trade.BuyAtMarketex 2, 1000, "Short Pair B"
+   end if
+   if Trade.OpenPositionSizeEx(1) > 0 and _
+      Trade.OpenPositionSizeEx(2) < 0 then
+      if (s0 > 0) then
+         Trade.exitallcurrentPositions ("Long Target")
+      end if
+      if s0 < param1.real*(-vb0) then
+         trade.exitallcurrentpositions ("Long SL")
+      end if
+   end if
+   if Trade.OpenPositionSizeEx (1) < 0 and _
+      Trade.OpenPositionSizeEx (2) > 0 then
+      if (s0 < 0) then
+         Trade.exitAllCurrentPositions ("Short Target")
+      end if
+      if s0 > param1.real*vb0 then
+         Trade.exitAllCurrentPositions ("Short SL")
+      end if
+   end if
+   ' option 1
+   ' turn off all option 2 lines and enable the following line to report equity curve
+   itself.answer(1) = trade.currentequity
+   itself.answer(2) = s0
+   itself.answer(3) = vb0
+   itself.answer(4) = -vb0
+   ' final reporting of system performance
+   ' uncomment those reports that you want to output
+   if data1.isLastbar then
+      with trade
+         '.reportalltrades ""
+         .reportallorders ""
+         .reporttradessummary ""
+      end with
+   end if
+end function

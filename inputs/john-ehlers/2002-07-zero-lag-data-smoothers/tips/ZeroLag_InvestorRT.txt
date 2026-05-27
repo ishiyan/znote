@@ -1,0 +1,13 @@
+EMA = K * ( 2 * PRICE - PRICE.X) + (1 - K) * EMA.1
+
+where:
+
+ K = 2 / (N + 1)
+
+ N = Period
+
+ PRICE.X = Price X bars back
+
+ X = lag = (N - 1) / 2
+
+EMAa - EMAb

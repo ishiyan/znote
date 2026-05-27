@@ -1,0 +1,6 @@
+SET(V#2, DV) AND SET(V#3, VOLAT) AND SET(V#4, COR)
+
+SET(V#5, 100 * 1.5 * ((V#3(ATVI)/100 + V#3(THQI)/100) * 0.063 * (1 - V#4(THQI)))) AND
+   SET(V#6, -100 * 1.5 * ((V#3(ATVI)/100 + V#3(THQI)/100) * 0.063 * (1 - V#4(THQI))))
+
+100 * ( (CL / V#2) - (CL(ATVI) / V#2(ATVI)) )

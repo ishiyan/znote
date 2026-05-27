@@ -1,0 +1,23 @@
+PAIRS TRADING SPREAD:
+ Sub ( Divide ( STOCKA, DayClose(Date, STOCKA, 1)), Divide ( STOCKB, DayClose(Date, STOCKB, 1) ) )
+HV - HISTORICAL VOLATILITY:
+ Mult2 ( SelectiveStndDev ( Ln ( Divide ( DayClose(Date,Close,1), DayClose(Date,Close,2) ) ), Time=X(Date,3:30pm), 30), Sqrt(252))
+VB ? VOLATILITY BAND
+ Mult4 ( 1.5, Add2 ( HVSTOCKA, HVSTOCKB) , Sqrt(252), Sub(1, LinXYRegr(STOCKA, STOCKB, 390) ) )
+
+Generate a buy long MARKET order if ONE of the following are true:
+ AND2 ( A=B(Close, STOCKA ), CrossAbove ( SPREAD, -VB ) )
+ AND2 ( A=B(Close, STOCKB ), CrossBelow ( SPREAD, VB ) )
+Generate a sell long MARKET order if ONE of the following are true:
+ AND2 ( A=B(Close, STOCKA ), CrossAbove ( SPREAD, 0 ) )
+ AND2 ( A=B(Close, STOCKA ), A>B(Spread, Mult2(VB, 1.5) ) )
+ AND2 ( A=B(Close, STOCKB), CrossBelow ( SPREAD, 0 ) )
+ AND2 ( A=B(Close, STOCKB ), A<B(Spread, Mult2(-VB, 1.5) ) )
+Generate a sell short MARKET order if ONE of the following are true:
+ AND2 ( A=B(Close, STOCKA ), CrossBelow ( SPREAD, VB )
+ AND2 ( A=B(Close, STOCKB), CrossAbove ( SPREAD, -VB )
+Generate a cover short MARKET order if ONE of the following are true:
+ AND2 ( A=B(Close, STOCKA ), CrossBelow ( SPREAD, 0 ) )
+ AND2 ( A=B(Close, STOCKA ), A<B(Spread, Mult2(-VB, 1.5) ) )
+ AND2 ( A=B(Close, STOCKB ), CrossAbove ( SPREAD, 0 ) )
+ AND2 ( A=B(Close, STOCKB ), A>B(Spread, Mult2(VB, 1.5) ) )

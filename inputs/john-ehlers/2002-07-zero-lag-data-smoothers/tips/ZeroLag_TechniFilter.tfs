@@ -1,0 +1,13 @@
+NAME: LaggedEMA
+
+SWITCHES: recursive
+
+PARAMETERS: .2
+
+INITIAL VALUE: C
+
+FORMULA: (2 * C - CY4) * (&1) + (1 - &1) * TY1
+
+NAME: FIR
+
+FORMULA: ( C + 2*CY1 + 3*CY2 + 3*CY3 + 2*CY4 + CY5 ) / 12

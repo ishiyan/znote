@@ -1,0 +1,34 @@
+inputs: p( 13 ), s( 13 ), f( .5 ) ;
+
+if C < C[1] and C > Average( C, P ) then
+
+ Buy next bar at C + f * ( H - L ) stop ;
+
+Sell next bar at High limit ;
+
+if C > C[1] and C < Average( C, S ) then
+
+ SellShort next bar at C - f * ( H - L ) stop ;
+
+BuyToCover next bar at Low limit ;
+Strategy: Simple Volatility Breakout
+
+inputs: p( 13 ), s( 13 ), f( .5 ) ;
+
+variables: BuyLevel( 0 ) ;
+
+BuyLevel = C + f * ( H - L ) ;
+
+if BuyLevel < High
+
+ and BuyLevel > Open next bar
+
+ and C < C[1]
+
+ and C > Average( C, P )
+
+then
+
+ Buy next bar at BuyLevel stop ;
+
+Sell next bar at High limit ;

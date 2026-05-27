@@ -1,0 +1,5 @@
+ PFT1 upswing = High of interval + 0.236/0.763 * Price interval of A to B
+
+PFT2 = 1 + 0.382/0.618 = 1.618
+PFT3 = 1 + 0.5/0.5 = 2
+PFT4 = 1 + 0.618/0.382 = 2.618

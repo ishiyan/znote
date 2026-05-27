@@ -1,0 +1,4 @@
+100 * CU / (CU + CD)
+AVG( SUM( (CL > CL.1) * (CL ? CL.1), 10), 3)
+AVG( SUM( (CL < CL.1) * (CL.1 ? CL), 10), 3)
+(CL > CL.1) * (CL ? CL.1)

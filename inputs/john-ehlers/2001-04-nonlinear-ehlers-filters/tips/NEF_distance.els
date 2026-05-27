@@ -1,0 +1,29 @@
+Inputs: Price((H+L)/2),
+        Length(15);
+
+Vars:   count(0),
+        LookBack(0),
+        SumCoef(0),
+        Num(0),
+        Filt(0);
+
+Array:  Coef[25](0),
+        Distance2[25](0);
+
+For count = 0 to Length - 1 begin
+    Distance2[count] = 0;
+    For LookBack = 1 to Length begin
+        Distance2[count] = Distance2[count] + (Price[count] - Price[count
+         + LookBack])*(Price[count] - Price[count + LookBack]);
+    end;
+    Coef[count] = Distance2[count];
+end;
+Num = 0;
+SumCoef =0;
+For count = 0 to Length -1 begin
+    Num = Num + Coef[count]*Price[count];
+    SumCoef = SumCoef + Coef[count];
+end;
+If SumCoef <> 0 then Filt = Num / SumCoef;
+
+Plot1(Filt, "Ehlers");

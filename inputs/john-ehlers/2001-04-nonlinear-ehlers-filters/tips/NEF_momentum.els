@@ -1,0 +1,25 @@
+Inputs: Price((H+L)/2), Length(15);
+Vars: count(0), SumCoef(0), Num(0), Filt(0);
+Array: Coef[25](0);
+
+{Coefficients can be computed using any statistic of choice ----
+ ---- a five-bar momentum is used as an example}
+
+For count = 0 to Length - 1 begin
+        Coef[count] = AbsValue(Price[count] - Price[Count + 5]);
+ {The line above is all that needs to be changed to use other statistics.
+  For example:  Coef[count]=AbsValue(Price[count]-Filt[count+1]);}
+end;
+
+{Sum across the numerator and across all coefficients}
+Num = 0;
+SumCoef =0;
+
+For count = 0 to Length -1 begin
+        Num = Num + Coef[count]*Price[count];
+        SumCoef = SumCoef + Coef[count];
+end;
+
+Filt = Num / SumCoef;
+
+Plot1(Filt, "Ehlers");

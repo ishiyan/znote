@@ -1,0 +1,51 @@
+Hilbert Transform Formula
+NAME: HilBTrns
+SWITCHES: multiline   recursive
+PARAMETERS: .635, .338
+INITIAL VALUE: (H+L)/2
+FORMULA: [1]: (H+L)/2
+        [2]: C-CY4      {value1}
+        [3]: 1.25*([2]Y4-&1*[2]Y2) + &1 * TY3 {r} {InPhase}
+        [4]: [2]Y2 - &2*[2] + &2 * TY2 {r}      {Quadrature}
+
+SNR Formula
+NAME: HilSNR
+SWITCHES: multiline   recursive
+PARAMETERS: .635, .338
+INITIAL VALUE: (H+L)/2
+FORMULA: [1]: (H+L)/2
+        [2]: C-CY4      {value1}
+        [3]: 1.25*([2]Y4-&1*[2]Y2) + &1 * TY3 {r} {InPhase}
+        [4]: [2]Y2 - &2*[2] + &2 * TY2 {r}      {Quadrature}
+        [5]: (H-L)X9    {Range}
+        [6]: ([4]*[4] + [3]*[3])X9 % .001       {Value2}
+        [7]: 10*([6]/([5]*[5]))U9/10U9
+        [8]: .25*( [7] +1.9) + .75 * TY1 {r}    {SNR}
+
+Formula for Cycle Period Measure
+NAME: HilPeriod
+SWITCHES: multiline   recursive
+PARAMETERS: .635, .338
+INITIAL VALUE: (H+L)/2
+FORMULA: [1]: (H+L)/2
+        [2]: C-CY4      {value1}
+        [3]: 1.25*([2]Y4-&1*[2]Y2) + &1 * TY3 {r} {InPhase}
+        [4]: [2]Y2 - &2*[2] + &2 * TY2 {r}      {Quadrature}
+        [5]: ( ([4]+[4]Y1)/([3]+[3]Y1) )U0U17 * 180/3.1415
+        [6]:  ([3]<0)*([4]>0)*(180-[5]) +
+               ([3]<0)*([4]<0)*(180+[5]) +
+               ([3]>0)*([4]<0)*(360-[5]) + (T=0) * [5] {phase}
+        [7]: [6]Y1-[6] {deltaPhase}
+        [8]: ([6]Y1<90)*([6]>270)*(360+[7]) +(T=0)*[7]
+        [9]: ([8]%1)#60
+        [10]: ([9]F2>360)*2 + (T=0)*([9]F3>360)*3
+               + (T=0)*([9]F4>360)*4 + (T=0)*([9]F5>360)*5
+               + (T=0)*([9]F6>360)*6 + (T=0)*([9]F7>360)*7
+               + (T=0)*([9]F8>360)*8 + (T=0)*([9]F9>360)*9
+               + (T=0)*([9]F10>360)*10 + (T=0)*([9]F11>360)*11
+               + (T=0)*([9]F12>360)*12 + (T=0)*([9]F13>360)*13
+               + (T=0)*([9]F14>360)*14 + (T=0)*([9]F15>360)*15
+               + (T=0)*([9]F16>360)*16 + (T=0)*([9]F17>360)*17
+               + (T=0)*([9]F18>360)*18 + (T=0)*([9]F19>360)*19
+               + (T=0)*([9]F20>360)*20 + (T=0)*([9]F11>360)*21
+        [11]: .25*[10]+.75*TY1 {r}

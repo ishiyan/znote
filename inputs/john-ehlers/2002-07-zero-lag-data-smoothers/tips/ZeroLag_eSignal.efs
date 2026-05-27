@@ -1,0 +1,73 @@
+function preMain() {
+
+ setPriceStudy(true);
+
+ setCursorLabelName("FIR");
+
+ setStudyTitle("Finite Impulse Response");
+
+ setDefaultBarFgColor(Color.blue);
+
+ setDefaultBarThickness(2);
+
+}
+
+function main() {
+
+ var vPrice = close(0, -7);
+
+ if(vPrice == null)
+
+  return;
+
+ // Ehlers' Favorite FIR filter
+
+ // var vRet = (vPrice[0] + 2*vPrice[1] + 3*vPrice[2] + 3*vPrice[3]
+ // + 2*vPrice[4] + vPrice[5]) / 12;
+
+
+
+ // Formula for the minimum lag FIR filter.
+
+ var vRet = (vPrice[0] + 3.5*vPrice[1] + 4.5*vPrice[2] + 3*vPrice[3]
+ + 0.5*vPrice[4] - 0.5*vPrice[5] - 1.5*vPrice[6]) / 10.5;
+
+ return vRet;
+
+}
+
+function preMain() {
+
+    setPriceStudy(true);
+
+ setCursorLabelName("IIR");
+
+ setStudyTitle("Infinite Impulse Response");
+
+ setDefaultBarFgColor(Color.black);
+
+ setDefaultBarThickness(2);
+
+}
+
+function main() {
+
+ var vPrice = close(0, -5);
+
+ var vRef = ref(-1);
+
+ if(vPrice == null)
+
+  return;
+
+ if(vRef == null) {
+
+  return vPrice[0];
+
+ } else {
+
+  return 0.2 * (2 * vPrice[0] - vPrice[4]) + 0.8 * vRef;
+
+ }
+
+}

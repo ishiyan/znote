@@ -1,0 +1,16 @@
+Ehlers Smooth23 FIR
+
+Name: Smooth23
+
+Inputs: Close
+
+Div (Add (Add (Close, Lag (Close, 3)), Mult (Add (Lag (Close, 1), Lag (Close, 2)), 2)), 6)
+Smoothed Relative Strength Index
+
+Name: SRSI
+
+Inputs: Close, Length
+
+If (Sum (Abs (Change (Smooth23 (Close), 1)), Length),
+ Div (Sum (Max (Change (Smooth23 (Close), 1), 0), Length),
+ Sum (Abs (Change (Smooth23 (Close), 1)), Length)), 0)

@@ -1,0 +1,73 @@
+NAME: VLTYbreakout
+
+TEST TYPE: stock
+
+FORMULAS----------------------------------
+
+  [1] Date
+
+  [2] Close
+
+       C
+
+  [3] High
+
+       H
+
+  [4] Low
+
+       L
+
+  [5] Average(13)
+
+       CA&1
+
+  [6] BuyPrice(.5)
+
+       C + &1 * (H - L)
+
+  [7] SellPrice(.5)
+
+       C - &1 * (H-L)
+
+  [8] okLong
+
+       (O < [6]Y1) & (C < CY1)Y1 & ([2] > [5])Y1
+
+  [9] okShort
+
+       (O > [7]Y1) & (C > CY1)Y1 & ([2] < [5])Y1
+
+  [10] okTrend(14,27)
+
+       CS&1X&2 > 18
+
+  [11] okVolatilty(25,13)
+
+       ( ((H%CY1)-(L#CY1))X&1 / CA&2) > 0.01
+
+RULES----------------------------------
+
+  r1: EnterLong
+
+       buy long 1 on [6]Y1
+
+       at signal: enterLong     [10] & [11] & [8]
+
+  r2: ExitLong
+
+       sell long 1 on [3]Y1
+
+       at signal: exitLong     [4] < [3]Y1
+
+  r3: EnterShort
+
+       open short 1 on [7]
+
+       at signal: enterShort     [10] & [11] & [9]
+
+  r4: ExitShort
+
+       cover short 1 on [4]Y1
+
+       at signal: exitShort     [3] > [4]Y1

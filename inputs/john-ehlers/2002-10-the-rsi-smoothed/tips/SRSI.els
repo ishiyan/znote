@@ -1,0 +1,42 @@
+Indicator: RSI_uninitialized
+
+variables:
+
+ Change( 0 ),
+
+ NetChgAvg( 0 ),
+
+ TotChgAvg( 0 ),
+
+ MyRSI( 0 ) ;
+
+Change = Close - Close[1] ;
+
+NetChgAvg = XAverageOrig( Change, 14 ) ;
+
+TotChgAvg = XAverageOrig( AbsValue( Change ), 14 ) ;
+
+MyRSI = 50 * ( NetChgAvg / TotChgAvg + 1 ) ;
+
+Plot1( MyRSI ) ;
+Function: TriAverage_gen
+
+inputs:
+
+ Price( numericseries ),
+
+ Length( numericsimple ) ;
+
+variables:
+
+ Length1( 0 ),
+
+ Length2( 0 ) ;
+
+Length1 = Floor( ( Length + 1 ) * .5 ) ;
+
+Length2 = Ceiling( ( Length + 1 ) * .5 ) ;
+
+TriAverage_gen =
+
+Average( Average( Price, Length1 ), Length2 ) ;

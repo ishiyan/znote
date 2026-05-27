@@ -1,0 +1,17 @@
+TrendIndicator if [close]> simpleavg([close],13).
+
+SetUp if [close] < val([close],1).
+
+Trigger if [close]> (([high]-[low])/2)+[low] and [close] > [open].
+
+Exit if [close] < val([high],1).
+
+! Note: Set ADX/R to 14days
+
+TrendFilter if [adx]>18.
+
+TrueRange is max([high]-[low],max([high]-val([close],1),val([close],1)-[low])).
+
+AvgTrueRange is SimpleAvg(TrueRange,13).
+
+VolatilityFilter if simpleavg([close],13) >0.01.

@@ -1,0 +1,20 @@
+Formula for Ehlers' filter
+NAME: Ehlers_Filter
+SWITCHES: multiline   
+PARAMETERS: 15
+FORMULA: 
+[1]: (H+L)/2    { Price }
+[2]: ([1]-[1]Y5)U0      { Coefficient }
+[3]: [2]F&1     { SumCoef }
+[4]: ([1] * [2])F&1     { Num }
+[5]: [4] / [3]  { Filt }
+
+Formula for Ehlers Filter using distance coefficients
+NAME: Ehlers_Filter_Dist_Coef
+SWITCHES: multiline   
+FORMULA: 
+[1]: (H+L)/2    { Price }
+[2]: 5*[1]*[1] - 2*[1]*[1]Y1F5 + ([1]Y1*[1]Y1)F5
+[3]: [2]F5      { SumCoef }
+[4]: ([1] * [2])F5      { Num }
+[5]: [4] / [3]  { Filt }

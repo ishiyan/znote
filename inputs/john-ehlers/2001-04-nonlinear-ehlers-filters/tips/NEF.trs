@@ -1,0 +1,14 @@
+Ehlers Filter (General)
+Short Name: Ehlers
+Inputs: Price, Coefficient, Length
+Div ( Sum ( Mult ( Coefficient , Price ) , Length ) , Sum ( Coefficient , Length ) )
+
+Ehlers Filter (Momentum)
+Short Name: EhlersMom
+Inputs: Price, Length
+Ehlers ( Price , Abs ( Change ( Price , 5 ) ) , Length )
+
+Ehlers Filter (Distance)
+Short Name : EhlersDist
+Inputs: Price, Length
+Ehlers (Price, Sum(Pow(Sub(Current: Ident(Price), Lag(Price, 1)), 2), Length), Length)

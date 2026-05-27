@@ -1,0 +1,18 @@
+hv1:=Input("30 day historical volatility of first security",0,100,0.5);
+hv2:=Input("30 day historical volatility of second security",0,100,0.5);
+r:=Input("correlation coefficient of these securities",0,100,0.5);
+vf:=Input("volatility factor",0,5,1.5);
+p1:= Security("ATVI", C );
+p2:= Security("THQI", C );
+
+p1:= p;
+p2:= C;
+
+newday:=ROC(DayOfWeek(),1,$)<>0;
+yp1:=ValueWhen(1,newday, Ref(p1,-1));
+yp2:=ValueWhen(1,newday, Ref(p2,-1));
+sprd:= (p1/yp1) - (p2/yp2);
+vb:=(hv1 + hv2) * Power(1/252,0.5) * (1-r);
+sprd;
+vb*vf;
+Neg(vb*vf)

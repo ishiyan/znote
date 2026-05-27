@@ -1,0 +1,50 @@
+Name: PivotPoint
+Type: Function
+
+Input: Method(NumericSimple);
+
+If Method <= 1 Then
+        PivotPoint = (High[1] + Low[1] + Close[1]) / 3;
+
+If Method = 2 Then
+        PivotPoint = (High[1] + Low[1] + Close[1] + Open) / 4;
+
+If Method >= 3 Then
+        PivotPoint = (High[1] + Low[1] + Open) / 3;
+
+{-------------------------------------------------------------}
+
+Name: Pivot Point Levels
+Type: Indicator
+
+Input: Method(1);
+Variables: Pivot(0), FirstSupp(0), SecondSupp(0), FirstRes(0), SecondRes(0);
+
+Pivot = PivotPoint(Method);
+
+FirstSupp = (2 * Pivot) - High;
+FirstRes = (2 * Pivot) - Low;
+SecondSupp = Pivot - Range;
+SecondRes = Pivot + Range;
+
+Plot1(FirstSupp, "Supp1");
+Plot2(FirstRes, "Res1");
+Plot3(SecondSupp, "Supp2");
+Plot4(SecondRes, "Res2");
+
+{-------------------------------------------------------------}
+
+Name: Pivot Point Average
+Type: Indicator
+
+Input: Method(1), Smooth(3);
+Variables: Pivot(0), PivotAvg(0), Length(0);
+
+Pivot = PivotPoint(Method);
+Length = MaxList(1, Smooth);
+PivotAvg = Average(Pivot, Length);
+
+Plot1(Pivot, "Pivot");
+
+If CurrentBar >= Length Then
+        Plot2(PivotAvg, "SmoothPivot");

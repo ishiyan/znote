@@ -1,0 +1,5 @@
+Enter Long:
+H > ExtFml( "EnhancedHilbert.ChannelHigh",(HIGH+LOW)/2, 0, 15)
+
+Enter Short:
+L < ExtFml( "EnhancedHilbert.ChannelLow",(HIGH+LOW)/2, 0, 15)

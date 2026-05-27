@@ -1,0 +1,17 @@
+formula:
+
+pds:=Input("number of periods",1,20,5);
+
+x:=2/(pds+1);
+
+xl:=LastValue((1/x)-1);
+
+(x*((2*C)-Ref(C,-xl))) +((1-x)*PREV)
+
+formula:
+
+(C + (3.5*Ref(C,-1)) +
+
+(4.5*Ref(C,-2)) + (3*Ref(C,-3)) +
+
+(.5*Ref(C,-4)) - (.5*Ref(C,-5)) - (1.5*Ref(C,-6))) / 10.5

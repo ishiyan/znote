@@ -1,0 +1,12 @@
+WAVE WI$E spreadsheet formulas
+A: DATE @TC2000(C:\TC2000V3\Data,SP-500,Standard & Poors 500,DB)
+B: HIGH 
+C: LOW   
+D: CLOSE         
+E: OPEN 
+F: VOL   
+G:       
+H: Cycle1       @CYCLE(A, "01-28-1999", 91)
+I: Cycle2       @CYCLE(A, "08-10-1999", 34)
+J: CycSum       CYCLE1+CYCLE2
+=========End Formulas

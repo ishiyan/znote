@@ -1,0 +1,15 @@
+NAME: SRSI
+
+SWITCHES: multiline
+
+PARAMETERS: 10
+
+FORMULA:
+
+[1]: (C + 2*CY1 + 2*CY2 + CY3)/6  {Smooth23}
+
+[2]: ([1] - [1]Y1)U4F&1  {CU23}
+
+[3]: ([1]Y1 - [1])U4F&1  {CD23}
+
+[4]: [2]/([2]+[3])U6   {SRSI}

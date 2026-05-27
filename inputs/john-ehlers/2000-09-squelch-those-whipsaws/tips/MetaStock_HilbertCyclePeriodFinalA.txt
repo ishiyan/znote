@@ -1,0 +1,5 @@
+{ Hilbert cycle period - final-a }
+c1:= Fml( "H cycle count 1a") + Fml( "H cycle count 2a") + Fml( "H cycle count 3a") ;
+c2:=If(c1=0,PREV,c1);
+
+(0.25*c2) + (0.75*PREV)

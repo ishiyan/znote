@@ -1,0 +1,19 @@
+Inputs: SDev(1.5), Length(30);
+Variables: Spread(0), HV1(0), HV2(0), R(0), VB(0);
+If Close Data3 <> 0 AND Close Data4 <> 0 Then
+ Spread = ( Close Data1 / Close Data3 ) - ( Close Data2 / Close Data4 );
+If Date <> D[1] Then Begin
+ HV1 = StdDev(Log(Close/Close[1]), Length) Data3 * SquareRoot(252/1);
+ HV2 = StdDev(Log(Close/Close[1]), Length) Data4 * SquareRoot(252/1);
+ R = CoefficientR(Close Data3, Close Data4, Length);
+ VB = SDev * ((HV1 + HV2) * SquareRoot(1/252) * (1 - R));
+End;
+Plot1(Spread, "Spread");
+Plot2(VB, "UpperVB");
+Plot3(-VB, "LowerVB");
+Plot4(0, "Zero");
+
+Data1 - Atvi 10 min
+Data2 - Thqi 10 min
+Data3 - Atvi Daily (hidden)
+ Data4 - Thqi Daily (hidden)

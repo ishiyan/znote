@@ -1,0 +1,7 @@
+entryk:=Input("Entry K", 0, 1, 0);
+entryval:=Input("Entry val", 0, 100, 0);
+exitk:= Input("Exit K", 0, 4.5, 0);
+exitval:=Input("Entry val", 0, 100, 0);
+
+ExtFml( "EnhancedHilbert.ChannelHigh", (HIGH+LOW)/2, entryk, entryval);
+ExtFml( "EnhancedHilbert.ChannelLow", (HIGH+LOW)/2, exitk, exitval)

@@ -1,0 +1,19 @@
+{ Hilbert cycle period - 1a }
+value1:=((H+L)/2) - Ref(((H+L)/2),-6);
+value2:= Ref(value1,-3);
+value3:=0.75*(value1-Ref(value1,-6)) + 0.25*(Ref(value1,-2)-Ref(value1,-4));
+
+inphase:= 0.33 * value2 + (0.67 * PREV);
+quad:= 0.2 * value3 + ( 0.8 * PREV);
+
+p1:=Atan(Abs(quad+Ref(quad,-1)),Abs(inphase+Ref(inphase,-1)));
+
+phase:=If(inphase<0 AND quad>0, 180-p1, 
+  If(inphase<0 AND quad<0, 180+p1,
+  If(inphase>0 AND quad<0, 360-p1,p1)));
+
+dp:=If(Ref(phase,-1)<90 AND phase>270, 360+Ref(phase,-1)-phase,Ref(phase,-1)-phase);
+dp2:=If(dp < 1, 1,
+  If(dp > 60, 60, dp));
+
+dp2

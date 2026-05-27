@@ -1325,14 +1325,518 @@ placing output in the same directory.
 Name converted markdown as content.md, place assets in assets/ folder.
 In content.md mention:
 - Article URL https://technical.traders.com/archive/article.asp?file=\V21\C12\270EHLR.pdf
+----------------------------------
+
+======== 06 ========================================
+
+----------------------------------
+In inputs/john-ehlers/2002-10-the-rsi-smoothed/ folder there is the
+tasc_v20_2002_10_pp58-61_John_Ehlers-The_RSI_Smoothed.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V20\C10\112rsi.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2002/10/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2002-07-zero-lag-data-smoothers/ folder there is the
+tasc_v20_2002_07_pp26-31_John_Ehlers-ZeroLag_Data_Smoothers.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V20\C07\134ZERO.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2002/07/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2002-05-the-center-of-gravity-oscillator/ folder there is the
+tasc_v20_2002_05_pp20-24_John_Ehlers-The_Center_Of_Gravity_Oscillator.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V20\C05\088CENT.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2002/08/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2002-03-determining-equity-growth-performance/ folder there is the
+tasc_v20_2002_03_pp22-26_John_Ehlers_Mike_Barna-Determining_Equity_Growth_Performance.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V20\C03\043DET.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/2002-02-the-instantaneous-trendline/ folder there is the
+tasc_v20_2002_02_pp28-32_John_Ehlers-The_Instantaneous_Trendline.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V20\C02\023INST.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2002/02/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2002-01-relative-vigor-index/ folder there is the
+tasc_v20_2002_01_pp16-20_John_Ehlers-Relative_Vigor_Index.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V20\C01\003RVI.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2002/01/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2001-09-mesa-adaptive-moving-averages/ folder there is the
+tasc_v19_2001_09_pp30-35_John_Ehlers-MESA_Adaptive_Moving_Averages.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V19\C09\099MESA.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2001/09/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2001-04-nonlinear-ehlers-filters/ folder there is the
+tasc_v19_2001_04_pp25-34_John_Ehlers-Nonlinear_Ehlers_Filters.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V19\C09\099MESA.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2001/04/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2000-12-phasor-displays/ folder there is the
+tasc_v18_2000_12_pp54-66_John_Ehlers-Phasor_Displays.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V18\C12\116PHA.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2000/12/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2000-09-squelch-those-whipsaws/ folder there is the
+tasc_v18_2000_09_pp42-46_John_Ehlers-Squelch_Those_Whipsaws.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V18\C09\082SQU.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2000/09/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2000-07-optimal-detrending/ folder there is the
+tasc_v18_2000_07_pp20-29_John_Ehlers-Optimal_Detrending.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V18\C07\060OPT.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/2000-05-adaptive-trends-and-oscillators/ folder there is the
+tasc_v18_2000_05_pp18-27_John_Ehlers-Adaptive-Trends-And-Oscillators.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V18\C05\039ADP.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2000/05/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
+----------------------------------
+In inputs/john-ehlers/2000-03-hilbert-indicators-tell-you-when-to-trade/ folder there is the
+tasc_v18_2000_03_pp05-08_John_Ehlers-Hilbert_Indicators_Tell_You_When_To_Trade.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V18\C03\019HIL.pdf
+- Traders' Tips URL https://www.traders.com/Documentation/FEEDbk_docs/2000/03/TradersTips/TradersTips.html
+- Add bibtex for both article and traders' tips.
+In the tips/ subfolder there is a single .mhtml file.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as tips.md, place assets in assets/ folder.
+Extract all code listings and put them both as embedded listings and as external files in the same directory.
+In tips.md mention:
+- Traders' Tips URL which should be embedded in .mhtml
+- Add bibtex for this traders' tips URL.
 
 update document-to-markdown/ skill with your findings
 
 ----------------------------------
-
-
-
-======== 06 ========================================
+In inputs/john-ehlers/1997-11-cycle-measurements/ folder there is the
+tasc_v15_1997_11_pp505-509_John_Ehlers-Cycle_Measurements.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V15\C11\CYCLEME.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1997-09-do-cycles-exist-in-the-market/ folder there is the
+tasc_v15_1997_09_pp415-419_John_Ehlers-Do_Cycles_Exist_in_the_Market.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V15\C09\DOCYCL.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1996-11-stay-in-phase/ folder there is the
+tasc_v14_1996_11_pp483-487_John_Ehlers-Stay_In_Phase.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V14\C11\STAYINP.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1995-06-optimum-predictive-filters/ folder there is the
+tasc_v13_1995_06_pp247-251_John_Ehlers-Optimum_Predictive_Filter.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V13\C06\OPTIMUM.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1994-09-the-bandpass-indicator/ folder there is the
+tasc_v12_1994_09_pp370-375_John_Ehlers-The_Bandpass_Indicator.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V12\C09\BANDPAS.PDF
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1993-10-creating-indicators-with-physics/ folder there is the
+tasc_v11_1993_10_pp395-400_John_Ehlers-Creating_Indicators_With_Physics.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V11\C10\CREATIN.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1993-02-cycle-analysis-and-intraday-trading/ folder there is the
+tasc_v11_1993_02_pp84-88_John_Ehlers-Cycle_Analysis_And_Intraday_Trading.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V11\C02\CYCLEAN.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1992-05-optimum-detrending/ folder there is the
+tasc_v10_1992_05_pp201-207_John_Ehlers-Optimum_Detrending.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V10\C05\OPTIMUM.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1992-04-1991-cycles/ folder there is the
+tasc_v10_1992_04_pp155-159_John_Ehlers-Cycles.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V10\C04\CYCLES.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1991-10-the-macd-indicator-revisited/ folder there is the
+tasc_v09_1991_10_pp391-395_John_Ehlers-The_MACD_Indicator_Revisited.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V09\C10\MACDREV.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1991-07-computing-cyclic-entries/ folder there is the
+tasc_v09_1991_07_pp270-275_John_Ehlers-Computing_Cyclic_Entries.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V09\C07\CYCLIC.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1991-04-using-a-constant-false-alarm-rate-in-trading/ folder there is the
+tasc_v09_1991_04_pp152-155_John_Ehlers-Using_A_Constant_False_Alarm_Rate_In_Trading.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V09\C04\CONSTAN.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1990-10-early-trend-identification/ folder there is the
+tasc_v08_1990_05_pp174-177_John_Ehlers-Trading_Threshold.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V08\C10\EARLY.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1990-06-1989-cycles/ folder there is the
+tasc_v08_1990_06_pp212-215_John_Ehlers-1989_Cycles.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V08\C06\CYC89.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1990-05-trading-threshold/ folder there is the
+tasc_v08_1990_05_pp174-177_John_Ehlers-Trading_Threshold.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V08\C05\TRADTH.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1990-04-profit-mapping/ folder there is the
+tasc_v08_1990_04_pp163-155_John_Ehlers-Profit_Mapping.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V08\C04\PROFIT.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1989-11-setting-stops-a-new-approach/ folder there is the
+tasc_v07_1989_11_pp408-410_John_Ehlers-Setting_stops_-_A_new_approach.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V07\C11\SETTING.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1989-09-leading-indicators-with-momentum/ folder there is the
+tasc_v07_1989_09_pp307-309_John_Ehlers-Leading_Indicators_With_Momentum.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V07\C09\LEADING.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1989-04-cyclic-personalities/ folder there is the
+tasc_v07_1989_04_pp132-134_John_Ehlers-Cyclic_Personalities.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V07\C04\CYCLICP.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1989-03-moving-averages-and-smoothing-filters/ folder there is the
+tasc_v07_1989_03_pp87-90_John_Ehlers-Moving_Averages_And_Smoothing_Filters.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V07\C03\MOVAVGS.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1988-07-moving-averages-part-2-ehlers-leading-indicator/ folder there is the
+tasc_v06_1988_07_pp250-252_John_Ehlers-Moving_Averages_Part_2_Ehlers_Leading_Indicator_(ELI).pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V06\C07\ELI.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1988-06-moving-averages-part-1/ folder there is the
+tasc_v06_1988_06_pp220-223_John_Ehlers-Moving_Averages_Part_1.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V06\C06\MOVAVG.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1987-10-how-to-use-maximum-entropy/ folder there is the
+tasc_v05_1987_10_pp334-339_John_Ehlers-How_To_Use_Maximum_Entropy.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V05\C10\HOWTO.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1987-06-a-complete-computer-trading-program-part-4/ folder there is the
+tasc_v05_1987_06_pp203-206_John_Ehlers-A_Complete_Computer_Trading_Program_(Part_4).pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V05\C06\ACOMPLE.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1987-05-a-complete-computer-trading-program-part-3/ folder there is the
+tasc_v05_1987_05_pp175-179_John_Ehlers-A_Complete_Computer_Trading_Program_(Part_3).pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V05\C05\ACOMPLE.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1987-04-a-complete-computer-trading-program-part-2/ folder there is the
+tasc_v05_1987_04_pp144-147_John_Ehlers-A_Complete_Computer_Trading_Program_(Part_2).pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V05\C04\ACOMPLE.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1987-03-a-complete-computer-trading-program-part-1/ folder there is the
+tasc_v05_1987_03_pp102-104_John_Ehlers-A_Complete_Computer_Trading_Program_(Part_1).pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V05\C03\ACOMPLE.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1986-09-cycle-analysis-comparison-of-fourier-and-maximum-entropy/ folder there is the
+tasc_v04_1986_09_pp209-214_John_Ehlers-Cycle_Analysis_A_Comparison_Of_The_Fourier_And_Maximum_Entropy_Methods.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V04\C06\CYC.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1986-04-trading-channels/ folder there is the
+tasc_v04_1986_04_pp93-97_John_Ehlers-Trading_Channels.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V04\C03\TRAD.PDF
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1986-03-0ptimizing-directional-movement-with-cycles/ folder there is the
+tasc_v04_1986_03_pp77-80_John_Ehlers-Optimizing_Directional_Movement_With_Cycles.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V04\C02\OPTI.PDF
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1986-02-optimizing-rsi-with-cycles/ folder there is the
+tasc_v04_1986_02_pp26-28_John_Ehlers-Optimizing_RSI_With_Cycles.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V04\C01\OPTI.PDF
+- Add bibtex for article.
+----------------------------------
+In inputs/john-ehlers/1985-12-understanding-cycles/ folder there is the
+tasc_v03_1985_12_pp242-246_John_Ehlers-Understanding_Cycles.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- Article URL https://technical.traders.com/archive/article.asp?file=\V03\C07\UND.PDF
+- Add bibtex for article.
+----------------------------------
 
 
 ======== 07 ========================================

@@ -1,0 +1,22 @@
+Inputs: Price, Alpha, Lag of Average
+
+Add (Mult (Alpha,Sub (Mult (2,Price),Lag (Price,Lag of Average))),
+Mult (Sub (1,Alpha),Prev (1)))
+
+where Lag of Average should be set to 1/Alpha - 1
+
+Inputs: Price, Alpha
+
+Add (Mult (Alpha,Sub (Mult (2,Price),LagVL (Price,Sub (Div (1,Alpha),1),20))),
+Mult (Sub (1,Alpha),Prev (1)))
+
+Inputs: Price
+
+Div (Add (Add3 (Price,Mult (2,Lag (Price,1)),Mult (3,Lag (Price,2))),
+Add3 (Mult (3,Lag (Price,3)),Mult (2,Lag (Price,4)),Lag (Price,5))),12)
+
+Inputs: Price
+
+Div (Add (Add3 (Price,Mult (3.5,Lag (Price,1)),Mult (4.5,Lag (Price,2))),
+Add3 (Mult (3,Lag (Price,3)),Mult (0.5,Lag (Price,4)),
+Add (Mult (-0.5,Lag (Price,5)),Mult (-1.5,Lag (Price,6))))),10.5)

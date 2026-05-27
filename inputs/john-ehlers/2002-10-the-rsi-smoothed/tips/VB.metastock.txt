@@ -1,0 +1,88 @@
+Enter Long
+Formula:
+
+new:=ROC(DayOfWeek(),1,$)<>0;
+
+r:=ValueWhen(1,new,Ref(HighestSince(1,new,H)-LowestSince(1,new,L),-1));
+
+count:=Cum(If(new,Ref(C,-1),0));
+
+ma:=count-ValueWhen(13,new,Ref(count,-1));
+
+ValueWhen(1,new,Ref(C,-1))<ValueWhen(2,new,Ref(C,-1)) AND
+
+ValueWhen(1,new,Ref(C,-1))>ma AND
+
+C>=ValueWhen(1,new,Ref(C+(0.5*r),-1))
+
+Close Long
+Formula:
+
+new:=ROC(DayOfWeek(),1,$)<>0;
+
+r:=ValueWhen(1,new,Ref(HighestSince(1,new,H)-LowestSince(1,new,L),-1));
+
+count:=Cum(If(new,Ref(C,-1),0));
+
+ma:=count-ValueWhen(13,new,Ref(count,-1));
+
+bc:=ValueWhen(1,new,Ref(C,-1))<ValueWhen(2,new,Ref(C,-1)) AND
+
+ValueWhen(1,new,Ref(C,-1))>ma AND
+
+C>=ValueWhen(1,new,Ref(C+(0.5*r),-1));
+
+H>=ValueWhen(1,bc,ValueWhen(1,new,Ref(HighestSince(1,new,H),-1)))
+
+Enter Short
+Formula:
+
+new:=ROC(DayOfWeek(),1,$)<>0;
+
+r:=ValueWhen(1,new,Ref(HighestSince(1,new,H)-LowestSince(1,new,L),-1));
+
+count:=Cum(If(new,Ref(C,-1),0));
+
+ma:=count-ValueWhen(13,new,Ref(count,-1));
+
+ValueWhen(1,new,Ref(C,-1))>ValueWhen(2,new,Ref(C,-1)) AND
+
+ValueWhen(1,new,Ref(C,-1))<ma AND
+
+C>=ValueWhen(1,new,Ref(C-(0.5*r),-1))
+
+Close Short
+Formula:
+
+new:=ROC(DayOfWeek(),1,$)<>0;
+
+r:=ValueWhen(1,new,Ref(HighestSince(1,new,H)-LowestSince(1,new,L),-1));
+
+count:=Cum(If(new,Ref(C,-1),0));
+
+ma:=count-ValueWhen(13,new,Ref(count,-1));
+
+sc:=ValueWhen(1,new,Ref(C,-1))>ValueWhen(2,new,Ref(C,-1)) AND
+
+ValueWhen(1,new,Ref(C,-1))<ma AND
+
+C>=ValueWhen(1,new,Ref(C-(0.5*r),-1));
+
+L<=ValueWhen(1,sc,ValueWhen(1,new,Ref(LowestSince(1,new,L),-1)))
+Column A : L/S
+Formula:
+If((C<Ref(C,-1) AND C>Mov(C,13,S)),1,-1)
+
+Column B: Buy Stop
+Formula:
+r:=.5*(H-L);
+If((C<Ref(C,-1) AND C>Mov(C,13,S)),C+r,C-r)
+
+Column C: Target
+Formula:
+If((C<Ref(C,-1) AND C>Mov(C,13,S)),H,L)
+
+Filter
+Formula:
+(C<Ref(C,-1) AND C>Mov(C,13,S)) OR
+(C>Ref(C,-1) AND C<Mov(C,13,S))

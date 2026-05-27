@@ -1,0 +1,145 @@
+LISTING 1
+
+function volbreak : double;
+
+var bmovavg, smovavg : variant;
+
+    myadx, BATR, SATR : variant;
+
+    Pfactor : double;
+
+    TradeSize : integer;
+
+begin
+
+  Pfactor := Param3.real;
+
+  TradeSize := param5.int;
+
+  ItSelf.MakeIndicator ('bmovavg', 'average', ['1'], [param1.str]);
+
+  bmovavg := ItSelf.Indicator ('bmovavg');
+
+  ItSelf.MakeIndicator ('smovavg', 'average', ['1'], [param2.str]);
+
+  smovavg := ItSelf.Indicator ('smovavg');
+
+  ItSelf.MakeIndicator ('myadx', 'ADX', ['1'], [param4.str]);
+
+  myadx := ItSelf.Indicator ('myadx');
+
+  ItSelf.MakeIndicator ('BATR', 'avgtruerange', ['1'], [param1.str]);
+
+  BATR := ItSelf.Indicator ('BATR');
+
+  ItSelf.MakeIndicator ('SATR', 'avgtruerange', ['1'], [param2.str]);
+
+  SATR := ItSelf.Indicator ('SATR');
+
+  if Trade.OpenPositionSize = 0 then
+
+  begin
+
+    if (Data1.Close [0] < Data1.Close [1]) and
+
+       (Data1.Close [0] > bmovavg.Value [0]) and
+
+       (myadx.Value [0] > 18 ) and
+
+       (BATR.Value [0]/bmovavg.Value [0] > 0.01) then
+
+    begin
+
+      trade.buystop (Data1.Close [0] + Pfactor*(data1.high[0]-data1.low[0]),
+
+                     TradeSize, otfFillorKill, 'Buy stop');
+
+      trade.selllimit (data1.High [1], TradeSize, otfFillorKill, 'Sell Exit');
+
+      ItSelf.Plot [1] := Trade.CurrentEquity;
+
+      ItSelf.Plot [2] := Data1.Close [0] +
+
+                       Pfactor*(data1.High [0]-data1.low [0]);
+
+      ItSelf.SuccessEx [3] := false;
+
+      exit;
+
+    end;
+
+    if (Data1.Close [0] > Data1.Close [1]) and
+
+       (Data1.Close [0] < smovavg.Value [0]) and
+
+       (myadx.Value [0] > 18 ) and
+
+       (SATR.Value [0]/smovavg.Value [0] > 0.01) then
+
+    begin
+
+      trade.sellstop (data1.Close [0] +Pfactor*(data1.high[0]-data1.low[0]),
+
+                      TradeSize, otfFillorKill, 'Sell stop');
+
+      trade.buylimit (data1.low [1], TradeSize, otfFillorKill, 'Buy Exit');
+
+      ItSelf.Plot [1] := Trade.CurrentEquity;
+
+      ItSelf.SuccessEx [2] := false;
+
+      ItSelf.Plot [3] := data1.Close [0] -
+
+                         Pfactor*(data1.high[0]-data1.low[0]);
+
+      exit;
+
+    end;
+
+  end
+
+  else
+
+  begin
+
+    if Trade.OpenPositionSize > 0 then
+
+    begin
+
+       if (data1.barsnum [0] - trade.openPositionEntryBar) > 1 then
+
+          trade.sellatmarket (TradeSize, 'Sell Exit 2')
+
+       else
+
+          trade.selllimit (Data1.High [0], TradeSize,
+
+                       otfFillorKill, 'Sell Exit 1');
+
+    end;
+
+    if Trade.OPenPositionSize < 0 then
+
+    begin
+
+       if (data1.barsnum [0] - trade.openPositionEntryBar) > 1 then
+
+          trade.buyatmarket (TradeSize, 'Buy Exit 2')
+
+       else
+
+          trade.buylimit (Data1.Low [0], TradeSize,
+
+                       otfFillorKill, 'Buy Exit 1');
+
+    end;
+
+  end;
+
+  itSelf.Plot [1] := Trade.CurrentEquity;
+
+  ItSelf.SuccessEx [2] := false;
+
+  ItSelf.SuccessEx [3] := false;
+
+end;

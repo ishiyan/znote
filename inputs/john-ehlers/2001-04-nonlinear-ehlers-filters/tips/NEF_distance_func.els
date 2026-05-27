@@ -1,0 +1,14 @@
+inputs:
+        Price( numericseries ), 
+        Length( numericsimple ) ;
+
+variables:
+        DSqrd( 0 ), 
+        LookBack( 0 ) ;
+
+DSqrd = 0 ;
+for LookBack = 1 to Length
+        begin
+        DSqrd = DSqrd + Square( Price - Price[LookBack] ) ;
+        end ;
+DistanceSqrd = DSqrd ;

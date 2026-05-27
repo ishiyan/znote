@@ -1,0 +1,12 @@
+{ H cycle count 3a }
+value:= Fml("Hilbert cycle period - 1a");
+If(Sum(value,26)>=360 AND Sum(value,25)<360 ,26,0) +
+If(Sum(value,27)>=360 AND Sum(value,26)<360 ,27,0) +
+If(Sum(value,28)>=360 AND Sum(value,27)<360 ,28,0) +
+If(Sum(value,29)>=360 AND Sum(value,28)<360 ,29,0) +
+If(Sum(value,30)>=360 AND Sum(value,29)<360 ,30,0) +
+If(Sum(value,31)>=360 AND Sum(value,30)<360 ,31,0) +
+If(Sum(value,32)>=360 AND Sum(value,31)<360 ,32,0) +
+If(Sum(value,33)>=360 AND Sum(value,32)<360 ,33,0) +
+If(Sum(value,34)>=360 AND Sum(value,33)<360 ,34,0) +
+If(Sum(value,35)>=360 AND Sum(value,34)<360 ,35,0)

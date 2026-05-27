@@ -1,0 +1,24 @@
+nputs:
+        Coef( AbsValue( MedianPrice - MedianPrice[5] ) ), 
+        Price( MedianPrice ), 
+        Length( 15 ) ;
+
+variables:
+        Num( 0 ), 
+        SumCoef( 0 ), 
+        Count( 0 ), 
+        Filt( 0 ) ;
+
+Num = 0 ;
+SumCoef = 0 ;
+
+for Count = 0 to Length - 1
+        begin
+        Num = Num + Coef[Count] * Price[Count] ;
+        SumCoef = SumCoef + Coef[Count] ;
+        end ;
+
+if SumCoef <> 0 then 
+        Filt = Num / SumCoef ;
+
+Plot1( Filt, "Ehlers" ) ;

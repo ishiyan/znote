@@ -1,0 +1,19 @@
+Price is [close].
+
+Price1 is val([close], 1).
+
+Price2 is val([close], 2).
+
+Price3 is val([close], 3).
+
+Price4 is val([close], 4).
+
+Price5 is val([close], 5).
+
+Price6 is val([close], 6).
+
+FIRFilter is (Price + 2 * Price1 + 3 * Price2 + 3 * Price3 +
+ 2 * Price4 + Price5) / 12.
+
+MinLagFIRFilter is (Price + 3.5 * Price1 + 4.5 * Price2 + 3 *
+ Price3 + 0.5 * Price4 - 0.5 * Price5 - 1.5 * Price6) / 10.5.

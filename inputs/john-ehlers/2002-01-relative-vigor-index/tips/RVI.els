@@ -1,0 +1,28 @@
+Indicator: Relative Vigor Index
+ Length( 10 ) ;
+ Change( 0 ),
+ MyRange( 0 ),
+ Num( 0 ),
+ Den( 0 ),
+ RVI( 0 ),
+ RVISig( 0 ) ;
+Change = Close - Open ;
+MyRange = High - Low ;
+Value1 = TriAverage_gen( Change, 4 ) ;
+Value2 = TriAverage_gen( MyRange, 4 ) ;
+Num = Summation( Value1, Length ) ;
+Den = Summation( Value2, Length ) ;
+if Den > 0 then
+ RVI = Num / Den ;
+RVISig = TriAverage_gen( RVI, 4 ) ;
+Plot1( RVI, "RVI" ) ;
+Plot2( RVISig, "Sig" ) ;
+Function: TriAverage_gen
+ Price( numericseries ),
+ Length( numericsimple ) ;
+ Length1( 0 ),
+ Length2( 0 ) ;
+Length1 = Floor( ( Length + 1 ) * .5 ) ;
+Length2 = Ceiling( ( Length + 1 ) * .5 ) ;
+TriAverage_gen =
+ Average( Average( Price, Length1 ), Length2 ) ;

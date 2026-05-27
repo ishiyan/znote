@@ -1,0 +1,8 @@
+Long Entry (Figure 2)
+Generate a buy long MARKET order if ALL of the following are true:
+A>B(Signal to Noise Ratio(High, Low),6)
+A>B(Cycle Period(High,Low),20)
+A>B(LinTimeReg Slope(Close,10),0)
+
+Long Trailing Stop (Figure 3)
+        TrailPrice%(Trading Strategy, 10)

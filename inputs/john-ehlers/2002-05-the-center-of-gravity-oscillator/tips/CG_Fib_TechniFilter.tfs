@@ -1,0 +1,8 @@
+Formula for Projected Fibonacci Targets
+NAME: pft
+PARAMETERS: 34.25,44.25,0.236
+FORMULA: (&3 * &1 - &2) / (&3 - 1)
+{ parameter 1: start price
+  parameter 2: end price
+  parameter 3: Fibanocci value
+}
