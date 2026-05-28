@@ -1,16 +1,12 @@
 # Traders' Tips — May 2000
 
-- Traders' Tips URL: https://www.traders.com/Documentation/FEEDbk_docs/2000/05/TradersTips/TradersTips.html
+**Adaptive Trends And Oscillators — John Ehlers**
+
+Traders' Tips URL: https://www.traders.com/Documentation/FEEDbk_docs/2000/05/TradersTips/TradersTips.html
 
 ---
 
 *Here is this month's selection of Traders' Tips, contributed by various developers of technical analysis software to help readers more easily implement some of the strategies presented in this issue.*
-
-This month's tips include formulas and programs for:
-
-- [MetaStock](#metastock)
-- [NeuroShell Trader](#neuroshell-trader)
-- [BioComp Systems](#biocomp-systems)
 
 ---
 
@@ -18,10 +14,8 @@ This month's tips include formulas and programs for:
 
 Here is the code for use in MetaStock 6.52 or higher for the instantaneous trendline and sinewave indicator as described by John Ehlers in "Adaptive Trends And Oscillators" in this issue. To implement them, the following formulas must be created in MetaStock's Indicator Builder. Each formula must be created separately and must be named exactly as it appears below. Only the last two formulas are plotted, so you may wish to prevent the others from being displayed in the Indicator QuickList by unchecking the "Display In QuickList" option when creating the formula. These formulas can also be downloaded from https://www.equis.com/customer/support/formulas/.
 
-See: [metastock-adaptive-trends.txt](metastock-adaptive-trends.txt)
-
 ```metastock
-Name: H cycle count 1a
+{Name: H cycle count 1a}
 value:= Fml("Hilbert cycle period - 1a");
 If(Sum(value,6)>=360 AND Sum(value,5)<360 ,6,0) +
 If(Sum(value,7)>=360 AND Sum(value,6)<360 ,7,0) +
@@ -33,8 +27,10 @@ If(Sum(value,12)>=360 AND Sum(value,11)<360 ,12,0) +
 If(Sum(value,13)>=360 AND Sum(value,12)<360 ,13,0) +
 If(Sum(value,14)>=360 AND Sum(value,13)<360 ,14,0) +
 If(Sum(value,15)>=360 AND Sum(value,14)<360 ,15,0)
+```
 
-Name: H cycle count 2a
+```metastock
+{Name: H cycle count 2a}
 value:= Fml("Hilbert cycle period - 1a");
 If(Sum(value,16)>=360 AND Sum(value,15)<360 ,16,0) +
 If(Sum(value,17)>=360 AND Sum(value,16)<360 ,17,0) +
@@ -46,8 +42,10 @@ If(Sum(value,22)>=360 AND Sum(value,21)<360 ,22,0) +
 If(Sum(value,23)>=360 AND Sum(value,22)<360 ,23,0) +
 If(Sum(value,24)>=360 AND Sum(value,23)<360 ,24,0) +
 If(Sum(value,25)>=360 AND Sum(value,24)<360 ,25,0)
+```
 
-Name: H cycle count 3a
+```metastock
+{Name: H cycle count 3a}
 value:= Fml("Hilbert cycle period - 1a");
 If(Sum(value,26)>=360 AND Sum(value,25)<360 ,26,0) +
 If(Sum(value,27)>=360 AND Sum(value,26)<360 ,27,0) +
@@ -59,8 +57,10 @@ If(Sum(value,32)>=360 AND Sum(value,31)<360 ,32,0) +
 If(Sum(value,33)>=360 AND Sum(value,32)<360 ,33,0) +
 If(Sum(value,34)>=360 AND Sum(value,33)<360 ,34,0) +
 If(Sum(value,35)>=360 AND Sum(value,34)<360 ,35,0)
+```
 
-Name: H ip sum 1
+```metastock
+{Name: H ip sum 1}
 pd:=Int(Fml("Hilbert cycle period - final-a"));
 pr:=(H+L)/2;
 (Cos(0)*pr)+
@@ -78,8 +78,10 @@ If(pd>11, Cos(360*(11/pd))*Ref(pr,-11), 0)+
 If(pd>12, Cos(360*(12/pd))*Ref(pr,-12), 0)+
 If(pd>13, Cos(360*(13/pd))*Ref(pr,-13), 0)+
 If(pd>14, Cos(360*(14/pd))*Ref(pr,-14), 0)
+```
 
-Name: H ip sum 2
+```metastock
+{Name: H ip sum 2}
 pd:=Int(Fml("Hilbert cycle period - final-a"));
 pr:=(H+L)/2;
 If(pd>15, Cos(360*(15/pd))*Ref(pr,-15), 0)+
@@ -92,8 +94,10 @@ If(pd>21, Cos(360*(21/pd))*Ref(pr,-21), 0)+
 If(pd>22, Cos(360*(22/pd))*Ref(pr,-22), 0)+
 If(pd>23, Cos(360*(23/pd))*Ref(pr,-23), 0)+
 If(pd>24, Cos(360*(24/pd))*Ref(pr,-24), 0)
+```
 
-Name: H ip sum 3
+```metastock
+{Name: H ip sum 3}
 pd:=Int(Fml("Hilbert cycle period - final-a"));
 pr:=(H+L)/2;
 If(pd>25, Cos(360*(25/pd))*Ref(pr,-25), 0)+
@@ -106,8 +110,10 @@ If(pd>31, Cos(360*(31/pd))*Ref(pr,-31), 0)+
 If(pd>32, Cos(360*(32/pd))*Ref(pr,-32), 0)+
 If(pd>33, Cos(360*(33/pd))*Ref(pr,-33), 0)+
 If(pd>34, Cos(360*(34/pd))*Ref(pr,-34), 0)
+```
 
-Name: H rp sum 1
+```metastock
+{Name: H rp sum 1}
 pd:=Int(Fml("Hilbert cycle period - final-a"));
 pr:=(H+L)/2;
 (Sin(0)*pr)+
@@ -125,8 +131,10 @@ If(pd>11, Sin(360*(11/pd))*Ref(pr,-11), 0)+
 If(pd>12, Sin(360*(12/pd))*Ref(pr,-12), 0)+
 If(pd>13, Sin(360*(13/pd))*Ref(pr,-13), 0)+
 If(pd>14, Sin(360*(14/pd))*Ref(pr,-14), 0)
+```
 
-Name: H rp sum 2
+```metastock
+{Name: H rp sum 2}
 pd:=Int(Fml("Hilbert cycle period - final-a"));
 pr:=(H+L)/2;
 If(pd>15, Sin(360*(15/pd))*Ref(pr,-15), 0)+
@@ -139,8 +147,10 @@ If(pd>21, Sin(360*(21/pd))*Ref(pr,-21), 0)+
 If(pd>22, Sin(360*(22/pd))*Ref(pr,-22), 0)+
 If(pd>23, Sin(360*(23/pd))*Ref(pr,-23), 0)+
 If(pd>24, Sin(360*(24/pd))*Ref(pr,-24), 0)
+```
 
-Name: H rp sum 3
+```metastock
+{Name: H rp sum 3}
 pd:=Int(Fml("Hilbert cycle period - final-a"));
 pr:=(H+L)/2;
 If(pd>25, Sin(360*(25/pd))*Ref(pr,-25), 0)+
@@ -153,8 +163,10 @@ If(pd>31, Sin(360*(31/pd))*Ref(pr,-31), 0)+
 If(pd>32, Sin(360*(32/pd))*Ref(pr,-32), 0)+
 If(pd>33, Sin(360*(33/pd))*Ref(pr,-33), 0)+
 If(pd>34, Sin(360*(34/pd))*Ref(pr,-34), 0)
+```
 
-Name: H TL sum 1
+```metastock
+{Name: H TL sum 1}
 value:=Int(Fml("Hilbert cycle period - final-a"));
 If(value=6, Mov((H+L)/2,8,S),0) +
 If(value=7, Mov((H+L)/2,9,S),0) +
@@ -166,8 +178,10 @@ If(value=12, Mov((H+L)/2,14,S),0) +
 If(value=13, Mov((H+L)/2,15,S),0) +
 If(value=14, Mov((H+L)/2,16,S),0) +
 If(value=15, Mov((H+L)/2,17,S),0)
+```
 
-Name: H TL sum 2
+```metastock
+{Name: H TL sum 2}
 value:=Int(Fml("Hilbert cycle period - final-a"));
 If(value=16, Mov((H+L)/2,18,S),0) +
 If(value=17, Mov((H+L)/2,19,S),0) +
@@ -179,8 +193,10 @@ If(value=22, Mov((H+L)/2,24,S),0) +
 If(value=23, Mov((H+L)/2,25,S),0) +
 If(value=24, Mov((H+L)/2,26,S),0) +
 If(value=25, Mov((H+L)/2,27,S),0)
+```
 
-Name: H TL sum 3
+```metastock
+{Name: H TL sum 3}
 value:=Int(Fml("Hilbert cycle period - final-a"));
 If(value=26, Mov((H+L)/2,28,S),0) +
 If(value=27, Mov((H+L)/2,29,S),0) +
@@ -192,8 +208,10 @@ If(value=32, Mov((H+L)/2,34,S),0) +
 If(value=33, Mov((H+L)/2,35,S),0) +
 If(value=34, Mov((H+L)/2,36,S),0) +
 If(value=35, Mov((H+L)/2,37,S),0)
+```
 
-Name: Hilbert cycle period - 1a
+```metastock
+{Name: Hilbert cycle period - 1a}
 value1:=((H+L)/2) - Ref(((H+L)/2),-6);
 value2:= Ref(value1,-3);
 value3:=0.75*(value1-Ref(value1,-6)) + 0.25*(Ref(value1,-2)-Ref(value1,-4));
@@ -212,20 +230,26 @@ dp2:=If(dp < 1, 1,
   If(dp > 60, 60, dp));
 
 dp2
+```
 
-Name: Hilbert cycle period - final-a
+```metastock
+{Name: Hilbert cycle period - final-a}
 c1:= Fml( "H cycle count 1a") + Fml( "H cycle count 2a") + Fml( "H cycle count 3a") ;
 c2:=If(c1=0,PREV,c1);
 
 (0.25*c2) + (0.75*PREV)
+```
 
-Name: Instantaneous Trend Line
+```metastock
+{Name: Instantaneous Trend Line}
 pr:=(H+L)/2;
 
 (Fml("H TL sum 1") + Fml("H TL sum 2") + Fml("H TL sum 3"));
 0.33*(pr + (0.5*(pr-Ref(pr,-3)))) + (0.67*PREV)
+```
 
-Name: Sinewave Indicator
+```metastock
+{Name: Sinewave Indicator}
 pd:=Int(Fml("Hilbert cycle period - final-a"));
 cp:=Fml("Hilbert cycle period - final-a");
 ip:=Fml( "H ip sum 1") + Fml( "H ip sum 2") +
@@ -242,22 +266,21 @@ Sin(dcp);
 Sin(dcp+45)
 ```
 
-— Cheryl Elton, Equis International
-https://www.equis.com
+*— Cheryl Elton, Equis International, https://www.equis.com*
 
 ---
 
 ## NeuroShell Trader
 
-The indicators that John Ehlers describes in "Adaptive Trends And Oscillators" are quite complex and could be built within NeuroShell Trader. However, with NeuroShell Trader's ability to call external code, we decided to build custom indicators and provide them to users to simplify the process. Users of NeuroShell Trader can go to the STOCKS & COMMODITIES section of the NeuroShell Trader free technical support Website to download the "trend-friendly oscillator" indicators.
+The indicators that John Ehlers describes in "Adaptive Trends And Oscillators" are quite complex and could be built within NeuroShell Trader. However, with NeuroShell Trader's ability to call external code, we decided to build custom indicators and provide them to users to simplify the process. Users of NeuroShell Trader can go to the Stocks & Commodities section of the NeuroShell Trader free technical support Website to download the "trend-friendly oscillator" indicators.
 
-![Figure 1: NeuroShell Trader](assets/Neuro.gif)
+![Figure 1: NeuroShell Trader Indicator Wizard](assets/Neuro.gif)
 
 **FIGURE 1: NEUROSHELL TRADER.** Using the NeuroShell Trader Indicator Wizard, insert the trend-friendly oscillators based on Ehlers's work into a NeuroShell Trader chart.
 
 After downloading the custom indicators, you can insert them into your chart (Figure 1), prediction, or trading strategy using the NeuroShell Indicator Wizard and selecting the custom indicators category (Figure 2).
 
-![Figure 2: NeuroShell Trader](assets/NuroChrt.gif)
+![Figure 2: NeuroShell Trader custom indicator category](assets/NuroChrt.gif)
 
 **FIGURE 2: NEUROSHELL TRADER.** In the NeuroShell Trader Indicator Wizard, select the custom indicator category.
 
@@ -265,15 +288,13 @@ You may want to use these indicators, as Ehlers suggests, in a trading strategy.
 
 In addition, you may find the indicators interesting when using the Prediction Wizard to predict future price movements, highs, or lows, as well as in additional trading strategies that you may combine with different indicators to create your own unique system.
 
-We have created additional indicators based on Ehlers' March 2000 STOCKS & COMMODITIES article, "On Lag, Signal Processing, And The Hilbert Transform: Hilbert Indicators Tell You When To Trade." Those indicators also can be downloaded from our free technical support Website. These indicators will help you determine the cycles that Ehlers discusses in his article.
+We have created additional indicators based on Ehlers' March 2000 Stocks & Commodities article, "On Lag, Signal Processing, And The Hilbert Transform: Hilbert Indicators Tell You When To Trade." Those indicators also can be downloaded from our free technical support Website. These indicators will help you determine the cycles that Ehlers discusses in his article.
 
 Ehlers' company, Mesa Software, sells additional indicators that are specifically designed for use with NeuroShell Trader. For more information, please contact Mesa Software at https://www.MesaSoftware.com.
 
 For more information on NeuroShell Trader, please visit https://www.NeuroShell.com.
 
-— Marge Sherald, Ward Systems Group, Inc.
-301 662-7950, sales@wardsystems.com
-https://www.neuroshell.com
+*— Marge Sherald, Ward Systems Group, Inc., 301 662-7950, sales@wardsystems.com, https://www.neuroshell.com*
 
 ---
 
@@ -287,34 +308,29 @@ We ran two models through a neural network using the same inputs, target, and da
 
 After three generations of models had been built, the difference between the equity curves was already apparent. Figures 3 and 4 depict the price of the S&P 500 futures contract from 1/2/1999 to 6/1/1999, with the red dots indicating the price where the model took a short trade, and the blue dots indicating the price where the models took a long trade. The center plot on the graph is the output of the neural network — when it crosses zero, a trade is entered or exited. The bottom plot is a graph of open equity, whereas the thin line indicates the closed equity. For simplicity's sake, no money management was used in either model, and only one contract was bought or sold for each trade.
 
-![Figure 3: BioComp Profit](assets/Profit1.gif)
-
-**FIGURE 3: BIOCOMP PROFIT.** Both Figures 3 and 4 depict models of the S&P 500 futures contract, daily bars of data, out-of-sample trading from 1/2/1999 to 6/1/1999. However, the chart in Figure 3 optimizes the model to correlation, while the chart in Figure 4 optimizes the model to a function of net profit.
-
-![Figure 4: BioComp Profit](assets/Profit2.gif)
-
-**FIGURE 4: BIOCOMP PROFIT.** This chart portrays the most profitable model of the 10 best models found after three generations optimized to the "best net profit" fitness metric. Note the far smoother equity curve in Figure 4 than that of Figure 3. This model yielded $98,925 profit by the end of the six-month out-of-sample (paper trading) period.
+| | |
+|---|---|
+| ![Figure 3: BioComp correlation-optimized](assets/Profit1.gif) | ![Figure 4: BioComp profit-optimized](assets/Profit2.gif) |
+| **FIGURE 3: BIOCOMP PROFIT.** Both Figures 3 and 4 depict models of the S&P 500 futures contract, daily bars of data, out-of-sample trading from 1/2/1999 to 6/1/1999. However, the chart in Figure 3 optimizes the model to correlation, while the chart in Figure 4 optimizes the model to a function of net profit. | **FIGURE 4: BIOCOMP PROFIT.** This chart portrays the most profitable model of the 10 best models found after three generations optimized to the "best net profit" fitness metric. Note the far smoother equity curve in Figure 4 than that of Figure 3. This model yielded $98,925 profit by the end of the six-month out-of-sample (paper trading) period. |
 
 The difference between the two equity curves is clearly in favor of the model optimized to profit (Figure 4) instead of the more typical metrics, such as an attempt to maximize r-squared or minimize mean squared error. When constructing a model of market behavior, whether it be a simple system such as MACD or something far more sophisticated such as a neural network, it pays to optimize to profit.
 
-— Rick Heymann, BioComp Systems, Inc.
-425-869-6770, 425-869-6850 fax
-www.biocompsystems.com
+*— Rick Heymann, BioComp Systems, Inc., 425-869-6770, 425-869-6850 fax, www.biocompsystems.com*
 
 ---
 
 *All rights reserved. Copyright 2000, Technical Analysis, Inc.*
 
----
-
 ## BibTeX
 
 ```bibtex
-@misc{traderstips2000may,
-  title        = {Traders' Tips: May 2000},
-  howpublished = {Technical Analysis of Stocks \& Commodities},
-  year         = {2000},
-  month        = may,
-  url          = {https://www.traders.com/Documentation/FEEDbk_docs/2000/05/TradersTips/TradersTips.html}
+@misc{traderstips200005,
+  title     = {Traders' Tips: Adaptive Trends And Oscillators},
+  journal   = {Technical Analysis of Stocks \& Commodities},
+  volume    = {18},
+  number    = {5},
+  year      = {2000},
+  month     = may,
+  url       = {https://www.traders.com/Documentation/FEEDbk_docs/2000/05/TradersTips/TradersTips.html}
 }
 ```
