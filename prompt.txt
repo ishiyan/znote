@@ -1337,3 +1337,97 @@ and come with a list of trading indicators we can implement based on this book.
 Think of mnemonic, abbreviation and names of these indicators.
 Please do the same for the first book in inputs/don-mak/2006-mathematical-techniques-in-financial-market-trading/ folder
 ----------------------------
+In inputs/zurab-silagadze/ I have 3 folders:
+- 0802.0984v2/ with an arXiv article describing Moving MiniMax indicator
+- ifta-2011/ with and IFTA article describing Moving MiniMax indicator
+- mq5/ with an article from mq5.com website also describing Moving MiniMax indicator and its implementation in MQ5, movingminmax.mq5
+Each folder contains cotent.md, read them all and come with a plan to make a Python implementation of this indicator in the moving-minmax/ fofder.
+Include in the plan:
+- compare if all 3 sources agree on how indicator is calculated
+- is movingminmax.mq5 can be base for our implementation or we shoul base on description in articles
+- are discussion comments in mq5/content.md make sense to consider
+- when decision is made, make in the moving-minmax/ folder:
+  - description.md with the description of how indicator works, including:
+    - basic principles on whhich it is based (for non-mathematicians)
+    - mathematical equations from articles (in KaTeX, inline $...$, display $...$) explaining how calculation goes.
+      Please copy full mathematical description from articles /for mathematicians), because agents reading this document will not have access to them.
+    - configuration parameters description, valid ranges, default values
+    - indicator should return two valuse, uSi and dSi (in MQ5 code),
+      but it is unclear to me should it also return:
+      - offsets (in bars) from the latest bar to local min and max
+      - values for support and resistance as calculated in MQ5 implementation suggested  
+    - algorithmic calculation flow, use Mermaid flowcharts
+    - references and bibtex to sources, you can find bibtex in all 3 articles
+  - create a Python implementation moving-minmax.py and:
+    - put excessive comments in code
+    - use only "standard" Python functionality (no numpy, no pandas, etc) because agents need to port this Python code to other languages, like Rust, Zig and Go.
+      So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
+    - show example usage in __main__
+  
+- check that there are following files:
+  - test_testdata.py
+  - testdata_test.go
+  - testdata.ts
+  - testdata.rs
+  - testdata.zig
+  - description.md
+  - <foldername>.py
+  - <foldername>.mq4
+  Ask me if they are not.
+- modify <foldername>.py so that:
+  - It reflects our findings and suggestions about this indicator parameters, among other things:
+    - has a thorow description
+    - has default value
+    - has an explicit range of valid values
+  - Use numpy package only if it is necessary, prefer standard Python functionality.
+    This is because in another repo this code will be ported to Go, Rust, Zig and TypeScript and each language should use only "standard library" withoutt external packages.
+    So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
+  - use descriptive names
+  - provide extensive comments in the code
+  - In its __main__, the code should read the 252 INPUT_CLOSE values from test_testdata.py
+    You better just embed this array into the __main__
+  - Propose the reasonable combination of parameters for generation of reference output data.
+    The number of combinations should be limited to 64.
+    Ask me to confirm the oroposal.
+  - Then, the __main__ should generate reference outputs for combination of parameters you propsed above.
+  - Use 15-digit precision in generated output floating-point data.
+  - All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_testdata.py) to the test_testdata.py file.
+  - The names of the arrays should be EXPECTED_XX_x_YY_y_YY_z, where x,y,z are values of parameters and X,Y,Z are name shortcuts.
+  - For fl;oating point values, use "_" instead of ".".
+  - Before each array put a comment with text in "What it tests" column of the table above.
+  - On the next comment line put the parameter names and their values.
+  - In data arrays, use NaN if indidicator is not primed yet.
+- modify description.md to reflect the updated <foldername>.py
+  This will be the "master reference implementation" documentation, please make it as thorough and comprehencive as possible.
+  You can also consult original Poton's implementation in <foldername>.mq4
+- Verify that <foldername>.py adheres the description in updated description.md
+- Verify that test_testdata.py contains output expected reference data
+- Append expected reference output data arrays from test_testdata.py to the individual test data files for other languages.
+  They already contain the input data arrays. Per language:
+  - testdata_test.go
+    - Update package xxxx with <foldername> with stripped underscores, following Go idiomatic naming.
+    - import "math" and use math.Nan() for NaNs
+    - you can use Go names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "var expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+  - testdata.ts
+    - use TypeScript-specific array as in "export const test_input() number[] = ["
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "export const expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use NaN for NaNs
+  - testdata.rs
+    - use Rust-specific array as in "pub fn test_input() -> Vec<f64>"
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and lowercase param shortcuts.
+      For example, "pub fn expected_w9_s6_o0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+      Note the underscore between "expected" and "w9_..."
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use f64:NAN for NaNs
+  - testdata.zig
+    - ensure there are "const math = @import("std").math;" and "const nan = math.nan(f64);" at the top of the file
+    - use nan for NaNs
+    - use Zig-specific array as in "pub fn testInput() [252]f64" with "return" statement
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "pub fn expectedW9_S6_O0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+
