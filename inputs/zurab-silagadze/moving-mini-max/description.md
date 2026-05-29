@@ -11,7 +11,7 @@ Imagine a price chart as a hilly landscape. You place a tiny ball at one end and
 However, in quantum mechanics, particles can "tunnel" through thin barriers with small but nonzero probability. The Moving Mini-Max indicator mimics this quantum tunneling behavior:
 
 1. **The ball can pass through small barriers** (noise), but is stopped by large ones (real trend reversals).
-2. **The smoothing window `m`** controls the ball's "mass" — a larger `m` means a lighter ball that tunnels more easily, producing smoother output.
+2. **The smoothing window `m`** controls how easily the ball tunnels through barriers — a larger `m` means the ball "sees" more neighbors and passes through small bumps more readily, producing smoother output.
 3. **The result is a probability distribution** over the price window that peaks at local maxima (up mini-max) or local minima (down mini-max).
 
 The indicator computes transition probabilities at each bar based on relative price differences with neighbors, chains them together via a Markov-like recurrence, and normalizes the result. The output naturally suppresses noise while highlighting genuine extrema.
@@ -82,6 +82,7 @@ The ratio $P_{i-1,i} / P_{i,i-1}$ measures how much easier it is to move **towar
 |-----------|-------------|---------|-------------|
 | `m` | Smoothing window width. Controls the "penetrating ability" of the quantum ball. Larger values produce smoother output, suppressing smaller peaks. | 5 | $\geq 1$ |
 | `n` | Lookback window size. Number of price bars over which the indicator is computed. | 300 | $> 2m$ |
+| `num_extrema` | Number of distinct support/resistance levels to detect and return. | 3 | $\geq 1$ |
 
 ### Parameter Guidance
 
@@ -98,12 +99,22 @@ The ratio $P_{i-1,i} / P_{i,i-1}$ measures how much easier it is to move **towar
 |--------|-------------|
 | `uSi[i]` | Up mini-max value at bar $i$. Peaks indicate local price maximums (resistance candidates). |
 | `dSi[i]` | Down mini-max value at bar $i$. Peaks indicate local price minimums (support candidates). |
-| `resistance_price` | Price value at the bar where `uSi` is maximum (strongest local high). |
-| `support_price` | Price value at the bar where `dSi` is maximum (strongest local low). |
-| `resistance_offset` | Number of bars from the most recent bar to the resistance level. |
-| `support_offset` | Number of bars from the most recent bar to the support level. |
+| `resistances` | List of `num_extrema` distinct resistance levels, sorted by strength (strongest first). Each entry contains `price`, `offset`, and `strength`. |
+| `supports` | List of `num_extrema` distinct support levels, sorted by strength (strongest first). Each entry contains `price`, `offset`, and `strength`. |
+
+Each resistance/support entry:
+
+| Field | Description |
+|-------|-------------|
+| `price` | Price value at that extremum. |
+| `offset` | Number of bars from the most recent bar to this level. 0 = newest bar, n-1 = oldest. |
+| `strength` | The minimax value at that peak (higher = more significant extremum). |
 
 The `uSi` and `dSi` arrays sum to 1.0 each (normalization condition). Higher values indicate stronger extrema.
+
+### Peak Detection
+
+Distinct peaks are found by locating local maxima in the minimax curve and applying a minimum separation constraint (equal to `m` bars) to avoid returning adjacent bars from the same broad hump. This ensures each returned level corresponds to a truly separate swing high/low.
 
 ---
 

@@ -196,7 +196,64 @@ def calc_minimax(p_plus, p_minus, n):
     return minimax
 
 
-def moving_minimax(prices, m=5, n=300):
+def find_peaks(values, num_peaks, min_separation):
+    """
+    Find distinct local peaks in a 1-D series.
+
+    A local peak is a point that is greater than both its neighbors.
+    Peaks are returned sorted by strength (highest value first).
+    Peaks within min_separation bars of a stronger peak are suppressed
+    to avoid returning multiple points from the same broad hump.
+
+    Parameters
+    ----------
+    values : list of float
+        The series to search for peaks.
+    num_peaks : int
+        Maximum number of peaks to return.
+    min_separation : int
+        Minimum distance (in bars) between returned peaks.
+
+    Returns
+    -------
+    list of (index, value) tuples, sorted by value descending.
+    """
+    n = len(values)
+
+    # Step 1: Find all local maxima (higher than both neighbors).
+    # Endpoints: compare with the single available neighbor.
+    candidates = []
+    for i in range(n):
+        if i == 0:
+            is_peak = values[i] >= values[i + 1] if n > 1 else True
+        elif i == n - 1:
+            is_peak = values[i] >= values[i - 1]
+        else:
+            is_peak = values[i] >= values[i - 1] and values[i] >= values[i + 1]
+        if is_peak:
+            candidates.append((values[i], i))
+
+    # Step 2: Sort by value descending (strongest peaks first).
+    candidates.sort(reverse=True)
+
+    # Step 3: Greedily select peaks that are at least min_separation apart.
+    selected = []
+    for val, idx in candidates:
+        if len(selected) >= num_peaks:
+            break
+        # Check distance to already-selected peaks
+        too_close = False
+        for _, sel_idx in selected:
+            if abs(idx - sel_idx) < min_separation:
+                too_close = True
+                break
+        if not too_close:
+            selected.append((val, idx))
+
+    return selected
+
+
+def moving_minimax(prices, m=5, n=300, num_extrema=3):
     """
     Compute the Moving Mini-Max indicator on a price series.
 
@@ -210,6 +267,8 @@ def moving_minimax(prices, m=5, n=300):
         Larger m = smoother output, fewer detected peaks.
     n : int, optional
         Lookback window size (default: 300). Number of bars to analyze.
+    num_extrema : int, optional
+        Number of distinct support/resistance levels to return (default: 3).
 
     Returns
     -------
@@ -218,15 +277,14 @@ def moving_minimax(prices, m=5, n=300):
             Up mini-max values (length n). Peaks at local price maxima.
         'dSi' : list of float
             Down mini-max values (length n). Peaks at local price minima.
-        'resistance_price' : float
-            Price at the strongest local maximum (where uSi peaks).
-        'support_price' : float
-            Price at the strongest local minimum (where dSi peaks).
-        'resistance_offset' : int
-            Bars from the end of the window to the resistance level.
-            0 = most recent bar, n-1 = oldest bar.
-        'support_offset' : int
-            Bars from the end of the window to the support level.
+        'resistances' : list of dict
+            Top num_extrema resistance levels, each with:
+                'price': float — price at that peak
+                'offset': int — bars from the most recent bar (0 = newest)
+                'strength': float — uSi value at that peak
+            Sorted by strength descending (strongest first).
+        'supports' : list of dict
+            Top num_extrema support levels, same structure as resistances.
 
     Raises
     ------
@@ -242,6 +300,8 @@ def moving_minimax(prices, m=5, n=300):
         raise ValueError(
             f"prices has {len(prices)} elements, need at least {n}"
         )
+    if num_extrema < 1:
+        raise ValueError("num_extrema must be >= 1")
 
     # --- Extract the last n prices as the analysis window ---
     # window[0] = oldest bar (S_1 in paper), window[n-1] = newest bar (S_n)
@@ -261,35 +321,37 @@ def moving_minimax(prices, m=5, n=300):
     uSi = calc_minimax(p_up_plus, p_up_minus, n)
     dSi = calc_minimax(p_dn_plus, p_dn_minus, n)
 
-    # --- Find peaks (strongest extrema) ---
-    # Resistance: bar with maximum uSi value
-    max_u = -1.0
-    resistance_idx = 0
-    for i in range(n):
-        if uSi[i] > max_u:
-            max_u = uSi[i]
-            resistance_idx = i
+    # --- Find distinct peaks ---
+    # min_separation = m ensures we don't pick adjacent bars from the same hump.
+    # The smoothing window m defines the scale of features we detect.
+    min_sep = max(m, 2)
 
-    # Support: bar with maximum dSi value
-    max_d = -1.0
-    support_idx = 0
-    for i in range(n):
-        if dSi[i] > max_d:
-            max_d = dSi[i]
-            support_idx = i
+    u_peaks = find_peaks(uSi, num_extrema, min_sep)
+    d_peaks = find_peaks(dSi, num_extrema, min_sep)
 
-    # --- Compute offsets (bars from end of window) ---
-    # offset = 0 means the most recent bar, offset = n-1 means the oldest
-    resistance_offset = (n - 1) - resistance_idx
-    support_offset = (n - 1) - support_idx
+    # --- Build resistance list ---
+    resistances = []
+    for strength, idx in u_peaks:
+        resistances.append({
+            'price': window[idx],
+            'offset': (n - 1) - idx,
+            'strength': strength,
+        })
+
+    # --- Build support list ---
+    supports = []
+    for strength, idx in d_peaks:
+        supports.append({
+            'price': window[idx],
+            'offset': (n - 1) - idx,
+            'strength': strength,
+        })
 
     return {
         'uSi': uSi,
         'dSi': dSi,
-        'resistance_price': window[resistance_idx],
-        'support_price': window[support_idx],
-        'resistance_offset': resistance_offset,
-        'support_offset': support_offset,
+        'resistances': resistances,
+        'supports': supports,
     }
 
 
@@ -320,15 +382,12 @@ if __name__ == '__main__':
     # Compute the Moving Mini-Max with default parameters
     m = 5
     n = 200
+    num_extrema = 5
 
-    result = moving_minimax(prices, m=m, n=n)
+    result = moving_minimax(prices, m=m, n=n, num_extrema=num_extrema)
 
-    print(f"Moving Mini-Max (m={m}, n={n})")
+    print(f"Moving Mini-Max (m={m}, n={n}, num_extrema={num_extrema})")
     print(f"  Window: bars {num_bars - n} to {num_bars - 1}")
-    print(f"  Resistance price: {result['resistance_price']:.4f}")
-    print(f"  Resistance offset: {result['resistance_offset']} bars from latest")
-    print(f"  Support price:     {result['support_price']:.4f}")
-    print(f"  Support offset:    {result['support_offset']} bars from latest")
     print()
 
     # Verify normalization
@@ -338,20 +397,14 @@ if __name__ == '__main__':
     print(f"  dSi sum: {d_sum:.6f} (should be 1.0)")
     print()
 
-    # Show top-5 peaks in uSi (resistance candidates)
-    indexed_u = [(val, i) for i, val in enumerate(result['uSi'])]
-    indexed_u.sort(reverse=True)
-    print("  Top 5 resistance candidates (uSi peaks):")
-    for val, idx in indexed_u[:5]:
-        offset = (n - 1) - idx
-        bar_price = prices[len(prices) - n + idx]
-        print(f"    offset={offset:3d} bars, price={bar_price:.2f}, uSi={val:.6f}")
+    # Show resistance levels
+    print(f"  Resistance levels ({len(result['resistances'])} found):")
+    for r in result['resistances']:
+        print(f"    price={r['price']:.2f}, offset={r['offset']:3d} bars, "
+              f"strength={r['strength']:.6f}")
 
-    # Show top-5 peaks in dSi (support candidates)
-    indexed_d = [(val, i) for i, val in enumerate(result['dSi'])]
-    indexed_d.sort(reverse=True)
-    print("  Top 5 support candidates (dSi peaks):")
-    for val, idx in indexed_d[:5]:
-        offset = (n - 1) - idx
-        bar_price = prices[len(prices) - n + idx]
-        print(f"    offset={offset:3d} bars, price={bar_price:.2f}, dSi={val:.6f}")
+    # Show support levels
+    print(f"  Support levels ({len(result['supports'])} found):")
+    for s in result['supports']:
+        print(f"    price={s['price']:.2f}, offset={s['offset']:3d} bars, "
+              f"strength={s['strength']:.6f}")
