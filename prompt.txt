@@ -1363,45 +1363,36 @@ Include in the plan:
     - use only "standard" Python functionality (no numpy, no pandas, etc) because agents need to port this Python code to other languages, like Rust, Zig and Go.
       So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
     - show example usage in __main__
-  
-- check that there are following files:
-  - test_testdata.py
-  - testdata_test.go
-  - testdata.ts
-  - testdata.rs
-  - testdata.zig
-  - description.md
-  - <foldername>.py
-  - <foldername>.mq4
-  Ask me if they are not.
-- modify <foldername>.py so that:
-  - It reflects our findings and suggestions about this indicator parameters, among other things:
-    - has a thorow description
-    - has default value
-    - has an explicit range of valid values
-  - Use numpy package only if it is necessary, prefer standard Python functionality.
-    This is because in another repo this code will be ported to Go, Rust, Zig and TypeScript and each language should use only "standard library" withoutt external packages.
-    So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
-  - use descriptive names
-  - provide extensive comments in the code
+---------------------------------
+Now read description.md and streaming.md, enrich/combine streaming.md with description.md and save it into prepared-for-conversion/moving-mini-max/ folder.
+Also, copy streaming.py as moving-mini-max.py into the same folder.
+This will be the master code and the master documentation to convert this indicator to various languages in another repo.
+Please ensure new description.md contains all theoretical background and bibtex.
+After this step, our working diractory will be prepared-for-conversion/moving-mini-max/
+In this directory there are 5 filse with test input data for different languages:
+- test_testdata.py
+- testdata_test.go
+- testdata.ts
+- testdata.rs
+- testdata.zig
+We will generate test output data from our master Python implementation and fill expacted data arrays into these files.
+Do the following steps:
+- Verify that moving-mini-max.py adheres the description in updated description.md
+- modify moving-mini-max.py so that:
   - In its __main__, the code should read the 252 INPUT_CLOSE values from test_testdata.py
     You better just embed this array into the __main__
-  - Propose the reasonable combination of parameters for generation of reference output data.
-    The number of combinations should be limited to 64.
-    Ask me to confirm the oroposal.
-  - Then, the __main__ should generate reference outputs for combination of parameters you propsed above.
-  - Use 15-digit precision in generated output floating-point data.
-  - All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_testdata.py) to the test_testdata.py file.
-  - The names of the arrays should be EXPECTED_XX_x_YY_y_YY_z, where x,y,z are values of parameters and X,Y,Z are name shortcuts.
-  - For fl;oating point values, use "_" instead of ".".
-  - Before each array put a comment with text in "What it tests" column of the table above.
-  - On the next comment line put the parameter names and their values.
-  - In data arrays, use NaN if indidicator is not primed yet.
-- modify description.md to reflect the updated <foldername>.py
-  This will be the "master reference implementation" documentation, please make it as thorough and comprehencive as possible.
-  You can also consult original Poton's implementation in <foldername>.mq4
-- Verify that <foldername>.py adheres the description in updated description.md
-- Verify that test_testdata.py contains output expected reference data
+- Propose the reasonable combination of parameters for generation of reference output data.
+  The number of combinations should be limited to 64.
+  Ask me to confirm the oroposal.
+- Then, the __main__ should generate reference outputs for combination of parameters you propsed above.
+- Use 15-digit precision in generated output floating-point data.
+- All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_testdata.py) to the test_testdata.py file.
+- The names of the arrays should be EXPECTED_XX_x_YY_y_YY_z, where x,y,z are values of parameters and X,Y,Z are name shortcuts.
+- For floating point values, use "_" instead of ".".
+- Before each array put a comment with text in "What it tests" column of the table above.
+- On the next comment line put the parameter names and their values.
+- In data arrays, use NaN if indidicator is not primed yet.
+- After running, verify that test_testdata.py contains output expected reference data
 - Append expected reference output data arrays from test_testdata.py to the individual test data files for other languages.
   They already contain the input data arrays. Per language:
   - testdata_test.go
@@ -1430,4 +1421,6 @@ Include in the plan:
     - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
       For example, "pub fn expectedW9_S6_O0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
     - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+At this point we should have generated master expected test data for all languages.
+---------------------------------
 
