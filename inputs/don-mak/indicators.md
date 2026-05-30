@@ -1,6 +1,6 @@
 # Don Mak — Implementable Trading Indicators
 
-A consolidated catalogue of indicators, filters, and techniques derived from two books by Don K. Mak, suitable for algorithmic implementation.
+A consolidated catalogue of indicators, filters, and techniques derived from three books by Don K. Mak, suitable for algorithmic implementation.
 
 ## Sources
 
@@ -8,6 +8,7 @@ A consolidated catalogue of indicators, filters, and techniques derived from two
 |-----|------|------|
 | **B1** | The Science of Financial Market Trading | 2003 |
 | **B2** | Mathematical Techniques in Financial Market Trading | 2006 |
+| **B3** | Trading Tactics in the Financial Market | 2021 |
 
 ---
 
@@ -114,6 +115,40 @@ A consolidated catalogue of indicators, filters, and techniques derived from two
 
 ---
 
+## Book 3: Trading Tactics in the Financial Market (2021)
+
+### Novel Velocity / Acceleration Indicators
+
+| Abbrev | Mnemonic | Name | Source |
+|--------|----------|------|--------|
+| EAACC | EmaAccel | EMA Acceleration Oscillator | Ch 4.2.4 |
+| MCDH1 | MacdH1 | MACDH with Price Replacing Fast EMA | Ch 6.3 |
+
+**EAACC** — Defined as (EMA3 − EMA6) − EMA9(EMA3 − EMA6). Uses short EMA lengths to create an acceleration indicator that behaves like a velocity indicator. Sure Profit Zone: 0 < ω < 0.53.
+
+**MCDH1** — Replaces the fast EMA (M₁=12) in standard MACD with raw price (M₁=1), keeping M₂=26, M₃=9. Phase lies between π and 0 for all 0 < ω < π, making the entire spectrum a Profit Zone — unlike standard MACDH which has a Loss Zone.
+
+### Skipped Convolution Technique
+
+| Abbrev | Mnemonic | Name | Source |
+|--------|----------|------|--------|
+| SKCONV | SkipConv | Skipped Convolution | Ch 2.4.4 |
+
+**SKCONV** — Applies a velocity indicator on sub-sampled data (e.g., hourly data within a daily chart) to detect turning points earlier than waiting for end-of-bar close. Skip-N convolves the indicator on every Nth sample of a lower timeframe.
+
+### Analytical Frameworks
+
+| Abbrev | Mnemonic | Name | Source |
+|--------|----------|------|--------|
+| PRFZN | ProfZone | Profit Zone / Loss Zone Analysis | Ch 2.3.1, Ch 8.1 |
+| SPRFZ | SureProfZone | Sure Profit Zone Criterion | Ch 2.4.3 |
+
+**PRFZN** — Framework classifying frequency ranges into Profit Zone (phase lead 0 to π) and Loss Zone (phase lead −π to 0) based on DTFT phase response of any velocity indicator. Provides a theoretical method to evaluate indicator profitability across frequencies.
+
+**SPRFZ** — The condition φ > ω guarantees profit regardless of sampling delay. The boundary φ = ω line plotted against the phase curve partitions frequencies into Sure Profit Zone (guaranteed) and Unsure Profit Zone.
+
+---
+
 ## Implementation Priority
 
 ### Tier 1 — Core (unique to Mak, most novel)
@@ -125,6 +160,8 @@ A consolidated catalogue of indicators, filters, and techniques derived from two
 5. **IF4 / IF5** — Instantaneous Frequency estimators
 6. **SKEMA / SKCV** — Skipped convolution variants
 7. **QV / QA / QNV / QNA / SXV / SXA** — Higher-order polynomial derivatives
+8. **MCDH1** — MACDH with Price as Fast EMA (zero Loss Zone)
+9. **EAACC** — EMA Acceleration Oscillator
 
 ### Tier 2 — Standard (well-known, include for completeness)
 
@@ -136,3 +173,6 @@ A consolidated catalogue of indicators, filters, and techniques derived from two
 10. **F1V / F1VA** — One-step-ahead forecasting
 11. **AEMA** — Adaptive EMA with frequency-dependent smoothing
 12. **WBH / WBM / WBL / WBV** — Sinc-based wavelet band-pass filters
+13. **SKCONV** — Skipped Convolution (sub-sampling for early detection)
+14. **PRFZN / SPRFZ** — Profit Zone analysis framework (evaluation tool, not a tradeable indicator)
+

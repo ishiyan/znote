@@ -1423,4 +1423,59 @@ Do the following steps:
     - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
 At this point we should have generated master expected test data for all languages.
 ---------------------------------
+In inputs/don-mak/2021-trading-tactics-in-the-financial-market/ folder there is a tt.pdf book.
+Convert each chapter and each appendix one-by-one to markdown.
+Skip front matter, contents, bibliography, index, etc.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, **give very large margins**, I will crop them manually.
+---------------------------------
+In inputs/don-mak/2021-trading-tactics-in-the-financial-market/ as working directory,
+make a toc.md file with the cover.png image, name of the book, author, year and a bibtex.
+After that add list with links to chapters markdowns, mentioning chapter name.
+After that add list of links tp appendices markdowns. mentioning appendix name.
+The bibtex is:
+```bibtex
+@book{mak2021trading,
+  author    = {Mak, Don K.},
+  title     = {Trading Tactics in the Financial Market: Mathematical Methods to Improve Performance},
+  year      = {2021},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  series    = {Management for Professionals},
+  isbn      = {978-3-030-70621-0},
+  doi       = {10.1007/978-3-030-70622-7},
+  url       = {https://link.springer.com/10.1007/978-3-030-70622-7}
+}
+```
+---------------------------------
+In inputs/don-mak/indicators.md we categorized indicators from two Don Mak's books.
+Read all chaptes from the third book, inputs/don-mak/2021-trading-tactics-in-the-financial-market/
+and extend indicators.md with info from the third book.
+Think of mnemonic, abbreviation and names of these indicators.
+Also we should skip standard well-known SMA, EMA, MACD, MOM
+---------------------------------
+Let's consider CV / CA / QV / QA / QNV / QNA / SXV / SXA
+Do all of them heve the same input parameters and output single value?
+---------------------------------
+I created inputs/don-mak/polynomial-fit-derivative/ folder for the implementation.
+Let's start with the description.md with the description of how indicator works, including:
+- basic principles on which it is based (for non-mathematicians)
+- mathematical equations from articles (in KaTeX, inline $...$, display $...$) explaining how calculation goes.
+  Please copy full mathematical description from book chapters, because agents reading this document will not have access to them.
+- configuration parameters description, valid ranges, default values
+- algorithmic calculation flow, use Mermaid flowcharts
+- references and bibtex to sources, you can find bibtex in all 3 books
+- create a Python implementation moving-minmax.py and:
+  - put excessive comments in code
+  - use only "standard" Python functionality (no numpy, no pandas, etc) because agents need to port this Python code to other languages, like Rust, Zig and Go. So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
+  - show example usage in __main__
 
+The book and chapter references are:
+- Parabolic Velocity : 2003 Ch 6.1
+- Parabolic Acceleration : 2003 Ch 6.2
+- Cubic Velocity/acceleration : 2003 Ch 6.3
+- Quartic Velocity/acceleration : 2006 Ch 8.4
+- Quintic Velocity/acceleration : 2006 Ch 8.5
+- Sextic Velocity/acceleration : 2006 Ch 8.6
+-----------------------------------
