@@ -1812,3 +1812,22 @@ Do the following steps:
     - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
 - Also add tests 1 and 2 from the intial implementation
 At this point we should have generated master expected test data for all languages.
+-----------------------------
+In external/william-blau/1995-momentum-direction-and-divergence/ as working directory,
+make a toc.md file with the cover.jpg image, name of the book, author, year and a bibtex.
+After that add list with links to chapters markdowns, mentioning chapter name.
+After that add list of links tp appendices markdowns. mentioning appendix name.
+The bibtex is:
+```bibtex
+@book{Blau1995,
+  author    = {Blau, William},
+  title     = {Momentum, Direction, and Divergence: Applying the Latest Momentum Indicators for Technical Analysis},
+  publisher = {John Wiley \& Sons},
+  year      = {1995},
+  isbn      = {978-0-471-02729-4},
+  series    = {Wiley Trader's Advantage},
+  pages     = {160},
+  url       = {https://www.amazon.com/Momentum-Direction-Divergence-Applying-Convergence/dp/0471027294},
+}
+```
+--------------------------------
