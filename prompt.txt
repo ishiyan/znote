@@ -1537,3 +1537,146 @@ Do the following steps:
     - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
 At this point we should have generated master expected test data for all languages.
 ---------------------------------
+I created inputs/don-mak/instantaneous-sine-wave-period/ folder for the implementation.
+Let's start with the description.md with the description of how indicator works, including:
+- basic principles on which it is based (for non-mathematicians)
+- mathematical equations from articles (in KaTeX, inline $...$, display $...$) explaining how calculation goes.
+  Please copy full mathematical description from book chapters, because agents reading this document will not have access to them.
+- configuration parameters description, valid ranges, default values
+- algorithmic calculation flow, use Mermaid flowcharts
+- references and bibtex to sources, you can find bibtex in all 3 books
+- create a Python implementation moving-minmax.py and:
+  - put excessive comments in code
+  - use only "standard" Python functionality (no numpy, no pandas, etc) because agents need to port this Python code to other languages, like Rust, Zig and Go. So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
+  - show example usage in __main__
+---------------------------------
+Now copy description.md instantaneous-sine-wave-period.py to the
+prepared-for-conversion/instantaneous-sine-wave-period/ folder.
+This will be the master code and the master documentation to convert this indicator to various languages in another repo.
+Please ensure new description.md contains all theoretical background and bibtex.
+After this step, our working diractory will be prepared-for-conversion/instantaneous-sine-wave-period/
+In this directory there are 5 filse with test input data for different languages:
+- test_testdata.py
+- testdata_test.go
+- testdata.ts
+- testdata.rs
+- testdata.zig
+We will generate test output data from our master Python implementation and fill expacted data arrays into these files.
+Do the following steps:
+- modify instantaneous-sine-wave-period.py so that:
+  - In its __main__, the code should read the 252 INPUT_CLOSE values from test_testdata.py
+    You better just embed this array into the __main__
+- Propose the reasonable combination of parameters for generation of reference output data.
+  The number of combinations should be limited to 64.
+  Ask me to confirm the oroposal.
+- Then, the __main__ should generate reference outputs for combination of parameters you propsed above.
+- Use 15-digit precision in generated output floating-point data.
+- All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_testdata.py) to the test_testdata.py file.
+- The names of the arrays should be EXPECTED_XX_x_YY_y_YY_z, where x,y,z are values of parameters and X,Y,Z are name shortcuts.
+- For floating point values, use "_" instead of ".".
+- Before each array put a comment with text in "What it tests" column of the table above.
+- On the next comment line put the parameter names and their values.
+- In data arrays, use NaN if indidicator is not primed yet.
+- After running, verify that test_testdata.py contains output expected reference data
+- Append expected reference output data arrays from test_testdata.py to the individual test data files for other languages.
+  They already contain the input data arrays. Per language:
+  - testdata_test.go
+    - Update package xxxx with instantaneous-sine-wave-period with stripped underscores, following Go idiomatic naming.
+    - import "math" and use math.Nan() for NaNs
+    - you can use Go names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "var expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+  - testdata.ts
+    - use TypeScript-specific array as in "export const test_input() number[] = ["
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "export const expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use NaN for NaNs
+  - testdata.rs
+    - use Rust-specific array as in "pub fn test_input() -> Vec<f64>"
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and lowercase param shortcuts.
+      For example, "pub fn expected_w9_s6_o0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+      Note the underscore between "expected" and "w9_..."
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use f64:NAN for NaNs
+  - testdata.zig
+    - ensure there are "const math = @import("std").math;" and "const nan = math.nan(f64);" at the top of the file
+    - use nan for NaNs
+    - use Zig-specific array as in "pub fn testInput() [252]f64" with "return" statement
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "pub fn expectedW9_S6_O0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+At this point we should have generated master expected test data for all languages.
+---------------------------------
+I created inputs/don-mak/mexican-hat-wavelet/ folder for the implementation.
+Let's start with the description.md with the description of how indicator works, including:
+- basic principles on which it is based (for non-mathematicians)
+- mathematical equations from articles (in KaTeX, inline $...$, display $...$) explaining how calculation goes.
+  Please copy full mathematical description from book chapters, because agents reading this document will not have access to them.
+- configuration parameters description, valid ranges, default values
+- algorithmic calculation flow, use Mermaid flowcharts
+- references and bibtex to sources, you can find bibtex in all 3 books
+- create a Python implementation mexican-hat-wavelet.py and:
+  - put excessive comments in code
+  - use only "standard" Python functionality (no numpy, no pandas, etc) because agents need to port this Python code to other languages, like Rust, Zig and Go. So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
+  - show example usage in __main__
+---------------------------------
+Now copy description.md mexican-hat-wavelet.py to the
+prepared-for-conversion/mexican-hat-wavelet/ folder.
+This will be the master code and the master documentation to convert this indicator to various languages in another repo.
+Please ensure new description.md contains all theoretical background and bibtex.
+After this step, our working diractory will be prepared-for-conversion/mexican-hat-wavelet/
+In this directory there are 5 filse with test input data for different languages:
+- test_testdata.py
+- testdata_test.go
+- testdata.ts
+- testdata.rs
+- testdata.zig
+We will generate test output data from our master Python implementation and fill expacted data arrays into these files.
+Do the following steps:
+- modify mexican-hat-wavelet.py so that:
+  - In its __main__, the code should read the 252 INPUT_CLOSE values from test_testdata.py
+    You better just embed this array into the __main__
+- Propose the reasonable combination of parameters for generation of reference output data.
+  The number of combinations should be limited to 64.
+  Ask me to confirm the oroposal.
+- Then, the __main__ should generate reference outputs for combination of parameters you propsed above.
+- Use 15-digit precision in generated output floating-point data.
+- All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_testdata.py) to the test_testdata.py file.
+- The names of the arrays should be EXPECTED_XX_x_YY_y_YY_z, where x,y,z are values of parameters and X,Y,Z are name shortcuts.
+- For floating point values, use "_" instead of ".".
+- Before each array put a comment with text in "What it tests" column of the table above.
+- On the next comment line put the parameter names and their values.
+- In data arrays, use NaN if indidicator is not primed yet.
+- After running, verify that test_testdata.py contains output expected reference data
+- Append expected reference output data arrays from test_testdata.py to the individual test data files for other languages.
+  They already contain the input data arrays. Per language:
+  - testdata_test.go
+    - Update package xxxx with mexican-hat-wavelet with stripped underscores, following Go idiomatic naming.
+    - import "math" and use math.Nan() for NaNs
+    - you can use Go names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "var expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+  - testdata.ts
+    - use TypeScript-specific array as in "export const test_input() number[] = ["
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "export const expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use NaN for NaNs
+  - testdata.rs
+    - use Rust-specific array as in "pub fn test_input() -> Vec<f64>"
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and lowercase param shortcuts.
+      For example, "pub fn expected_w9_s6_o0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+      Note the underscore between "expected" and "w9_..."
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use f64:NAN for NaNs
+  - testdata.zig
+    - ensure there are "const math = @import("std").math;" and "const nan = math.nan(f64);" at the top of the file
+    - use nan for NaNs
+    - use Zig-specific array as in "pub fn testInput() [252]f64" with "return" statement
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "pub fn expectedW9_S6_O0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+- Also add tests 1 and 2 from the intial implementation
+At this point we should have generated master expected test data for all languages.
+---------------------------------

@@ -1,155 +1,120 @@
-# Don K. Mak
+# Don K. Mak — Trading Research Profile
 
 ## Biography
 
-Don K. Mak is a Canadian research scientist and author based in Ottawa, Canada. He was formerly a research scientist with the Canadian Federal Government research laboratories and served as an Adjunct Professor at Queen's University in Kingston, Ontario. His primary scientific career spanned condensed matter physics, materials evaluation, and medical diagnosis, producing over fifty peer-reviewed papers.
+| Field | Detail |
+|-------|--------|
+| Full name | Don K. Mak |
+| Location | Ottawa, Canada |
+| Background | Research Scientist, Canadian Federal Government |
+| Academic role | Adjunct Professor, Queen's University (Canada) |
+| Academic output | 50+ papers in condensed matter physics, materials evaluation, medical diagnosis |
+| Trading books | 3 (World Scientific 2003, 2006; Springer 2021) |
+| Amazon Author ID | B001JOC9LY |
+| Public profile | Extremely low — no interviews, videos, social media, or conference appearances found |
 
-He subsequently applied his expertise in signal processing and mathematical analysis to financial markets, authoring three books on the subject: *The Science of Financial Market Trading* (2003), *Mathematical Techniques in Financial Market Trading* (2006), and *Trading Tactics in the Financial Market* (2021). These works apply concepts from physics and engineering — including Fourier analysis, wavelet filters, fractal geometry, chaos theory, Hurst exponent estimation, and phase analysis — to technical trading.
-
-He also co-authored *Solving Everyday Problems with the Scientific Method* with Angela T. Mak and Anthony B. Mak, a book translated into Korean, Chinese, and Arabic and adopted as a reference by universities in multiple countries.
-
-Despite his published body of work, Mak maintains an extremely low public profile: no photographs, videos, interviews, personal website, or social media presence could be located.
-
----
-
-## Books
-
-| # | Title | Year | Publisher | ISBN | DOI | Link |
-|---|-------|------|-----------|------|-----|------|
-| 1 | The Science of Financial Market Trading | 2003 | World Scientific | 978-981-238-252-8 | 10.1142/5178 | [World Scientific](https://www.worldscientific.com/worldscibooks/10.1142/5178), [Google Books](https://books.google.com/books?id=_uxSQgAACAAJ) |
-| 2 | Mathematical Techniques in Financial Market Trading | 2006 | World Scientific | 978-981-256-699-7 | 10.1142/6055 | [World Scientific](https://www.worldscientific.com/worldscibooks/10.1142/6055), [Google Books](https://books.google.com/books?id=WYRRAAAACAAJ) |
-| 3 | Trading Tactics in the Financial Market: Mathematical Methods to Improve Performance | 2021 | Springer | 978-3-030-70621-0 | 10.1007/978-3-030-70622-7 | [Springer](https://link.springer.com/10.1007/978-3-030-70622-7) |
-| 4 | Solving Everyday Problems with the Scientific Method (2nd ed.) | 2016 | World Scientific | 978-981-314-529-0 | — | [World Scientific](https://www.worldscientific.com/worldscibooks/10.1142/10015) |
-
-### Chapters in "Trading Tactics in the Financial Market" (2021)
-
-| Chapter | Title | DOI | Citations |
-|---------|-------|-----|-----------|
-| 1 | Trading Tactics in Technical Analysis | 10.1007/978-3-030-70622-7_1 | — |
-| 2 | Market Turning Points | 10.1007/978-3-030-70622-7_2 | — |
-| 3 | Simple Moving Average | 10.1007/978-3-030-70622-7_3 | 3 |
-| 4 | Exponential Moving Average | 10.1007/978-3-030-70622-7_4 | 5 |
-| 5 | Awesome Oscillator and Accelerator Oscillator | 10.1007/978-3-030-70622-7_5 | — |
-| 6 | Moving Average Convergence-Divergence and Its Histogram | 10.1007/978-3-030-70622-7_6 | 3 |
-| 7 | Trading Tactics in the Real Market | 10.1007/978-3-030-70622-7_7 | — |
-| 8 | Analysis of the Trading Tactics | 10.1007/978-3-030-70622-7_8 | — |
-| 9 | Epilogue | 10.1007/978-3-030-70622-7_9 | — |
-
-### Key Topics Covered in Books
-
-- Fourier analysis and spectral methods for price series
-- Wavelet filters and multi-resolution analysis
-- Fractal dimension estimation (box-counting, Hurst exponent)
-- Chaos theory applied to financial time series
-- Phase analysis and cycle detection
-- Moving averages (SMA, EMA) — mathematical treatment
-- MACD and its histogram — formal analysis
-- Awesome Oscillator and Accelerator Oscillator
+> Don K. Mak was a research scientist for the Canada Federal Government, and an Adjunct Professor at Queen's University (Canada). He has published over fifty papers in condensed matter physics, materials evaluation, and medical diagnosis. His book, *Science of Financial Market Trading*, has been adopted as a textbook and reference by universities worldwide. — *Springer, 2021*
 
 ---
 
 ## TASC Publications
 
-**Don K. Mak has no articles published in Technical Analysis of Stocks & Commodities (TASC).** The TASC complete author list (`authorlist.asp`) was searched exhaustively for "Don Mak", "Donald Mak", "Don K Mak", and "Don Mak PhD" — no matches found. The TASC archive system confirmed no author XML file exists for any name variation.
+**None.** Don K. Mak has zero articles in Technical Analysis of Stocks & Commodities.
+
+Note: "Mak Sangha" (TASC V34C08, V35C10 — Gann articles) is a **different person**.
 
 ---
 
 ## Technical Indicators & Tools
 
-Don K. Mak does not have named proprietary indicators in the way that many TASC authors do. His contributions are mathematical frameworks and analytical methods applied to existing indicators. Key concepts from his books:
+Don Mak does not introduce named indicators in the traditional sense. His contribution is **analytical framework** — using signal processing theory to evaluate existing indicators.
+
+### Core Concepts
 
 | Concept | First Published | Category |
 |---------|----------------|----------|
-| Fractal dimension estimation for price series | Book: The Science of Financial Market Trading (2003) | Fractal |
-| Hurst exponent calculation and interpretation | Book: The Science of Financial Market Trading (2003) | Fractal |
-| Fourier analysis of price cycles | Book: The Science of Financial Market Trading (2003) | Spectral |
-| Wavelet filter applications to trading | Book: Mathematical Techniques in Financial Market Trading (2006) | Filter |
-| Phase analysis for cycle detection | Book: Mathematical Techniques in Financial Market Trading (2006) | Cycle |
-| Chaos theory regime detection | Book: The Science of Financial Market Trading (2003) | Cycle |
-| SMA/EMA mathematical treatment with trading tactics | Book: Trading Tactics in the Financial Market (2021) | Adaptive MA |
-| MACD histogram analysis | Book: Trading Tactics in the Financial Market (2021) | Oscillator |
-| Awesome Oscillator / Accelerator Oscillator analysis | Book: Trading Tactics in the Financial Market (2021) | Oscillator |
+| Skipped Convolution | Book: *Science of Financial Market Trading* (2003) | Filter / Lag Reduction |
+| Profit Zone / Loss Zone | Book: *Trading Tactics in the Financial Market* (2021) | Spectral Analysis |
+| Phase Analysis of Indicators | All 3 books (2003, 2006, 2021) | Analytical Framework |
+| Indicators as Calculus Derivatives | Book: *Science of Financial Market Trading* (2003) | Analytical Framework |
+
+### Indicators Analyzed (Not Invented)
+
+| Indicator | Analysis Provided | Book |
+|-----------|-------------------|------|
+| Simple Moving Average (SMA) | Frequency response, phase delay, Profit/Loss Zone | 2021 |
+| Exponential Moving Average (EMA) | Frequency response, phase comparison to SMA | 2021 |
+| Awesome Oscillator (AO) | Shown to approximate 1st derivative (velocity) | 2021 |
+| Accelerator Oscillator (AccO) | Shown to approximate 2nd derivative (acceleration) | 2021 |
+| MACD | Phase analysis, parameter tuning for profit optimization | 2021 |
+| MACD Histogram | Phase advantage over MACD, parameter sensitivity | 2021 |
+| Momentum/ROC oscillators | Relationship to calculus derivatives | 2003 |
+
+### Indicators Introduced in Books
+
+#### The Science of Financial Market Trading (2003)
+
+| Indicator/Technique | Chapter | Category |
+|---------------------|---------|----------|
+| Skipped Convolution filter | — | Filter / Lag Reduction |
+| Minimal-lag oscillator variants | — | Oscillator |
+| Divergence detection (formal) | — | Signal Detection |
+
+#### Trading Tactics in the Financial Market (2021)
+
+| Concept | Chapter | Category |
+|---------|---------|----------|
+| Profit Zone frequency boundary | Ch. 3–6 | Spectral Analysis |
+| Loss Zone frequency boundary | Ch. 3–6 | Spectral Analysis |
+| Phase-optimized MACD parameters | Ch. 6 | Parameter Optimization |
+
+---
+
+## Books
+
+| # | Title | Year | Publisher | ISBN | Link |
+|---|-------|------|-----------|------|------|
+| 1 | The Science of Financial Market Trading | 2003 | World Scientific | 978-9812382528 | [Amazon](https://www.amazon.com/Science-Financial-Market-Trading/dp/9812382526) |
+| 2 | Mathematical Techniques in Financial Market Trading | 2006 | World Scientific | 978-9812566997 | [Amazon](https://www.amazon.com/MATHEMATICAL-TECHNIQUES-FINANCIAL-MARKET-TRADING/dp/9812566996) |
+| 3 | Trading Tactics in the Financial Market: Mathematical Methods to Improve Performance | 2021 | Springer | 978-3-030-70622-7 | [Springer](https://doi.org/10.1007/978-3-030-70622-7) |
+| 4 | Solving Everyday Problems with the Scientific Method (2nd ed.) | 2017 | World Scientific | 978-9813145306 | [Amazon](https://www.amazon.com/dp/9813145307) |
 
 ---
 
 ## MQL5 Implementations
 
-Don K. Mak has no direct presence on MQL5 — no indicators attributed to him and no articles by him. However, the concepts he covers (fractal dimension, Hurst exponent, chaos theory) are well-represented in the MQL5 CodeBase:
+**None found.** No MQL5 CodeBase entries reference Don K. Mak, "skipped convolution," "Profit Zone," or "Loss Zone."
 
-### Fractal Dimension Indicators
+---
 
-| Title | Author | Platform | URL |
-|-------|--------|----------|-----|
-| Fractal Graph Dimension Indicator (FGDI) | [Deleted] (jppoton) | MT4 | https://www.mql5.com/en/code/8844 |
-| FGDI | Scriptor | MT5 | https://www.mql5.com/en/code/21826 |
-| FGDI | Nikolay Kositsin | MT5 | https://www.mql5.com/en/code/16916 |
-| Fractal Dimension Index + Step EMA | LastViking | MT4 | https://www.mql5.com/en/code/8997 |
-| Institutional Fractal Dimension Index | KayruYuta | MT5 | https://www.mql5.com/en/code/71577 |
+## GitHub Repositories
 
-### Hurst Exponent Indicators
-
-| Title | Author | Platform | URL |
-|-------|--------|----------|-----|
-| Variations of the Hurst Exponent over time | [Deleted] (jppoton) | MT4 | https://www.mql5.com/en/code/9676 |
-| Hurst_Difference | Scriptor | MT5 | https://www.mql5.com/en/code/22798 |
-
-### Fractal-Based Adaptive Indicators
-
-| Title | Author | Platform | URL |
-|-------|--------|----------|-----|
-| Fractal Bands | [Deleted] (jppoton) | MT4 | https://www.mql5.com/en/code/8895 |
-| FRASMAv2 (Fractal Adaptive SMA) | [Deleted] (jppoton) | MT4 | https://www.mql5.com/en/code/8866 |
-| Fractal Self-Similarity Measure | [Deleted] (jppoton) | MT4 | https://www.mql5.com/en/code/9604 |
-
-### Other Related
-
-| Title | Author | Platform | URL |
-|-------|--------|----------|-----|
-| Variation Index | Ilnur Iksanov | MT4 | https://www.mql5.com/en/code/8464 |
-| Variation Index | Nikolay Kositsin | MT5 | https://www.mql5.com/en/code/463 |
-| Fractals Chaos Oscillator | Mladen Rakic | MT5 | https://www.mql5.com/en/code/20068 |
-| Choppiness Index | Mladen Rakic | MT5 | https://www.mql5.com/en/code/21585 |
-| Timeframe Quality Analyzer | Rajesh Kumar Nait | MT5 | https://www.mql5.com/en/code/69537 |
+**None found.** No GitHub repositories dedicated to Don Mak's techniques were located.
 
 ---
 
 ## Forum Discussions
 
-**No relevant discussions found on any of the 10 mandatory trading forums.** Don K. Mak and his books have zero presence across all searched forums:
+**None found.** Searches across all 10 mandatory forums returned zero results or were blocked by CAPTCHA:
 
 | Forum | Result |
 |-------|--------|
-| ForexFactory | 0 results |
-| futures.io (BigMikeTrading) | 0 results |
-| Elite Trader | 0 results |
-| NinjaTrader Forum | 0 results |
-| TradingView Community | 0 results |
-| MQL5 Forum | 0 results |
-| Wealth-Lab | 0 results |
-| Quant Stack Exchange | 0 results |
-| r/algotrading | 0 results |
-| Trade2Win | 0 results |
-
-Also searched for book titles ("Science of Financial Market Trading", "Mathematical Techniques in Financial Market Trading") — no results on any forum.
+| ForexFactory | 0 / blocked |
+| futures.io | 0 / blocked |
+| Elite Trader | 0 / blocked |
+| NinjaTrader Forum | 0 |
+| TradingView | 0 |
+| MQL5 Forum | 0 |
+| Wealth-Lab | 0 |
+| Quant Stack Exchange | 0 |
+| r/algotrading | 0 |
+| Trade2Win | 0 |
 
 ---
 
 ## Academic Papers
 
-Don K. Mak has not published standalone journal articles or preprints on financial trading. His academic publication record consists of:
-
-- **50+ papers** in condensed matter physics, materials evaluation, and medical diagnosis (pre-dating his trading work)
-- **3 books** on financial market trading (World Scientific and Springer)
-- **0 arXiv preprints** on trading or finance
-- **0 journal articles** on trading indexed in Crossref, Semantic Scholar, or OpenAlex
-
-### Citation Counts
-
-| Work | Citations (Google Scholar) | Citations (Crossref) |
-|------|---------------------------|---------------------|
-| The Science of Financial Market Trading (2003) | 33 | 5 |
-| Mathematical Techniques in Financial Market Trading (2006) | 19 | 4 |
-| Trading Tactics in the Financial Market (2021) | ~11 (across chapters) | 1 |
+50+ papers in condensed matter physics (per Springer bio). No finance/trading journal papers found in Crossref, Semantic Scholar, or arXiv. His trading work is published exclusively in book form.
 
 ---
 
@@ -159,16 +124,13 @@ Don K. Mak has not published standalone journal articles or preprints on financi
 
 | Description | URL | Source |
 |-------------|-----|--------|
-| [URL not found] Amazon author page — default placeholder, no actual photo | https://www.amazon.com/Don-K-Mak/e/B001JOC9LY | Amazon |
-| [URL not found] World Scientific author page — no photo | https://www.worldscientific.com/author/Mak%2C+Don+K | World Scientific |
-| [URL not found] Springer book page — no author photo | https://link.springer.com/book/10.1007/978-3-030-70622-7 | Springer |
-| [URL not found] No Wikipedia article exists | — | Wikipedia |
-| [URL not found] No LinkedIn profile found | — | LinkedIn |
-| [URL not found] No Goodreads photo | https://www.goodreads.com/author/show/2820509.Don_K_Mak | Goodreads |
+| Small author thumbnail | [Amazon](https://www.amazon.com/Don-K-Mak/e/B001JOC9LY) | Amazon Author Page |
 
 ### Videos
 
-No videos found. Searched YouTube for "Don Mak" + trading/fractal/financial — no relevant results.
+| Title | URL | Duration | Date |
+|-------|-----|----------|------|
+| [URL not found] No video appearances found | — | — | — |
 
 ### Interviews & Podcasts
 
@@ -176,263 +138,71 @@ No interviews or podcast appearances found.
 
 ---
 
+## Related Authors
+
+| Author | Relationship |
+|--------|-------------|
+| **John Ehlers** | Same DSP tradition; Ehlers designs new filters, Mak analyzes existing ones |
+| **William Blau** | Mak's frequency analysis explains why Blau's double smoothing works |
+| **Tushar Chande** | Different approach to the same lag-reduction problem |
+| **Perry Kaufman** | Practical adaptive methods vs. Mak's theoretical framework |
+| **Alok Srivastava** | TASC V23C02 — "Fourier Transforms As An Aid To Decision-Making" — related methodology |
+
+---
+
 ## BibTeX
 
 ```bibtex
-@book{mak2003science,
+@book{Mak2003,
   author    = {Mak, Don K.},
   title     = {The Science of Financial Market Trading},
-  year      = {2003},
   publisher = {World Scientific},
-  address   = {Singapore},
-  isbn      = {978-981-238-252-8},
-  doi       = {10.1142/5178},
-  url       = {https://www.worldscientific.com/worldscibooks/10.1142/5178}
+  year      = {2003},
+  isbn      = {978-9812382528},
+  pages     = {260},
+  url       = {https://www.amazon.com/Science-Financial-Market-Trading/dp/9812382526},
 }
 
-@book{mak2006mathematical,
+@book{Mak2006,
   author    = {Mak, Don K.},
   title     = {Mathematical Techniques in Financial Market Trading},
-  year      = {2006},
   publisher = {World Scientific},
-  address   = {Singapore},
-  isbn      = {978-981-256-699-7},
-  doi       = {10.1142/6055},
-  url       = {https://www.worldscientific.com/worldscibooks/10.1142/6055}
+  year      = {2006},
+  isbn      = {978-9812566997},
+  url       = {https://www.amazon.com/MATHEMATICAL-TECHNIQUES-FINANCIAL-MARKET-TRADING/dp/9812566996},
 }
 
-@book{mak2021trading,
+@book{Mak2021,
   author    = {Mak, Don K.},
   title     = {Trading Tactics in the Financial Market: Mathematical Methods to Improve Performance},
+  publisher = {Springer},
   year      = {2021},
-  publisher = {Springer International Publishing},
-  address   = {Cham},
-  series    = {Management for Professionals},
-  isbn      = {978-3-030-70621-0},
+  isbn      = {978-3-030-70622-7},
   doi       = {10.1007/978-3-030-70622-7},
-  url       = {https://link.springer.com/10.1007/978-3-030-70622-7}
+  series    = {Management for Professionals},
+  pages     = {269},
 }
 
-@book{mak2016solving,
+@book{Mak2017,
   author    = {Mak, Don K. and Mak, Angela T. and Mak, Anthony B.},
   title     = {Solving Everyday Problems with the Scientific Method: Thinking Like a Scientist},
-  edition   = {2},
-  year      = {2016},
   publisher = {World Scientific},
-  address   = {Singapore},
-  isbn      = {978-981-314-529-0}
+  year      = {2017},
+  edition   = {2nd},
+  isbn      = {978-9813145306},
 }
 
-@incollection{mak2021sma,
-  author    = {Mak, Don K.},
-  title     = {Simple Moving Average},
-  booktitle = {Trading Tactics in the Financial Market},
-  year      = {2021},
-  publisher = {Springer},
-  doi       = {10.1007/978-3-030-70622-7_3}
+@online{amazon_mak_author,
+  author  = {Mak, Don K.},
+  title   = {Don K. Mak --- Amazon Author Page},
+  url     = {https://www.amazon.com/Don-K-Mak/e/B001JOC9LY},
+  urldate = {2026-05-31},
 }
 
-@incollection{mak2021ema,
-  author    = {Mak, Don K.},
-  title     = {Exponential Moving Average},
-  booktitle = {Trading Tactics in the Financial Market},
-  year      = {2021},
-  publisher = {Springer},
-  doi       = {10.1007/978-3-030-70622-7_4}
-}
-
-@incollection{mak2021awesome,
-  author    = {Mak, Don K.},
-  title     = {Awesome Oscillator and Accelerator Oscillator},
-  booktitle = {Trading Tactics in the Financial Market},
-  year      = {2021},
-  publisher = {Springer},
-  doi       = {10.1007/978-3-030-70622-7_5}
-}
-
-@incollection{mak2021macd,
-  author    = {Mak, Don K.},
-  title     = {Moving Average Convergence-Divergence and Its Histogram},
-  booktitle = {Trading Tactics in the Financial Market},
-  year      = {2021},
-  publisher = {Springer},
-  doi       = {10.1007/978-3-030-70622-7_6}
-}
-
-@incollection{mak2021turning,
-  author    = {Mak, Don K.},
-  title     = {Market Turning Points},
-  booktitle = {Trading Tactics in the Financial Market},
-  year      = {2021},
-  publisher = {Springer},
-  doi       = {10.1007/978-3-030-70622-7_2}
-}
-
-@incollection{mak2021tactics_technical,
-  author    = {Mak, Don K.},
-  title     = {Trading Tactics in Technical Analysis},
-  booktitle = {Trading Tactics in the Financial Market},
-  year      = {2021},
-  publisher = {Springer},
-  doi       = {10.1007/978-3-030-70622-7_1}
-}
-
-@incollection{mak2021real,
-  author    = {Mak, Don K.},
-  title     = {Trading Tactics in the Real Market},
-  booktitle = {Trading Tactics in the Financial Market},
-  year      = {2021},
-  publisher = {Springer},
-  doi       = {10.1007/978-3-030-70622-7_7}
-}
-
-@incollection{mak2021analysis,
-  author    = {Mak, Don K.},
-  title     = {Analysis of the Trading Tactics},
-  booktitle = {Trading Tactics in the Financial Market},
-  year      = {2021},
-  publisher = {Springer},
-  doi       = {10.1007/978-3-030-70622-7_8}
-}
-
-@online{mql5:deleted_fgdi_mt4,
-  author    = {{[Deleted] (jppoton)}},
-  title     = {Fractal Graph Dimension Indicator (FGDI)},
-  url       = {https://www.mql5.com/en/code/8844},
-  urldate   = {2026-05-09},
-  note      = {MQL4 Code Base -- Indicators}
-}
-
-@online{mql5:scriptor_fgdi,
-  author    = {{Scriptor}},
-  title     = {FGDI},
-  url       = {https://www.mql5.com/en/code/21826},
-  urldate   = {2026-05-09},
-  note      = {MQL5 Code Base -- Indicators}
-}
-
-@online{mql5:godzilla_fgdi,
-  author    = {{Nikolay Kositsin}},
-  title     = {FGDI},
-  url       = {https://www.mql5.com/en/code/16916},
-  urldate   = {2026-05-09},
-  note      = {MQL5 Code Base -- Indicators}
-}
-
-@online{mql5:deleted_hurst_variations,
-  author    = {{[Deleted] (jppoton)}},
-  title     = {Variations of the Hurst Exponent over time},
-  url       = {https://www.mql5.com/en/code/9676},
-  urldate   = {2026-05-09},
-  note      = {MQL4 Code Base -- Indicators}
-}
-
-@online{mql5:scriptor_hurst_difference,
-  author    = {{Scriptor}},
-  title     = {Hurst\_Difference},
-  url       = {https://www.mql5.com/en/code/22798},
-  urldate   = {2026-05-09},
-  note      = {MQL5 Code Base -- Indicators}
-}
-
-@online{mql5:deleted_fractal_bands,
-  author    = {{[Deleted] (jppoton)}},
-  title     = {Fractal Bands},
-  url       = {https://www.mql5.com/en/code/8895},
-  urldate   = {2026-05-09},
-  note      = {MQL4 Code Base -- Indicators}
-}
-
-@online{mql5:deleted_frasmav2,
-  author    = {{[Deleted] (jppoton)}},
-  title     = {FRASMAv2},
-  url       = {https://www.mql5.com/en/code/8866},
-  urldate   = {2026-05-09},
-  note      = {MQL4 Code Base -- Indicators}
-}
-
-@online{mql5:deleted_fractal_selfsimilarity,
-  author    = {{[Deleted] (jppoton)}},
-  title     = {A measure of fractal self-similarity},
-  url       = {https://www.mql5.com/en/code/9604},
-  urldate   = {2026-05-09},
-  note      = {MQL4 Code Base -- Indicators}
-}
-
-@online{mql5:ilnur_variation_index_mt4,
-  author    = {{Ilnur Iksanov}},
-  title     = {Variation Index},
-  url       = {https://www.mql5.com/en/code/8464},
-  urldate   = {2026-05-09},
-  note      = {MQL4 Code Base -- Indicators}
-}
-
-@online{mql5:godzilla_variation_index_mt5,
-  author    = {{Nikolay Kositsin}},
-  title     = {Variation Index},
-  url       = {https://www.mql5.com/en/code/463},
-  urldate   = {2026-05-09},
-  note      = {MQL5 Code Base -- Indicators}
-}
-
-@online{mql5:lastviking_fdi_step_ema,
-  author    = {{LastViking}},
-  title     = {Fractal Dimension Index. + Step EMA},
-  url       = {https://www.mql5.com/en/code/8997},
-  urldate   = {2026-05-09},
-  note      = {MQL4 Code Base -- Indicators}
-}
-
-@online{mql5:kayruyuta_institutional_fdi,
-  author    = {{Amanda Vitoria De Paula Pereira}},
-  title     = {Institutional Fractal Dimension Index (Regime Detector)},
-  url       = {https://www.mql5.com/en/code/71577},
-  urldate   = {2026-05-09},
-  note      = {MQL5 Code Base -- Indicators}
-}
-
-@online{mql5:mladen_fractals_chaos_oscillator,
-  author    = {{Mladen Rakic}},
-  title     = {Fractals Chaos Oscillator},
-  url       = {https://www.mql5.com/en/code/20068},
-  urldate   = {2026-05-09},
-  note      = {MQL5 Code Base -- Indicators}
-}
-
-@online{mql5:mladen_choppiness_index,
-  author    = {{Mladen Rakic}},
-  title     = {Choppiness Index},
-  url       = {https://www.mql5.com/en/code/21585},
-  urldate   = {2026-05-09},
-  note      = {MQL5 Code Base -- Indicators}
-}
-
-@online{mql5:rajeshnait_timeframe_quality,
-  author    = {{Rajesh Kumar Nait}},
-  title     = {Timeframe Quality Analyzer},
-  url       = {https://www.mql5.com/en/code/69537},
-  urldate   = {2026-05-09},
-  note      = {MQL5 Code Base -- Indicators}
-}
-
-@online{mak_amazon_author,
-  author    = {{Amazon.com}},
-  title     = {Don K. Mak -- Author Page},
-  url       = {https://www.amazon.com/Don-K-Mak/e/B001JOC9LY},
-  urldate   = {2026-05-09}
-}
-
-@online{mak_goodreads,
-  author    = {{Goodreads}},
-  title     = {Don K. Mak -- Author Page},
-  url       = {https://www.goodreads.com/author/show/2820509.Don_K_Mak},
-  urldate   = {2026-05-09}
-}
-
-@online{mak_worldsci_author,
-  author    = {{World Scientific}},
-  title     = {Author: Mak, Don K -- Search Results},
-  url       = {https://www.worldscientific.com/author/Mak%2C+Don+K},
-  urldate   = {2026-05-09}
+@online{springer_mak2021,
+  title   = {Trading Tactics in the Financial Market --- Springer},
+  url     = {https://link.springer.com/book/10.1007/978-3-030-70622-7},
+  urldate = {2026-05-31},
+  note    = {Publisher page with TOC, author bio, and metrics},
 }
 ```
