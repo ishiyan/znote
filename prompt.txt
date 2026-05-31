@@ -1680,3 +1680,135 @@ Do the following steps:
 - Also add tests 1 and 2 from the intial implementation
 At this point we should have generated master expected test data for all languages.
 ---------------------------------
+For completeness, let's implement Sinc-based wavelets WBH / WBM / WBL / WBV
+Can we do it in single idicator?
+
+I created inputs/don-mak/sinc-wavelet-bandpass/ folder for the implementation.
+Let's start with the description.md with the description of how indicator works, including:
+- basic principles on which it is based (for non-mathematicians)
+- mathematical equations from articles (in KaTeX, inline $...$, display $...$) explaining how calculation goes.
+  Please copy full mathematical description from book chapters, because agents reading this document will not have access to them.
+- configuration parameters description, valid ranges, default values
+- algorithmic calculation flow, use Mermaid flowcharts
+- references and bibtex to sources, you can find bibtex in all 3 books
+- create a Python implementation sinc-wavelet-bandpass.py and:
+  - put excessive comments in code
+  - use only "standard" Python functionality (no numpy, no pandas, etc) because agents need to port this Python code to other languages, like Rust, Zig and Go. So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
+  - show example usage in __main__
+-------------------------------------------
+In inputs/raymond-lee/2020-quantum-finance/ folder there is a qf.epub book.
+Convert each chapter and each appendix one-by-one to markdown.
+Skip front matter, contents, bibliography, index, etc.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, **give very large margins, better full pages**, I will crop them manually.
+-------------------------------------------
+In inputs/raymond-lee/2020-quantum-finance/ as working directory,
+make a toc.md file with the cover.png image, name of the book, author, year and a bibtex.
+After that add list with links to chapters markdowns, mentioning chapter name.
+After that add list of links tp appendices markdowns. mentioning appendix name.
+The bibtex is:
+```bibtex
+@book{Lee2020quantum,
+  author    = {Lee, Raymond S. T.},
+  title     = {Quantum Finance: Intelligent Forecast and Trading Systems},
+  publisher = {Springer Singapore},
+  year      = {2020},
+  doi       = {10.1007/978-981-32-9796-8},
+  url       = {https://doi.org/10.1007/978-981-32-9796-8},
+}
+```
+---------------------------------------------
+In inputs/raymond-lee/2021-a420121/ folder there is a A420121.pdf article.
+Convert it to markdown file content.md.
+When extracting illustrations and figures, **give very large margins, better full pages**, I will crop them manually.
+-------------------------------------------
+In external/william-blau/1995-momentum-direction-and-divergence/ folder there are ch-XX.pdf and ap-XX.pdf files.
+They are chapters and appendicies of a book.
+Convert each chapter and appendix one-by-one to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In the inputs/raymond-lee/ as a working folder, please read:
+- all chapters of the 2020-quantum-finance/ book
+- the 2021-a420121/ papers
+- qffc.uic.edu.cn/ materials and *.mq4 files in subfolders
+Write indicators.md containing indicators or utilities you think we can implement from this material.
+Looks like MQ4 files rely on closed source Windows DLLs.
+I downloadd them because it was the only author's material I could find.
+Are they still useful?
+Is webpage with Python code also depends on these DLLs?
+-----------------------------
+Let's start with the description.md with the description (it is very essential because of difficulcy of material) of how indicator works, including:
+- basic principles on which it is based
+- mathematical equations from articles (in KaTeX, inline $...$, display $...$) explaining how calculation goes.
+  Please copy full mathematical description from book chapters, because agents reading this document will not have access to them.
+- configuration parameters description, valid ranges, default values
+- algorithmic calculation flow, use Mermaid flowcharts
+- references and bibtex to all sources
+- create a Python implementation quantum-price-levels.py and:
+  - put excessive comments in code
+  - use only "standard" Python functionality (no numpy, no pandas, etc) because agents need to port this Python code to other languages, like Rust, Zig and Go. So if "standard library" doesn't provide the numpy functionality you used, other languages have to implement it in code, which is not handy.
+  - show example usage in __main__
+---------------------------------
+Now copy description.md quantum-price-levels.py to the
+prepared-for-conversion/quantum-price-levels/ folder.
+This will be the master code and the master documentation to convert this indicator to various languages in another repo.
+Please ensure new description.md contains all theoretical background and bibtex.
+After this step, our working diractory will be prepared-for-conversion/quantum-price-levels/
+In this directory there are 5 filse with test input data for different languages:
+- test_testdata.py
+- testdata_test.go
+- testdata.ts
+- testdata.rs
+- testdata.zig
+We will generate test output data from our master Python implementation and fill expacted data arrays into these files.
+Do the following steps:
+- modify quantum-price-levels.py so that:
+  - In its __main__, the code should read the 252 INPUT_CLOSE values from test_testdata.py
+    You better just embed this array into the __main__
+    In our case, we need 2048 data points, but can we live with 252?
+    Maybe we just have to use Log-normal random walk data you generated, but then we have to put it as input array in testdata files for all languages. 
+- Propose the reasonable combination of parameters for generation of reference output data.
+  The number of combinations should be limited to 64.
+  Ask me to confirm the o#proposal.
+- Then, the __main__ should generate reference outputs for combination of parameters you propsed above.
+- Use 15-digit precision in generated output floating-point data.
+- All outputs should be appended as Python arrays (as in INPUT_CLOSE in test_testdata.py) to the test_testdata.py file.
+- The names of the arrays should be EXPECTED_XX_x_YY_y_YY_z, where x,y,z are values of parameters and X,Y,Z are name shortcuts.
+- For floating point values, use "_" instead of ".".
+- Before each array put a comment with text in "What it tests" column of the table above.
+- On the next comment line put the parameter names and their values.
+- In data arrays, use NaN if indidicator is not primed yet.
+- After running, verify that test_testdata.py contains output expected reference data
+- Append expected reference output data arrays from test_testdata.py to the individual test data files for other languages.
+  They already contain the input data arrays. Per language:
+  - testdata_test.go
+    - Update package xxxx with quantum-price-levels with stripped underscores, following Go idiomatic naming.
+    - import "math" and use math.Nan() for NaNs
+    - you can use Go names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "var expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+  - testdata.ts
+    - use TypeScript-specific array as in "export const test_input() number[] = ["
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "export const expectedW9_S6_O0_85" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use NaN for NaNs
+  - testdata.rs
+    - use Rust-specific array as in "pub fn test_input() -> Vec<f64>"
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and lowercase param shortcuts.
+      For example, "pub fn expected_w9_s6_o0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+      Note the underscore between "expected" and "w9_..."
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+    - use f64:NAN for NaNs
+  - testdata.zig
+    - ensure there are "const math = @import("std").math;" and "const nan = math.nan(f64);" at the top of the file
+    - use nan for NaNs
+    - use Zig-specific array as in "pub fn testInput() [252]f64" with "return" statement
+    - use names of arrays with underscores, as in Python but start with lowclase "expected" and uppercase param shortcuts.
+      For example, "pub fn expectedW9_S6_O0_85()" for parameters "window=9, sigma=6.0, offset=0.85"
+    - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
+- Also add tests 1 and 2 from the intial implementation
+At this point we should have generated master expected test data for all languages.
