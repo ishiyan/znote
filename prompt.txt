@@ -1831,3 +1831,30 @@ The bibtex is:
 }
 ```
 --------------------------------
+In inputs/william-blau/tasc/1993-01-stochastic-momentum/ folder there is the
+tasc_v11_1993_01_pp11-18_William_Blau-Stochastic_Momentum.pdf
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+In content.md mention:
+- https://technical.traders.com/archive/article.asp?file=\V11\C01\STOCHAS.pdf
+- Add bibtex for article.
+----------------------------------
+In inputs/william-blau/mql5/ folder there is the
+mq5.mhtml file saved from https://www.mql5.com/en/articles/190
+You can either use this file or look directly at URL, what is more convenient.
+Switch to this folder and convert this document to markdown using document-to-markdown/ skill,
+placing output in the same directory.
+Name converted markdown as content.md, place assets in assets/ folder.
+In content.md mention:
+- https://www.mql5.com/en/articles/190
+- Add bibtex for article.
+----------------------------------
+In the inputs/william-blau/ as a working folder, take your time to read:
+- all chapters (ch-XX.md) in the 1995-momentum-direction-and-divergence/ book
+- all 5 tasc articles (content.md) in tasc/ folder
+- article (content.md) in the mql5/ folder and *.mq5/*.mqh files in the mql5/code/ folder
+- 2 researches (deep-research.md and trading-research.md)
+Write indicators.md containing indicators or utilities you think we can implement from this material.
+-----------------------------
