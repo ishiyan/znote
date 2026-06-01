@@ -13,6 +13,9 @@
 }
 ```
 
+[Issue 4 Volume 2](https://www.iajer.com/volume-4-issue-2/)
+[PDF](https://www.iajer.com/wp-content/uploads/2021/02/A420121.pdf)
+
 # Quantum Finance Forecast System with Quantum Anharmonic Oscillator Model for Quantum Price Level Modeling
 
 **Raymond S. T. Lee**
