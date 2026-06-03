@@ -143,18 +143,19 @@ Signal  = EMA(Ergodic, ul)
 ### 4.1 Mean Deviation Index (MDI)
 
 ```
-md(price, q) = price - EMA(price, q)
-MDI(price, q, r, s, u) = 100 * TEMA(md, r, s, u) / TEMA(|md|, r, s, u)
+md(close, r) = close - EMA(close, r)
+MDI(close, r, s, u) = EMA(EMA(md, s), u)
 ```
 
-- **Parameters**: q=20, r=20, s=5, u=3
-- **Range**: [-100, +100]
-- **Properties**: Measures deviation from trend; approximates MACD when q >> s
+- **Parameters**: r=20, s=5, u=3 (MQL5); book pure form uses u=1
+- **Range**: unbounded (raw price units, like a MACD line)
+- **Properties**: Un-normalized detrended momentum; approximates the MACD when r is long and s is short
+- **Note**: NOT normalized. The authoritative book (ch. 5, Appendix B-11) and MQL5 `Blau_MDI.mq5` define a raw EMA-smoothed deviation with **no `100*TEMA/TEMA` ratio** and **no separate detrend period `q`** — the baseline period is `r` itself.
 
 ### 4.2 Ergodic MDI Oscillator
 
 ```
-Ergodic = MDI(price, q, r, s, u)
+Ergodic = MDI(close, r, s, u)
 Signal  = EMA(Ergodic, ul)
 ```
 
@@ -162,20 +163,22 @@ Signal  = EMA(Ergodic, ul)
 
 ## Group 5: MACD-Based
 
-### 5.1 MACD (Blau-style, normalized)
+### 5.1 MACD (Blau-style)
 
 ```
-macd(price, q1, q2) = EMA(price, q1) - EMA(price, q2)
-MACD_I(price, q1, q2, r, s, u) = 100 * TEMA(macd, r, s, u) / TEMA(|macd|, r, s, u)
+macd(close, r, s) = EMA(close, s) - EMA(close, r)   # s fast < r slow
+MACD_I(close, r, s, u) = EMA(macd, u)
 ```
 
-- **Parameters**: q1=12, q2=26, r=20, s=5, u=3
-- **Range**: [-100, +100]
+- **Parameters**: r=20 (slow), s=5 (fast), u=3 (MQL5); book pure form uses u=1
+- **Range**: unbounded (raw price units, the classic MACD line)
+- **Properties**: Un-normalized double-smoothed momentum; nearly interchangeable shape with the MDI (within a scale factor)
+- **Note**: NOT normalized. The authoritative book (ch. 5, Appendix B-13) and MQL5 `Blau_MACD.mq5` define a raw MACD line with **no `100*TEMA/TEMA` ratio** — the fast EMA is `s`, the slow EMA is `r` (`s < r`), and `u` smooths the line.
 
 ### 5.2 Ergodic MACD Oscillator
 
 ```
-Ergodic = MACD_I(price, q1, q2, r, s, u)
+Ergodic = MACD_I(close, r, s, u)
 Signal  = EMA(Ergodic, ul)
 ```
 
@@ -202,16 +205,19 @@ CMI(r, s, u) = 100 * TEMA(cmtm, r, s, u) / TEMA(|cmtm|, r, s, u)
 - **Range**: [-100, +100]
 - **Properties**: TSI-format using intra-bar momentum
 
-### 6.3 Candlestick Strength Index (CSI)
+### 6.3 Candlestick Index (CSI)
 
 ```
-CSI(r, s, u) = 100 * TEMA(close - low, r, s, u) / [TEMA(close - low, r, s, u) + TEMA(high - close, r, s, u)]
+CSI(r, s, u) = 100 * TEMA(close - open, r, s, u) / TEMA(high - low, r, s, u)
 ```
 
-- **Alternative**: `= 100 * TEMA(close - low, r, s, u) / TEMA(high - low, r, s, u)`
-- **Parameters**: r=32, s=32, u=1
-- **Range**: [0, 100]
-- **Properties**: RSI-format for intra-bar close position
+- **Parameters**: r=20, s=5, u=3 (book Appendix B-15; MQL5 Blau_CSI)
+- **Range**: [-100, +100]
+- **Properties**: signed candle body normalized by the bar range; shares CMI's
+  numerator TEMA(close-open) but divides by TEMA(high-low) instead of
+  TEMA(|close-open|). Blau calls this the "CandleStick Indicator." Not to be
+  confused with the unrelated RSI-style close-position oscillator
+  100*TEMA(close-low)/TEMA(high-low) in [0,100].
 
 ### 6.4 Ergodic CMI / CSI Oscillators
 
