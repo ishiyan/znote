@@ -1987,3 +1987,9 @@ Then:
 - for each prepared-for-conversion/*/ folder there should be a maching folder in the don-mak/ folder
 - analyze implementations of indiators for correctness
 -----------------------------
+I created inputs/walter-bressert/ folder with deep-research-md and trading-research.md
+Can yourad them and assess what indicators may be implemented, on which source shoyld/might they be based
+Or this is te ame situation as with Doug Schaff?
+Does it make sense for me to find and download some of his books if there are no his own journal articles describing his indicators?
+-----------------------------
+
