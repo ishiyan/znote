@@ -18,7 +18,7 @@
 
 **Algorithm:**
 
-1. Compute daily price returns: $r(t) = \text{Close}(t) / \text{Close}(t-1)$
+1. Compute daily price returns: $r(t) = \text{Close}(t-1) / \text{Close}(t)$ (inverse ratio, previous/current, matching Lee's MQ4 and Python code)
 2. Compute $\mu$, $\sigma$ of returns over 2048 days
 3. Build wavefunction histogram: 100 bins, width $dr = 3\sigma/50$, centered at $r=1$
 4. Normalize histogram → $NQ[i]$
@@ -26,7 +26,8 @@
 6. Evaluate anharmonic coefficient $\lambda$:
    $$\lambda = \left|\frac{r_{-1}^2 \cdot NQ[\text{maxQno}-1] - r_{+1}^2 \cdot NQ[\text{maxQno}+1]}{r_{+1}^4 \cdot NQ[\text{maxQno}+1] - r_{-1}^4 \cdot NQ[\text{maxQno}-1]}\right|$$
 7. Compute $K_0(n)$:
-   $$K_0(n) = \left[\frac{1.1924 + 33.2383n + 56.2169n^2}{1 + 43.6196n}\right]^{1/3}$$
+   $$K_0(n) = \left[\frac{1.1924 + 33.2383n + 56.2169n^2}{1 + 43.6106n}\right]^{1/3}$$
+   (Note: the published book/article text prints the denominator constant as `43.6196`, but this is a typo — both deployed reference implementations on qffc.uic.edu.cn, the MQ4 `QPL_Calculation.mq4` and the official Python, use `43.6106`. We follow the deployed code.)
 8. Solve depressed cubic (Cardano) for each energy level $n = 0..20$:
    $$E^3 - (2n+1)^2 E - \lambda(2n+1)^3 K_0(n)^3 = 0$$
 9. Quantum Price Return: $QPR(n) = QFEL(n) / QFEL(0)$

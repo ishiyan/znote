@@ -43,13 +43,18 @@ def compute_k0(n):
     Compute the K0 constant for energy level n.
 
     Formula (eq. 31 in Lee 2021):
-        K0(n) = ((1.1924 + 33.2383*n + 56.2169*n^2) / (1 + 43.6196*n))^(1/3)
+        K0(n) = ((1.1924 + 33.2383*n + 56.2169*n^2) / (1 + 43.6106*n))^(1/3)
+
+    NOTE: The published paper/book text prints the denominator constant as
+    43.6196, but that is a typo. Both deployed reference implementations
+    (the MQ4 QPL_Calculation.mq4 and the official Python on qffc.uic.edu.cn)
+    use 43.6106, which we follow here.
 
     These coefficients come from Dasgupta et al.'s empirical fit to the
     quantum anharmonic oscillator energy spectrum for the quartic (m=2) case.
     """
     numerator = 1.1924 + 33.2383 * n + 56.2169 * n * n
-    denominator = 1.0 + 43.6196 * n
+    denominator = 1.0 + 43.6106 * n
     return (numerator / denominator) ** (1.0 / 3.0)
 
 

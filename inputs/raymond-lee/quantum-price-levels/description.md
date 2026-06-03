@@ -85,9 +85,11 @@ $$E(n)^3 - (2n+1)^2 \cdot E(n) - \lambda(2n+1)^3 K_0(n)^3 = 0 \tag{7}$$
 
 where:
 
-$$K_0(n) = \left(\frac{1.1924 + 33.2383n + 56.2169n^2}{1 + 43.6196n}\right)^{1/3} \tag{8}$$
+$$K_0(n) = \left(\frac{1.1924 + 33.2383n + 56.2169n^2}{1 + 43.6106n}\right)^{1/3} \tag{8}$$
 
-The coefficients 1.1924, 33.2383, 56.2169, 43.6196 are empirical constants from Dasgupta et al.'s numerical fitting of the QAHO energy spectrum.
+The coefficients 1.1924, 33.2383, 56.2169, 43.6106 are empirical constants from Dasgupta et al.'s numerical fitting of the QAHO energy spectrum.
+
+> **Note on the denominator constant.** The published paper and book print this constant as `43.6196`, but that is a typo. Both deployed reference implementations on qffc.uic.edu.cn — the MQ4 `QPL_Calculation.mq4` (`1 + 43.6106*eL`) and the official Python tutorial (`1 + (43.6106*eL)`) — use **43.6106**. This was confirmed numerically: the reference K0 outputs match 43.6106 exactly, not 43.6196. We follow the deployed code.
 
 ### Finding $\lambda$ via Finite Difference Method (FDM)
 
@@ -213,7 +215,7 @@ Guard: if `maxQno` is 0 or 99, the computation is invalid.
 
 ### Step 6: Compute $K_0(n)$ Constants
 
-$$K_0(n) = \left(\frac{1.1924 + 33.2383n + 56.2169n^2}{1 + 43.6196n}\right)^{1/3}, \quad n = 0..20$$
+$$K_0(n) = \left(\frac{1.1924 + 33.2383n + 56.2169n^2}{1 + 43.6106n}\right)^{1/3}, \quad n = 0..20$$
 
 ### Step 7: Solve for Energy Levels (Cardano)
 

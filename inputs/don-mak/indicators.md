@@ -26,6 +26,7 @@ A consolidated catalogue of indicators, filters, and techniques derived from thr
 
 | Abbrev | Mnemonic | Name | Source |
 |--------|----------|------|--------|
+| PCTK | StochK | Stochastic %K = (C − L)/(H − L) (standard; Mak analyzes it) | Ch 4.1 |
 | MOM | MOM | Momentum (2-point difference) | Ch 4.2 |
 | PV | ParVel | Parabolic Velocity | Ch 6.1 |
 | PA | ParAcc | Parabolic Acceleration | Ch 6.2 |
@@ -116,6 +117,26 @@ A consolidated catalogue of indicators, filters, and techniques derived from thr
 ---
 
 ## Book 3: Trading Tactics in the Financial Market (2021)
+
+### Third-Party Indicators Mak Analyzes (Ch 5–6)
+
+| Abbrev | Mnemonic | Name | Source | Origin |
+|--------|----------|------|--------|--------|
+| AO | Awesome | Awesome Oscillator = SMA(median,5) − SMA(median,34) | Ch 5 | Bill Williams |
+| AC | Accel | Accelerator Oscillator = AO − SMA(AO,5) | Ch 5 | Bill Williams |
+| MACD | MACD | MACD = EMA(12) − EMA(26); signal = EMA(MACD,9) | Ch 6 | Appel |
+| MACDH | MACDHist | MACD Histogram = MACD − signal | Ch 6 | Appel |
+
+These are standard third-party indicators. Mak's contribution is the frequency-response analysis (each is a velocity or acceleration filter), not the indicators themselves. They are cataloged here for completeness but skipped for implementation (ubiquitous). See Skip table below.
+
+### Mak Reduced-Lag Tactics (Ch 8)
+
+| Abbrev | Mnemonic | Name | Source |
+|--------|----------|------|--------|
+| PMSMA | PriceMinusSMA | price − SMA(N) (zero Loss Zone by design) | Ch 8 (D.26) |
+| PMEMA | PriceMinusEMA | price − EMA(M) (zero Loss Zone by design) | Ch 8 (D.24) |
+
+**PMSMA / PMEMA** — Mak's deliberately phase-optimal velocity tactics: subtracting a moving average from raw price yields an oscillator whose entire spectrum lies in the Profit Zone (no Loss Zone), per his Appendix A framework. Trivial composition (`price − ma`), so skipped for standalone implementation, but theoretically the "best" of the velocity tactics in the book.
 
 ### Novel Velocity / Acceleration Indicators
 
@@ -212,12 +233,53 @@ It's not a uniform operation — each indicator type responds differently to sub
 | **SMA / EMA / BWF / SINC** | Well-known DSP filters available in every library. No novelty. |
 | **MOM / MACD / MACDH** | Standard momentum indicators available everywhere. |
 | **DEMA** (Double EMA) | `ema(ema(price))` — trivial. |
+| **AO** (Awesome Oscillator, B3 Ch5) | Bill Williams indicator: `sma(median,5) − sma(median,34)`. Third-party, ubiquitous. Mak only contributes frequency analysis. |
+| **AC** (Accelerator Oscillator, B3 Ch5) | Bill Williams indicator: `AO − sma(AO,5)`. Third-party, ubiquitous. |
+| **PMSMA / PMEMA** (B3 Ch8) | `price − sma(N)` / `price − ema(M)`. Trivial one-line composition. Theoretically zero-Loss-Zone, but not a standalone algorithm. |
+| **PCTK** (Stochastic %K, B1 Ch4.1) | `(C−L)/(H−L)`. Standard, ubiquitous. Mak analyzes it critically. |
+| **Simple return** (B1 Ch3.1) | `(x(n)−x(n−1))/x(n−1)`. Preprocessing transform, not an indicator. |
 
 ### Not from Don Mak
 
 | Indicator | Implementation | Source |
 |-----------|---------------|--------|
 | **Moving Mini-Max** | `moving-mini-max` | Silagadze 2008 |
+
+---
+
+## Confirmed Non-Implementable (surveyed, not formulated)
+
+A full deep-read of all three books verified that several topics one might expect to yield
+indicators contain **no formulas, coefficients, or algorithms** — they are literature surveys,
+market-characterization models, or analytical frameworks. These are documented here so they are
+not mistakenly re-investigated as implementation candidates.
+
+| Topic | Location | Why not implementable |
+|-------|----------|-----------------------|
+| Fractal dimension / Hurst exponent / R/S analysis | B1 Ch 2 ("Is the Market Random?") | Literature survey only; results quoted (D≈1.33–1.69) but no estimator algorithm given. |
+| Approximate entropy, BDS test, runs test, close-returns test | B1 Ch 2 | Named only; no formulas. |
+| Chaos theory / Lyapunov exponent / correlation dimension | B1 Ch 12 | Philosophical/narrative wrap-up; no algorithm. |
+| Fuzzy-logic decision procedure | B1 Ch 3.7 | Framework described; no concrete rule set or numbers. |
+| ARIMA(p,d,q) forecasting | B1 Ap 1 | Standard Box–Jenkins; cited fitted examples (IBM, DJU, S&P), not Mak's own indicator. |
+| Log-normal / Lévy / Tsallis-entropy distributions | B2 Ch 2 | Market-characterization models, not chart indicators. |
+| Variance-ratio test, modified R/S, log-periodic crash model, Omori law | B2 Ch 2 | Statistical/descriptive models, no tradeable signal. |
+| Phase / causality framework (H_R ↔ H_I relation) | B2 Ch 7 | Analytical filter-design framework, not a standalone signal. |
+| Ideal brick-wall low-pass filter | B2 Ch 3 | Non-causal / theoretical reference filter. |
+| Profit Zone / Loss Zone taxonomy | B3 Ap A | Evaluation framework for ranking velocity indicators; produces no signal. |
+| Money-management stop-loss expected-value engine | B2 Ch 12–13, Ap 5 | Risk-management math (MATLAB over a Lévy distribution), not a chart indicator. |
+
+### Coefficient errata confirmed during review
+
+The 2003 book's chapter body contains transcription typos that the **appendices correct**. Our
+implementations already use the authoritative appendix forms (verified exactly via the Lagrange
+basis), so no code change is required — recorded here for provenance:
+
+- **Eq 10.4** (velocity forecast) misprints the leading coefficient as `11/6`; correct is `17/6`
+  (Ap 8, A8.12). `polynomial-forecast` computes `price + velocity`, yielding `17/6` exactly. ✓
+- **Eq 10.5** (vel+acc forecast) misprinted; correct is `(23/6, −11/2, 7/2, −5/6)` (A8.14).
+  `polynomial-forecast` order=2 reproduces this exactly. ✓
+- **Eq 9.1** (high wavelet) misprinted; correct sinc form is A7.44. `mexican-hat-wavelet` /
+  `sinc-wavelet-bandpass` compute from the exact formula, not the book's rounded/typo values. ✓
 
 ---
 

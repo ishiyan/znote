@@ -1950,3 +1950,40 @@ Critically rething what is in indicators.md
 Heve we missed something or something was incorrect or something still to implement?
 If so, update indicators.md
 -----------------------------
+In the inputs/don-mak/ , take your time to read:
+- all 3 books in 20XX-*/ folders (chapters ch-*.md), appendices ap-*.md)
+- deep-research.md, trading-research.md, and indicators.md
+- article (content.md) in the mql5/ folder and *.mq5/*.mqh files in the mql5/code/ folder
+- 2 researches (deep-research.md and trading-research.md) and indicators.md
+Critically rething what is in indicators.md
+Heve we missed something or something was incorrect or something still to implement?
+If so, update indicators.md
+-----------------------------
+In the inputs/don-mak/ :
+- inspect all indicator folders prepared-for-conversion/*/
+- for each prepared-for-conversion/*/ folder there should be a maching folder in the don-mak/ folder
+- analyze implementations of indiators for correctness
+-----------------------------
+Did we implemented all indicators? 
+-----------------------------
+In the inputs/zurab-silagadze/ , take your time to read:
+- articles in 0802.*/, and ifta-*/ and mq5/ folders (content.md) and *.mq5 files)
+- deep-research.md, trading-research.md
+- inspect moving-mini-max/ and prepared-for-conversion/moving-mini-max/ indicator folders
+- are they implemented correctly (note mq5 implementation is inferior to article sources)?
+  If not, we should correct them.
+- inspecr description.md in both folders and update if necessary
+-----------------------------
+In the inputs/raymond-lee/ , take your time to read:
+- the book in 2020-*/ folder (chapters ch-*.md, appendices ap-*.md)
+- article in 2021-*/
+- python and mq5 implementations in qffc.uic.edu.cn/ (all *.md, *.mq4 and *.mqh files recursively)
+- deep-research.md, trading-research.md, and indicators.md
+Critically rething what is in indicators.md
+Heve we missed something or something was incorrect or something still to implement?
+If so, update indicators.md
+Then:
+- inspect all indicator folders prepared-for-conversion/*/
+- for each prepared-for-conversion/*/ folder there should be a maching folder in the don-mak/ folder
+- analyze implementations of indiators for correctness
+-----------------------------
