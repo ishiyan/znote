@@ -1992,4 +1992,87 @@ Can yourad them and assess what indicators may be implemented, on which source s
 Or this is te ame situation as with Doug Schaff?
 Does it make sense for me to find and download some of his books if there are no his own journal articles describing his indicators?
 -----------------------------
-
+In inputs/walter-bressert/1991-the-power-of-oscillator-cycle-combinations/ folder there are ch-XX.pdf and ap-XX.pdf files.
+They are chapters and appendicies of a book.
+Convert each chapter and appendix one-by-one to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In inputs/walter-bressert/1997-the-cycle-trading-pattern-manual/ folder there content.pdf file.
+Convert to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In inputs/walter-bressert/1998-trading-with-time-fractals-to-reduce-risk-and-improve-profit-potential/ folder there content.pdf file.
+Convert to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In inputs/walter-bressert/1992-cycles-patterns-and-oscillators-in-the-stock-market/ folder there content.pdf file.
+Convert to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In inputs/walter-bressert/2000-cycle-timing-can-improve-your-timing-performance/ folder there content.pdf file.
+Convert to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In inputs/walter-bressert/2001-intraday-timing-for-low-risk-swing-trading/ folder there content.pdf file.
+Convert to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In inputs/walter-bressert/2002-overview-of-profit-trader-6-0-indicators/ folder there content.pdf file.
+Convert to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In inputs/walter-bressert/2003-profit-trader-for-metastock-manual/ folder there content.pdf file.
+Convert to markdown.
+Name converted chapters ch-XX.md and appendicies ap-XX.md
+Put all assets in the assets folder, give names ch-XX-*.* and ap-XX-*.*
+When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+----------------------------
+In inputs/walter-bressert/1997-the-cycle-trading-pattern-manual/ folder
+we created separate ch-*.md files splitting content in chanks.
+Can you combine them into single content.md
+Leave ch-*.md and assets as is
+----------------------------
+In inputs/walter-bressert/1992-cycles-patterns-and-oscillators-in-the-stock-market/ folder
+we created separate ch-*.md files splitting content in chanks.
+Can you combine them into single content.md
+Leave ch-*.md and assets as is
+----------------------------
+In inputs/walter-bressert/2003-profit-trader-for-metastock-manual/ folder
+we created separate ch-*.md files splitting content in chanks.
+Can you combine them into single content.md
+Leave ch-*.md and assets as is
+----------------------------
+In inputs/walter-bressert/2002-overview-of-profit-trader-6-0-indicators/ folder
+we created separate ch-*.md files splitting content in chanks.
+Can you combine them into single content.md
+Leave ch-*.md and assets as is
+----------------------------
+In inputs/walter-bressert/2001-intraday-timing-for-low-risk-swing-trading/ folder
+we created separate ch-*.md files splitting content in chanks.
+Can you combine them into single content.md
+Leave ch-*.md and assets as is
+----------------------------
+In inputs/walter-bressert/1991-the-power-of-oscillator-cycle-combinations/ folder
+we created separate ch-*.md and ap-*.md files splitting content in chanks.
+Can you combine them into single content.md
+Leave ch-*.md and assets as is
+----------------------------
+In inputs/walter-bressert/1991-the-power-of-oscillator-cycle-combinations/ folder
+in ch-05.md extracted text is different from the original in ch-05.pdf
+.For instance, "CHART D-16 ... shows a centered 20-Week Moving Average running" became "CHART D-16...is a Daily chart of the S&P 500 with"
+And this is in many places.
+---------------------------
