@@ -1,22 +1,5 @@
 # Chapter 6: Market Structure and the Hurst Coefficient
 
-## BibTeX
-
-```bibtex
-@InBook{ehlers2013cycle_ch6,
-  author    = {Ehlers, John F.},
-  title     = {Cycle Analytics for Traders: Advanced Technical Trading Concepts},
-  chapter   = {6},
-  chaptertitle = {Hurst Coefficient},
-  publisher = {Wiley},
-  year      = {2013},
-  series    = {Wiley Trading},
-  isbn      = {9781118728604},
-}
-```
-
----
-
 *“The market has a definite structure,” said Tom randomly.*
 
 It is well understood that white noise has no correlation in time, and random walk (Brownian motion) noise has no correlation between increments. Brownian walks can be generated from a function where the spectral density is proportional to $1/F^ {\alpha}$, where $F$ is frequency, $\alpha$ is a power law, and $\alpha = 1$ generally signifies “long memory,” as I will describe in Chapter 8. Thus, $1/F$ noise is synonymous with long-range dependence. Integration of noise increases the exponent $\alpha$ by $2$, whereas the inverse operation of differentiation decreases it by $2$. Therefore, $1/F^ {\alpha}$ noise cannot be obtained by the simple procedure of integration or of differentiation of such convenient signals. The widespread occurrence of signals exhibiting such behavior suggests that a generic mathematical explanation might exist. The ubiquity of $1/F^ {\alpha}$ noise is one of the oldest puzzles of contemporary physics and science in general.
@@ -28,7 +11,7 @@ $$\begin{aligned}
 &= \alpha \log(F) + \log(\text{constant})
 \end{aligned}$$
 
-![Figure 6.1: Time Series and Spectral Densities for Several Kinds of Noise](ch6_images/fig_01.png)
+![Figure 6.1: Time Series and Spectral Densities for Several Kinds of Noise](assets/ch6_fig_01.png)
 
 **Figure 6.1** *Time Series and Spectral Densities for Several Kinds of Noise*
 
@@ -134,17 +117,17 @@ Plot1(SmoothHurst);
 
 The fractal dimension indicator is applied to approximately one year of data of Dollar General (symbol DG) in Figure 6.2 using an input length of $30$. With this setting, the Hurst coefficient swings between showing persistence and antipersistence. However, when the input length is increased to $200$, as shown in Figure 6.3, the uptrend is reflected as the Hurst coefficient rising to be above $0.5$.
 
-![Figure 6.2: Using an Input Length of 30, the Hurst Coefficient Swings](ch6_images/fig_02.png)
+![Figure 6.2: Using an Input Length of 30, the Hurst Coefficient Swings](assets/ch6_fig_02.png)
 
 **Figure 6.2** *Using an Input Length of 30, the Hurst Coefficient Swings between Showing Persistence and Antipersistence^
 
-![Figure 6.3: The Longer-Term Trend is Indicated by a Hurst Coefficient](ch6_images/fig_03.png)
+![Figure 6.3: The Longer-Term Trend is Indicated by a Hurst Coefficient](assets/ch6_fig_03.png)
 
 **Figure 6.3** *The Longer-Term Trend is Indicated by a Hurst Coefficient Greater than 0.5 When an Input Length of 200 Is Used^
 
 It is perhaps instructive to describe action of the Hurst coefficient from another theoretical perspective. In Figure 6.4, the indicator is applied to a theoretical sine wave whose period is continuously increasing from left to right from a period of 10 bars to 40 bars. A period of $20$ bars is approximately in the horizontal center of the chart. In this case, I have given the Hurst coefficient indicator an input of $20$. The periodicity in the persistent case is due to the peaks and valleys of the time waveform tending to “fill the boxes” of the fractal dimension. From this perspective, the Hurst coefficient can be used to define trend modes ($> 0.5$) and cycle modes ($< 0.5$) in the market relative to the selected input length.
 
-![Figure 6.4](ch6_images/fig_04.png)
+![Figure 6.4](assets/ch6_fig_04.png)
 
 **Figure 6.4** *Cycle Periods Shorter than the Hurst Coefficient Input Parameter Display as Antipersistent; Longer Cycle Periods Display as Persistent^
 

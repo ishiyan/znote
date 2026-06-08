@@ -1,22 +1,5 @@
 # Chapter 3: Smoothing Filters on Steroids
 
-## BibTeX
-
-```bibtex
-@InBook{ehlers2013cycle_ch3,
-  author    = {Ehlers, John F.},
-  title     = {Cycle Analytics for Traders: Advanced Technical Trading Concepts},
-  chapter   = {3},
-  chaptertitle = {Measuring Cycles},
-  publisher = {Wiley},
-  year      = {2013},
-  series    = {Wiley Trading},
-  isbn      = {9781118728604},
-}
-```
-
----
-
 *“Steroids are for guys who want to cheat their opponents,” said Tom combatively.*
 
 The objective of smoothing filters in trading is to get the highest degree of smoothing possible within the constraint of inducing the least amount of lag. The purpose of this chapter is to develop those kinds of filters for traders. Then, it is up to the trader to interpret the results of the filtering. None of these filters are predictive. None of these filters explain market activity.
@@ -31,11 +14,11 @@ As a shorthand notation, $[b_0 b_1 b_2 b_3 . . . b_N] / S$ is introduced to de
 
 The expectation of obtaining more smoothing by increasing the length of the SMA leads us to examine a six-element nonrecursive filter whose elements are $[1 1 1 1 1 1] / 6$. The frequency response of this filter is shown in Figure 3.2. Increasing the degree of the polynomial introduced another zero in the transfer response polynomial so that two-, three-, and five-bar cycle periods are completely eliminated at the output. However, ­attenuation ­between the rejection points is not changed with respect to the lobe number, and is only slightly increased from lobe to lobe. The critical period of this filter is increased compared to the four-element SMA to be at a $13.7$-bar cycle period.
 
-![Figure 3.1: Frequency Response of a [1 1 1 1] / 4 Nonrecursive Filter](ch3_images/fig_3_1.png)
+![Figure 3.1: Frequency Response of a [1 1 1 1] / 4 Nonrecursive Filter](assets/ch3_fig_3_1.png)
 
 **Figure 3.1** *Frequency Response of a [1 1 1 1] / 4 Nonrecursive Filter*
 
-![Figure 3.2: Frequency Response of a [1 1 1 1 1 1] / 6 Nonrecursive Filter](ch3_images/fig_3_2.png)
+![Figure 3.2: Frequency Response of a [1 1 1 1 1 1] / 6 Nonrecursive Filter](assets/ch3_fig_3_2.png)
 
 **Figure 3.2** ^Frequency Response of a [1 1 1 1 1 1] / 6 Nonrecursive Filter*
 
@@ -43,11 +26,11 @@ Nonrecursive filters are not restricted to be SMAs. The coefficients can be weig
 
 From our experience with SMAs, we can improve both the smoothing and the rejection band attenuation by increasing the degree of the filter (at the expense of increased lag). The frequency response of a $[1 2 3 3 2 1] / 12$ nonrecursive filter is shown in Figure 3.4. In this case, two-, three-, and four-bar cycle periods are completely eliminated from the output of the ­filter and the rejection in the stop bands is still greater than $−25$ dB. Filtering is improved because the critical period has been increased to be at a $10.9$-bar cycle period. All this is done at the expense of a delay of $3.5$ bars. While this is a pretty nice filter, we can do better.
 
-![Figure 3.3: Frequency Response of a [1 2 2 1] / 6 Nonrecursive Filter](ch3_images/fig_3_3.png)
+![Figure 3.3: Frequency Response of a [1 2 2 1] / 6 Nonrecursive Filter](assets/ch3_fig_3_3.png)
 
 **Figure 3.3** *Frequency Response of a [1 2 2 1] / 6 Nonrecursive Filter*
 
-![Figure 3.4: Frequency Response of a [1 2 3 3 2 1] / 12 Nonrecursive Filter](ch3_images/fig_3_4.png)
+![Figure 3.4: Frequency Response of a [1 2 3 3 2 1] / 12 Nonrecursive Filter](assets/ch3_fig_3_4.png)
 
 **Figure 3.4** *Frequency Response of a [1 2 3 3 2 1] / 12 Nonrecursive Filter*
 
@@ -55,11 +38,11 @@ From our experience with SMAs, we can improve both the smoothing and the rejecti
 
 An interesting fact is that if the values of the first and last elements of an SMA having an even degree are cut in half, then one is guaranteed a double zero in the transfer response at the Nyquist frequency. For example, a five-element (four-degree) SMA would have coefficients as $[0.5 1 1 1 0.5] / 4$. The transfer response of a five-element modified SMA is shown in ­Figure 3.5 for comparison to the response of a four-element SMA shown in Figure 3.1. Not only do we have the double zero at the Nyquist frequency and the same zero at a four-bar cycle period, but we also have increased the minimum attenuation between the two zeros to be $−20$ dB, which means the output amplitude is only $10$ percent of the input data amplitude. This improved ­filtering performance comes at the expense of only a half bar of delay because we went from a four-element filter to a five-element filter. The frequency responses of three-, five-, seven-, and nine-element modified SMAs are shown in Figure 3.6.
 
-![Figure 3.5: Frequency Response of a Five-Element Modified Simple](ch3_images/fig_3_5.png)
+![Figure 3.5: Frequency Response of a Five-Element Modified Simple](assets/ch3_fig_3_5.png)
 
 **Figure 3.5** *Frequency Response of a Five-Element Modified Simple ­Moving Average*
 
-![Figure 3.6: Modified Simple Moving Average Frequency Responses](ch3_images/fig_3_6.png)
+![Figure 3.6: Modified Simple Moving Average Frequency Responses](assets/ch3_fig_3_6.png)
 
 **Figure 3.6** *Modified Simple Moving Average Frequency Responses*
 
@@ -72,7 +55,7 @@ $[1 6 12 14 12 6 1] / 52$
 $[−1 28 78 108 118 108 78 28 −1] / 544$
 $[−11 18 88 138 168 178 168 138 88 18 −11] / 980$
 
-![Figure 3.7: Modified Least-Squares Quadratics Filter Frequency Responses](ch3_images/fig_3_7.png)
+![Figure 3.7: Modified Least-Squares Quadratics Filter Frequency Responses](assets/ch3_fig_3_7.png)
 
 **Figure 3.7** *Modified Least-Squares Quadratics Filter Frequency Responses*
 
@@ -116,7 +99,7 @@ d_1 &= 1 - d_2 - d_3 - d_4 \\
 
 The frequency responses for two- and three-pole modified Butterworth filters whose critical period was set at a 10-bar cycle are shown in ­Figure 3.8. The three-pole version gives about 6 dB more attenuation at the Nyquist frequency than the two-pole version. That means the output wave amplitude of the three-pole version would be half the wave amplitude at the Nyquist frequency. In some applications, this difference in filtered amplitude could be important.
 
-![Figure 3.8: Frequency Response of Two- and Three-Pole Modified](ch3_images/fig_3_8.png)
+![Figure 3.8: Frequency Response of Two- and Three-Pole Modified](assets/ch3_fig_3_8.png)
 
 **Figure 3.8** *Frequency Response of Two- and Three-Pole Modified Butterworth Filters Where Period = 10*
 
@@ -135,13 +118,13 @@ c_1 &= 1 - c_2 - c_3 \\
 
 (3-3)
 
-![Figure 3.9: Lags of Two- and Three-Pole Modified Butterworth Filters](ch3_images/fig_3_9.png)
+![Figure 3.9: Lags of Two- and Three-Pole Modified Butterworth Filters](assets/ch3_fig_3_9.png)
 
 **Figure 3.9** *Lags of Two- and Three-Pole Modified Butterworth Filters Where Period = 10*
 
 The frequency response of the SuperSmoother filter where the critical period is set to $10$ is shown in Figure 3.10.
 
-![Figure 3.10: Frequency Response of a SuperSmoother Filter Where](ch3_images/fig_3_10.png)
+![Figure 3.10: Frequency Response of a SuperSmoother Filter Where](assets/ch3_fig_3_10.png)
 
 **Figure 3.10** *Frequency Response of a SuperSmoother Filter Where Period = 10*
 

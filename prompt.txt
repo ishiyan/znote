@@ -2076,3 +2076,5 @@ in ch-05.md extracted text is different from the original in ch-05.pdf
 .For instance, "CHART D-16 ... shows a centered 20-Week Moving Average running" became "CHART D-16...is a Daily chart of the S&P 500 with"
 And this is in many places.
 ---------------------------
+Make a toc.md file with the cover.png image, name of the book, author, year and a bibtex.
+After that add list with links to chapters markdowns, mentioning chapter name.

@@ -1,23 +1,5 @@
 # Chapter 1: Unified Filter Theory
 
-
-## BibTeX
-
-```bibtex
-@InBook{ehlers2013cycle_ch1,
-  author    = {Ehlers, John F.},
-  title     = {Cycle Analytics for Traders: Advanced Technical Trading Concepts},
-  chapter   = {1},
-  chaptertitle = {Unified Filter Theory},
-  publisher = {Wiley},
-  year      = {2013},
-  series    = {Wiley Trading},
-  isbn      = {9781118728604},
-}
-```
-
----
-
 *“It is too complex,” said Tom simply.*
 
 Simplicity is at the heart of the concept of linear systems. Input data are supplied to the system, and the system provides the resultant as an ­output. There is only one input and only one output. However, the system between the input and output can be as complex as desired. The output divided by the input is the transfer response of the system. It is this transfer response that describes the action of the system.
@@ -136,7 +118,7 @@ When we plot the response of the four-element SMA as a function of frequency in 
 
 The horizontal axis is plotted in terms of frequency rather than the cycle period that is most familiar to traders. Frequency and period have a reciprocal relationship, so a frequency of $0.25$ cycles per bar corresponds to a four-bar period. The vertical axis is the amplitude of the output relative to the ­amplitude of the input data in decibels. A decibel ($dB$) is a logarithmic measure of the power in the output. Figure 1.1 shows that there are zeros in the filter transfer response in the frequency domain as well as in the time domain.
 
-![Figure 1.1: Frequency Response of a Four-Bar Simple Moving Average](ch1_images/fig_1_1.png)
+![Figure 1.1: Frequency Response of a Four-Bar Simple Moving Average](assets/ch1_fig_1_1.png)
 
 **Figure 1.1** *Frequency Response of a Four-Bar Simple Moving Average*
 
@@ -154,7 +136,7 @@ Then the frequency response of the filter is shown in Figure 1.2.
 
 In this case, the higher frequencies are passed, and the lower frequencies are severely attenuated by the filter. This is an example of a high-pass filter. Since trends can be viewed as pieces of a very long cycle, a high-pass filter is basically a detrender because the low-trend frequencies are rejected in its transfer response.
 
-![Figure 1.2: Frequency Response of a Two-Bar Difference Filter](ch1_images/fig_1_2.png)
+![Figure 1.2: Frequency Response of a Two-Bar Difference Filter](assets/ch1_fig_1_2.png)
 
 **Figure 1.2** *Frequency Response of a Two-Bar Difference Filter*
 
@@ -212,7 +194,7 @@ $$\text{Output} = \alpha \cdot \text{Input} + (1 - \alpha) \cdot \text{Output}[1
 
 Equation 1-12 is exactly the equation for an exponential moving average (EMA). Note that the sum of all of the coefficients on the right-hand side of Equation 1-11 sum to 1 so that the filter has no noise gain.
 
-![Figure 1.3: shows the frequency response of the EMA when alpha = 0.2.](ch1_images/fig_1_3.png)
+![Figure 1.3: shows the frequency response of the EMA when alpha = 0.2.](assets/ch1_fig_1_3.png)
 
 **Figure 1.3** *shows the frequency response of the EMA when alpha = 0.2.*
 

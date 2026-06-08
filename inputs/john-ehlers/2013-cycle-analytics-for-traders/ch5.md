@@ -1,22 +1,5 @@
 # Chapter 5: Band-Pass Filters
 
-## BibTeX
-
-```bibtex
-@InBook{ehlers2013cycle_ch5,
-  author    = {Ehlers, John F.},
-  title     = {Cycle Analytics for Traders: Advanced Technical Trading Concepts},
-  chapter   = {5},
-  chaptertitle = {Band-Pass Filters},
-  publisher = {Wiley},
-  year      = {2013},
-  series    = {Wiley Trading},
-  isbn      = {9781118728604},
-}
-```
-
----
-
 *“A little of the data narrowly passed,” said Tom broadly.*
 
 Perhaps the least appreciated and most underutilized filter in ­technical analysis is the band-pass filter. The band-pass filter simultaneously ­diminishes the amplitude at low frequencies, qualifying it as a detrender, and diminishes the amplitude at high frequencies, qualifying it as a data ­smoother. It passes only those frequency components from input to output in which the trader is interested. The filtering produced by a band-pass filter is superior because the rejection in the stop bands is related to its bandwidth. The degree of rejection of undesired frequency components is called selectivity. The band-stop filter is the dual of the band-pass filter. It rejects a band of frequency components as a notch at the output and passes all other frequency components virtually unattenuated. Since the bandwidth of the deep rejection in the notch is relatively narrow and since the spectrum of market cycles is relatively broad due to systemic noise, the band-stop filter has little application in trading.
@@ -52,25 +35,25 @@ Another example of the frequency response of a band-pass filter is shown in Figu
 
 Readers can easily make their own chirped frequency sine wave data source in Excel. Make the first column be a counter from $1$ to $1,000$. The equation for a phase rate of change per sample so the cycle period varies from $10$ to $60$ as a counter varies from $100$ to $1,000$ is approximately $Phase = 0.1 − 0.000075 * Counter$. Therefore, in cell B1 type “= 60 + 5 * Sin(6.28318 * (0.1 − 0.000075 * a1))” and then copy cell B1 into cells B2 through B1000. Column B can be the opening price. You can make the data look a little more realistic by making column C the high price as one greater than price in column B, making column D as the low price be one lower than the price in column B, and letting column E be the closing price and have the same value of the price in column B. For those platforms sensitive to dates in price data, export a real data file having about five years of data in CSV format to capture the dates. Then, copy columns B, C, D, and E into the clipboard and then Edit  .  .  . Paste Special  .  .  .  Values into the Open, High, Low, and Close columns, overwriting the values in those columns with the chirped sine wave values. Finally, save the data file so you can import it into your trading platform.
 
-![Figure 5.1: Frequency Response of a Two-Pole Band-Pass Filter Tuned to a](ch5_images/fig_5_1.png)
+![Figure 5.1: Frequency Response of a Two-Pole Band-Pass Filter Tuned to a](assets/ch5_fig_5_1.png)
 
 *^Figure 5.1** *Frequency Response of a Two-Pole Band-Pass Filter Tuned to a 10-Bar Cycle Period and Having 30 Percent Bandwith*
 
-![Figure 5.2: Frequency Response of a Band-Pass Filter Tuned to a 20-Bar](ch5_images/fig_01.png)
+![Figure 5.2: Frequency Response of a Band-Pass Filter Tuned to a 20-Bar](assets/ch5_fig_01.png)
 
 **Figure 5.2** *Frequency Response of a Band-Pass Filter Tuned to a 20-Bar Cycle Period*
 
 One of the amazing characteristics of a band-pass filter is that if the center period of the filter is tuned to a static sine wave whose period is the same as the center period of the filter, then there is absolutely no lag in the output. Figure 5.3 shows the output of a 20-bar band-pass filter having a $30$ percent bandwidth compared to the $20$-bar input data. However, if the band-pass filter is tuned to its previous half-power period of $17$ bars per cycle, the $20$-bar data cycle is longer than the tuned frequency of the filter. As a result, the output response has a $65$-degree lag, as shown in Figure 5.4. However, if the band-pass filter is tuned to its other previous half-power period of $23$ bars per cycle, the $20$-bar data cycle is shorter than the tuned frequency of the filter. As a result, the output response has a $65$-degree lead, as shown in Figure 5.5. The phase shift across the bandwidth of the band-pass filter is unavoidable. The phase shift is doubled each time the number of poles is doubled in the transfer response. Therefore, it is important to use the simplest filter possible in trading to minimize phase shift distortion.
 
-![Figure 5.3: A Band-Pass Filter Precisely Tuned Has No Lag](ch5_images/fig_02.png)
+![Figure 5.3: A Band-Pass Filter Precisely Tuned Has No Lag](assets/ch5_fig_02.png)
 
 **Figure 5.3** *A Band-Pass Filter Precisely Tuned Has No Lag*
 
-![Figure 5.4: 65-Degree Lag Results from the Band-Pass Filter’s Being Tuned](ch5_images/fig_03.png)
+![Figure 5.4: 65-Degree Lag Results from the Band-Pass Filter’s Being Tuned](assets/ch5_fig_03.png)
 
 **Figure 5.4** *65-Degree Lag Results from the Band-Pass Filter’s Being Tuned 15 Percent Too Long*
 
-![Figure 5.5: 65-Degree Lead Results from the Band-Pass Filter’s Being](ch5_images/fig_04.png)
+![Figure 5.5: 65-Degree Lead Results from the Band-Pass Filter’s Being](assets/ch5_fig_04.png)
 
 **Figure 5.5** *65-Degree Lead Results from the Band-Pass Filter’s Being Tuned 15 Percent Too Short*
 
@@ -88,11 +71,11 @@ For example, a band-pass filter having a $Q = 3.33$ would have the energy stored
 
 Figure 5.6 shows the input data as three complete cycles of a sine wave having a $20$-bar cycle period. The subgraph shows the output response of a band-pass filter tuned to a $20$-bar period and having a $Q = 3.33$. The output swing exceeds the half-power amplitude within one full cycle period after the data are applied to the input. Further, the output swing is damped below the half-power amplitude within a half cycle after the data input is removed. However, a relatively high-Q filter will be slow to rise in response to new data and will continue to ring after the data is removed, as shown in ­Figure 5.7.
 
-![Figure 5.6: Transient Response of a Band-Pass Filter Having a Q = 3.33](ch5_images/fig_05.png)
+![Figure 5.6: Transient Response of a Band-Pass Filter Having a Q = 3.33](assets/ch5_fig_05.png)
 
 **Figure 5.6** *Transient Response of a Band-Pass Filter Having a Q = 3.33*
 
-![Figure 5.7: Transient Response of a Band-Pass Filter Having a Q = 10](ch5_images/fig_06.png)
+![Figure 5.7: Transient Response of a Band-Pass Filter Having a Q = 10](assets/ch5_fig_06.png)
 
 **Figure 5.7** *Transient Response of a Band-Pass Filter Having a Q = 10*
 
@@ -100,7 +83,7 @@ Band-pass filters can be more responsive in the time domain by having a lower $Q
 
 Using a band-pass filter having a $30$ percent pass band is a relatively good compromise between selectivity and transient responsiveness for most trading applications.
 
-![Figure 5.8: Transient Response of a Band-Pass Filter Having a Q = 2](ch5_images/fig_07.png)
+![Figure 5.8: Transient Response of a Band-Pass Filter Having a Q = 2](assets/ch5_fig_07.png)
 
 **Figure 5.8** *Transient Response of a Band-Pass Filter Having a Q = 2*
 
@@ -114,7 +97,7 @@ Figure 5.9 depicts the AGC action, where the absolute value of the sine wave sig
 
 $$\text{Gain} = K^{(\text{Period} / 2)}$$
 
-![Figure 5.9: The AGC Normalizing Factor Decays Exponentially and Is](ch5_images/fig_5_9.png)
+![Figure 5.9: The AGC Normalizing Factor Decays Exponentially and Is](assets/ch5_fig_5_9.png)
 
 **Figure 5.9** *The AGC Normalizing Factor Decays Exponentially and Is Rapidly Reset to the Absolute Value of the Cyclic Swing*
 
@@ -199,7 +182,7 @@ Plot6(Trigger);
 
 An example of the indicator plotted over roughly a year on daily data of Dollar General (symbol DG) is shown in Figure 5.10. Note the band-pass filter correctly identifies the peaks and valleys in the data. However, the band-pass filter is dead wrong when the prices go into a trend as in March 2012 and June and July 2012. As a discretionary indicator, one can say the band-pass filter is working well when the filter output looks similar to a sine wave. However, watch out when the filter output contains erratic signals.
 
-![Figure 5.10: Band-Pass Filter Measurement of the Dominant Cycle Period](ch5_images/fig_08.png)
+![Figure 5.10: Band-Pass Filter Measurement of the Dominant Cycle Period](assets/ch5_fig_08.png)
 
 **Figure 5.10** *Band-Pass Indicator for DG Pinpoints Peaks and Valleya*
 
@@ -209,7 +192,7 @@ An interesting addition to the band-pass filter is the second high-pass filter s
 
 Figure 5.10 shows the cycle content of the data swinging pretty much as a variable amplitude sine wave with variable periodicity. The band-pass filter can be used as a relatively simple measurement of the dominant cycle. A cycle is complete when the waveform crosses zero two times from the last zero crossing. Therefore, each successive zero crossing of the indicator marks a half cycle period. We can establish the dominant cycle period as twice the spacing between successive zero crossings.
 
-![Figure 5.11: he Leading Trigger Waveform Clearly Flags Peaks and Valleys of the Band-Pass Indicator in Real Time](ch5_images/fig_09.png)
+![Figure 5.11: he Leading Trigger Waveform Clearly Flags Peaks and Valleys of the Band-Pass Indicator in Real Time](assets/ch5_fig_09.png)
 
 **Figure 5.11** *The Leading Trigger Waveform Clearly Flags Peaks and Valleys of the Band-Pass Indicator in Real Time*
 
@@ -217,7 +200,7 @@ When we measure the dominant cycle period this way, it is best to widen the pass
 
 While measuring the changing dominant cycle period via zero crossings of the band-pass waveform is easy, it is not necessarily the most accurate method. More accurate techniques examining the entire spectral content of the data are presented in later chapters of this book.
 
-![Figure 5.12: Band-Pass Filter Measurement of the Dominant Cycle Period](ch5_images/fig_5_12.png)
+![Figure 5.12: Band-Pass Filter Measurement of the Dominant Cycle Period](assets/ch5_fig_5_12.png)
 
 **Figure 5.12** *Band-Pass Filter Measurement of the Dominant Cycle Period*
 

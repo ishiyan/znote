@@ -1,20 +1,5 @@
 # Chapter 2: SMAs, EMAs, or Other?
 
-```bibtex
-@InBook{ehlers2013cycle_ch2,
-  author    = {Ehlers, John F.},
-  title     = {Cycle Analytics for Traders: Advanced Technical Trading Concepts},
-  chapter   = {2},
-  chaptertitle = {Indicators Based on Instantaneous Trend},
-  publisher = {Wiley},
-  year      = {2013},
-  series    = {Wiley Trading},
-  isbn      = {9781118728604},
-}
-```
-
----
-
 *“Everyone’s children are above average,” said Tom meanly.^
 
 Moving averages are discussed in this chapter simply because they are ubiquitous in technical analysis. There are many better filters for ­various applications that are described in the following chapters. Moving averages have the advantage that they are dirt-simple to compute. Their disadvantage is that the produce only a small amount of smoothing for the cost of lag in their computation.
@@ -53,7 +38,7 @@ It is a reasonable approximation and easy to remember that the critical period o
 
 The first zero in the transfer response occurs the when the argument in the numerator has a value of $\pi$. This occurs when $f = 1 / N$. Subsequent zeros in the transfer response occur when the argument in the numerator are integer multiples of $\pi$. The first maximum in the stop band occurs when the argument in the numerator causes the sine function to be at a maximum, or $f = 3\pi / 2$. At this frequency the value of the transfer response is approximately $2 / (3\pi)$, or $−13.3$ decibels (dB). For the same reason, the next maximum in the stop band occurs at $f = 5\pi / 2$, and the attenuation is $2 / (5\pi)$, or $−17.8$ dB. This amount of attenuation is not substantial, and you will see methods to modify an SMA to improve its filtering capability.
 
-![Figure 2.1: SMA Critical Period as a Function of Filter Length](ch2_images/fig_2_1.png)
+![Figure 2.1: SMA Critical Period as a Function of Filter Length](assets/ch2_fig_2_1.png)
 
 **Figure 2.1** ^SMA Critical Period as a Function of Filter Length*
 
@@ -107,11 +92,11 @@ This is the relationship between an $N$-bar SMA and the alpha of an EMA that is 
 
 Although the lags at static frequencies align, note that the critical period of the EMA is not aligned with that of the SMA. We can obtain a better calculation for the fraction $\alpha$ by examining the transfer response of the EMA.
 
-![Figure 2.2: Frequency Response Comparison of a Five-Bar SMA and ­Similar EMA](ch2_images/fig_2_2.png)
+![Figure 2.2: Frequency Response Comparison of a Five-Bar SMA and ­Similar EMA](assets/ch2_fig_2_2.png)
 
 **Figure 2.2** *Frequency Response Comparison of a Five-Bar SMA and ­Similar EMA^
 
-![Figure 2.3: Lag Response of EMA Compared to a Constant Two-Bar Lag of a Five-Bar SMA](ch2_images/fig_2_3.png)
+![Figure 2.3: Lag Response of EMA Compared to a Constant Two-Bar Lag of a Five-Bar SMA](assets/ch2_fig_2_3.png)
 
 **Figure 2.3** *Lag Response of EMA Compared to a Constant Two-Bar Lag of a Five-Bar SMA*
 
@@ -123,11 +108,11 @@ A WMA is an FIR filter having coefficients asymmetrically weighted about the cen
 
 Figure 2.4 shows that a WMA has poorer attenuation than the equivalent SMA shown in Figure 2.2 and that a WMA has more lag in the pass band than the equivalent EMA shown in Figure 2.3. In short, a WMA has little to recommend itself compared to the other common moving ­averages.
 
-![Figure 2.4: A WMA Has Poor Rejection in Its Transfer Response](ch2_images/fig_2_4.png)
+![Figure 2.4: A WMA Has Poor Rejection in Its Transfer Response](assets/ch2_fig_2_4.png)
 
 **Figure 2.4** *A WMA Has Poor Rejection in Its Transfer Response*
 
-![Figure 2.5: Lag of a Five-Element WMA Has No Outstanding Characteristics](ch2_images/fig_2_5.png)
+![Figure 2.5: Lag of a Five-Element WMA Has No Outstanding Characteristics](assets/ch2_fig_2_5.png)
 
 **Figure 2.5** *Lag of a Five-Element WMA Has No Outstanding Characteristics*
 

@@ -1,22 +1,5 @@
 # Chapter 4: Decyclers
 
-## BibTeX
-
-```bibtex
-@InBook{ehlers2013cycle_ch4,
-  author    = {Ehlers, John F.},
-  title     = {Cycle Analytics for Traders: Advanced Technical Trading Concepts},
-  chapter   = {4},
-  chaptertitle = {Roofing Filter as a Universal Indicator Preprocessor},
-  publisher = {Wiley},
-  year      = {2013},
-  series    = {Wiley Trading},
-  isbn      = {9781118728604},
-}
-```
-
----
-
 *“The wiggles have been canceled,” said Tom flatly.*
 
 If technical analysis techniques include a detrender, then certainly there is room for its corollary, a decycler. A decycler removes the cycle components and retains only the trend components.
@@ -35,7 +18,7 @@ $$H(z) = \frac{(\alpha/2)(1 + z^{-1})}{1 - (1 - \alpha) z^{-1}}$$
 
 This transfer response equation shows the decycler to be a one-pole ­filter because the denominator contains only a first-order polynomial. By ­examination, the decycler must closely follow the input data because there is no difference term in the numerator of the transfer response. The Easy-Language code to compute the decycler is written almost directly from the transfer response equation in Code Listing 4-1.
 
-![Figure 4.1: Frequency Response of a High-Pass Filter Having a 30-Bar](ch4_images/fig_4_1.png)
+![Figure 4.1: Frequency Response of a High-Pass Filter Having a 30-Bar](assets/ch4_fig_4_1.png)
 
 **Figure 4.1** ^Frequency Response of a High-Pass Filter Having a 30-Bar Cutoff Period*
 
@@ -65,11 +48,11 @@ Plot1(Decycle);
 
 The decycler removes the shorter cycle energy by cancellation, leaving the decycler output to be basically a one-pole low-pass filter. A decycler having a $30$-bar cutoff period is used as an example. The amplitude response is shown in Figure 4.2, and the lag is shown in Figure 4.3. The amplitude response confirms the $6$-dB-per-octave attenuation roll-off rate of a single-pole filter. For example, the response at a frequency of $0.1$ bars per cycle is approximately $−10$ dB, and the response one octave higher at a frequency of $0.2$ bars per cycle is approximately $−16$ dB.
 
-![Figure 4.2: Amplitude Response of a Decycler Having a 30-Bar Cutoff Period](ch4_images/fig_4_2.png)
+![Figure 4.2: Amplitude Response of a Decycler Having a 30-Bar Cutoff Period](assets/ch4_fig_4_2.png)
 
 **Figure 4.2** *Amplitude Response of a Decycler Having a 30-Bar Cutoff Period*
 
-![Figure 4.3: Lag of a Decycler Having a 30-Bar Cutoff Period](ch4_images/fig_4_3.png)
+![Figure 4.3: Lag of a Decycler Having a 30-Bar Cutoff Period](assets/ch4_fig_4_3.png)
 
 **Figure 4.3** *Lag of a Decycler Having a 30-Bar Cutoff Period*
 
@@ -137,7 +120,7 @@ Plot2(0);
 
 The decycler oscillator can be useful for determining the transition between uptrends and downtrends by the crossing of the zero line. Alternatively, the changes of slope of the decycler oscillator are easier to identify than the changes in slope of the original decycler. Optimum cutoff periods can easily be found by experimentation. The decycler and decycler oscillator examples are shown in Figure 4.4, where the cutoff period is $30$ bars. In the case of the decycler oscillator, the longer cutoff period is set to be $60$ bars.
 
-![Figure 4.4: Both Decyclers Show the Instantaneous Trend with Minimum Lag](ch4_images/fig_4_4.png)
+![Figure 4.4: Both Decyclers Show the Instantaneous Trend with Minimum Lag](assets/ch4_fig_4_4.png)
 
 **Figure 4.4** *Both Decyclers Show the Instantaneous Trend with Minimum Lag*
 

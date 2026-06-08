@@ -1,22 +1,5 @@
 # Chapter 7: Spectral Dilation
 
-## BibTeX
-
-```bibtex
-@InBook{ehlers2013cycle_ch7,
-  author    = {Ehlers, John F.},
-  title     = {Cycle Analytics for Traders: Advanced Technical Trading Concepts},
-  chapter   = {7},
-  chaptertitle = {Spectral Dilation},
-  publisher = {Wiley},
-  year      = {2013},
-  series    = {Wiley Trading},
-  isbn      = {9781118728604},
-}
-```
-
----
-
 *“The cycle swings are getting bigger,” said Tom expansively.*
 
 Linear system theory teaches that any problem can be divided into three “boxes”: an input box, a transfer box, and an output box. The transfer box can be as complex as desired and can be composed of many less complex boxes wired together. For this reason, I assumed that if I applied a filter to input data the output would contain only frequency components defined by the filter. I have certainly been aware of the fractal nature of market data and the log spiral used by Fibonaccians, but it just did not oc- cur to me that the concept would extend to the frequency range of swing- trading filters.
@@ -63,7 +46,7 @@ Plot1(Filt);
 Plot2(0);
 ```
 
-![Figure 7.1: Roofing Filter Display Does Not Have a Zero Mean](ch7_images/fig_01.png)
+![Figure 7.1: Roofing Filter Display Does Not Have a Zero Mean](assets/ch7_fig_01.png)
 
 **Figure 7.1** *Roofing Filter Display Does Not Have a Zero Mean*
 
@@ -112,7 +95,7 @@ Plot6(0);
 
 The roofing filter does an excellent job of using only the frequency components between its upper and lower critical periods. All that needs to be done to create an indicator from the roofing filter is to add more generality by allowing the high-pass and low-pass critical periods be supplied as indicator inputs. In the code of Code Listing 7-3, the two high-pass filters have been implemented as a single two-pole high-pass filter.
 
-![Figure 7.2: Zero Mean Roofing Filter Output Contains Only Desired](ch7_images/fig_02.png)
+![Figure 7.2: Zero Mean Roofing Filter Output Contains Only Desired](assets/ch7_fig_02.png)
 
 **Figure 7.2** * Zero Mean Roofing Filter Output Contains Only Desired Frequency Components*
 
@@ -161,13 +144,13 @@ An example of the roofing filter indicator is shown in Figure 7.3, where the LP 
 
 If a normalized amplitude indicator is desired, the automatic gain control (AGC) code fragment described in Chapter 5 can be added after the Filt calculation.
 
-![Figure 7.3: The Roofing Filter Is an Outstanding Technical Indicator](ch7_images/fig_03.png)
+![Figure 7.3: The Roofing Filter Is an Outstanding Technical Indicator](assets/ch7_fig_03.png)
 
 **Figure 7.3** *The Roofing Filter Is an Outstanding Technical Indicator*
 
 ## Impact of Spectral Dilation on Conventional Indicators
 
-![Figure 7.4: Spectral Dilation Removal Has a Dramatic Impact on the](ch7_images/fig_04.png)
+![Figure 7.4: Spectral Dilation Removal Has a Dramatic Impact on the](assets/ch7_fig_04.png)
 
 **Figure 7.4: Spectral Dilation Removal Has a Dramatic Impact on the Stochastic Indicator*
 
@@ -238,7 +221,7 @@ In other words, the RSI is the percentage of the sum of the delta closes up to t
 
 The EasyLanguage code to compute the modified RSI indicator is given in Code Listing 7-5. The computation starts with the roofing filter, followed by the routine calculations for an RSI. I have included an optional SuperSmoother to produce the MyRSI variable. The indicator lag can be reduced a little by not using a smoothing filter, but the decreased lag comes at the expense of the indicator’s being more irregular.
 
-![Figure 7.5: The Modified RSI Is More Responsive than the Standard RSI](ch7_images/fig_05.png)
+![Figure 7.5: The Modified RSI Is More Responsive than the Standard RSI](assets/ch7_fig_05.png)
 
 **Figure 7.5** *The Modified RSI Is More Responsive than the Standard RSI*
 
