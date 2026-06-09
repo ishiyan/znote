@@ -2076,5 +2076,14 @@ in ch-05.md extracted text is different from the original in ch-05.pdf
 .For instance, "CHART D-16 ... shows a centered 20-Week Moving Average running" became "CHART D-16...is a Daily chart of the S&P 500 with"
 And this is in many places.
 ---------------------------
-Make a toc.md file with the cover.png image, name of the book, author, year and a bibtex.
-After that add list with links to chapters markdowns, mentioning chapter name.
+In the inputs/walter-bressert/, take your time to read:
+- the book in 1991-*/ folder (chapters ch-*.md, appendices ap-*.md)
+- content.md in 1992-*/, 1997-*/, 1998-*/, 2000-*/, 2001-*/, 2002-*/, 2003-*/ folders
+- content.md in tasc/*/ folders
+- deep-research.md, trading-research.md, and indicators.md
+
+Based on this new information, what can you say about what indicators may be implemented, on which source shoyld/might they be based?
+What is the list of indicators?
+Is there enough attribution to Bressert in sources to code indicators?
+When I was looking at Bressert's material, there was little concrete description of calculations, only charting examples and marketing noise.
+-----------------------------
