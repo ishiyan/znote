@@ -24,8 +24,6 @@ In this expression I added 1 to the position count because the count started wit
 
 In EasyLanguage, the notation Price[N] means the price N bars ago. Thus Price[0] is the price for the current bar. Counting for the location is backward from the current bar. In the code the summation is accomplished by recursion, where the count is varied from the current bar to the length of the observation window. The numerator is the sum of the product of the bar position and the price, and the denominator is the sum of the prices. Then the CG is just the negative ratio of the numerator to the denominator. A zero counter value for CG is established by adding half the length of the observation window plus 1. Since the CG is smoothed, an effective crossover signal is produced simply by delaying the CG by one bar.
 
-### EasyLanguage Code (Figure 5.1)
-
 ```easylanguage
 Inputs: Price((H+L)/2),
         Length(10);
@@ -48,9 +46,7 @@ Plot1(CG, "CG");
 Plot2(CG[1], "CG1");
 ```
 
-*Figure 5.1: EasyLanguage Code to Compute the CG Oscillator*
-
-### eSignal Formula Script (EFS) Code (Figure 5.2)
+**Figure 5.1** *EasyLanguage Code to Compute the CG Oscillator*
 
 ```javascript
 /***********************************************************
@@ -134,9 +130,11 @@ function main(OscLength) {
 }
 ```
 
-*Figure 5.2: EFS Code to Compute the CG Oscillator*
+**Figure 5.2** *EFS Code to Compute the CG Oscillator*
 
-![Figure 5.3 - The CG Oscillator Accurately Identifies Each Price Turning Point](images/figures/fig5-3.png)
+![Figure 5.3 - The CG Oscillator Accurately Identifies Each Price Turning Point](assets/fig5-3.png)
+
+**Figure 5.3** *The CG Oscillator Accurately Identifies Each Price Turning Point*
 
 An example of the CG Oscillator is shown in Figure 5.3. In this case, I selected the length to be an eight-bar observation window. It is clear that every major price turning point is identified with zero lag by the CG Oscillator and the crossovers formed by its trigger. Since the CG Oscillator is filtered and smoothed, whipsaws of the crossovers are minimized. The relative amplitudes of the cyclic swings are retained. The resemblance of the CG Oscillator to the Cyber Cycle Indicator of Chapter 4 is striking. I will compare all the oscillator type indicators in a later chapter.
 

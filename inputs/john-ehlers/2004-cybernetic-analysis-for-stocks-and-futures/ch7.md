@@ -8,11 +8,15 @@ Frankly, I don't see a nickel's worth of difference between the three oscillator
 
 The differences will become more apparent when you insert these oscillators as part of an automatic trading strategy. In these applications one oscillator may give a signal one bar earlier than the others at critical times for the strategy. It's also true that one oscillator may have fewer short-term crossovers that lead to whipsaw trades. In any event, you now have three excellent tools for your own technical analysis. It may be that one of the oscillators will outperform the others in your application.
 
-![Figure 7.1 - Comparison of the Cyber Cycle, CG, and RVI Oscillators](images/figures/fig7-1.png)
+![Figure 7.1 - Comparison of the Cyber Cycle, CG, and RVI Oscillators](assets/fig7-1.png)
+
+**Figure 7.1** *Comparison of the Cyber Cycle, CG, and RVI Oscillators*
 
 It may be constructive to compare just one of the oscillators I have developed to several other oscillators that are in common use on a chart using the same data as before. This standardized comparison is useful to assess the relative lag of the trading signals and the degree to which whipsaw signals are produced. Two of the more popular oscillators are the Relative Strength Index (RSI) and the Stochastic. These are compared to the Cyber Cycle in Figure 7.2, where eight-bar periods are used for comparable scaling. Whoa! Clearly, the RSI and Stochastic are more erratic than the Cyber Cycle. Waiting for confirmation for the indicators to cross the signal lines is the conventional way of minimizing the erratic behavior of the indicators. Waiting for confirmation means that the RSI and Stochastic trading signals are invariably late or that the signal is missed altogether. I could cite many more examples and many more comparison indicators, but the purpose of this book is to generate tools you can use in your own work. Since you have the code, you can test your own examples. You can also compare these new tools to your other favorite indicators.
 
-![Figure 7.2 - Cyber Cycle is Smoother and Signals are More Timely than Those of an RSI or Stochastic](images/figures/fig7-2.png)
+![Figure 7.2 - Cyber Cycle is Smoother and Signals are More Timely than Those of an RSI or Stochastic](assets/fig7-2.png)
+
+**Figure 7.2** *Cyber Cycle is Smoother and Signals are More Timely than Those of an RSI or Stochastic*
 
 ## Key Points to Remember
 

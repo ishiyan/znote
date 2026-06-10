@@ -8,9 +8,11 @@ $$Smooth = (Price + 2 \times Price[1] + 2 \times Price[2] + Price[3]) / 6 \tag{4
 
 The lag of the Smooth filter of Equation 4.1 is 1.5 bars at all frequencies. Figure 4.1 demonstrates that the Smooth filter eliminates the two- and three-bar cycle components. The Smooth filter is to be used as an additional filter to remove the distracting very-high-frequency components, thus creating an indicator that is easier to interpret for trading.
 
-![Figure 4.1 - A Four-Element FIR Filter Eliminates Two- and Three-Bar Cycles](images/figures/fig4-1.png)
-
 The EasyLanguage code to make a cycle component indicator is given in Figure 4.2 and the eSignal Formula Script (EFS) code is given in Figure 4.3. I call this the Cyber Cycle Indicator. After the inputs and variables are defined, the smoothing filter of Equation 4.1 and the high-pass filter of Equation 2.7 are computed. They are followed by an initialization condition that facilitates a rapid convergence at the beginning of the input data. A trading trigger signal is created by delaying the cycle by one bar.
+
+![Figure 4.1 - A Four-Element FIR Filter Eliminates Two- and Three-Bar Cycles](assets/fig4-1.png)
+
+**Figure 4.1** *A Four-Element FIR Filter Eliminates Two- and Three-Bar Cycles*
 
 ```easylanguage
 Inputs: Price((H+L)/2),
@@ -31,7 +33,7 @@ Plot1(Cycle, "Cycle");
 Plot2(Cycle[1], "Trigger");
 ```
 
-*Figure 4.2: EasyLanguage Code for the Cyber Cycle Indicator*
+**Figure 4.2** *EasyLanguage Code for the Cyber Cycle Indicator*
 
 ```javascript
 /***************************************************
@@ -68,21 +70,23 @@ function main() {
 }
 ```
 
-*Figure 4.3: EFS Code for the Cyber Cycle Indicator*
+**Figure 4.3** *EFS Code for the Cyber Cycle Indicator*
 
 Trading the Cyber Cycle Indicator is straightforward. Buy when the Cycle line crosses over the Trigger line. You are at the bottom of the cycle at this point. Sell when the Cycle line crosses under the Trigger line. You are at the top of the cycle in this case. Figure 4.4 illustrates that each of the major turning points is captured by the Cycle line crossing the Trigger line. To be sure, there are crossings at other than the cyclic turning points. Many of these can be eliminated by discretionary traders using their experience or others of their favorite tools.
 
-![Figure 4.4 - The Cyber Cycle Indicator Catches Every Significant Turning Point](images/figures/fig4-4.png)
+![Figure 4.4 - The Cyber Cycle Indicator Catches Every Significant Turning Point](assets/fig4-4.png)
+
+**Figure 4.4** *The Cyber Cycle Indicator Catches Every Significant Turning Point*
 
 One of the more interesting aspects of the Cyber Cycle is that it was developed simultaneously with the Instantaneous Trendline. They are opposite sides of the same coin because the total frequency content of the market being analyzed is in one indicator or the other. This is important because the conventional methods of using moving averages and oscillators can be dispensed with. The significance of this duality is demonstrated in Figure 4.5.
 
 A low-lag four-bar weighted moving average (WMA) is plotted in Figure 4.5 for comparison with the action of the Instantaneous Trendline. Note that each time the WMA crosses the Instantaneous Trendline the Cyber Cycle Oscillator is also crossing its zero line. Since there is essentially no lag in the Instantaneous Trendline we can, for the first time, use an indicator overlay on prices in exactly the same way we have traditionally used oscillators. That is, when the prices cross the Instantaneous Trendline you can start to prepare for a reversal when prices reach a maximum excursion from the Instantaneous Trendline. Since there is only a small lag in the Instantaneous Trendline, it represents a short-term mean of prices. This being the case, we can use the old principle that prices revert to their mean.
 
-![Figure 4.5 - The Instantaneous Trendline and Cyber Cycle Oscillator are Duals](images/figures/fig4-5.png)
+![Figure 4.5 - The Instantaneous Trendline and Cyber Cycle Oscillator are Duals](assets/fig4-5.png)
 
-But what is the best way to exploit the mean reversion? The false signals arising from use of the Cyber Cycle are more problematic for automatic trading systems. The first thing that must be understood about indicators is that they are invariably late. No indicator can precede an event from which it is derived. This is particularly important when trading short-term cycles.
+**Figure 4.5** *The Instantaneous Trendline and Cyber Cycle Oscillator are Duals*
 
-We need an indicator that predicts the turning point so the trade can be made at the turning point or even before it occurs. In the code of Figure 4.2 we know we induce 1.5 bars of lag due to the calculation of Smooth. The cycle equation contributes some small amount of lag also, perhaps half a bar. The Trigger lags the Cycle by one bar, so that their crossing introduces at least another bar of lag. Finally, we can't execute the trade until the bar after the signal is observed. In total, that means our trade execution will be at least four bars late. If we are working with an eight-bar cycle, that means the signal will be exactly wrong. We could do better to buy when the signal says Sell, and vice versa.
+But what is the best way to exploit the mean reversion? The false signals arising from use of the Cyber Cycle are more problematic for automatic trading systems. The first thing that must be understood about indicators is that they are invariably late. No indicator can precede an event from which it is derived. This is particularly important when trading short-term cycles. We need an indicator that predicts the turning point so the trade can be made at the turning point or even before it occurs. In the code of Figure 4.2 we know we induce 1.5 bars of lag due to the calculation of Smooth. The cycle equation contributes some small amount of lag also, perhaps half a bar. The Trigger lags the Cycle by one bar, so that their crossing introduces at least another bar of lag. Finally, we can't execute the trade until the bar after the signal is observed. In total, that means our trade execution will be at least four bars late. If we are working with an eight-bar cycle, that means the signal will be exactly wrong. We could do better to buy when the signal says Sell, and vice versa.
 
 The difficulties arising from the lag suggest a way to build an automatic trading strategy. Suppose we choose to use the trading signal in the opposite direction of the signal. That will work if we can introduce lag so the correct signal will be given in the more general case, not just the case of an eight-bar cycle. Figure 4.6 is the EasyLanguage code for the Cyber Cycle strategy. It starts exactly the same as the Cyber Cycle Indicator. I then introduce the variable Signal, which is an exponential moving average of the Cycle variable. The exponential moving average generates the desired lag in the trading signal. As derived in *Rocket Science for Traders*, the relationship between the alpha of an exponential moving average and lag is
 
@@ -120,7 +124,7 @@ If MarketPosition = -1 and PositionProfit
     < 0 and BarsSinceEntry > 8 then Buy To Cover This Bar;
 ```
 
-*Figure 4.6: EasyLanguage Code for the Cyber Cycle Trading Strategy*
+**Figure 4.6** *EasyLanguage Code for the Cyber Cycle Trading Strategy*
 
 This relationship is used to create the variable alpha2 in the code and the variable Signal using the exponential moving average.
 
@@ -358,9 +362,9 @@ function gID() {
 }
 ```
 
-*Figure 4.7: EFS Code for the Cyber Cycle Trading Strategy*
+**Figure 4.7** *EFS Code for the Cyber Cycle Trading Strategy*
 
-**Table 4.1** Fifteen-Year Performance of the Cyber Cycle Trading System Trading Treasury Bond Futures
+**Table 4.1** *Fifteen-Year Performance of the Cyber Cycle Trading System Trading Treasury Bond Futures*
 
 | Metric | Value |
 |---|---|
@@ -371,7 +375,9 @@ function gID() {
 | Max drawdown | ($12,500) |
 | Profit/trade | $216.64 |
 
-![Figure 4.8 - Cyber Cycle Trading System 15-Year Equity Growth Trading Treasury Bonds](images/figures/fig4-8.png)
+![Figure 4.8 - Cyber Cycle Trading System 15-Year Equity Growth Trading Treasury Bonds](assets/fig4-8.png)
+
+**Figure 4.8** *Cyber Cycle Trading System 15-Year Equity Growth Trading Treasury Bonds*
 
 ## Key Points to Remember
 

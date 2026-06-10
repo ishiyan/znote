@@ -2,47 +2,43 @@
 
 > "Get to the back of the boat," said Tom sternly.
 
-It is a well-known observation that prices tend to close higher than they open in up markets. Conversely, prices close lower than they open in down markets. The vigor of this movement can be expressed relative to the trading range to produce a normalized oscillator. I call this the Relative Vigor Index (RVI). The equation to compute the RVI is:
+This chapter describing the Relative Vigor Index (RVI) uses concepts dating back over three decades and also uses modern filter and digital signal processing theory to realize those concepts as a practical and useful indicator. The RVI merges the old concepts with the new technologies. The basic idea of the RVI is that prices tend to close higher than they open in up markets and tend to close lower than they open in down markets. The vigor of the move is thus established by where the prices reside at the end of the day. To normalize the index to the daily trading range, the change in price is divided by the maximum range of prices for the day. Thus, the basic equation for the RVI is
 
-```
-RVI = (Close - Open) / (High - Low)                                  (6.1)
-```
+$$RVI = \frac{Close - Open}{High - Low}\tag{6.1}$$
 
-The concept of the RVI is not altogether new. As far back as 1972, Larry Williams and Jim Waters created the Accumulation/Distribution (A/D) Oscillator. They defined the buying pressure (BP) and selling pressure (SP) as:
+In 1972, Jim Waters and Larry Williams published a description of their A/D Oscillator. In this case, A/D means accumulation/distribution rather than the usual advance/decline. Waters and Williams defined Buying Power (BP) and Selling Power (SP) as
 
-```
-BP = High - Open
-SP = Close - Low
-```
+$$BP = High - Open$$
 
-From these definitions, they defined their Distribution Range Factor (DRF) as:
+$$SP = Close - Low$$
 
-```
-DRF = (BP + SP) / (2 * (High - Low))                                (6.2)
-```
+where the prices were the open, high, low, and closing prices for the day. The two values, BP and SP, show the additional buying strength relative to the open and the selling strength relative to the close to obtain an implied measure of the day's trading. Waters and Williams combined the measurement as the Daily Raw Figure (DRF). DRF is calculated as
 
-If we expand the numerator of the DRF, we get:
+$$DRF = \frac{BP + SP}{2 * (High - Low)}\tag{6.2}$$
 
-```
-DRF = (High - Open + Close - Low) / (2 * (High - Low))
-    = 1/2 * (1 + (Close - Open) / (High - Low))                     (6.3)
-```
+The maximum value of 1 is reached when a market opens trading at the low and closes at the high. Conversely, the minimum value of 0 is reached when the market opens trading at the high and closes at the low. The day-to-day evaluation causes the DRF to vary radically and requires smoothing to make it usable.
 
-Thus, the DRF is simply a biased and scaled version of the RVI. The RVI is preferred because it removes the bias and the scaling, leaving a purer indication of relative vigor.
+We can expand the equation for the DRF as
 
-The RVI is computed by applying the four-bar symmetrical FIR filter (from Equation 4.1) to smooth the numerator and denominator independently. That is, both the (Close - Open) component and the (High - Low) component are smoothed before the ratio is taken. Smoothing the numerator and denominator independently avoids division by zero and produces a much smoother oscillator.
+$$\begin{aligned}
+DRF &= \frac{1}{2}\left(\frac{High - Open + Close - Low}{High - Low}\right) \\[1ex]
+&= \frac{1}{2}\left(\frac{High - Low + Close - Open}{High - Low}\right) \\[1ex]
+&= \frac{1}{2}\left(1 + \frac{Close - Open}{High - Low}\right)
+\end{aligned}\tag{6.3}$$
 
-The theoretical justification for the RVI is based on the observation that the sharpest rate of change for a cycle occurs at its midpoint. The derivative of a sinewave produces a negative cosine, which leads the original sinewave by a quarter cycle. Integration of this rate of change over a half cycle delays the result by a quarter cycle. The net result of the quarter-cycle lead and the quarter-cycle delay is an oscillator that is in phase with the original cycle. Thus, the RVI tends to be synchronous with the market cycle.
+Clearly, the equation for the DRF is identical with the daily RVI expression except for the additive and multiplicative constants. It seems there are no new ideas in technical analysis. However, smoothing must be done to make the indicator practical. This is where modern filter theory contributes to the successful implementation of the RVI. I use the four-bar symmetrical finite impulse response (FIR) filter (described in Equation 4.1 and Figure 4.1) to independently smooth the numerator and the denominator.
 
-The trigger line for the RVI is simply the RVI delayed by one bar. Crossovers of the RVI and its trigger provide trading signals.
+The RVI is an oscillator, and we are therefore only concerned with the cycle modes of the market in its use. The sharpest rate of change for a cycle is at its midpoint. Therefore, in the ascending part of the cycle we would expect the difference between the close and open to be at a maximum. This is like a derivative in calculus, where the derivative of a sinewave produces a negative cosine wave. The derivative is therefore a waveform that leads the original sinewave by a quarter cycle. Also, from calculus, integration of a sinewave over a half-cycle period results in another sinewave delayed by a quarter cycle. Summing over a half cycle is basically the same as mathematically integrating, with the result that the waveshape of the sum is delayed by a quarter wavelength relative to the input. The net result of taking the differences and summing produces an oscillator output in phase with the cyclic component of the price. It is also possible to generate a leading function if the summation window is less than a half wavelength of the Dominant Cycle. If a cycle measurement is not available, you can sum the RVI components over a fixed default period. A nominal value of 8 is suggested because this is approximately half the period of most cycles of interest.
 
-A default period of 8 is suggested for the RVI computation.
+Calculating the RVI is straightforward. The numerator, consisting of Close - Open, is filtered in the four-bar symmetrical FIR filter before the terms are summed. The denominator, consisting of High - Low, is independently filtered in the four-bar symmetrical FIR filter before it is summed. The numerator and denominator are summed individually and the RVI is then computed as the ratio of the numerator to the denominator. Since the numerator and denominator are lagged the same amount due to filtering, the lag is removed by taking their ratio.
 
-![Figure 6.1 - The RVI Gives Crisp Indications of the Cyclic Turning Point](images/figures/fig6-1.png)
+The rules for the use of the RVI are flexible. Just remember that it is an oscillator that is basically in phase with the cyclic component of the market prices. I prefer crossing line indicators because they are unambiguous in their signals. A simple Trigger line is just the RVI delayed by one bar.
 
-The RVI applied to a chart is shown in Figure 6.1. The turning points are crisp and occur in a timely fashion.
+![Figure 6.1 - The RVI Gives Crisp Indications of the Cyclic Turning Point](assets/fig6-1.png)
 
-### EasyLanguage Code (Figure 6.2)
+**Figure 6.1** *The RVI Gives Crisp Indications of the Cyclic Turning Point*
+
+The RVI oscillator is shown in Figure 6.1. The responsiveness and clarity of the signals are self-explanatory. The EasyLanguage code to compute the RVI is shown in Figure 6.2, and its eSignal Formula Script (EFS) code is shown in Figure 6.3.
 
 ```easylanguage
 Inputs: Length(10);
@@ -70,9 +66,7 @@ Plot1(RVI, "RVI");
 Plot2(Trigger, "Trigger");
 ```
 
-*Figure 6.2: EasyLanguage Code to Compute the RVI*
-
-### eSignal Formula Script (EFS) Code (Figure 6.3)
+**Figure 6.2** *EasyLanguage Code to Compute the RVI*
 
 ```javascript
 /***********************************************************
@@ -159,7 +153,7 @@ function main(OscLength) {
 }
 ```
 
-*Figure 6.3: EFS Code to Compute the RVI*
+**Figure 6.3** *EFS Code to Compute the RVI*
 
 ## Key Points to Remember
 

@@ -18,7 +18,7 @@ Deviation is computed from the difference of prices and moving average values ov
 
 Suppose prices behave as a square wave. If you tried to use the price crossing a moving average as a trading system, you would be destined for failure because the price has already switched to the opposite value by the time the movement is detected. There are only two price values. Therefore, the probability distribution is 50 percent that the price will be at one value or the other. There are no other possibilities. The probability distribution of the square wave is shown in Figure 1.1. Clearly, this probability function does not remotely resemble a Gaussian probability distribution.
 
-![Figure 1.1 - The Probability Distribution of a Square Wave Has Only Two Values](images/figures/fig1-1.png)
+![Figure 1.1 - The Probability Distribution of a Square Wave Has Only Two Values](assets/fig1-1.png)
 
 **Figure 1.1** *The Probability Distribution of a Square Wave Has Only Two Values*
 
@@ -35,29 +35,29 @@ Where:
   $y$ is the output
   $\ln$ is the natural logarithm
 
-![Figure 1.2 - Sinewave Cycle PDF Does Not Resemble a Gaussian PDF](images/figures/fig1-2.png)
+![Figure 1.2 - Sinewave Cycle PDF Does Not Resemble a Gaussian PDF](assets/fig1-2.png)
 
 **Figure 1.2** *Sinewave Cycle PDF Does Not Resemble a Gaussian PDF*
 
 The transfer function of the Fisher transform is shown in Figure 1.3.
 
-![Figure 1.3 - The Nonlinear Transfer of the Fisher Transform](images/figures/fig1-3.png)
+![Figure 1.3 - The Nonlinear Transfer of the Fisher Transform](assets/fig1-3.png)
 
 **Figure 1.3** *The Nonlinear Transfer of the Fisher Transform Convert Inputs (x Axis) to Outputs (y Axis) Having a Nearly Gaussian PDF*
 
 The input values are constrained to be within the range $-1 < X < 1$. When the input data is near the mean, the gain is approximately unity. For example, go to x = 0.5 in Figure 1.3. There, the Y value is only slightly larger than 0.5. By contrast, when the input approaches either limit within the range, the output is greatly amplified. This amplification accentuates the largest deviations from the mean, providing the "tail" of the Gaussian PDF. Figure 1.4 shows the PDF of the Fisher-transformed output as the familiar bell-shaped curve, compared to the input sinewave PDF. Both have the same probability at the mean value. The transformed output PDF is nearly Gaussian, a radical change from the sinewave PDF.
 
-![Figure 1.4 - PDF of Fisher-Transformed Output](images/figures/fig1-4.png)
+![Figure 1.4 - PDF of Fisher-Transformed Output](assets/fig1-4.png)
 
 **Figure 1.4** *The Fisher-Transformed Sinewave Has a Nearly Gaussian PDF Shape*
 
 I measured the probability distribution of U.S. Treasury Bond futures over a 15-year span from 1988 to 2003. To make the measurement, I created a normalized channel 10 bars long. The normalized channel is basically the same as a 10-bar Stochastic Indicator. I then measured the price location within that channel in 100 bins and counted up the number of times the price was in each bin. The results of this probability distribution measurement are shown in Figure 1.5. This actual probability distribution more closely resembles the PDF of a sinewave rather than a Gaussian PDF. I then increased the length of the normalized channel to 30 bars to test the hypothesis that the sinewave-like probability distribution is only a short-term phenomenon. The resulting probability distribution is shown in Figure 1.6. The probability distributions of Figures 1.5 and 1.6 are very similar.
 
-![Figure 1.5 - Probability Distribution of Treasury Bond Futures in a 10-Bar Channel over 15 Years](images/figures/fig1-5.png)
+![Figure 1.5 - Probability Distribution of Treasury Bond Futures in a 10-Bar Channel over 15 Years](assets/fig1-5.png)
 
 **Figure 1.5** *Probability Distribution of Treasury Bond Futures in a 10-Bar Channel over 15 Years*
 
-![Figure 1.6 - Probability Distribution with 30-Bar Normalized Channel](images/figures/fig1-6.png)
+![Figure 1.6 - Probability Distribution with 30-Bar Normalized Channel](assets/fig1-6.png)
 
 **Figure 1.6** *Probability Distribution  of Treasury Bond Futures in a 30-Bar Channel over 15 Years*
 
@@ -149,7 +149,7 @@ function main(nLength) {
 
 The Fisher transform of the prices within an eight-day channel is plotted below the price bars in Figure 1.9. Note that the turning points are not only sharp and distinct, but they also occur in a timely fashion so that profitable trades can be entered. The Fisher transform is also compared to a similarly scaled moving average convergence-divergence (MACD) indicator in Figure 1.9. The MACD is representative of conventional indicators whose turning points are rounded and indistinct in comparison to the Fisher transform. As a result of the rounded turning points, the entry and exit signals are invariably late.
 
-![Figure 1.9 - The Fisher Transform Has Very Sharp Turning Points Compared to MACD](images/figures/fig1-9.png)
+![Figure 1.9 - The Fisher Transform Has Very Sharp Turning Points Compared to MACD](assets/fig1-9.png)
 
 **Figure 1.9** *The Fisher Transform of Normalized Prices Has Very Sharp Turning Points When Compared to Conventional Indicators such as the MACD*
 

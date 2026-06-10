@@ -6,19 +6,19 @@ Having an Instantaneous Trendline with zero lag (Equations 2.8 and 2.9) is a goo
 
 The rationale for the leading trigger is that adding the two-day momentum to the current value in a trend is predicting where the Instantaneous Trendline will be two days from now. When plotting the trigger on the current bar, the trigger must lead the Instantaneous Trendline by two bars. On a more mathematical level, the lag of the trigger is shown in Figure 3.1. The figure shows that the low-frequency lead is two bars and the worst-case lag occurs at a frequency of 0.25 cycles per day (a four-bar cycle period). The lag is of no concern because the attenuation of the Instantaneous Trendline (shown in Figure 2.5) makes the amplitude of the components in the vicinity of 0.25 cycles per day almost irrelevant to the overall response.
 
-![Figure 3.1 - Lead and Lag of the Trigger as a Function of Frequency](images/figures/fig3-1.png)
+![Figure 3.1 - Lead and Lag of the Trigger as a Function of Frequency](assets/fig3-1.png)
 
 **Figure 3.1** *Lead and Lag of the Trigger as a Function of Frequency*
 
 There is a price to pay for achieving the lead response of the trigger. That price is that leading functions cause a higher-frequency gain in the filter instead of attenuation, which has a smoothing effect. Therefore, high-frequency gain causes the resulting transfer response to look more ragged than the original function. This is the case for any momentum function. The gain response of the trigger has a maximum of 9.5 dB at a frequency of 0.25 cycles per day, as shown in Figure 3.2. In this case, the gain does not severely affect the smoothness of the trigger because the Instantaneous Trendline has an attenuation of 26 dB at 0.25 cycles per day, as shown in Figure 2.5. Therefore, using both terms to compute the net attenuation, the worst-case high-frequency smoothing attenuation is still about 16 dB. This means the trigger will have about the same degree of smoothness as the Instantaneous Trendline.
 
-![Figure 3.2 - Gain Response of the Trigger](images/figures/fig3-2.png)
+![Figure 3.2 - Gain Response of the Trigger](assets/fig3-2.png)
 
 **Figure 3.2** *Gain Response of the Trigger*
 
 The Instantaneous Trendline and the Trigger of the trend-following system are shown as indicators in Figure 3.3; the EasyLanguage code to create these indicator lines is shown in Figure 3.4, and the eSignal Formula Script (EFS) code is shown in Figure 3.5. The process for creating a trend-following trading system from the indicators is simple. One unique aspect of the code is that the ITrend is forced to be a finite impulse response (FIR)-smoothed version of price for the first seven bars of the calculation. This initialization is included to cause the ITrend to converge more rapidly to its correct value from the beginning transient. The strategy enters a long position when the trigger crosses over the Instantaneous Trendline and enters a short position when the trigger crosses under the Instantaneous Trendline. However, an effective trading system is more than following a simple set of indicators.
 
-![Figure 3.3 - Crossing of the Trigger and Instantaneous Trendline are Trading Signals](images/figures/fig3-3.png)
+![Figure 3.3 - Crossing of the Trigger and Instantaneous Trendline are Trading Signals](assets/fig3-3.png)
 
 **Figure 3.3** *Crossing of the Trigger and Instantaneous Trendline are Trading Signals*
 

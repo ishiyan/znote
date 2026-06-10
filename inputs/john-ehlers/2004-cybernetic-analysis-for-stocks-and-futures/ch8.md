@@ -14,8 +14,6 @@ The EasyLanguage and EFS codes to derive the Stochastic RSI from RSI and Stochas
 
 The amazing thing about the Stochastic RSI is that, after all the computations, the trading signals have almost no lag. The primary reason for this is that both the RSI and the Stochastic Indicators are ratios, so that lag in the numerator is canceled by lag in the denominator. The performance of the Stochastic RSI is shown in Figure 8.3. Unlike the Cyber Cycle and CG Oscillator, the Stochastic RSI tends not to retain the relative amplitudes of the cycles. This amplitude standardization can be an advantage to traders because it removes some of the interpretive aspects of the oscillators. In Figure 8.3, the Stochastic RSI clearly captures every major turning point in a timely manner.
 
-**Figure 8.1: EasyLanguage Code to Compute the Stochastic RSI**
-
 ```easylanguage
 Inputs: RSILength(8),
         StocLength(8),
@@ -34,7 +32,7 @@ Plot1(Value4, "StocRSI");
 Plot2(Value4[1], "Trig");
 ```
 
-**Figure 8.2: EFS Code to Compute the Stochastic RSI**
+**Figure 8.1** *EasyLanguage Code to Compute the Stochastic RSI*
 
 ```javascript
 /*************************************************************
@@ -204,11 +202,13 @@ function Lowest(nPeriod) {
 }
 ```
 
-![Figure 8.3 - The Stochastic RSI Captures Turning Points in a Timely Manner](images/figures/fig8-3.png)
+**Figure 8.2** *EFS Code to Compute the Stochastic RSI*
+
+![Figure 8.3 - The Stochastic RSI Captures Turning Points in a Timely Manner](assets/fig8-3.png)
+
+**Figure 8.3** *The Stochastic RSI Captures Turning Points in a Timely Manner*
 
 This is the good part. If taking the Stochastic of a standard indicator produces a better indicator, it is reasonable that a superlative indicator can be created by applying the same process to an already good indicator. The EasyLanguage and EFS codes for transforming the Cyber Cycle of Figure 4.4 into a Stochastic Cyber Cycle are given in Figures 8.4 and 8.5, respectively. The EasyLanguage and eSignal Formula Script (EFS) codes for converting the CG Indicator of Figure 5.3 into a Stochastic CG are given in Figures 8.6 and 8.7, respectively. Finally, the EasyLanguage and EFS codes to stochasticize the Relative Vigor Index (RVI) of Figure 6.1 are provided in Figures 8.8 and 8.9, respectively. In each case, I have simply added the code to take the Stochastic of the indicators and scaled the resulting indicators to range between -1 and +1. This scaling was done because the next step of the indicator creation is to take the Fisher transform for sharper, better-defined entry and exit signals. The Trigger is just the indicator delayed by one bar and scaled to swing between -0.98 and +0.98. Shrinking the size of the Trigger gives a better-defined crossover when the indicator moves away from the extreme values.
-
-**Figure 8.4: EasyLanguage Code to Compute the Stochastic Cyber Cycle**
 
 ```easylanguage
 {Stochastic Cyber Cycle}
@@ -246,7 +246,7 @@ Plot2(.96*(Value2[1] + .02), "Trigger");
 Plot3(0, "Ref");
 ```
 
-**Figure 8.5: EFS Code to Compute the Stochastic Cyber Cycle**
+**Figure 8.4** *EasyLanguage Code to Compute the Stochastic Cyber Cycle*
 
 ```javascript
 /*************************************************************
@@ -382,7 +382,7 @@ function Lowest(nPeriod) {
 }
 ```
 
-**Figure 8.6: EasyLanguage Code to Compute the Stochastic CG**
+**Figure 8.5** *EFS Code to Compute the Stochastic Cyber Cycle*
 
 ```easylanguage
 {Stochastic CG Oscillator}
@@ -422,7 +422,7 @@ Plot2(.96*(Value2[1] + .02), "Trigger");
 Plot3(0, "Ref");
 ```
 
-**Figure 8.7: EFS Code to Compute the Stochastic CG**
+**Figure 8.6** *EasyLanguage Code to Compute the Stochastic CG*
 
 ```javascript
 /*************************************************************
@@ -550,7 +550,7 @@ function Lowest(nPeriod) {
 }
 ```
 
-**Figure 8.8: EasyLanguage Code to Compute the Stochastic RVI**
+**Figure 8.7** *EFS Code to Compute the Stochastic CG*
 
 ```easylanguage
 {Stochastic Relative Vigor Index (RVI)}
@@ -594,7 +594,7 @@ Plot2(.96*(Value4[1] + .02), "Trigger");
 Plot3(0, "Ref");
 ```
 
-**Figure 8.9: EFS Code to Compute the Stochastic RVI**
+**Figure 8.8** *EasyLanguage Code to Compute the Stochastic RVI*
 
 ```javascript
 /*************************************************************
@@ -724,13 +724,16 @@ function Lowest(nPeriod) {
 }
 ```
 
-![Figure 8.10 - Comparison of the Stochasticized Indicators](images/figures/fig8-10.png)
+**Figure 8.9** *EFS Code to Compute the Stochastic RVI*
+
+![Figure 8.10 - Comparison of the Stochasticized Indicators](assets/fig8-10.png)
+
+**Figure 8.10** *Comparison of the Stochasticized Indicators*
 
 The three stochasticized indicators are compared in Figure 8.10. They are clearly similar, although I like the Stochastic Cyber Cycle because the buy/sell indications are based purely on the cycle content of the data. On the other hand, it is clear that the Stochastic RVI is more regular with fewer whipsaws. In any event, you have all the tools to make your own selection. The input parameters for each of the indicators enable you to optimize the indicator period, if desired, when used with a specific security.
 
 In Chapter 1, I pointed out that the probability density functions of sinewaves are not Gaussian and that creating sharp indicators from them is difficult because the indications come after the movement has already started. The Stochasticized Indicators all look somewhat like sinewaves. Therefore, we should be able to create razor-sharp trading signals by applying the Fisher transform to them. This is exactly what I have done in the indicator codes of Figures 8.11 through 8.16. I have limited the amplitude swings to absolute values of 0.99 to avoid getting huge output amplitudes from the Fisher transform. The trading signals, as before, are given by the crossing of the Signal line and the Trigger line. The Trigger line is simply the Signal line delayed by one bar.
 
-**Figure 8.11: EasyLanguage Code to Compute the Fisher Stochastic Cyber Cycle**
 
 ```easylanguage
 {Fisher Cyber Cycle}
@@ -771,7 +774,7 @@ Plot2(Value3[1], "Trigger");
 Plot3(0, "Ref");
 ```
 
-**Figure 8.12: EFS Code to Compute the Fisher Stochastic Cyber Cycle**
+**Figure 8.11** *EasyLanguage Code to Compute the Fisher Stochastic Cyber Cycle*
 
 ```javascript
 /*************************************************************
@@ -911,7 +914,7 @@ function Lowest(nPeriod) {
 }
 ```
 
-**Figure 8.13: EasyLanguage Code to Compute the Fisher Stochastic CG**
+**Figure 8.12** *EFS Code to Compute the Fisher Stochastic Cyber Cycle*
 
 ```easylanguage
 {Fisher CG}
@@ -953,7 +956,7 @@ Plot2(Value3[1], "Trigger");
 Plot3(0, "Ref");
 ```
 
-**Figure 8.14: EFS Code to Compute the Fisher Stochastic CG**
+**Figure 8.13** *EasyLanguage Code to Compute the Fisher Stochastic CG*
 
 ```javascript
 /*************************************************************
@@ -1081,7 +1084,7 @@ function Lowest(nPeriod) {
 }
 ```
 
-**Figure 8.15: EasyLanguage Code to Compute the Fisher Stochastic RVI**
+**Figure 8.14** *EFS Code to Compute the Fisher Stochastic CG*
 
 ```easylanguage
 {Fisher RVI}
@@ -1128,7 +1131,7 @@ Plot2(Value5[1], "Trigger");
 Plot3(0, "Ref");
 ```
 
-**Figure 8.16: EFS Code to Compute the Fisher Stochastic RVI**
+**Figure 8.15** *EasyLanguage Code to Compute the Fisher Stochastic RVI*
 
 ```javascript
 /*************************************************************
@@ -1262,9 +1265,13 @@ function Lowest(nPeriod) {
 }
 ```
 
+**Figure 8.16** *EFS Code to Compute the Fisher Stochastic RVI*
+
 The three Fisherized indicators are compared in Figure 8.17. In all cases, the Fisher transform provides a means to filter the undesired whipsaw signals by ignoring line crossovers that happen at an absolute amplitude of less than 2. It appears that the Fisher RVI is the superior oscillator because, almost without exception, it provides trading signals several bars in advance of the other indicators. That makes it a really good indicator because the other two are not slouches in their own right. Any or all of the three can be a profound addition to your technical analysis tools.
 
-![Figure 8.17 - Fisherized Indicators Give Razor-Sharp Trading Signals](images/figures/fig8-17.png)
+![Figure 8.17 - Fisherized Indicators Give Razor-Sharp Trading Signals](assets/fig8-17.png)
+
+**Figure 8.17** *Fisherized Indicators Give Razor-Sharp Trading Signals*
 
 ## Key Points to Remember
 
