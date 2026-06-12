@@ -1,7 +1,7 @@
-# MARKET MODES
+# Chapter 2: Market Modes
 
-Chaos often breeds life, when order breeds habit.
-—HENRY BROOKS ADAMS
+> Chaos often breeds life, when order breeds habit.
+> —HENRY BROOKS ADAMS
 
 The whole point of technical analysis is to find a way to exploit the inefficiency of the market for gain. The general objective of the market is to provide accurate prices for asset allocation. That is, investors can choose strategies that allow prices to fully reflect all available information at any time. Such a market (a market in which prices always fully reflect available information) is called efficient. Much research has been done to prove that the market is indeed efficient. However, the fact that there exists a number of traders who are continuously successful is adequate proof that markets are not necessarily completely efficient. The failure of the efficiency hypothesis in several cases is sufficient evidence to invalidate the hypothesis itself.
 
@@ -13,7 +13,9 @@ I assume that there is an adequate number of traders involved in making the mark
 
 I have formed my philosophical basis of market action from extensive work using constrained Random Walks in the physical sciences. The expression of such a Random Walk is that of a drunkard moving on a one-dimensional array of regularly spaced points. At regular intervals, the drunkard flips a coin and makes one step to the right or left, depending on the outcome of the coin toss. At the end of n steps, he can be at any one of 2n + 1 sites, and the probability that he is at any site can be calculated. Let the distance between the points on the lattice be U, and let the time between successive steps be AT. If AL and AT are allowed to shrink to zero in such a way that (U)²/AT remains constant to the diffusion constant D, then the equation governing the distribution of the displacement of the Random Walker from his starting point is
 
-'Weiss, G. H., and R. J. Rubin. "Random Walks: Theory and Selected Applications." Advances in Chemical Physics 52 (1982): 363-505.
+$$
+\frac{\partial P}{\partial t} = D \frac{\partial^2 P}{\partial x^2}
+$$
 
 This rather famous partial differential equation is called the Diffusion Equation. The function P(x,t) can be interpreted in two ways. It can either be taken to express the probability density or the concentration of diffusing matter at position x at time t. Following the latter interpretation, it can, for example, describe the way heat flows up the stem of a silver spoon when placed in a hot cup of coffee.
 
@@ -45,12 +47,13 @@ It is true that if you are a hammer, the rest of the world looks like a nail. We
 
 There are many ways to analyze the market using technical analysis. Regarding indicators, the preferred tools are moving averages or data smoothers for Trend Modes and oscillator-type indicators for Cycle Modes. In later chapters, we develop superior indicators for both market modes. At this point, it is important to understand that the two modes of a simplified market model have been directly derived from solutions to the Drunkard's Walk problem. Keep asking yourself, "Will the market go up or down today?" and "I wonder if the trend will continue?"
 
-Key Points to Remember
+## Key Points to Remember
 
-A simplified model of the market has a Trend Mode and a Cycle Mode.
+- A simplified model of the market has a Trend Mode and a Cycle Mode.
+- The market model is similar to a meandering river.
+- Both the Trend Mode and the Cycle Mode are derived from the Drunkard's Walk.
+- Different technical indicators are appropriate for each market mode.
 
-The market model is similar to a meandering river.
+## Notes
 
-Both the Trend Mode and the Cycle Mode are derived from the Drunkard's Walk.
-
-Different technical indicators are appropriate for each market mode.
+'Weiss, G. H., and R. J. Rubin. "Random Walks: Theory and Selected Applications." Advances in Chemical Physics 52 (1982): 363-505.
