@@ -1,0 +1,244 @@
+Function: $HighPass
+
+{
+	$HighPass Function
+ 	(C) 2004-2024 John F. Ehlers
+}
+
+inputs:
+	Price(numericseries),
+	Period(numericsimple);
+	
+variables:
+	a1( 0 ),
+	b1( 0 ),
+	c1( 0 ),
+	c2( 0 ),
+	c3( 0 );
+
+a1 = ExpValue(-1.414 * 3.14159 / Period);
+b1 = 2 * a1 * Cosine(1.414 * 180 / Period);
+c2 = b1;
+c3 = -a1 * a1;
+c1 = (1 + c2 - c3) / 4;
+
+if CurrentBar >= 4 then 
+ 	$HighPass = c1*(Price - 2 * Price[1] + Price[2]) +
+	 c2 * $HighPass[1] + c3 * $HighPass[2];
+if Currentbar < 4 then 
+	$HighPass = 0;
+
+
+Function: $BandPass
+
+{
+	Bandpass Function
+	(C) 2005 - 2022 John F. Ehlers
+}
+
+inputs:
+	Price( NumericSeries ),
+	Period( NumericSimple ),
+	Bandwidth( NumericSimple );
+
+variables:
+	G1( 0 ),
+	S1( 0 ),
+	L1( 0 ),
+	BP( 0 );
+
+L1 = Cosine( 360 / Period );
+G1 = Cosine( Bandwidth * 360 / Period );
+S1 = 1 / G1 - SquareRoot( 1 / (G1 * G1) - 1 );
+BP = .5 * (1 - S1) * (Price - Price[2]) 
+ + L1 * (1 + S1) * BP[1] - S1 * BP[2];
+
+if CurrentBar < 3 then
+begin
+	BP = 0;
+end;
+
+$BandPass = BP;
+
+Indicator: AutoTune
+
+{
+	TASC MAY 2026
+	AutoTune Indicator
+	(C) 2025 John F. Ehlers
+}
+
+inputs:
+	Window( 20 );
+
+variables:
+	Filt( 0 ),
+	Lag( 0 ),
+	J( 0 ),
+	Sx( 0 ),
+	Sy( 0 ),
+	Sxx( 0 ),
+	Sxy( 0 ),
+	Syy( 0 ),
+	X( 0 ),
+	Y( 0 ),
+	MinCorr( 0 ),
+	DC( 0 ),
+	BP( 0 );
+
+arrays:
+	Corr[100]( 0 );
+
+Filt = $Highpass( Close, Window );
+//Cycle test waveform
+//Filt = Sine(360*CurrentBar / 20);
+ 
+//>>>>>>>>> Correlation >>>>>>>>>>>>
+for Lag = 1 to Window
+begin
+	Sx = 0;
+	Sy = 0;
+	Sxx = 0;
+	Sxy = 0;
+	Syy = 0;
+
+	for J = 0 to Window - 1
+	begin
+		X = Filt[J];
+		Y = Filt[Lag + J];
+		Sx = Sx + X;
+		Sy = Sy + Y;
+		Sxx = Sxx + X * X;
+		Sxy = Sxy + X * Y;
+		Syy = Syy + Y * Y;
+	end;
+
+	if (Window * Sxx - Sx * Sx > 0) and( Window * Syy -
+	Sy * Sy > 0) then Corr[Lag] = (Window * Sxy - Sx * Sy) /
+	SquareRoot( (Window * Sxx - Sx * Sx)
+	* (Window * Syy - Sy * Sy));
+end;
+
+//Find minimum correlation and Dominant Cycle
+MinCorr = 1;
+
+for Lag = 1 to Window
+begin
+	if Corr[Lag] < MinCorr then
+	begin
+		MinCorr = Corr[Lag];
+		DC = 2 * Lag;
+	end;
+end;
+
+if DC > DC[1] + 2 then
+begin
+	DC = DC[1] + 2;
+end;
+
+if DC < DC[1] - 2 then
+begin
+	DC = DC[1] - 2;
+end;
+
+BP = $Bandpass( Close, DC, .25 );
+
+Plot1( 0, "Zero Line" );
+Plot2( Filt, "Filt" );
+
+//Plot3(MinCorr, "", blue, 4, 4);
+//Plot4(DC, "", blue, 4, 4);
+//Plot5(BP, "", blue, 4, 4);
+
+Strategy: AutoTune Pro Forma
+
+{
+AutoTune Pro Forma Strategy
+(C) 2025 John F. Ehlers
+}
+inputs:
+	BegDate( 1090101 ),
+	EndDate( 1251231 ),
+	Window( 26 ),
+	BW( .22 ),
+	Thresh( -.22 ),
+	Delay( 0 );
+
+variables:
+	Filt( 0 ),
+	Lag( 0 ),
+	J( 0 ),
+	Sx( 0 ),
+	Sy( 0 ),
+	Sxx( 0 ),
+	Sxy( 0 ),
+	Syy( 0 ),
+	X( 0 ),
+	Y( 0 ),
+	MinCorr( 0 ),
+	DC( 0 ),
+	BP( 0 ),
+	ROC( 0 );
+
+arrays:
+	Corr[100]( 0 );
+
+Filt = $Highpass( Close, Window );
+
+//>>>>>>>>> Correlation >>>>>>>>>>>>
+for Lag = 1 to Window
+begin
+	Sx = 0;
+	Sy = 0;
+	Sxx = 0;
+	Sxy = 0;
+	Syy = 0;
+
+	for J = 0 to Window - 1
+	begin
+		X = Filt[J];
+		Y = Filt[Lag + J];
+		Sx = Sx + X;
+		Sy = Sy + Y;
+		Sxx = Sxx + X * X;
+		Sxy = Sxy + X * Y;
+		Syy = Syy + Y * Y;
+	end;
+
+	if (Window * Sxx - Sx * Sx > 0) 
+	 and (Window * Syy - Sy * Sy > 0) then 
+	 	Corr[Lag] = (Window * Sxy - Sx * Sy) /
+	 	 SquareRoot( (Window * Sxx - Sx * Sx) 
+	 	 * (Window * Syy - Sy * Sy) );
+end;
+
+//Find minimum correlation and Dominant Cycle
+MinCorr = 1;
+
+for Lag = 1 to Window
+begin
+	if Corr[Lag] < MinCorr then
+	begin
+		MinCorr = Corr[Lag];
+		DC = 2 * Lag;
+	end;
+end;
+
+if DC > DC[1] + 2 then
+begin
+	DC = DC[1] + 2;
+end;
+
+if DC < DC[1] - 2 then
+begin
+	DC = DC[1] - 2;
+end;
+
+BP = $Bandpass( Close, DC, BW );
+ROC = BP - BP[2];
+
+if ROC crosses over 0 and MinCorr < Thresh then
+	Buy Next Bar On Open;
+
+if ROC crosses under 0 and MinCorr < Thresh and Filt > 0 then 
+	Sell Short Next Bar on Open;

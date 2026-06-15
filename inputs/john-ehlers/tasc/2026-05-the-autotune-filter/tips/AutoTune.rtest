@@ -1,0 +1,103 @@
+Notes:
+	John Ehlers "The AutoTune Filter", TASC May 2026.
+	Implements the AutoTune Filter indicator and pro forma strategy.
+	Rolling autocorrelation of highpass-filtered data identifies
+	the dominant cycle period, which dynamically tunes a bandpass
+	filter for mean-reversion signals.
+	The Highpass and Bandpass filter functions from previous Ehlers
+	articles are implemented inline in the Data section.
+
+Import:
+	DataSource:	Norgate
+	IncludeList:	&ES_CCB
+	StartDate:	2008-01-01
+	EndDate:	Latest
+	SaveAs:	es.rtd
+
+Settings:
+	DataFile:	es.rtd
+	BarSize:	Daily
+	StartDate:	2009-01-01
+	EndDate:	Latest
+
+Parameters:
+	Window:	20
+	BW:	0.25
+	Thresh:	-0.3
+
+Data:
+	// Common constants for Ehlers filters
+	decay_factor:	-1.414 * 3.14159
+	phase_angle:	1.414 * 180
+
+	// Highpass Filter of Close at Window period
+	hp_a1:	exp(decay_factor / Window)
+	hp_b1:	2 * hp_a1 * Cosine(phase_angle / Window)
+	hp_c2:	hp_b1
+	hp_c3:	-hp_a1 * hp_a1
+	hp_c1:	(1 + hp_c2 - hp_c3) / 4
+	Filt:	if(BarNum >= 4, hp_c1 * (Close - 2 * Close[1] + Close[2]) + hp_c2 * Filt[1] + hp_c3 * Filt[2], 0)
+
+	// Rolling autocorrelation at lags 1 through 20 (must match Window)
+	Corr1:	Correl(Filt, Filt[1], Window)
+	Corr2:	Correl(Filt, Filt[2], Window)
+	Corr3:	Correl(Filt, Filt[3], Window)
+	Corr4:	Correl(Filt, Filt[4], Window)
+	Corr5:	Correl(Filt, Filt[5], Window)
+	Corr6:	Correl(Filt, Filt[6], Window)
+	Corr7:	Correl(Filt, Filt[7], Window)
+	Corr8:	Correl(Filt, Filt[8], Window)
+	Corr9:	Correl(Filt, Filt[9], Window)
+	Corr10:	Correl(Filt, Filt[10], Window)
+	Corr11:	Correl(Filt, Filt[11], Window)
+	Corr12:	Correl(Filt, Filt[12], Window)
+	Corr13:	Correl(Filt, Filt[13], Window)
+	Corr14:	Correl(Filt, Filt[14], Window)
+	Corr15:	Correl(Filt, Filt[15], Window)
+	Corr16:	Correl(Filt, Filt[16], Window)
+	Corr17:	Correl(Filt, Filt[17], Window)
+	Corr18:	Correl(Filt, Filt[18], Window)
+	Corr19:	Correl(Filt, Filt[19], Window)
+	Corr20:	Correl(Filt, Filt[20], Window)
+
+	// Minimum correlation across all lags
+	MinCorr:	Min(Corr1, Corr2, Corr3, Corr4, Corr5, Corr6, Corr7, Corr8, Corr9, Corr10, Corr11, Corr12, Corr13, Corr14, Corr15, Corr16, Corr17, Corr18, Corr19, Corr20)
+
+	// Lag at which minimum correlation occurs => dominant half-cycle
+	DClag:	Switch(MinCorr, Corr1, 1, Corr2, 2, Corr3, 3, Corr4, 4, Corr5, 5, Corr6, 6, Corr7, 7, Corr8, 8, Corr9, 9, Corr10, 10, Corr11, 11, Corr12, 12, Corr13, 13, Corr14, 14, Corr15, 15, Corr16, 16, Corr17, 17, Corr18, 18, Corr19, 19, Corr20, 20)
+
+	// Dominant Cycle period, clamped to change no more than 2 per bar
+	rawDC:	2 * DClag
+	DC:	Bound(rawDC, nonan(DC[1], rawDC) - 2, nonan(DC[1], rawDC) + 2)
+
+	// Bandpass Filter of Close tuned to dominant cycle
+	bp_L1:	Cosine(360 / DC)
+	bp_G1:	Cosine(BW * 360 / DC)
+	bp_S1:	1 / bp_G1 - Sqr(1 / (bp_G1 * bp_G1) - 1)
+	BP:	if(BarNum >= 4 and not IsNaN(DC), 0.5 * (1 - bp_S1) * (Close - Close[2]) + bp_L1 * (1 + bp_S1) * nonan(BP[1]) - bp_S1 * nonan(BP[2]), 0)
+
+	// Rate of change (two-bar difference for smoother response)
+	bpROC:	BP - BP[2]
+
+	// Trading signals
+	goLong:	Cross(bpROC, 0) and MinCorr < Thresh
+	goShort:	Cross(0, bpROC) and MinCorr < Thresh and Filt > 0
+
+Charts:
+	BP:	BP {|}
+	Zero:	0 {|}
+//	Filt:	Filt {|}
+//	MinCorr:	MinCorr {|}
+//	DC:	DC {|}
+
+Strategy: AT_Long
+	Side:	Long
+	Quantity:	1
+	EntrySetup:	goLong
+	ExitRule:	goShort
+
+Strategy: AT_Short
+	Side:	Short
+	Quantity:	1
+	EntrySetup:	goShort
+	ExitRule:	goLong

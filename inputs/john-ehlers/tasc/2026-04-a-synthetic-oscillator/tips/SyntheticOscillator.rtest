@@ -1,0 +1,104 @@
+Notes:
+	John Ehlers "Synthetic Oscillator", TASC April 2026.
+	Implements and plots the indicator as in the article.
+	Adds a simple strategy to demonstrate trading signals.
+
+Import:
+	DataSource:	Norgate
+	IncludeList:	&ES_CCB // back-adjusted continuous contract
+	StartDate:	2008-01-01
+	EndDate:	Latest
+	SaveAs:	es.rtd
+
+Settings:
+	DataFile:	es.rtd
+	BarSize:	Daily
+	StartDate:	2009-01-01
+	EndDate:	Latest
+
+Parameters:
+	LowerBound:	15
+	UpperBound:	25
+	Len:	4
+
+Data:
+	// Common constants
+	decay_factor:	-1.414 * 3.14159
+	phase_angle:	1.414 * 180
+
+	// Hann windowed filter of Close (Len 12)
+	filt:	Sum((1 - Cosine(360 * FunBar / 13)) * Close, 12)
+	coef:	Sum(1 - Cosine(360 * FunBar / 13), 12)
+	hann:	filt / coef
+
+	// Highpass Filter at UpperBound period
+	hp_Q:	exp(decay_factor / UpperBound)
+	hp_c1:	2 * hp_Q * Cosine(phase_angle / UpperBound)
+	hp_c2:	hp_Q * hp_Q
+	hp_a0:	(1 + hp_c1 + hp_c2) / 4
+	HP:	if(BarNum >= 4, hp_a0 * (hann - 2 * hann[1] + hann[2]) + hp_c1 * HP[1] - hp_c2 * HP[2], 0)
+
+	// SuperSmoother at LowerBound period
+	ss_Q:	exp(decay_factor / LowerBound)
+	ss_c1:	2 * ss_Q * Cosine(phase_angle / LowerBound)
+	ss_c2:	ss_Q * ss_Q
+	ss_a0:	(1 - ss_c1 + ss_c2) / 2
+	LP:	if(BarNum >= 4, ss_a0 * (HP + HP[1]) + ss_c1 * LP[1] - ss_c2 * LP[2], HP)
+
+	// RMS of LP and normalized Real component
+	RMS_LP:	Sqr(SumSQ(LP, 100) / 100)
+	Real:	if(RMS_LP, LP / RMS_LP, nonan(Real[1]))
+
+	// Imaginary component (normalized rate of change of Real)
+	ROC_R:	Real - Real[1]
+	QRMS:	Sqr(SumSQ(ROC_R, 100) / 100)
+	Imag:	if(QRMS, ROC_R / QRMS, nonan(Imag[1]))
+
+	// Dominant Cycle period
+	Denom:	(Real - Real[1]) * Imag - (Imag - Imag[1]) * Real
+	rawDC:	if(Denom, 6.28 * (Real * Real + Imag * Imag) / Denom, nonan(rawDC[1]))
+	DC:	Bound(rawDC, LowerBound, UpperBound)
+
+	// Mid frequency for bandpass filter
+	MidP:	Sqr(LowerBound * UpperBound)
+
+	// Highpass of Close at Mid period
+	hp2_Q:	exp(decay_factor / MidP)
+	hp2_c1:	2 * hp2_Q * Cosine(phase_angle / MidP)
+	hp2_c2:	hp2_Q * hp2_Q
+	hp2_a0:	(1 + hp2_c1 + hp2_c2) / 4
+	HP2:	if(BarNum >= 4, hp2_a0 * (Close - 2 * Close[1] + Close[2]) + hp2_c1 * HP2[1] - hp2_c2 * HP2[2], 0)
+
+	// Ultimate Smoother of HP2 at Mid period
+	BP:	if(BarNum >= 4, (1 - hp2_a0) * HP2 + (2 * hp2_a0 - hp2_c1) * hp2[1] + (hp2_c2 - hp2_a0) * hp2[2] + hp2_c1 * nonan(BP[1]) - hp2_c2 * nonan(BP[2]), HP2)
+
+	// Phase accumulation with reset at zero crossings of BP
+	Phase:	Select(Cross(BP, 0), 180 / DC, Cross(0, BP), 180 + 180 / DC, nonan(Phase[1]) + 360 / DC)
+
+	// Synthetic Oscillator with glitch removal
+	rawSynth:	Sine(Phase)
+	Synth:	if((Phase > 0 and Phase < 90 and rawSynth < nonan(Synth[1])) or (Phase > 180 and Phase < 270 and rawSynth > nonan(Synth[1])), nonan(Synth[1]), rawSynth)
+
+	// Trading signal: Hann smoothed Synth and its rate of change
+	filt2:	Sum((1 - Cosine(360 * FunBar / (Len + 1))) * Synth, Len)
+	coef2:	Sum(1 - Cosine(360 * FunBar / (Len + 1)), Len)
+	Synth2:	filt2 / coef2
+	ROC2:	Synth2 - Synth2[1]
+	goLong:	Cross(ROC2, 0)
+	goShort:	Cross(0, ROC2)
+
+Charts:
+	Synth:	Synth {|}
+	Zero:	0 {|}
+
+Strategy: synth_long
+	Side:	Long
+	Quantity:	1
+	EntrySetup:	goLong
+	ExitRule:	goShort
+
+Strategy: synth_short
+	Side:	Short
+	Quantity:	1
+	EntrySetup:	goShort
+	ExitRule:	goLong

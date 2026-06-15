@@ -1,0 +1,172 @@
+# Laguerre Filters
+
+**By John Ehlers**
+
+- **Downloaded from:** [Mesa Software — Laguerre Filters](https://www.mesasoftware.com/papers/Laguerre%20Filters.pdf)
+
+---
+
+Laguerre filters have an exceptional capability for smoothing long wavelength components in the data spectrum. This makes them an ideal candidate as a tool for trend trading. I first described Laguerre Filters in my book *Cybernetic Analysis for Stocks and Futures*. In this article I will briefly describe Laguerre polynomials, show advanced trend filters, describe an advanced oscillator indicator, and suggest how to make a profitable trading strategy.
+
+Laguerre polynomials are solutions to a differential equation solved by Edmond Laguerre (1834–1886). For a discrete system, the Nth coefficient of the polynomial is:
+
+$$
+L_N = \left[ \frac{1 - \gamma}{1 - \gamma Z^{-1}} \right] \left[ \frac{Z^{-1} - \gamma}{1 - \gamma Z^{-1}} \right]^N
+$$
+
+I recognized that the first term (zeroth order term) is the Z transform expression for an Exponential Moving Average (EMA) and the square bracketed term is the Z transform expression for an allpass filter. An allpass filter passes the input to the output with no change in amplitude, but with a nonlinear phase relationship that depends on gamma. This structure makes the Laguerre polynomial be an ideal candidate for use in a transversal filter.
+
+A transversal filter consists of three main components: delay elements, multipliers, and an adder. The input signal is passed through a series of delay elements, creating multiple delayed versions of the signal. The delayed signals are tapped at various points along the delay line. Each tapped signal is multiplied by a coefficient (weight) to adjust its contribution to the output, and the weighted signals are summed to form the filter output. A Simple Moving Average (SMA) is one example of a transversal filter where the weighting is uniform. A Finite Impulse Response (FIR) filter is a more general example, where the coefficients are established by windowing.
+
+Actually, an EMA is not a very good filter. With a goal of improving filtering results by reducing lag, I will modify the Laguerre polynomial by replacing the EMA with an UltimateSmoother[^1]. The computation of the Laguerre filter is explained with reference to Code Listing 1. The code for the UltimateSmoother function is shown in Code Listing 2 for your convenience.
+
+The zeroth order term is computed by calling the UltimateSmoother function using the input parameters. Then, sequentially, each term of the Laguerre polynomial is computed as the allpass filter delay of the previous term. I chose a fifth order filter, but the filter can be as long or as short as desired. I chose binomial weighting of the coefficients in the summation, but weighting is not necessary. Perhaps the filter performance could be improved if Hann windowing were employed, but this increases the complexity of the code. Two plot lines are provided so you can compare the Laguerre filter to the UltimateSmoother.
+
+The example Laguerre filter (in blue), using a gamma of .8 and a period of 30, is compared to the UltimateSmoother (in red) in Figure 1. It is obvious that the Laguerre filter is a much better trend filter than the responsive UltimateSmoother.
+
+![Figure 1: Laguerre Filter vs UltimateSmoother](assets/fig-01.png)
+**Figure 1. The Laguerre Filter (Blue) Is A Much Better Trend Filter Than The More Responsive UltimateSmoother (Red).**
+
+The filtering characteristics can be changed rather dramatically by changing the input parameters, Length and gamma. For example, Figure 2 suggests that the crossovers of the UltimateSmoother and Laguerre filter can be used effectively as buy and sell signals in a trading strategy. I used a gamma of .2 and a period of 60 in creating Figure 2. Crossovers of different orders of the Laguerre polynomial may be a better selection for use in a trading strategy than the crossovers of the UltimateSmoother and the Laguerre filter.
+
+![Figure 2: Crossover Strategy](assets/fig-02.png)
+**Figure 2. Changing the Length and Gamma Parameters Suggests that the Laguerre Filter Can Be Used To Create A Profitable Crossover Strategy.**
+
+Since the Laguerre coefficients are nonlinear delay functions, it is a trivial matter to create a smooth and timely oscillator as the difference between the zeroth order and first order Laguerre coefficients. This Laguerre Oscillator is shown in Figure 3, using a gamma of .8 and a period of 20. The indicator is scaled in standard deviations to assist in swing trading decisions. The Laguerre Oscillator Code is given in Code Listing 3 and the RMS function is given in Code Listing 4.
+
+A smoother oscillator, but having more lag, can be created by taking the difference of the zeroth order Laguerre coefficient and the second order coefficient.
+
+![Figure 3: Laguerre Oscillator](assets/fig-03.png)
+**Figure 3. A Timely Smooth Oscillator Indicator Is Generated By The Difference of the Zeroth Order and First Order Laguerre Coefficients. The Display Is Scaled In Standard Deviations To Guide Swing Trading.**
+
+---
+
+## Code Listing 1. EasyLanguage Code for a Sample Laguerre Filter
+
+```easylanguage
+{
+Laguerre Filter
+(C) 2002-2025 John F. Ehlers
+}
+Inputs:
+gama(.8),
+Length(40);
+
+Vars:
+L0(0),
+L1(0),
+L2(0),
+L3(0),
+L4(0),
+L5(0),
+Laguerre(0);
+
+L0 = $UltimateSmoother(Close, Length);
+L1 = -gama*L0[1] + L0[1] + gama*L1[1];
+L2 = -gama*L1[1] + L1[1] + gama*L2[1];
+L3 = -gama*L2[1] + L2[1] + gama*L3[1];
+L4 = -gama*L3[1] + L3[1] + gama*L4[1];
+L5 = -gama*L4[1] + L4[1] + gama*L5[1];
+Laguerre = (L0 + 4*L1 + 6*L2 + 4*L3 + L5) / 16;
+Plot1(Laguerre);
+Plot2(L0);
+```
+
+## Code Listing 2. EasyLanguage Code for the $UltimateSmoother Function
+
+```easylanguage
+{
+Ultimate Smoother Function
+(C) 2004-2024 John F. Ehlers
+}
+Inputs:
+Price(numericseries),
+Period(numericsimple);
+
+Vars:
+a1(0),
+b1(0),
+c1(0),
+c2(0),
+c3(0),
+US(0);
+
+a1 = expvalue(-1.414*3.14159 / Period);
+b1 = 2*a1*Cosine(1.414*180 / Period);
+c2 = b1;
+c3 = -a1*a1;
+c1 = (1 + c2 - c3) / 4;
+
+If CurrentBar >= 4 Then
+    US = (1 - c1)*Price + (2*c1 - c2)*Price[1] - (c1 + c3)*Price[2]
+         + c2*US[1] + c3*US[2];
+If CurrentBar < 4 Then US = Price;
+$UltimateSmoother = US;
+```
+
+## Code Listing 3. EasyLanguage Code For the Laguerre Oscillator
+
+```easylanguage
+{
+Laguerre Oscillator
+(C) 2002-2025 John F. Ehlers
+}
+Inputs:
+gama(.5),
+Length(30);
+
+Vars:
+L0(0),
+L1(0),
+RMS(0),
+LaguerreOsc(0);
+
+L0 = $UltimateSmoother(Close, Length);
+L1 = -gama *L0 + L0[1] + gama *L1[1];
+RMS = $RMS(L0 - L1, 100);
+If RMS <> 0 Then LaguerreOsc = (L0 - L1) / RMS;
+Plot1(LaguerreOsc);
+Plot2(0);
+```
+
+## Code Listing 4. EasyLanguage Code for the $RMS Function
+
+```easylanguage
+{
+RMS Function
+(C) 2015-2022 John F. Ehlers
+}
+Inputs:
+Price(numericseries),
+Length(numericsimple);
+
+Vars:
+SumSq(0),
+count(0);
+
+SumSq = 0;
+for count = 0 to Length - 1 Begin
+    SumSq = SumSq + Price[count]*Price[count];
+End;
+If SumSq <> 0 Then $RMS = SquareRoot(SumSq / Length);
+```
+
+## Conclusions
+
+The coefficients of a Laguerre polynomial suggest that an allpass filter is an ideal candidate for the delay elements of a transversal filter. The allpass filter does not change the data amplitude across the entire spectrum, but has a nonlinear phase response that favors the longer wavelengths. This nonlinear phase response results in a filter characteristic that is helpful for trend trading without the additional lag that would result by using conventional filters with equivalent smoothing.
+
+---
+
+## BibTeX
+
+```bibtex
+@misc{ehlers_laguerre_filters,
+  author       = {John F. Ehlers},
+  title        = {Laguerre Filters},
+  year         = {2026},
+  howpublished = {online},
+  url          = {https://www.mesasoftware.com/papers/Laguerre%20Filters.pdf}
+}
+```
+
+[^1]: John Ehlers, "The Ultimate Smoother", *Stocks & Commodities*, April 2024
