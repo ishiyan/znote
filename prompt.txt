@@ -2087,13 +2087,13 @@ What is the list of indicators?
 Is there enough attribution to Bressert in sources to code indicators?
 When I was looking at Bressert's material, there was little concrete description of calculations, only charting examples and marketing noise.
 -----------------------------
-In external/ehlers/2021-12-the-dmh-an-improved-directional-movement-indicator/mesa/ folder there is mesa.pdf file.
-Convert to markdown.
+In external/ehlers/20xx-a-thinking-mans-macd/mesa/ folder there is mesa.pdf file.
+Convert to markdown. Don't summarize or alter text, follow the original text.
 Name converted file content.md
 Put all assets in the assets/ folder, give names fig-*.*
-When extracting illustrations and figures, give very large margins (almost full page), I will crop them manually.
+When extracting illustrations and figures, don't split them in parts, give very large margins (almost full page), I will crop them manually.
 Add to content.md you just created the original source of downloaded PDF:
-https://www.mesasoftware.com/papers/DMH.pdf
+http://www.mesasoftware.com/papers/A%20Thinking%20Man's%20MACD.pdf
 Also add the bibtex info for this URL
 -----------------------------
 In external/ehlers/2026-04-a-synthetic-oscillator/tips/ folder there is tips.mhtml file.
