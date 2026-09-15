@@ -1,0 +1,84 @@
+Cycle Scanner Excel Workbook
+https://www.whentotrade.com/Excel/CycleScanner
+https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.whentotrade.com%2Fwordpress%2Fwp-content%2Fuploads%2F2019%2F07%2FAPI_CycleScanner_Workbook_v2.xlsm&wdOrigin=BROWSELINK
+WTTCycleScanner.cs
+https://gist.github.com/Program66/40fee4398211cf645c93619244bb7873
+WTTCycleExplorer.cs
+https://gist.github.com/whentotrade/3da134ea205642838fdc8600747e0443
+https://gist.githubusercontent.com/whentotrade/3da134ea205642838fdc8600747e0443/raw/aa04c56c19972fb2636d49fc11db243377960b6e/WTTCycleExplorer.cs
+hp_filter.cpp
+https://gist.github.com/whentotrade/75d75f7805efbc11eae304f3caeb7a07
+https://gist.githubusercontent.com/whentotrade/75d75f7805efbc11eae304f3caeb7a07/raw/fe7957dbe2f7f37b3c8c9a0b2ec531d626c8634e/hp_filter.cpp
+goertzel.cpp
+https://gist.github.com/whentotrade/d09217d27fac05b6868bfe82d4f218be
+https://gist.githubusercontent.com/whentotrade/d09217d27fac05b6868bfe82d4f218be/raw/9437ef085f193ebcb7a583387a865621bac7d641/goertzel.cpp
+BartelsScore.cpp
+https://gist.github.com/whentotrade/39c428bf315b0ed06758601a63e5cf4f
+https://gist.githubusercontent.com/whentotrade/39c428bf315b0ed06758601a63e5cf4f/raw/49e5f1a1a63cecd761646d35e913088cecab7735/BartelsScore.cpp
+WTTCyclePhaseScore.cs
+https://www.whentotrade.com/NT8/CyclePhasing
+https://gist.github.com/whentotrade/2b222d7aa1ebba09da192c56d9f4a9e8
+https://gist.githubusercontent.com/whentotrade/2b222d7aa1ebba09da192c56d9f4a9e8/raw/96df6a81d0927d852f1b2458129b5fbfcc688484/WTTCyclePhaseScore.cs
+WTT_CycleSwing.mq4
+www.whentotrade.com/MetaTrader/CSI
+https://gist.github.com/whentotrade/f78664f1f6c1c7f31eb37968a2a8fe52
+https://gist.githubusercontent.com/whentotrade/f78664f1f6c1c7f31eb37968a2a8fe52/raw/c50d9d02519c6a8f8326c3f0ea79393ef5270576/WTT_CycleSwing.mq4
+WTTCycleSwingIndicator.cs
+www.whentotrade.com/NT8/CSI
+https://gist.github.com/whentotrade/1cf57be0b5ea9c9fd78976cd193346aa
+https://gist.githubusercontent.com/whentotrade/1cf57be0b5ea9c9fd78976cd193346aa/raw/3da5017dbb295e7192a7a1cbda128a9811718b7d/WTTCycleSwingIndicator.cs
+CSI tradingview
+https://www.tradingview.com/u/StockMarketCycles/#published-scripts
+www.whentotrade.com/TradingView/CSI
+Detrended Rhythm Oscillator (DRO)
+https://www.tradingview.com/script/nzvqcuSh-Detrended-Rhythm-Oscillator-DRO/
+Cycle Swing Momentum
+WTTcRSI.cs
+www.whentotrade.com/NT8/CRSI
+https://gist.githubusercontent.com/whentotrade/25349463326da8b846d5afd43102e6b0/raw/1d5a15423eb8365ad99bcfef363e4fbde733c579/WTTcRSI.cs
+WTT_cRSI.mq4
+www.whentotrade.com/MetaTrader/CRSI
+https://gist.githubusercontent.com/whentotrade/db796668f51782c9163a1abc4b9dcb20/raw/532bf3f4355479e6155574334e57fb99ee7377f6/WTT_cRSI.mq4
+RSI cyclic smoothed
+www.whentotrade.com/TradingView/CRSI
+https://www.tradingview.com/script/l4tO5Smh-RSI-cyclic-smoothed/
+https://www.tradingview.com/script/TmqiR1jp-RSI-cyclic-smoothed-v2/
+Dynamic Cycles Explained
+http://www.whentotrade.com/wtt-dynamic-cycles-explained/
+WTT Cycles Book Video Lesson 1
+http://www.whentotrade.com/dynamiccycles1/
+S&P 500 bar-by-bar video for 2008–2010
+http://www.whentotrade.com/dynamiccycles1/
+Weekly S&P 500 Long-Term Cycle
+http://www.whentotrade.com/dynamiccycles2/
+Live Silver Cycle Calls
+http://www.whentotrade.com/silver-cycles/
+WTT public internet magazine on March 22, 2015
+https://www.whentotrade.com/euro-dominant-social-media-sentimiento-de-ciclo/
+Euro – dominant social media sentiment cycles
+https://www.linkedin.com/pulse/euro-dominant-social-media-sentimiento-ciclos-Lars-von-thienen
+Euro set to bounce as sentiment cycle turns positive
+https://psychsignal.com/psychsignal-blog/
+Social media sentiment cycles
+https://www.whentotrade.com/sentiment-cycles/
+Financial stress cycles
+https://www.whentotrade.com/financial-stress-cycles/
+VIX dynamic cycles snapshot
+https://www.whentotrade.com/spx-vix-dynamic-cycles-snapshot/
+online magazine on April 19
+https://www.whentotrade.com/market-cycles-snapshot/
+cycle phasing calculator
+https://www.whentotrade.com/cycle-phasing-calculator/
+wtt cycle phasing
+https://www.desmos.com/calculator/wtk0npd87w
+cycle phases
+https://www.whentotrade.com/video-lesson-cycle-phasing/
+Genetic Algorithm - Daily S&P 500 video
+www.whentotrade.com/ga-cycles-sp500
+
+gist cloners
+https://github.com/Program66?tab=repositories
+https://github.com/PCWin12
+https://github.com/goldstar111?tab=repositories
+https://github.com/PCC19
+https://github.com/bledubd
