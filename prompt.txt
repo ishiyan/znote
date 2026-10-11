@@ -2104,3 +2104,9 @@ Add to tips.md you just created the original source of downloaded MHTML:
 https://www.traders.com/Documentation/FEEDbk_docs/2026/04/TradersTips.html
 Also add the bibtex info for this URL
 -----------------------------
+In inputs/john-ehlers/tasc/2026-05-the-autotune-filter/ folder there is content.pdf file.
+Convert it to markdown and place the converted content.md file in the same folder.
+Put all PNG images in the assets/ folder.
+Add to content.md you just created the original source of downloaded article:
+https://technical.traders.com/archive/article.asp?file=\V44\C05\118EHLE.pdf
+Also add the bibtex info for this URL
