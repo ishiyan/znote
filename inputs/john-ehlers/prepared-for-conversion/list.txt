@@ -1,0 +1,144 @@
+ultimate-smoother | 2024-04-the-ultimate-smoother
+ultimate-bands | 2024-05-ultimate-channels-and-ultimate-bands
+ultimate-channel | 2024-05-ultimate-channels-and-ultimate-bands
+ultimate-strength-index | 2024-11-ultimate-strength-index-(usi)
+ultimate-oscillator | 2025-04-the-ultimate-oscillator
+continuation-index | 2025-09-the-continuation-index
+one-euro-filter | 2025-12-the-one-euro-filter
+reversion-index | 2026-01-the-reversion-index
+autotune-filter | 2026-05-the-autotune-filter
+adaptive-super-smoother | 2026-09-adaptive-super-smoother
+projected-moving-average | 2025-03-removing-moving-average-lag
+cybernetic-oscillator | 2025-06-making-a-better-oscillator
+
+2025-01-linear-predictive-filters-and-instantaneous-frequency
+griffiths-predictor
+griffiths-spectrum (spectrum heatmap + instatntaneous period)
+griffiths-dominant-cycle
+2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
+autocorrelation-spectrum (autocorrelation heatmap?)
+
+-----------------
+1985-12-understanding-cycles
+1986-02-optimizing-rsi-with-cycles
+1986-03-0ptimizing-directional-movement-with-cycles
+1986-04-trading-channels
+1986-09-cycle-analysis-comparison-of-fourier-and-maximum-entropy
+1987-03-a-complete-computer-trading-program-part-1
+1987-04-a-complete-computer-trading-program-part-2
+1987-05-a-complete-computer-trading-program-part-3
+1987-06-a-complete-computer-trading-program-part-4
+1987-10-how-to-use-maximum-entropy
+1988-06-moving-averages-part-1
+1988-07-moving-averages-part-2-ehlers-leading-indicator
+1989-03-moving-averages-and-smoothing-filters
+1989-04-cyclic-personalities
+1989-09-leading-indicators-with-momentum
+1989-11-setting-stops-a-new-approach
+1990-04-profit-mapping
+1990-05-trading-threshold
+1990-06-1989-cycles
+1990-10-early-trend-identification
+1991-04-using-a-constant-false-alarm-rate-in-trading
+1991-07-computing-cyclic-entries
+1991-10-the-macd-indicator-revisited
+1992-04-1991-cycles
+1992-05-optimum-detrending
+1993-02-cycle-analysis-and-intraday-trading
+1993-10-creating-indicators-with-physics
+1994-09-the-bandpass-indicator
+1995-06-optimum-predictive-filters
+1996-11-stay-in-phase
+1997-09-do-cycles-exist-in-the-market
+1997-11-cycle-measurements
+2000-03-hilbert-indicators-tell-you-when-to-trade
+2000-05-adaptive-trends-and-oscillators
+2000-07-optimal-detrending
+2000-09-squelch-those-whipsaws
+2000-12-phasor-displays
+2001-04-nonlinear-ehlers-filters
+2001-09-mesa-adaptive-moving-averages
+2002-01-relative-vigor-index
+2002-02-the-instantaneous-trendline
+2002-03-determining-equity-growth-performance
+2002-05-the-center-of-gravity-oscillator
+2002-07-zero-lag-data-smoothers
+2002-10-the-rsi-smoothed
+2003-12-moving-average-computations-made-easier
+2004-05-the-inverse-fisher-transform
+2005-03-whats-the-difference
+2005-10-fractal-adaptive-moving-averages
+2006-01-swiss-army-knife-indicator
+2006-08-modeling-the-market-building-trading-strategies
+2007-01-fourier-transform-for-traders
+2007-03-trading-in-your-ira
+2007-04-when-to-trade-with-cycles
+2008-03-measuring-cycle-periods
+2008-11-corona-charts
+2010-03-empirical-mode-decomposition
+2010-06-fractal-dimension-as-a-market-mode-sensor
+2010-11-zero-lag-(well-almost)
+2012-03-introducing-swami-charts
+2012-04-setting-strategies-with-swami-charts
+2012-10-swami-charts-convolution
+2012-12-reducing-risk-while-finding-profit
+2014-01-predictive-and-successful-indicators
+2014-05-the-real-reason-traders-lose-money
+2014-08-the-quotient-transform
+2015-01-whiter-is-brighter
+2015-03-trading-system-design-a-statistical-approach
+2015-05-schrödingers-cat
+2015-09-decyclers
+2016-01-aliasing
+2016-07-the-super-passband-filter
+2016-09-measuring-market-cycles
+2017-01-be-your-own-hedge-fund
+2017-09-the-reverse-ems-indicator
+2018-03-recursive-median-filters
+2018-05-rocket-rsi-a-solid-propellant-for-your-rocket-science-trading
+2018-07-the-deviation-scaled-moving-average
+2018-10-probability-probably-a-good-thing-to-know
+2019-06-fourier-series-model-of-the-market
+2019-08-a-peek-into-the-future
+2020-02-reflex-a-new-zero-lag-ndicator
+2020-05-correlation-as-a-trend-indicator
+2020-06-correlation-as-a-cycle-indicator
+2020-07-truncated-indicators
+2020-12-noise-elimination-technology
+2021-05-a-technical-description-of-market-data-for-traders
+2021-06-creating-more-robust-trading-strategies-with-the-fm-demodulator
+2021-09-windowing
+2021-10-cycle-trend-analytics-and-the-mad-indicator
+2021-11-the-mad--indicator-enhanced
+2021-12-the-dmh-an-improved-directional-movement-indicator
+2022-01-(yet-another)-improved-rsi
+2022-02-inverse-fisher-transform-redux
+2022-06-ehlers-loops-part-1
+2022-07-pairs-rotation-with-ehlers-loops-part-2
+2022-10-recurring-phase-of-cycle-snalysis
+2023-03-every-little-bit-helps
+2023-04-a-conversation-with-john-ehlers
+2023-04-just-ignore-them
+----2025-01-linear-predictive-filters-and-instantaneous-frequency
+----2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
+2025-07-laguerre-filters
+2025-08-plotting-with-strategies
+2026-03-the-savitzky-golay-filter
+2026-04-a-synthetic-oscillator
+2026-06-the-kalman-filter-vs-the-alpha-beta-filter
+2026-a-new-look-at-prediction
+2026-dominant-cycle
+2026-the-jack-and-jill-indicator
+20xx-a-procedure-to-evaluate-trading-strategy-robustness
+20xx-a-thinking-mans-macd
+20xx-anticipating-turning-points
+20xx-cycles-tutorial
+20xx-dsp-tutorial
+20xx-evaluating-trading-systems
+20xx-gaussian-and-other-low-lag-filters
+20xx-inferring-trading-strategies-from-probability-distribution-functions
+20xx-poles-zeros-and-higher-order-filters
+20xx-time-warp-without-space-travel
+20xx-using-the-fisher-transform
+20xx-walk-forward-optimization
+list.txt
