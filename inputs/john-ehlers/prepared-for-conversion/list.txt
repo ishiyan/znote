@@ -10,6 +10,9 @@ autotune-filter | 2026-05-the-autotune-filter
 adaptive-super-smoother | 2026-09-adaptive-super-smoother
 projected-moving-average | 2025-03-removing-moving-average-lag
 cybernetic-oscillator | 2025-06-making-a-better-oscillator
+laguerre-filter | 2025-07-laguerre-filters
+laguerre-oscillator | 2025-07-laguerre-filters
+synthetic-oscillator | 2026-04-a-synthetic-oscillator
 
 2025-01-linear-predictive-filters-and-instantaneous-frequency
 griffiths-predictor
@@ -121,10 +124,8 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2023-04-just-ignore-them
 ----2025-01-linear-predictive-filters-and-instantaneous-frequency
 ----2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
-2025-07-laguerre-filters
 2025-08-plotting-with-strategies
 2026-03-the-savitzky-golay-filter
-2026-04-a-synthetic-oscillator
 2026-06-the-kalman-filter-vs-the-alpha-beta-filter
 2026-a-new-look-at-prediction
 2026-dominant-cycle
