@@ -2201,9 +2201,9 @@ The implementation procedure for an indicator is:
 At this point we should have generated master expected test data for all languages.
 -----------------------------
 The following instruction uses parameters:
-- <input indicator>: inputs/john-ehlers/tasc/2025-03-removing-moving-average-lag/
+- <input indicator>: inputs/john-ehlers/tasc/2026-04-a-synthetic-oscillator/
 - <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
-- <indicator>: projected-moving-average
+- <indicator>: synthetic-oscillator
 
 Create working "research prototype master reference implementation" of the <input indicator> in Python in <prepared for conversion>/<indicator>/ folder with:
 - extensive description and theoretical background
@@ -2290,11 +2290,11 @@ The implementation procedure for an indicator is:
 At this point we should have generated master expected test data for all languages.
 -----------------------------
 The following instruction uses parameters:
-- <input indicator>: inputs/john-ehlers/tasc/2024-04-the-ultimate-smoother/
+- <input indicator>: inputs/john-ehlers/tasc/2025-07-laguerre-filters/
 - <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
 The <input indicator> article actually defines two indicators, so we have to do the procedure tice: 
-- <indicator>: ultimate-channel
-- <indicator>: ultimate-bands
+- <indicator>: laguerre-filter
+- <indicator>: laguerre-oscillator
 
 Create working "research prototype master reference implementation" of the <input indicator> in Python in <prepared for conversion>/<indicator>/ folder with:
 - extensive description and theoretical background
