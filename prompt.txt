@@ -2290,9 +2290,9 @@ The implementation procedure for an indicator is:
 At this point we should have generated master expected test data for all languages.
 -----------------------------
 The following instruction uses parameters:
-- <input indicator>: inputs/john-ehlers/tasc/2025-09-the-continuation-index/
+- <input indicator>: inputs/john-ehlers/tasc/2024-04-the-ultimate-smoother/
 - <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
-- <indicator>: the-continuation-index
+- <indicator>: ultimate-smoother
 
 Create working "research prototype master reference implementation" of the <input indicator> in Python in <prepared for conversion>/<indicator>/ folder with:
 - extensive description and theoretical background
