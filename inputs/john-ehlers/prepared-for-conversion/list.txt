@@ -13,6 +13,7 @@ cybernetic-oscillator | 2025-06-making-a-better-oscillator
 laguerre-filter | 2025-07-laguerre-filters
 laguerre-oscillator | 2025-07-laguerre-filters
 synthetic-oscillator | 2026-04-a-synthetic-oscillator
+elegant-oscillator | 2022-02-inverse-fisher-transform-redux
 
 2025-01-linear-predictive-filters-and-instantaneous-frequency
 griffiths-predictor
@@ -115,7 +116,6 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2021-11-the-mad--indicator-enhanced
 2021-12-the-dmh-an-improved-directional-movement-indicator
 2022-01-(yet-another)-improved-rsi
-2022-02-inverse-fisher-transform-redux
 2022-06-ehlers-loops-part-1
 2022-07-pairs-rotation-with-ehlers-loops-part-2
 2022-10-recurring-phase-of-cycle-snalysis
