@@ -2201,9 +2201,9 @@ The implementation procedure for an indicator is:
 At this point we should have generated master expected test data for all languages.
 -----------------------------
 The following instruction uses parameters:
-- <input indicator>: inputs/john-ehlers/tasc/2021-10-cycle-trend-analytics-and-the-mad-indicator/
+- <input indicator>: inputs/john-ehlers/tasc/2021-11-the-mad--indicator-enhanced/
 - <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
-- <indicator>: moving-average-difference
+- <indicator>: moving-average-difference-hann
 
 Create working "research prototype master reference implementation" of the <input indicator> in Python in <prepared for conversion>/<indicator>/ folder with:
 - extensive description and theoretical background
