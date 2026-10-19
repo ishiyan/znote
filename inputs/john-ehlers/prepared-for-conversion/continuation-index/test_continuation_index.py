@@ -14,7 +14,7 @@ import unittest
 
 DIRECTORY = Path(__file__).resolve().parent
 ARTICLE = DIRECTORY.parent.parent / "tasc" / "2025-09-the-continuation-index" / "content.md"
-SPEC = importlib.util.spec_from_file_location("continuation_index_master", DIRECTORY / "the-continuation-index.py")
+SPEC = importlib.util.spec_from_file_location("continuation_index_master", DIRECTORY / "continuation-index.py")
 MASTER = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MASTER)
 INPUT_CLOSE = MASTER._load_literal_arrays(DIRECTORY / "test_testdata.py")["INPUT_CLOSE"]
@@ -261,7 +261,7 @@ class ContinuationIndexTests(unittest.TestCase):
         for name in ("INPUT_CLOSE", "INPUT_HIGH", "INPUT_LOW", "INPUT_OPEN"):
             self.assertEqual(len(copied[name]), 252)
             self.assertEqual(copied[name], source[name])
-        parsed = ast.parse((DIRECTORY / "the-continuation-index.py").read_text())
+        parsed = ast.parse((DIRECTORY / "continuation-index.py").read_text())
         assignment = next(node for node in ast.walk(parsed)
                           if isinstance(node, ast.Assign) and any(
                               isinstance(target, ast.Name) and target.id == "INPUT_CLOSE"

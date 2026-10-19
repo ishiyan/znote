@@ -10,8 +10,8 @@ scalars, runs in O(1) time per sample, and stores no price history. File handlin
 below the indicator is fixture-generation tooling, not part of the port.
 
 Usage:
-    python3 the-one-euro-filter.py
-    python3 the-one-euro-filter.py --generate-reference-data
+    python3 one-euro-filter.py
+    python3 one-euro-filter.py --generate-reference-data
 
 The second command regenerates the user-confirmed parameter cases documented
 in description.md. Repeated generation replaces a marked generated section

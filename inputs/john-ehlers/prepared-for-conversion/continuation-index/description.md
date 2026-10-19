@@ -330,7 +330,7 @@ The Go package is `thecontinuationindex`. The existing copied input declarations
 The Python implementation is standalone and requires no NumPy, pandas, plotting libraries, or network access. From this folder, run
 
 ```bash
-python3 the-continuation-index.py
+python3 continuation-index.py
 python3 -m unittest discover -p 'test_continuation_index.py' -v
 ```
 
@@ -346,7 +346,7 @@ The verification suite compares streaming outputs with an independent batch eval
 Regenerate the confirmed reference fixtures with
 
 ```bash
-python3 the-continuation-index.py --generate-reference-data
+python3 continuation-index.py --generate-reference-data
 ```
 
 The generator first checks the embedded closes against the copied Python input, writes all Python expected arrays at 15 significant digits, then reads those arrays back and verifies names, lengths, NaN positions, and retained precision. It appends translations of those same written values to Go, TypeScript, Rust, and Zig. Marked sections make repeat generation replace the prior generated outputs without duplicating arrays or disturbing copied OHLC inputs.

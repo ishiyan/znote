@@ -15,9 +15,9 @@ return NaN in every field. The first complete window is valid immediately;
 the first three valid ratios seed both filters by passing through unchanged.
 
 Commands, from this directory or any other working directory:
-    python3 the-reversion-index.py              # example and confirmed grid
-    python3 the-reversion-index.py --generate   # update all five data files
-    python3 the-reversion-index.py --verify     # validate saved data and tests
+    python3 reversion-index.py              # example and confirmed grid
+    python3 reversion-index.py --generate   # update all five data files
+    python3 reversion-index.py --verify     # validate saved data and tests
 
 Reference values have 15 digits AFTER the decimal point, as in the existing
 conversion example. Internal state always retains the unrounded float.
@@ -416,7 +416,7 @@ def main(closes):
         # Tests live beside the master. Discovery imports the hyphenated file
         # through importlib; it never runs this script's example recursively.
         suite = unittest.defaultTestLoader.discover(
-            str(HERE), pattern="test_the_reversion_index.py"
+            str(HERE), pattern="test_reversion_index.py"
         )
         outcome = unittest.TextTestRunner(verbosity=2).run(suite)
         if not outcome.wasSuccessful():

@@ -2,7 +2,7 @@
 
 This directory is the complete reference package for converting John F. Ehlers'
 Reversion Index to other languages. The numerical master is
-**the-reversion-index.py**, a streaming implementation using only Python's
+**reversion-index.py**, a streaming implementation using only Python's
 standard library. The five data files contain the same input prices and the same
 reference output values. A port does not need access to the original articles
 to implement the algorithm.
@@ -488,7 +488,7 @@ example, run from this directory, is:
 ~~~python
 import importlib.util
 
-spec = importlib.util.spec_from_file_location("reversion_index", "the-reversion-index.py")
+spec = importlib.util.spec_from_file_location("reversion_index", "reversion-index.py")
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
@@ -675,9 +675,9 @@ significant digits. The generator uses unrounded binary64 state to calculate
 the complete series, then rounds only the emitted literals.
 
 ~~~sh
-python3 the-reversion-index.py
-python3 the-reversion-index.py --generate
-python3 the-reversion-index.py --verify
+python3 reversion-index.py
+python3 reversion-index.py --generate
+python3 reversion-index.py --verify
 ~~~
 
 The executable embeds all 252 closes inside its main block and checks them
@@ -691,7 +691,7 @@ survive. Repeated generation is byte-identical.
 
 ## 7. Verification and porting acceptance
 
-The standard-library tests in **test_the_reversion_index.py** independently
+The standard-library tests in **test_reversion_index.py** independently
 translate the article in batch form, including the confirmed CurrentBar mapping.
 They compare that implementation with the bounded streaming ring for the
 entire grid and synthetic edge cases.

@@ -33,9 +33,9 @@ Outputs (see `AutoTuneResult`):
 
 Run as a script to regenerate the reference test vectors:
 
-    python3 the-autotune-filter.py            # prints the parameter grid
-    python3 the-autotune-filter.py --emit py  # writes the Python arrays
-    python3 the-autotune-filter.py --emit go|ts|rs|zig
+    python3 autotune-filter.py            # prints the parameter grid
+    python3 autotune-filter.py --emit py  # writes the Python arrays
+    python3 autotune-filter.py --emit go|ts|rs|zig
 """
 
 from __future__ import annotations

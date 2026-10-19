@@ -1,5 +1,5 @@
 //nolint:testpackage
-package thereversionindex
+package reversionindex
 
 import "math"
 

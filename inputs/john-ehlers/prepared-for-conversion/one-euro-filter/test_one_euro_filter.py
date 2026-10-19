@@ -15,7 +15,7 @@ import unittest
 
 DIRECTORY = Path(__file__).resolve().parent
 SOURCE_DIRECTORY = DIRECTORY.parent.parent / "tasc" / "2025-12-the-one-euro-filter"
-SPEC = importlib.util.spec_from_file_location("one_euro_master", DIRECTORY / "the-one-euro-filter.py")
+SPEC = importlib.util.spec_from_file_location("one_euro_master", DIRECTORY / "one-euro-filter.py")
 MASTER = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MASTER)
 INPUT_CLOSE = MASTER._load_literal_arrays(DIRECTORY / "test_testdata.py")["INPUT_CLOSE"]
@@ -158,7 +158,7 @@ class OneEuroFilterTests(unittest.TestCase):
         for name in ("INPUT_CLOSE", "INPUT_HIGH", "INPUT_LOW", "INPUT_OPEN"):
             self.assertEqual(len(copied[name]), 252)
             self.assertEqual(copied[name], templates[name])
-        parsed = ast.parse((DIRECTORY / "the-one-euro-filter.py").read_text())
+        parsed = ast.parse((DIRECTORY / "one-euro-filter.py").read_text())
         embedded = next(
             node for node in ast.walk(parsed)
             if isinstance(node, ast.Assign)

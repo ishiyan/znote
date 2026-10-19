@@ -1,5 +1,5 @@
 //nolint:testpackage
-package theautotunefilter
+package autotunefilter
 
 import "math"
 

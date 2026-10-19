@@ -1,6 +1,6 @@
 """Independent numerical and fixture acceptance tests; standard library only.
 
-Run python3 the-reversion-index.py --verify, or python3 -m unittest discover.
+Run python3 reversion-index.py --verify, or python3 -m unittest discover.
 The batch oracle below follows the article using full arrays, not the master's
 ring, private coefficient helper, or per-sample filter state.
 """
@@ -15,7 +15,7 @@ import unittest
 
 HERE = Path(__file__).resolve().parent
 SPEC = importlib.util.spec_from_file_location(
-    "reversion_index_master", HERE / "the-reversion-index.py"
+    "reversion_index_master", HERE / "reversion-index.py"
 )
 MASTER = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MASTER)
@@ -277,7 +277,7 @@ class ReversionIndexTests(unittest.TestCase):
         inputs = literal_inputs(HERE / "test_testdata.py")
         self.assertEqual(set(inputs), {"INPUT_CLOSE", "INPUT_HIGH", "INPUT_LOW", "INPUT_OPEN"})
         # The independent literal inside main must match all 252 close values.
-        master_tree = ast.parse((HERE / "the-reversion-index.py").read_text())
+        master_tree = ast.parse((HERE / "reversion-index.py").read_text())
         main = next(node for node in master_tree.body if isinstance(node, ast.If))
         embedded = next(node for node in main.body if isinstance(node, ast.Assign))
         self.assertEqual(ast.literal_eval(embedded.value), inputs["INPUT_CLOSE"])

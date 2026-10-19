@@ -1,5 +1,5 @@
 //nolint:testpackage
-package thecontinuationindex
+package continuationindex
 
 import "math"
 

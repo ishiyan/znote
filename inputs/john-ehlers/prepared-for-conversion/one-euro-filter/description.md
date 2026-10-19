@@ -282,14 +282,14 @@ The Go package is `theoneeurofilter`, removing separators from the folder name. 
 Run from this folder:
 
 ```bash
-python3 the-one-euro-filter.py
+python3 one-euro-filter.py
 python3 -m unittest discover -p 'test_one_euro_filter.py' -v
 ```
 
 The first command demonstrates streaming on an embedded copy of all 252 `INPUT_CLOSE` values and prints the confirmed cases. It does not write fixture arrays. To regenerate the confirmed reference data, run
 
 ```bash
-python3 the-one-euro-filter.py --generate-reference-data
+python3 one-euro-filter.py --generate-reference-data
 ```
 
 The generator checks the embedded input against the copied Python fixture, calculates full-precision outputs, formats them with **15 significant digits** using `.15g`, and appends marked expected sections to `test_testdata.py`. It reads the written Python arrays back, verifies names, lengths, and retained precision, and translates those same values into Go, TypeScript, Rust, and Zig. It preserves all copied OHLC input arrays. Repeated generation replaces its marked sections rather than duplicating arrays.

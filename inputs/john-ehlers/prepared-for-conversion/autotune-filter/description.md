@@ -1,7 +1,7 @@
 # The AutoTune Filter — A Rolling Autocorrelation Function
 
 Master reference documentation for the research prototype implementation in
-[`the-autotune-filter.py`](./the-autotune-filter.py).
+[`autotune-filter.py`](./autotune-filter.py).
 
 - **Article:** John F. Ehlers, *The AutoTune Filter: A Rolling Autocorrelation Function*,
   *Technical Analysis of STOCKS & COMMODITIES*, Vol. 44, May 2026, pp. 9–15, 31
@@ -321,7 +321,7 @@ plus 60 expected arrays each):
 Regenerate everything with:
 
 ```bash
-python3 the-autotune-filter.py --emit py    # also: go | ts | rs | zig
+python3 autotune-filter.py --emit py    # also: go | ts | rs | zig
 ```
 
 Sanity anchors that hold for every grid point and that ports should check first:
@@ -448,13 +448,13 @@ Sanity anchors that hold for every grid point and that ports should check first:
 
 ## 10. Master implementation API
 
-The master file is `the-autotune-filter.py` (the hyphen matches the folder name; load it
-with `importlib` or rename it to `the_autotune_filter.py` if you prefer a plain
+The master file is `autotune-filter.py` (the hyphen matches the folder name; load it
+with `importlib` or rename it to `autotune_filter.py` if you prefer a plain
 `import`):
 
 ```python
 import importlib.util
-spec = importlib.util.spec_from_file_location("at", "the-autotune-filter.py")
+spec = importlib.util.spec_from_file_location("at", "autotune-filter.py")
 at = importlib.util.module_from_spec(spec); spec.loader.exec_module(at)
 
 ind = at.AutoTune(window=20, bandwidth=0.25)

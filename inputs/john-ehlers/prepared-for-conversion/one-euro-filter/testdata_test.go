@@ -1,5 +1,5 @@
 //nolint:testpackage
-package theoneeurofilter
+package oneeurofilter
 
 import "math"
 
