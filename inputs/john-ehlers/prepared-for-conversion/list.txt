@@ -6,7 +6,6 @@ correlation-angle | 2020-06-correlation-as-a-cycle-indicator
 truncated-bandpass-Filter | 2020-07-truncated-indicators
 rsi-net | 2020-12-noise-elimination-technology
 
-
 moving-average-difference | 2021-10-cycle-trend-analytics-and-the-mad-indicator
 moving-average-difference-hann | 2021-11-the-mad--indicator-enhanced
 directional-movement-hann | 2021-12-the-dmh-an-improved-directional-movement-indicator
