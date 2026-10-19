@@ -2201,9 +2201,9 @@ The implementation procedure for an indicator is:
 At this point we should have generated master expected test data for all languages.
 -----------------------------
 The following instruction uses parameters:
-- <input indicator>: inputs/john-ehlers/tasc/2022-02-inverse-fisher-transform-redux/
+- <input indicator>: inputs/john-ehlers/tasc/2021-10-cycle-trend-analytics-and-the-mad-indicator/
 - <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
-- <indicator>: elegant-oscillator
+- <indicator>: moving-average-difference
 
 Create working "research prototype master reference implementation" of the <input indicator> in Python in <prepared for conversion>/<indicator>/ folder with:
 - extensive description and theoretical background
@@ -2380,3 +2380,5 @@ The implementation procedure for an indicator is:
       - In fornt of every array copy two comment lines (description of teh array and parameter values) from Python test_testdata.py
 At this point we should have generated master expected test data for all languages.
 -----------------------------
+ ehlers
+ codex resume 01a14040-b7d9-7bb1-a259-2c76364b0282

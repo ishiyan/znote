@@ -1,3 +1,5 @@
+moving-average-difference | 2021-10-cycle-trend-analytics-and-the-mad-indicator
+
 elegant-oscillator | 2022-02-inverse-fisher-transform-redux
 ultimate-smoother | 2024-04-the-ultimate-smoother
 ultimate-bands | 2024-05-ultimate-channels-and-ultimate-bands
@@ -112,7 +114,6 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2021-05-a-technical-description-of-market-data-for-traders (am-detector, fm-demodulator)
 2021-06-creating-more-robust-trading-strategies-with-the-fm-demodulator
 2021-09-windowing
-2021-10-cycle-trend-analytics-and-the-mad-indicator (MAD - Moving Average Difference Indicator), (Cycle-Trend Analytics)
 2021-11-the-mad--indicator-enhanced (MADH - Moving Average Difference - Hann Indicator)
 2021-12-the-dmh-an-improved-directional-movement-indicator (DMH - Directional Movement using Hann Windowing)
 2022-01-(yet-another)-improved-rsi (RSIH - RSI with Hann Windowing)
