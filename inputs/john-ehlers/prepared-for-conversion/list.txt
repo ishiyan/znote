@@ -3,6 +3,9 @@ reflex | 2020-02-reflex-a-new-zero-lag-ndicator
 trendflex | 2020-02-reflex-a-new-zero-lag-ndicator
 correlation-trend | 2020-05-correlation-as-a-trend-indicator
 correlation-angle | 2020-06-correlation-as-a-cycle-indicator
+truncated-bandpass-Filter | 2020-07-truncated-indicators
+rsi-net | 2020-12-noise-elimination-technology
+
 
 moving-average-difference | 2021-10-cycle-trend-analytics-and-the-mad-indicator
 moving-average-difference-hann | 2021-11-the-mad--indicator-enhanced
@@ -114,8 +117,6 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2018-10-probability-probably-a-good-thing-to-know
 2019-06-fourier-series-model-of-the-market
 
-2020-07-truncated-indicators (Truncated Bandpass Filter, should also return Bandpass Filter)
-2020-12-noise-elimination-technology (NET - Noise Elimination Technology RSI)
 2021-05-a-technical-description-of-market-data-for-traders (am-detector, fm-demodulator)
 2021-06-creating-more-robust-trading-strategies-with-the-fm-demodulator
 2021-09-windowing
