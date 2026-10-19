@@ -1,8 +1,12 @@
+voss-predictive-filter | 2019-08-a-peek-into-the-future
+reflex | 2020-02-reflex-a-new-zero-lag-ndicator
+trendflex | 2020-02-reflex-a-new-zero-lag-ndicator
+
+
 moving-average-difference | 2021-10-cycle-trend-analytics-and-the-mad-indicator
 moving-average-difference-hann | 2021-11-the-mad--indicator-enhanced
 directional-movement-hann | 2021-12-the-dmh-an-improved-directional-movement-indicator
 rsi-hann | 2022-01-(yet-another)-improved-rsi
-
 elegant-oscillator | 2022-02-inverse-fisher-transform-redux
 ultimate-smoother | 2024-04-the-ultimate-smoother
 ultimate-bands | 2024-05-ultimate-channels-and-ultimate-bands
@@ -108,8 +112,7 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2018-07-the-deviation-scaled-moving-average
 2018-10-probability-probably-a-good-thing-to-know
 2019-06-fourier-series-model-of-the-market
-2019-08-a-peek-into-the-future (voss-predictive-filter)
-2020-02-reflex-a-new-zero-lag-ndicator  (reflex, trendflex)
+
 2020-05-correlation-as-a-trend-indicator (correlation-trend)
 2020-06-correlation-as-a-cycle-indicator (correlation-angle)
 2020-07-truncated-indicators (Truncated Bandpass Filter, should also return Bandpass Filter)
