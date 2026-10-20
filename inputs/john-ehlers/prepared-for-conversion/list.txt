@@ -1,3 +1,10 @@
+super-smoother | 2014-01-predictive-and-successful-indicators
+roofing-filter | 2014-01-predictive-and-successful-indicators
+mesa-stochastic | 2014-01-predictive-and-successful-indicators
+quotient-transform | 2014-08-the-quotient-transform
+universal-oscillator | 2015-01-whiter-is-brighter
+
+super-passband-filter | 2016-07-the-super-passband-filter
 
 reverse-ema | 2017-09-the-reverse-ema-indicator
 
@@ -108,19 +115,15 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2012-03-introducing-swami-charts
 2012-04-setting-strategies-with-swami-charts
 2012-10-swami-charts-convolution
+
 2012-12-reducing-risk-while-finding-profit
-2014-01-predictive-and-successful-indicators
 2014-05-the-real-reason-traders-lose-money
-2014-08-the-quotient-transform
-2015-01-whiter-is-brighter
 2015-03-trading-system-design-a-statistical-approach
 2015-05-schrödingers-cat
 2015-09-decyclers
 2016-01-aliasing
-2016-07-the-super-passband-filter
-2016-09-measuring-market-cycles
+2016-09-measuring-market-cycles (done: auto_correlation_periodogram)
 2017-01-be-your-own-hedge-fund
-
 2021-06-creating-more-robust-trading-strategies-with-the-fm-demodulator
 2021-09-windowing
 2022-06-ehlers-loops-part-1
