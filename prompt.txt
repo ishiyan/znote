@@ -2402,9 +2402,9 @@ Just check:
 Please investigate this first and only then we can do the procedure below.
 ---
 The following instruction uses parameters:
-- <input indicator>: inputs/john-ehlers/tasc/2015-01-whiter-is-brighter/
+- <input indicator>: inputs/john-ehlers/tasc/2017-09-the-reverse-ema-indicator/
 - <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
-- <indicator>: universal-oscillator
+- <indicator>: reverse-ema
 Use full-precision constants instead of truncated 1.414 or 3.14159 Easy-Language code may use.
 The same <indicator> may be also described and implemented in a book, `inputs/john-ehlers/2013-cycle-analytics-for-traders/toc.md`. Search in chapters of this book if it is there.
 If found, check how code in article differs from code in book.
