@@ -1,5 +1,6 @@
 recursive-median-filter | 2018-03-recursive-median-filters
 my-rsi | 2018-05-rocket-rsi-a-solid-propellant-for-your-rocket-science-trading
+rocket-rsi | 2018-05-rocket-rsi-a-solid-propellant-for-your-rocket-science-trading
 deviation-scaled-moving-average | 2018-07-the-deviation-scaled-moving-average
 
 voss-predictive-filter | 2019-08-a-peek-into-the-future
