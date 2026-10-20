@@ -1,3 +1,6 @@
+
+reverse-ema | 2017-09-the-reverse-ema-indicator
+
 recursive-median-filter | 2018-03-recursive-median-filters
 my-rsi | 2018-05-rocket-rsi-a-solid-propellant-for-your-rocket-science-trading
 rocket-rsi | 2018-05-rocket-rsi-a-solid-propellant-for-your-rocket-science-trading
@@ -5,7 +8,6 @@ deviation-scaled-moving-average | 2018-07-the-deviation-scaled-moving-average
 deviation-scaled-oscillator | 2018-10-probability-probably-a-good-thing-to-know
 fisher-deviation-scaled-oscillator | 2018-10-probability-probably-a-good-thing-to-know
 fourier-series-analysis | 2019-06-fourier-series-model-of-the-market
-
 voss-predictive-filter | 2019-08-a-peek-into-the-future
 reflex | 2020-02-reflex-a-new-zero-lag-ndicator
 trendflex | 2020-02-reflex-a-new-zero-lag-ndicator
@@ -118,7 +120,6 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2016-07-the-super-passband-filter
 2016-09-measuring-market-cycles
 2017-01-be-your-own-hedge-fund
-2017-09-the-reverse-ems-indicator
 
 2021-06-creating-more-robust-trading-strategies-with-the-fm-demodulator
 2021-09-windowing
