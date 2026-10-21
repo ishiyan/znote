@@ -41,6 +41,7 @@ ultimate-strength-index | 2024-11-ultimate-strength-index-(usi)
 griffiths-predictor | 2025-01-linear-predictive-filters-and-instantaneous-frequency
 griffiths-spectrum | 2025-01-linear-predictive-filters-and-instantaneous-frequency
 griffiths-dominant-cycle | 2025-01-linear-predictive-filters-and-instantaneous-frequency
+autocorrelation-heatmap | 2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
 projected-moving-average | 2025-03-removing-moving-average-lag
 ultimate-oscillator | 2025-04-the-ultimate-oscillator
 cybernetic-oscillator | 2025-06-making-a-better-oscillator
@@ -52,10 +53,6 @@ reversion-index | 2026-01-the-reversion-index
 synthetic-oscillator | 2026-04-a-synthetic-oscillator
 autotune-filter | 2026-05-the-autotune-filter
 adaptive-super-smoother | 2026-09-adaptive-super-smoother
-
-2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
-autocorrelation-spectrum (autocorrelation heatmap?)
-
 -----------------
 1985-12-understanding-cycles
 1986-02-optimizing-rsi-with-cycles
@@ -134,7 +131,6 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2023-03-every-little-bit-helps
 2023-04-a-conversation-with-john-ehlers
 2023-04-just-ignore-them
-----2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
 2025-08-plotting-with-strategies
 2026-03-the-savitzky-golay-filter
 2026-06-the-kalman-filter-vs-the-alpha-beta-filter
