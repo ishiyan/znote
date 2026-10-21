@@ -2291,14 +2291,32 @@ The implementation procedure for an indicator is:
 At this point we should have generated master expected test data for all languages.
 -----------------------------
 The following instruction uses parameters:
-- <input indicator>: inputs/john-ehlers/tasc/2018-10-probability-probably-a-good-thing-to-know/
+- <input indicator>: inputs/john-ehlers/tasc/2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation/
 - <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
-The <input indicator> article actually defines two indicators, so we have to do the procedure tice: 
-- <indicator>: deviation-scaled-oscillator
-- <indicator>: fisher-deviation-scaled-oscillator
-Or do you think we should make single folder with indicator returning two values?
+The <input indicator> article actually defines three indicators, so we have to do the procedure three times: 
+- <indicator>: griffiths-predictor
+- <indicator>: griffiths-spectrum (output spectrum heatmap + instatntaneous period)
+- <indicator>: griffiths-dominant-cycle
+Or do you think we should make single folder with indicator returning several values?
+When implementing new master, please use heatmap structure as in `external/zpano/py/indicators/john_ehlers/auto_correlation_periodogram/` and `external/zpano/py/indicators/core/outputs/heatmap.py`: it shouldn't be exactly the same but clouse enough to conversion later.
 Use full-precision constants instead of truncated 1.414 or 3.14159 Easy-Language code may use.
-
+---
+The book:
+- `inputs/john-ehlers/2013-cycle-analytics-for-traders/toc.md`
+introduces various indicators.
+Plwease advise is it worth to implement them and if yes, which list of master folders should it be.
+Please check which master versions we already have in `inputs/john-ehlers/prepared-for-conversion/`, we can skip them.
+Also check what I already implemented in `external/zpano/py/indicators/john_ehlers/` folder, we might make new masters for them.
+ 
+codex resume 01a15e9e-4964-7762-9391-678e81b017f2
+---
+The following instruction uses parameters:
+- <input indicator>: inputs/john-ehlers/tasc/2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation/
+- <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
+- <indicator>: autocorrelation-indicator (or autocorrelation-heatmap? Please advise which is better)
+When implementing new master, please use heatmap structure as in `external/zpano/py/indicators/john_ehlers/auto_correlation_periodogram/` and `external/zpano/py/indicators/core/outputs/heatmap.py`: it shouldn't be exactly the same but clouse enough to conversion later.
+Use full-precision constants instead of truncated 1.414 or 3.14159 Easy-Language code may use.
+---
 Create working "research prototype master reference implementation" of the <input indicator> in Python in <prepared for conversion>/<indicator>/ folder with:
 - extensive description and theoretical background
 - test data for 5 different languages
@@ -2384,30 +2402,55 @@ The implementation procedure for an indicator is:
 At this point we should have generated master expected test data for all languages.
 -----------------------------
 The following instruction uses parameters:
-- <input indicator>: inputs/john-ehlers/tasc/2014-01-predictive-and-successful-indicators/
-- <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
-The <input indicator> article actually defines three indicators, so we have to do the procedure three times: 
-- <indicator>: super-smoother-filter
-- <indicator>: roofing-filter
-Use full-precision constants instead of truncated 1.414 or 3.14159 Easy-Language code may use.
-The same <indicator> may be also described and implemented in a book, `inputs/john-ehlers/2013-cycle-analytics-for-traders/toc.md`. Search in chapters of this book if they are there.
-Also, I already have two indicators implemented in a different repo. I've copied them to
-- `external/zpano/py/indicators/john_ehlers/super_smoother/`
-- `external/zpano/py/indicators/john_ehlers/roofing_filter/`
-This code will not compile because it is knipped out of context.
-Just check:
-- haw code in article differs from code in book
-- if the two indicators above implemented according the book
-- do we need to make new master preparation or existing code is good enough.
-Please investigate this first and only then we can do the procedure below.
----
-The following instruction uses parameters:
 - <input indicator>: inputs/john-ehlers/tasc/2017-09-the-reverse-ema-indicator/
 - <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
 - <indicator>: reverse-ema
 Use full-precision constants instead of truncated 1.414 or 3.14159 Easy-Language code may use.
 The same <indicator> may be also described and implemented in a book, `inputs/john-ehlers/2013-cycle-analytics-for-traders/toc.md`. Search in chapters of this book if it is there.
 If found, check how code in article differs from code in book.
+Please investigate this first and only then we can do the procedure below.
+---
+The following instruction uses parameters:
+- <input indicator>: inputs/john-ehlers/tasc/2016-09-measuring-market-cycles/
+- <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
+- <indicator>: auto-correlation-periodogram
+The <indicator> should also output the dominant cycle value.
+Use full-precision constants instead of truncated 1.414 or 3.14159 Easy-Language code may use.
+The same <indicator> may be also described and implemented in a book, `inputs/john-ehlers/2013-cycle-analytics-for-traders/toc.md`. Search in chapters of this book if they are there.
+Also, I already have this indicator implemented in a different repo. I've copied it to
+- `external/zpano/py/indicators/john_ehlers/auto_correlation_periodogram/`
+This code will not compile because it is knipped out of context.
+Just check:
+- haw code in article differs from code in book
+- if the two indicators above implemented according the book
+I think we need to make new master preparation anyways, because ecisting implementation do not output dominant cycle.
+When implementing new master, please use heatmap structure as in `external/zpano/py/indicators/john_ehlers/auto_correlation_periodogram/` and `external/zpano/py/indicators/core/outputs/heatmap.py`: it shouldn't be exactly the same but clouse enough to conversion later.
+Please investigate this first and only then we can do the procedure below.
+---
+The following instruction uses parameters:
+- <input indicator>: inputs/john-ehlers/tasc/2008-11-corona-charts/
+- <prepared for conversion>: inputs/john-ehlers/prepared-for-conversion/
+The article defines 4 indictors:
+- <indicator>: corona-trend-vigor
+- <indicator>: corona-swing-position
+- <indicator>: corona-spectrum
+- <indicator>: corona-signal-to-noise-ratio
+Use full-precision constants instead of truncated 1.414 or 3.14159 Easy-Language code may use.
+The same <indicator> may be also described and implemented in a book, `inputs/john-ehlers/2013-cycle-analytics-for-traders/toc.md`. Search in chapters of this book if they are there.
+Also, I already have these indicators implemented in a different repo. I've copied them to
+- `external/zpano/py/indicators/john_ehlers/corona/` (thgis is a common estimator used in 4 other indicators)
+- `external/zpano/py/indicators/john_ehlers/corona_trend_vigor/`
+- `external/zpano/py/indicators/john_ehlers/corona_swing-position/`
+- `external/zpano/py/indicators/john_ehlers/corona_spectrum/`
+- `external/zpano/py/indicators/john_ehlers/corona_signal-to-noise-ratio/`
+This code will not compile because it is knipped out of context.
+Check how code in article differs from code in book and in my implementation.
+I think we need to make new master preparation anyways.
+When implementing new master, please
+- use heatmap structure as in `external/zpano/py/indicators/john_ehlers/auto_correlation_periodogram/` and `external/zpano/py/indicators/core/outputs/heatmap.py`: it shouldn't be exactly the same but clouse enough to conversion later
+- use the same structure with common `corona` estimator
+- return not only heatmaps but also  values my implementation returns, and possibly more if there are more useful ones.
+I will upgrade my implementation with these masters then.
 Please investigate this first and only then we can do the procedure below.
 ---
 Create working "research prototype master reference implementation" of the <input indicator> in Python in <prepared for conversion>/<indicator>/ folder with:
