@@ -1,0 +1,170 @@
+{
+  "indicator": "swami-swing-wave",
+  "confirmed_on": "2026-10-21",
+  "confirmed_by": "user",
+  "sample_count": 252,
+  "significant_digits": 15,
+  "case_count": 8,
+  "expected_arrays_per_language": 24,
+  "scalar_values_per_language": 105588,
+  "cases": [
+    {
+      "parameters": {
+        "min_period": 8,
+        "max_period": 40,
+        "delta": 0.1
+      },
+      "what_it_tests": "NinjaTrader default band-pass bank and rolling normalization.",
+      "input": "close",
+      "bin_count": 33,
+      "warmup_bars": 41,
+      "first_available_index": 41,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P08_P140_D0_1_HEATMAP",
+        "MIN": "EXPECTED_P08_P140_D0_1_MIN",
+        "MAX": "EXPECTED_P08_P140_D0_1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 16,
+        "max_period": 48,
+        "delta": 0.1
+      },
+      "what_it_tests": "Website advertised cycle span with NinjaTrader numerical variant.",
+      "input": "close",
+      "bin_count": 33,
+      "warmup_bars": 49,
+      "first_available_index": 49,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P016_P148_D0_1_HEATMAP",
+        "MIN": "EXPECTED_P016_P148_D0_1_MIN",
+        "MAX": "EXPECTED_P016_P148_D0_1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 3,
+        "max_period": 12,
+        "delta": 0.1
+      },
+      "what_it_tests": "Fast short-cycle research extension.",
+      "input": "close",
+      "bin_count": 10,
+      "warmup_bars": 13,
+      "first_available_index": 13,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P03_P112_D0_1_HEATMAP",
+        "MIN": "EXPECTED_P03_P112_D0_1_MIN",
+        "MAX": "EXPECTED_P03_P112_D0_1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 8,
+        "max_period": 24,
+        "delta": 0.1
+      },
+      "what_it_tests": "Compact bank and expiring filtered extrema.",
+      "input": "close",
+      "bin_count": 17,
+      "warmup_bars": 25,
+      "first_available_index": 25,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P08_P124_D0_1_HEATMAP",
+        "MIN": "EXPECTED_P08_P124_D0_1_MIN",
+        "MAX": "EXPECTED_P08_P124_D0_1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 8,
+        "max_period": 40,
+        "delta": 0.25
+      },
+      "what_it_tests": "Broader passband than the original narrow filter.",
+      "input": "close",
+      "bin_count": 33,
+      "warmup_bars": 41,
+      "first_available_index": 41,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P08_P140_D0_25_HEATMAP",
+        "MIN": "EXPECTED_P08_P140_D0_25_MIN",
+        "MAX": "EXPECTED_P08_P140_D0_25_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 8,
+        "max_period": 40,
+        "delta": 0.5
+      },
+      "what_it_tests": "Wide passband and fast decay.",
+      "input": "close",
+      "bin_count": 33,
+      "warmup_bars": 41,
+      "first_available_index": 41,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P08_P140_D0_5_HEATMAP",
+        "MIN": "EXPECTED_P08_P140_D0_5_MIN",
+        "MAX": "EXPECTED_P08_P140_D0_5_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 40,
+        "max_period": 40,
+        "delta": 0.1
+      },
+      "what_it_tests": "Single-cycle normalization and filter state.",
+      "input": "close",
+      "bin_count": 1,
+      "warmup_bars": 41,
+      "first_available_index": 41,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P040_P140_D0_1_HEATMAP",
+        "MIN": "EXPECTED_P040_P140_D0_1_MIN",
+        "MAX": "EXPECTED_P040_P140_D0_1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 8,
+        "max_period": 250,
+        "delta": 0.1
+      },
+      "what_it_tests": "Full-record boundary: longest bin first appears on the last bar.",
+      "input": "close",
+      "bin_count": 243,
+      "warmup_bars": 251,
+      "first_available_index": 251,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P08_P1250_D0_1_HEATMAP",
+        "MIN": "EXPECTED_P08_P1250_D0_1_MIN",
+        "MAX": "EXPECTED_P08_P1250_D0_1_MAX"
+      }
+    }
+  ],
+  "fixtures": {
+    "test_testdata.py": {
+      "sha256": "1fc6eda37694c44d7d6316ca695c8c7c95193ba887a9b6bef2fc16c560eb052e",
+      "bytes": 926491
+    },
+    "testdata_test.go": {
+      "sha256": "a6dac1c644902b14b2d76b3f06a2ab2ccff992d0158dac18567d6c1a02451a66",
+      "bytes": 1396383
+    },
+    "testdata.ts": {
+      "sha256": "473372aa9b63e74b2d00d15bf861d1d5951e7ef5e377fd94976d62663c3c7c90",
+      "bytes": 927124
+    },
+    "testdata.rs": {
+      "sha256": "afc9ea7a0da3c4ee18819b166a98c40986ca9ec3d617840dd70bfd8462d60ac5",
+      "bytes": 1288575
+    },
+    "testdata.zig": {
+      "sha256": "ff12acb75c0fddb026bce206c3a052af8ede2e097ed18a85593b7775044cbaf0",
+      "bytes": 941107
+    }
+  }
+}

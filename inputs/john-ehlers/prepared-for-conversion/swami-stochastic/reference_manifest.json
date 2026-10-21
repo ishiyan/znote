@@ -1,0 +1,202 @@
+{
+  "indicator": "swami-stochastic",
+  "confirmed_on": "2026-10-21",
+  "confirmed_by": "user",
+  "sample_count": 252,
+  "significant_digits": 15,
+  "case_count": 8,
+  "expected_arrays_per_language": 24,
+  "scalar_values_per_language": 69048,
+  "cases": [
+    {
+      "parameters": {
+        "min_period": 6,
+        "max_period": 48,
+        "variant": "classic_2012",
+        "range_alpha": 0.5,
+        "output_alpha": 0.2,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Original 2012 price-based default bank and EMA cascade.",
+      "input": "close",
+      "bin_count": 43,
+      "warmup_bars": 47,
+      "first_available_index": 47,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2012_P06_P148_HEATMAP",
+        "MIN": "EXPECTED_V2012_P06_P148_MIN",
+        "MAX": "EXPECTED_V2012_P06_P148_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 6,
+        "max_period": 24,
+        "variant": "classic_2012",
+        "range_alpha": 0.5,
+        "output_alpha": 0.2,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Compact classic bank and expiration of old extrema.",
+      "input": "close",
+      "bin_count": 19,
+      "warmup_bars": 23,
+      "first_available_index": 23,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2012_P06_P124_HEATMAP",
+        "MIN": "EXPECTED_V2012_P06_P124_MIN",
+        "MAX": "EXPECTED_V2012_P06_P124_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 6,
+        "max_period": 48,
+        "variant": "classic_2012",
+        "range_alpha": 1.0,
+        "output_alpha": 0.5,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Fast classic response with alternate EMA weights.",
+      "input": "close",
+      "bin_count": 43,
+      "warmup_bars": 47,
+      "first_available_index": 47,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2012_P06_P148_RA1_OA0_5_HEATMAP",
+        "MIN": "EXPECTED_V2012_P06_P148_RA1_OA0_5_MIN",
+        "MAX": "EXPECTED_V2012_P06_P148_RA1_OA0_5_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 2,
+        "max_period": 2,
+        "variant": "classic_2012",
+        "range_alpha": 0.5,
+        "output_alpha": 0.2,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Single classic period and minimum nondegenerate range.",
+      "input": "close",
+      "bin_count": 1,
+      "warmup_bars": 1,
+      "first_available_index": 1,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2012_P02_P12_HEATMAP",
+        "MIN": "EXPECTED_V2012_P02_P12_MIN",
+        "MAX": "EXPECTED_V2012_P02_P12_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 5,
+        "max_period": 48,
+        "variant": "roofed_2013",
+        "range_alpha": 0.5,
+        "output_alpha": 0.2,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Book 2013 roofed default bank with clipped SuperSmoother history.",
+      "input": "close",
+      "bin_count": 44,
+      "warmup_bars": 51,
+      "first_available_index": 51,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2013_P05_P148_HEATMAP",
+        "MIN": "EXPECTED_V2013_P05_P148_MIN",
+        "MAX": "EXPECTED_V2013_P05_P148_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 5,
+        "max_period": 24,
+        "variant": "roofed_2013",
+        "range_alpha": 0.5,
+        "output_alpha": 0.2,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Compact roofed bank with shorter rolling windows.",
+      "input": "close",
+      "bin_count": 20,
+      "warmup_bars": 27,
+      "first_available_index": 27,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2013_P05_P124_HEATMAP",
+        "MIN": "EXPECTED_V2013_P05_P124_MIN",
+        "MAX": "EXPECTED_V2013_P05_P124_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 5,
+        "max_period": 48,
+        "variant": "roofed_2013",
+        "range_alpha": 0.5,
+        "output_alpha": 0.2,
+        "shortest_cycle_period": 10.5,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Fractional book low-pass coefficient period without rounding.",
+      "input": "close",
+      "bin_count": 44,
+      "warmup_bars": 51,
+      "first_available_index": 51,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2013_P05_P148_LP10_5_HEATMAP",
+        "MIN": "EXPECTED_V2013_P05_P148_LP10_5_MIN",
+        "MAX": "EXPECTED_V2013_P05_P148_LP10_5_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 5,
+        "max_period": 48,
+        "variant": "roofed_2013",
+        "range_alpha": 0.5,
+        "output_alpha": 0.2,
+        "shortest_cycle_period": 20.0,
+        "longest_cycle_period": 80.0
+      },
+      "what_it_tests": "Slower book roofing band and output smoothing.",
+      "input": "close",
+      "bin_count": 44,
+      "warmup_bars": 51,
+      "first_available_index": 51,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2013_P05_P148_LP20_HP80_HEATMAP",
+        "MIN": "EXPECTED_V2013_P05_P148_LP20_HP80_MIN",
+        "MAX": "EXPECTED_V2013_P05_P148_LP20_HP80_MAX"
+      }
+    }
+  ],
+  "fixtures": {
+    "test_testdata.py": {
+      "sha256": "bb55652baf4b4146e6a08f5dd273aa95320e0d6df330361852dbe4e61077d493",
+      "bytes": 1131416
+    },
+    "testdata_test.go": {
+      "sha256": "40f7f3d8a3fb314ad29ac5417be49834741e90958efa91e8e9c6c6ee706eba9d",
+      "bytes": 1209862
+    },
+    "testdata.ts": {
+      "sha256": "0a25502e66f02f03f8ea98e74a5ea000064f6ec0685cf69e91a0483c0b6d3c02",
+      "bytes": 1132049
+    },
+    "testdata.rs": {
+      "sha256": "45853c78e1a9e1a2401dca3b26d808919a77e10f28d0a536b0fdf4969fbd940e",
+      "bytes": 1213895
+    },
+    "testdata.zig": {
+      "sha256": "dada331a6322c51849a83df6ec43c818b670aafe0fca90ee5b54bcb0b957608a",
+      "bytes": 1146031
+    }
+  }
+}

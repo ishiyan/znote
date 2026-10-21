@@ -1,0 +1,202 @@
+{
+  "indicator": "swami-relative-strength-index",
+  "confirmed_on": "2026-10-21",
+  "confirmed_by": "user",
+  "sample_count": 252,
+  "significant_digits": 15,
+  "case_count": 8,
+  "expected_arrays_per_language": 24,
+  "scalar_values_per_language": 64512,
+  "cases": [
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 48,
+        "variant": "classic_2012",
+        "alpha": 0.33,
+        "contrast": 4.0,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Original 2012 Wilder-style changes with fourfold contrast.",
+      "input": "close",
+      "bin_count": 37,
+      "warmup_bars": 48,
+      "first_available_index": 48,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2012_P012_P148_HEATMAP",
+        "MIN": "EXPECTED_V2012_P012_P148_MIN",
+        "MAX": "EXPECTED_V2012_P012_P148_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 48,
+        "variant": "classic_2012",
+        "alpha": 0.33,
+        "contrast": 1.0,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Classic ratio without amplified contrast.",
+      "input": "close",
+      "bin_count": 37,
+      "warmup_bars": 48,
+      "first_available_index": 48,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2012_P012_P148_C1_HEATMAP",
+        "MIN": "EXPECTED_V2012_P012_P148_C1_MIN",
+        "MAX": "EXPECTED_V2012_P012_P148_C1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 24,
+        "variant": "classic_2012",
+        "alpha": 0.1,
+        "contrast": 4.0,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Compact classic bank with slower output EMA.",
+      "input": "close",
+      "bin_count": 13,
+      "warmup_bars": 24,
+      "first_available_index": 24,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2012_P012_P124_A0_1_HEATMAP",
+        "MIN": "EXPECTED_V2012_P012_P124_A0_1_MIN",
+        "MAX": "EXPECTED_V2012_P012_P124_A0_1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 1,
+        "max_period": 1,
+        "variant": "classic_2012",
+        "alpha": 0.33,
+        "contrast": 4.0,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Single one-change classic RSI boundary.",
+      "input": "close",
+      "bin_count": 1,
+      "warmup_bars": 1,
+      "first_available_index": 1,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2012_P01_P11_HEATMAP",
+        "MIN": "EXPECTED_V2012_P01_P11_MIN",
+        "MAX": "EXPECTED_V2012_P01_P11_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 5,
+        "max_period": 48,
+        "variant": "roofed_2013",
+        "alpha": 0.33,
+        "contrast": 4.0,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Book 2013 roofed default bank of finite-window gain/loss ratios.",
+      "input": "close",
+      "bin_count": 44,
+      "warmup_bars": 52,
+      "first_available_index": 52,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2013_P05_P148_HEATMAP",
+        "MIN": "EXPECTED_V2013_P05_P148_MIN",
+        "MAX": "EXPECTED_V2013_P05_P148_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 5,
+        "max_period": 24,
+        "variant": "roofed_2013",
+        "alpha": 0.33,
+        "contrast": 4.0,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Compact book bank and correct extra price for P changes.",
+      "input": "close",
+      "bin_count": 20,
+      "warmup_bars": 28,
+      "first_available_index": 28,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2013_P05_P124_HEATMAP",
+        "MIN": "EXPECTED_V2013_P05_P124_MIN",
+        "MAX": "EXPECTED_V2013_P05_P124_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 5,
+        "max_period": 48,
+        "variant": "roofed_2013",
+        "alpha": 0.33,
+        "contrast": 4.0,
+        "shortest_cycle_period": 10.5,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Fractional book low-pass coefficient period without rounding.",
+      "input": "close",
+      "bin_count": 44,
+      "warmup_bars": 52,
+      "first_available_index": 52,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2013_P05_P148_LP10_5_HEATMAP",
+        "MIN": "EXPECTED_V2013_P05_P148_LP10_5_MIN",
+        "MAX": "EXPECTED_V2013_P05_P148_LP10_5_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 5,
+        "max_period": 48,
+        "variant": "roofed_2013",
+        "alpha": 0.33,
+        "contrast": 4.0,
+        "shortest_cycle_period": 20.0,
+        "longest_cycle_period": 80.0
+      },
+      "what_it_tests": "Slower book roofing band and output smoothing.",
+      "input": "close",
+      "bin_count": 44,
+      "warmup_bars": 52,
+      "first_available_index": 52,
+      "arrays": {
+        "HEATMAP": "EXPECTED_V2013_P05_P148_LP20_HP80_HEATMAP",
+        "MIN": "EXPECTED_V2013_P05_P148_LP20_HP80_MIN",
+        "MAX": "EXPECTED_V2013_P05_P148_LP20_HP80_MAX"
+      }
+    }
+  ],
+  "fixtures": {
+    "test_testdata.py": {
+      "sha256": "12e400939fce8e96c466fea5ea26f1116cac1dff44f2a1c1d894a3e7cd754c61",
+      "bytes": 1044999
+    },
+    "testdata_test.go": {
+      "sha256": "09040ed66437b81831d960a9d06b1e7b3ac0af4dd6ab08d4bfbc3d4079ce5250",
+      "bytes": 1120313
+    },
+    "testdata.ts": {
+      "sha256": "14241755eda3e9ae884f469ba9dd706d12b1fb7b5b0c26a118d92a7433d8c0e2",
+      "bytes": 1045632
+    },
+    "testdata.rs": {
+      "sha256": "351de64e9c9f22cf1db8cbea0a3a582f5b706dd021be93e6b8205b2cd412a480",
+      "bytes": 1125233
+    },
+    "testdata.zig": {
+      "sha256": "b35b75473d7561acb0bbb5119f443dcd80ea290fe1375604d26f94f5ecb010da",
+      "bytes": 1059614
+    }
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "indicator": "swami-convolution",
+  "confirmed_on": "2026-10-21",
+  "confirmed_by": "user",
+  "sample_count": 252,
+  "significant_digits": 15,
+  "case_count": 8,
+  "expected_arrays_per_language": 48,
+  "scalar_values_per_language": 284256,
+  "cases": [
+    {
+      "parameters": {
+        "min_period": 3,
+        "max_period": 48,
+        "shortest_cycle_period": 40.0,
+        "longest_cycle_period": 80.0
+      },
+      "what_it_tests": "Book default 40/80 filters and full folded-window map.",
+      "input": "close",
+      "bin_count": 46,
+      "warmup_bars": 49,
+      "first_available_index": 49,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P03_P148_LP40_HP80_HEATMAP",
+        "MIN": "EXPECTED_P03_P148_LP40_HP80_MIN",
+        "MAX": "EXPECTED_P03_P148_LP40_HP80_MAX",
+        "CORRELATION": "EXPECTED_P03_P148_LP40_HP80_CORRELATION",
+        "STRENGTH": "EXPECTED_P03_P148_LP40_HP80_STRENGTH",
+        "DIRECTION": "EXPECTED_P03_P148_LP40_HP80_DIRECTION"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 3,
+        "max_period": 48,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Faster smoothing exposes short reversal structures.",
+      "input": "close",
+      "bin_count": 46,
+      "warmup_bars": 49,
+      "first_available_index": 49,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P03_P148_LP10_HP48_HEATMAP",
+        "MIN": "EXPECTED_P03_P148_LP10_HP48_MIN",
+        "MAX": "EXPECTED_P03_P148_LP10_HP48_MAX",
+        "CORRELATION": "EXPECTED_P03_P148_LP10_HP48_CORRELATION",
+        "STRENGTH": "EXPECTED_P03_P148_LP10_HP48_STRENGTH",
+        "DIRECTION": "EXPECTED_P03_P148_LP10_HP48_DIRECTION"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 3,
+        "max_period": 48,
+        "shortest_cycle_period": 20.0,
+        "longest_cycle_period": 80.0
+      },
+      "what_it_tests": "Intermediate smoothing with unchanged long-wave rejection.",
+      "input": "close",
+      "bin_count": 46,
+      "warmup_bars": 49,
+      "first_available_index": 49,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P03_P148_LP20_HP80_HEATMAP",
+        "MIN": "EXPECTED_P03_P148_LP20_HP80_MIN",
+        "MAX": "EXPECTED_P03_P148_LP20_HP80_MAX",
+        "CORRELATION": "EXPECTED_P03_P148_LP20_HP80_CORRELATION",
+        "STRENGTH": "EXPECTED_P03_P148_LP20_HP80_STRENGTH",
+        "DIRECTION": "EXPECTED_P03_P148_LP20_HP80_DIRECTION"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 3,
+        "max_period": 48,
+        "shortest_cycle_period": 40.5,
+        "longest_cycle_period": 80.0
+      },
+      "what_it_tests": "Fractional smoother period retains real coefficient arithmetic.",
+      "input": "close",
+      "bin_count": 46,
+      "warmup_bars": 49,
+      "first_available_index": 49,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P03_P148_LP40_5_HP80_HEATMAP",
+        "MIN": "EXPECTED_P03_P148_LP40_5_HP80_MIN",
+        "MAX": "EXPECTED_P03_P148_LP40_5_HP80_MAX",
+        "CORRELATION": "EXPECTED_P03_P148_LP40_5_HP80_CORRELATION",
+        "STRENGTH": "EXPECTED_P03_P148_LP40_5_HP80_STRENGTH",
+        "DIRECTION": "EXPECTED_P03_P148_LP40_5_HP80_DIRECTION"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 3,
+        "max_period": 24,
+        "shortest_cycle_period": 40.0,
+        "longest_cycle_period": 80.0
+      },
+      "what_it_tests": "Compact folded-window map.",
+      "input": "close",
+      "bin_count": 22,
+      "warmup_bars": 25,
+      "first_available_index": 25,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P03_P124_LP40_HP80_HEATMAP",
+        "MIN": "EXPECTED_P03_P124_LP40_HP80_MIN",
+        "MAX": "EXPECTED_P03_P124_LP40_HP80_MAX",
+        "CORRELATION": "EXPECTED_P03_P124_LP40_HP80_CORRELATION",
+        "STRENGTH": "EXPECTED_P03_P124_LP40_HP80_STRENGTH",
+        "DIRECTION": "EXPECTED_P03_P124_LP40_HP80_DIRECTION"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 3,
+        "max_period": 3,
+        "shortest_cycle_period": 10.0,
+        "longest_cycle_period": 48.0
+      },
+      "what_it_tests": "Shortest supported convolution window as one bin.",
+      "input": "close",
+      "bin_count": 1,
+      "warmup_bars": 4,
+      "first_available_index": 4,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P03_P13_LP10_HP48_HEATMAP",
+        "MIN": "EXPECTED_P03_P13_LP10_HP48_MIN",
+        "MAX": "EXPECTED_P03_P13_LP10_HP48_MAX",
+        "CORRELATION": "EXPECTED_P03_P13_LP10_HP48_CORRELATION",
+        "STRENGTH": "EXPECTED_P03_P13_LP10_HP48_STRENGTH",
+        "DIRECTION": "EXPECTED_P03_P13_LP10_HP48_DIRECTION"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 24,
+        "max_period": 48,
+        "shortest_cycle_period": 40.0,
+        "longest_cycle_period": 80.0
+      },
+      "what_it_tests": "Long-window-only plume display.",
+      "input": "close",
+      "bin_count": 25,
+      "warmup_bars": 49,
+      "first_available_index": 49,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P024_P148_LP40_HP80_HEATMAP",
+        "MIN": "EXPECTED_P024_P148_LP40_HP80_MIN",
+        "MAX": "EXPECTED_P024_P148_LP40_HP80_MAX",
+        "CORRELATION": "EXPECTED_P024_P148_LP40_HP80_CORRELATION",
+        "STRENGTH": "EXPECTED_P024_P148_LP40_HP80_STRENGTH",
+        "DIRECTION": "EXPECTED_P024_P148_LP40_HP80_DIRECTION"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 3,
+        "max_period": 48,
+        "shortest_cycle_period": 40.0,
+        "longest_cycle_period": 160.0
+      },
+      "what_it_tests": "Longer high-pass memory preserves the book angle factor.",
+      "input": "close",
+      "bin_count": 46,
+      "warmup_bars": 49,
+      "first_available_index": 49,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P03_P148_LP40_HP160_HEATMAP",
+        "MIN": "EXPECTED_P03_P148_LP40_HP160_MIN",
+        "MAX": "EXPECTED_P03_P148_LP40_HP160_MAX",
+        "CORRELATION": "EXPECTED_P03_P148_LP40_HP160_CORRELATION",
+        "STRENGTH": "EXPECTED_P03_P148_LP40_HP160_STRENGTH",
+        "DIRECTION": "EXPECTED_P03_P148_LP40_HP160_DIRECTION"
+      }
+    }
+  ],
+  "fixtures": {
+    "test_testdata.py": {
+      "sha256": "9f5cb47366d82071f2ef508e43b7571c89b158ad09e070a5830dbb67a8a99b0d",
+      "bytes": 4062898
+    },
+    "testdata_test.go": {
+      "sha256": "3f76be9b13b0c8e293362a477c213505ffb60ac6c457d629103a9d3b4f895641",
+      "bytes": 4407043
+    },
+    "testdata.ts": {
+      "sha256": "3a902996d9370db6f81cd2657ccfbcff07f671b2e0dae4750235fc48f10a6ac6",
+      "bytes": 4064179
+    },
+    "testdata.rs": {
+      "sha256": "22cfa1bdc719284336a33575554d679aa072d84df8420b3317bc62b4557677dc",
+      "bytes": 4397239
+    },
+    "testdata.zig": {
+      "sha256": "8fb50b776f44ddf15f09b1d4fecaee6b0432170aabf4bb258b023bce34080d98",
+      "bytes": 4108758
+    }
+  }
+}

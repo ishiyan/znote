@@ -1,0 +1,162 @@
+{
+  "indicator": "swami-aroon",
+  "confirmed_on": "2026-10-21",
+  "confirmed_by": "user",
+  "sample_count": 252,
+  "significant_digits": 15,
+  "case_count": 8,
+  "expected_arrays_per_language": 24,
+  "scalar_values_per_language": 54432,
+  "cases": [
+    {
+      "parameters": {
+        "min_period": 8,
+        "max_period": 48
+      },
+      "what_it_tests": "TradeStation displayed default and original hidden 4..60 bank.",
+      "input": "ohlc",
+      "bin_count": 41,
+      "warmup_bars": 60,
+      "first_available_index": 60,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P08_P148_HEATMAP",
+        "MIN": "EXPECTED_P08_P148_MIN",
+        "MAX": "EXPECTED_P08_P148_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 48
+      },
+      "what_it_tests": "Website advertised display range with literal TradeStation age rules.",
+      "input": "ohlc",
+      "bin_count": 37,
+      "warmup_bars": 60,
+      "first_available_index": 60,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P148_HEATMAP",
+        "MIN": "EXPECTED_P012_P148_MIN",
+        "MAX": "EXPECTED_P012_P148_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 60
+      },
+      "what_it_tests": "Entire original computation bank including both endpoints.",
+      "input": "ohlc",
+      "bin_count": 57,
+      "warmup_bars": 60,
+      "first_available_index": 60,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P160_HEATMAP",
+        "MIN": "EXPECTED_P04_P160_MIN",
+        "MAX": "EXPECTED_P04_P160_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 8,
+        "max_period": 24
+      },
+      "what_it_tests": "Compact display must retain original hidden-bank calculations.",
+      "input": "ohlc",
+      "bin_count": 17,
+      "warmup_bars": 60,
+      "first_available_index": 60,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P08_P124_HEATMAP",
+        "MIN": "EXPECTED_P08_P124_MIN",
+        "MAX": "EXPECTED_P08_P124_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 24,
+        "max_period": 48
+      },
+      "what_it_tests": "Long-period display subset and retained extrema ages.",
+      "input": "ohlc",
+      "bin_count": 25,
+      "warmup_bars": 60,
+      "first_available_index": 60,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P024_P148_HEATMAP",
+        "MIN": "EXPECTED_P024_P148_MIN",
+        "MAX": "EXPECTED_P024_P148_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 4
+      },
+      "what_it_tests": "Shortest source period as a single displayed bin.",
+      "input": "ohlc",
+      "bin_count": 1,
+      "warmup_bars": 60,
+      "first_available_index": 60,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P14_HEATMAP",
+        "MIN": "EXPECTED_P04_P14_MIN",
+        "MAX": "EXPECTED_P04_P14_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 60,
+        "max_period": 60
+      },
+      "what_it_tests": "Longest source period as a single displayed bin.",
+      "input": "ohlc",
+      "bin_count": 1,
+      "warmup_bars": 60,
+      "first_available_index": 60,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P060_P160_HEATMAP",
+        "MIN": "EXPECTED_P060_P160_MIN",
+        "MAX": "EXPECTED_P060_P160_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 32
+      },
+      "what_it_tests": "Intermediate display span and fixed source warm-up.",
+      "input": "ohlc",
+      "bin_count": 21,
+      "warmup_bars": 60,
+      "first_available_index": 60,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P132_HEATMAP",
+        "MIN": "EXPECTED_P012_P132_MIN",
+        "MAX": "EXPECTED_P012_P132_MAX"
+      }
+    }
+  ],
+  "fixtures": {
+    "test_testdata.py": {
+      "sha256": "34ed191d1efaf19e66983db73c879b50acdd3134901403338509b6db12496a2a",
+      "bytes": 302477
+    },
+    "testdata_test.go": {
+      "sha256": "8adee26b3f6683b506ff3c1ed66c4b24ed8baf1f2c370ea9a7f96f36d3d263f1",
+      "bytes": 385202
+    },
+    "testdata.ts": {
+      "sha256": "e95163d33b9fcb7fd3404d44ca56a4a1a63e4fb9079a24f69cdf198ae7c4a73b",
+      "bytes": 303110
+    },
+    "testdata.rs": {
+      "sha256": "080758c3581a34bec2e4804ab745409cc1181b7c7adc95f6d032004c4631b756",
+      "bytes": 388016
+    },
+    "testdata.zig": {
+      "sha256": "796e83774e4918ef31d952589129df7174000f56889418f4679dcb65d10b64a3",
+      "bytes": 317091
+    }
+  }
+}

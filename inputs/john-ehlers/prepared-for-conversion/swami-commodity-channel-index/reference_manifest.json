@@ -1,0 +1,170 @@
+{
+  "indicator": "swami-commodity-channel-index",
+  "confirmed_on": "2026-10-21",
+  "confirmed_by": "user",
+  "sample_count": 252,
+  "significant_digits": 15,
+  "case_count": 8,
+  "expected_arrays_per_language": 24,
+  "scalar_values_per_language": 117432,
+  "cases": [
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 48,
+        "alpha": 0.33
+      },
+      "what_it_tests": "TradeStation CCI default using OHLC typical price.",
+      "input": "ohlc",
+      "bin_count": 37,
+      "warmup_bars": 47,
+      "first_available_index": 47,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P148_A0_33_HEATMAP",
+        "MIN": "EXPECTED_P012_P148_A0_33_MIN",
+        "MAX": "EXPECTED_P012_P148_A0_33_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 2,
+        "max_period": 48,
+        "alpha": 0.33
+      },
+      "what_it_tests": "Shorter periods expose unbounded CCI normalization before clipping.",
+      "input": "ohlc",
+      "bin_count": 47,
+      "warmup_bars": 47,
+      "first_available_index": 47,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P02_P148_A0_33_HEATMAP",
+        "MIN": "EXPECTED_P02_P148_A0_33_MIN",
+        "MAX": "EXPECTED_P02_P148_A0_33_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 24,
+        "alpha": 0.33
+      },
+      "what_it_tests": "Compact CCI map with identical source smoothing.",
+      "input": "ohlc",
+      "bin_count": 13,
+      "warmup_bars": 23,
+      "first_available_index": 23,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P124_A0_33_HEATMAP",
+        "MIN": "EXPECTED_P012_P124_A0_33_MIN",
+        "MAX": "EXPECTED_P012_P124_A0_33_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 48,
+        "max_period": 48,
+        "alpha": 0.33
+      },
+      "what_it_tests": "Single long CCI bin.",
+      "input": "ohlc",
+      "bin_count": 1,
+      "warmup_bars": 47,
+      "first_available_index": 47,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P048_P148_A0_33_HEATMAP",
+        "MIN": "EXPECTED_P048_P148_A0_33_MIN",
+        "MAX": "EXPECTED_P048_P148_A0_33_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 48,
+        "alpha": 0.1
+      },
+      "what_it_tests": "Slower CCI color-state smoothing.",
+      "input": "ohlc",
+      "bin_count": 37,
+      "warmup_bars": 47,
+      "first_available_index": 47,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P148_A0_1_HEATMAP",
+        "MIN": "EXPECTED_P012_P148_A0_1_MIN",
+        "MAX": "EXPECTED_P012_P148_A0_1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 48,
+        "alpha": 0.5
+      },
+      "what_it_tests": "Faster CCI color-state smoothing.",
+      "input": "ohlc",
+      "bin_count": 37,
+      "warmup_bars": 47,
+      "first_available_index": 47,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P148_A0_5_HEATMAP",
+        "MIN": "EXPECTED_P012_P148_A0_5_MIN",
+        "MAX": "EXPECTED_P012_P148_A0_5_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 48,
+        "alpha": 1.0
+      },
+      "what_it_tests": "No CCI EMA memory; normalize then saturate directly.",
+      "input": "ohlc",
+      "bin_count": 37,
+      "warmup_bars": 47,
+      "first_available_index": 47,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P148_A1_HEATMAP",
+        "MIN": "EXPECTED_P012_P148_A1_MIN",
+        "MAX": "EXPECTED_P012_P148_A1_MAX"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 252,
+        "alpha": 0.33
+      },
+      "what_it_tests": "Full-record CCI window: only the last bar is public.",
+      "input": "ohlc",
+      "bin_count": 241,
+      "warmup_bars": 251,
+      "first_available_index": 251,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P1252_A0_33_HEATMAP",
+        "MIN": "EXPECTED_P012_P1252_A0_33_MIN",
+        "MAX": "EXPECTED_P012_P1252_A0_33_MAX"
+      }
+    }
+  ],
+  "fixtures": {
+    "test_testdata.py": {
+      "sha256": "916ebbbe32e3b980302d210580db3131e91932e7e9ed528d814c1da266fd4d5f",
+      "bytes": 1062070
+    },
+    "testdata_test.go": {
+      "sha256": "650a0248e056f3b2a7b4e378d771188ef8ba69262f6f75ef2c9d8ce65414f84f",
+      "bytes": 1551889
+    },
+    "testdata.ts": {
+      "sha256": "62e5b7d07a573ab7de3eea7f0afbf366fa5e57aeb997bb0ccb0730599f82aa82",
+      "bytes": 1062703
+    },
+    "testdata.rs": {
+      "sha256": "b6aa624cfaa892c3a6c65367d7bbc9561fd1deb2f7f90cf3e6af7568d77c5aca",
+      "bytes": 1438379
+    },
+    "testdata.zig": {
+      "sha256": "1b4d1c84bbb9d9c901f17df5d8e286d937e9f2f83c5f6b01e54793fcca8636ba",
+      "bytes": 1076686
+    }
+  }
+}

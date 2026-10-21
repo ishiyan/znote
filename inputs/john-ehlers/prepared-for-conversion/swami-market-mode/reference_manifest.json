@@ -1,0 +1,210 @@
+{
+  "indicator": "swami-market-mode",
+  "confirmed_on": "2026-10-21",
+  "confirmed_by": "user",
+  "sample_count": 252,
+  "significant_digits": 15,
+  "case_count": 8,
+  "expected_arrays_per_language": 48,
+  "scalar_values_per_language": 334656,
+  "cases": [
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 48,
+        "delta": 0.25,
+        "fraction": 0.25,
+        "peak_average_length": 50
+      },
+      "what_it_tests": "OmniTrader heatmap defaults with exact coefficient-table reconstruction.",
+      "input": "hl2",
+      "bin_count": 45,
+      "warmup_bars": 97,
+      "first_available_index": 97,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P148_D0_25_F0_25_PA50_HEATMAP",
+        "MIN": "EXPECTED_P04_P148_D0_25_F0_25_PA50_MIN",
+        "MAX": "EXPECTED_P04_P148_D0_25_F0_25_PA50_MAX",
+        "MEAN": "EXPECTED_P04_P148_D0_25_F0_25_PA50_MEAN",
+        "UPPER": "EXPECTED_P04_P148_D0_25_F0_25_PA50_UPPER",
+        "LOWER": "EXPECTED_P04_P148_D0_25_F0_25_PA50_LOWER"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 12,
+        "max_period": 48,
+        "delta": 0.5,
+        "fraction": 0.1,
+        "peak_average_length": 50
+      },
+      "what_it_tests": "Article scalar defaults across the advertised Swami cycle span.",
+      "input": "hl2",
+      "bin_count": 37,
+      "warmup_bars": 97,
+      "first_available_index": 97,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P012_P148_D0_5_F0_1_PA50_HEATMAP",
+        "MIN": "EXPECTED_P012_P148_D0_5_F0_1_PA50_MIN",
+        "MAX": "EXPECTED_P012_P148_D0_5_F0_1_PA50_MAX",
+        "MEAN": "EXPECTED_P012_P148_D0_5_F0_1_PA50_MEAN",
+        "UPPER": "EXPECTED_P012_P148_D0_5_F0_1_PA50_UPPER",
+        "LOWER": "EXPECTED_P012_P148_D0_5_F0_1_PA50_LOWER"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 24,
+        "delta": 0.25,
+        "fraction": 0.25,
+        "peak_average_length": 50
+      },
+      "what_it_tests": "Compact market-mode bank with shorter trend averages.",
+      "input": "hl2",
+      "bin_count": 21,
+      "warmup_bars": 51,
+      "first_available_index": 51,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P124_D0_25_F0_25_PA50_HEATMAP",
+        "MIN": "EXPECTED_P04_P124_D0_25_F0_25_PA50_MIN",
+        "MAX": "EXPECTED_P04_P124_D0_25_F0_25_PA50_MAX",
+        "MEAN": "EXPECTED_P04_P124_D0_25_F0_25_PA50_MEAN",
+        "UPPER": "EXPECTED_P04_P124_D0_25_F0_25_PA50_UPPER",
+        "LOWER": "EXPECTED_P04_P124_D0_25_F0_25_PA50_LOWER"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 48,
+        "delta": 0.1,
+        "fraction": 0.25,
+        "peak_average_length": 50
+      },
+      "what_it_tests": "Narrower band-pass than the optimized heatmap table.",
+      "input": "hl2",
+      "bin_count": 45,
+      "warmup_bars": 97,
+      "first_available_index": 97,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P148_D0_1_F0_25_PA50_HEATMAP",
+        "MIN": "EXPECTED_P04_P148_D0_1_F0_25_PA50_MIN",
+        "MAX": "EXPECTED_P04_P148_D0_1_F0_25_PA50_MAX",
+        "MEAN": "EXPECTED_P04_P148_D0_1_F0_25_PA50_MEAN",
+        "UPPER": "EXPECTED_P04_P148_D0_1_F0_25_PA50_UPPER",
+        "LOWER": "EXPECTED_P04_P148_D0_1_F0_25_PA50_LOWER"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 48,
+        "delta": 0.25,
+        "fraction": 0.1,
+        "peak_average_length": 50
+      },
+      "what_it_tests": "Lower cycle threshold favors trend classification.",
+      "input": "hl2",
+      "bin_count": 45,
+      "warmup_bars": 97,
+      "first_available_index": 97,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P148_D0_25_F0_1_PA50_HEATMAP",
+        "MIN": "EXPECTED_P04_P148_D0_25_F0_1_PA50_MIN",
+        "MAX": "EXPECTED_P04_P148_D0_25_F0_1_PA50_MAX",
+        "MEAN": "EXPECTED_P04_P148_D0_25_F0_1_PA50_MEAN",
+        "UPPER": "EXPECTED_P04_P148_D0_25_F0_1_PA50_UPPER",
+        "LOWER": "EXPECTED_P04_P148_D0_25_F0_1_PA50_LOWER"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 48,
+        "delta": 0.25,
+        "fraction": 0.5,
+        "peak_average_length": 50
+      },
+      "what_it_tests": "Higher cycle threshold favors cycle classification.",
+      "input": "hl2",
+      "bin_count": 45,
+      "warmup_bars": 97,
+      "first_available_index": 97,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P148_D0_25_F0_5_PA50_HEATMAP",
+        "MIN": "EXPECTED_P04_P148_D0_25_F0_5_PA50_MIN",
+        "MAX": "EXPECTED_P04_P148_D0_25_F0_5_PA50_MAX",
+        "MEAN": "EXPECTED_P04_P148_D0_25_F0_5_PA50_MEAN",
+        "UPPER": "EXPECTED_P04_P148_D0_25_F0_5_PA50_UPPER",
+        "LOWER": "EXPECTED_P04_P148_D0_25_F0_5_PA50_LOWER"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 48,
+        "delta": 0.25,
+        "fraction": 0.25,
+        "peak_average_length": 20
+      },
+      "what_it_tests": "Shorter averaging of persistent detected extrema.",
+      "input": "hl2",
+      "bin_count": 45,
+      "warmup_bars": 97,
+      "first_available_index": 97,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P148_D0_25_F0_25_PA20_HEATMAP",
+        "MIN": "EXPECTED_P04_P148_D0_25_F0_25_PA20_MIN",
+        "MAX": "EXPECTED_P04_P148_D0_25_F0_25_PA20_MAX",
+        "MEAN": "EXPECTED_P04_P148_D0_25_F0_25_PA20_MEAN",
+        "UPPER": "EXPECTED_P04_P148_D0_25_F0_25_PA20_UPPER",
+        "LOWER": "EXPECTED_P04_P148_D0_25_F0_25_PA20_LOWER"
+      }
+    },
+    {
+      "parameters": {
+        "min_period": 4,
+        "max_period": 48,
+        "delta": 0.25,
+        "fraction": 0.25,
+        "peak_average_length": 251
+      },
+      "what_it_tests": "Insufficient record for peak averaging: every public result is NaN.",
+      "input": "hl2",
+      "bin_count": 45,
+      "warmup_bars": 252,
+      "first_available_index": null,
+      "arrays": {
+        "HEATMAP": "EXPECTED_P04_P148_D0_25_F0_25_PA251_HEATMAP",
+        "MIN": "EXPECTED_P04_P148_D0_25_F0_25_PA251_MIN",
+        "MAX": "EXPECTED_P04_P148_D0_25_F0_25_PA251_MAX",
+        "MEAN": "EXPECTED_P04_P148_D0_25_F0_25_PA251_MEAN",
+        "UPPER": "EXPECTED_P04_P148_D0_25_F0_25_PA251_UPPER",
+        "LOWER": "EXPECTED_P04_P148_D0_25_F0_25_PA251_LOWER"
+      }
+    }
+  ],
+  "fixtures": {
+    "test_testdata.py": {
+      "sha256": "e5c6d236fc7b8ed8cb3f4d472a6dc06f0a8be5c95f60e0256277f496bfbcbaf3",
+      "bytes": 3660254
+    },
+    "testdata_test.go": {
+      "sha256": "cfc73e495c3dbc7fd6df1a95cc56e0ed3f26f6b19054ce6cc8d992fcb1df19db",
+      "bytes": 4705994
+    },
+    "testdata.ts": {
+      "sha256": "8a76a79a2656d78125a85afa63c8618128718ac967fd2848afd5e283eb764479",
+      "bytes": 3661535
+    },
+    "testdata.rs": {
+      "sha256": "756c4074470080315fcdc5525bcd280c61ec9bce8f2338f5b0da81a40f730052",
+      "bytes": 4495735
+    },
+    "testdata.zig": {
+      "sha256": "381d9df29a1f7c56eadfbb105e00c52a460d10d4372f9760f15707d1f76e6c90",
+      "bytes": 3706118
+    }
+  }
+}
