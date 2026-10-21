@@ -38,6 +38,9 @@ ultimate-smoother | 2024-04-the-ultimate-smoother
 ultimate-bands | 2024-05-ultimate-channels-and-ultimate-bands
 ultimate-channel | 2024-05-ultimate-channels-and-ultimate-bands
 ultimate-strength-index | 2024-11-ultimate-strength-index-(usi)
+griffiths-predictor | 2025-01-linear-predictive-filters-and-instantaneous-frequency
+griffiths-spectrum | 2025-01-linear-predictive-filters-and-instantaneous-frequency
+griffiths-dominant-cycle | 2025-01-linear-predictive-filters-and-instantaneous-frequency
 projected-moving-average | 2025-03-removing-moving-average-lag
 ultimate-oscillator | 2025-04-the-ultimate-oscillator
 cybernetic-oscillator | 2025-06-making-a-better-oscillator
@@ -50,10 +53,6 @@ synthetic-oscillator | 2026-04-a-synthetic-oscillator
 autotune-filter | 2026-05-the-autotune-filter
 adaptive-super-smoother | 2026-09-adaptive-super-smoother
 
-2025-01-linear-predictive-filters-and-instantaneous-frequency
-griffiths-predictor
-griffiths-spectrum (spectrum heatmap + instatntaneous period)
-griffiths-dominant-cycle
 2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
 autocorrelation-spectrum (autocorrelation heatmap?)
 
@@ -135,7 +134,6 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2023-03-every-little-bit-helps
 2023-04-a-conversation-with-john-ehlers
 2023-04-just-ignore-them
-----2025-01-linear-predictive-filters-and-instantaneous-frequency
 ----2025-02-drunkards-walk-theory-and-measurement-by-autocorrelation
 2025-08-plotting-with-strategies
 2026-03-the-savitzky-golay-filter
