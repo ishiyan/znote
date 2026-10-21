@@ -1,0 +1,484 @@
+{
+  "indicator": "corona-spectrum",
+  "confirmed_cases": 16,
+  "input_count": 252,
+  "formatting": "15 significant decimal digits, binary64 calculations",
+  "tolerance": {
+    "relative": 5e-12,
+    "absolute": 5e-12
+  },
+  "cases": [
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 6,
+        "max_period": 30,
+        "decibels_threshold": 6.0
+      },
+      "suffix": "H30_PMIN6_PMAX30_DB6",
+      "purpose": "Original Corona period range and half-bar spectral channels. Article detrending. Original centroid selection.",
+      "parameter_line": "high_pass_cutoff=30, min_period=6, max_period=30, decibels_threshold=6, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 49,
+      "first_available_sample": 13,
+      "parameter_first": 6.0,
+      "parameter_last": 30.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 6,
+        "max_period": 30,
+        "decibels_threshold": 3.0
+      },
+      "suffix": "H30_PMIN6_PMAX30_DB3",
+      "purpose": "Original Corona period range and half-bar spectral channels. Article detrending. Tighter centroid selection and centroid holds.",
+      "parameter_line": "high_pass_cutoff=30, min_period=6, max_period=30, decibels_threshold=3, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 49,
+      "first_available_sample": 13,
+      "parameter_first": 6.0,
+      "parameter_last": 30.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 6,
+        "max_period": 20,
+        "decibels_threshold": 6.0
+      },
+      "suffix": "H30_PMIN6_PMAX20_DB6",
+      "purpose": "Reduced upper bound and faster-cycle selection. Article detrending. Original centroid selection.",
+      "parameter_line": "high_pass_cutoff=30, min_period=6, max_period=20, decibels_threshold=6, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 29,
+      "first_available_sample": 13,
+      "parameter_first": 6.0,
+      "parameter_last": 20.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 6,
+        "max_period": 20,
+        "decibels_threshold": 3.0
+      },
+      "suffix": "H30_PMIN6_PMAX20_DB3",
+      "purpose": "Reduced upper bound and faster-cycle selection. Article detrending. Tighter centroid selection and centroid holds.",
+      "parameter_line": "high_pass_cutoff=30, min_period=6, max_period=20, decibels_threshold=3, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 29,
+      "first_available_sample": 13,
+      "parameter_first": 6.0,
+      "parameter_last": 20.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 10,
+        "max_period": 30,
+        "decibels_threshold": 6.0
+      },
+      "suffix": "H30_PMIN10_PMAX30_DB6",
+      "purpose": "Suppression of short-cycle candidates. Article detrending. Original centroid selection.",
+      "parameter_line": "high_pass_cutoff=30, min_period=10, max_period=30, decibels_threshold=6, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 41,
+      "first_available_sample": 13,
+      "parameter_first": 10.0,
+      "parameter_last": 30.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 10,
+        "max_period": 30,
+        "decibels_threshold": 3.0
+      },
+      "suffix": "H30_PMIN10_PMAX30_DB3",
+      "purpose": "Suppression of short-cycle candidates. Article detrending. Tighter centroid selection and centroid holds.",
+      "parameter_line": "high_pass_cutoff=30, min_period=10, max_period=30, decibels_threshold=3, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 41,
+      "first_available_sample": 13,
+      "parameter_first": 10.0,
+      "parameter_last": 30.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 10,
+        "max_period": 48,
+        "decibels_threshold": 6.0
+      },
+      "suffix": "H30_PMIN10_PMAX48_DB6",
+      "purpose": "Extended cycle search beyond the original30-bar range. Article detrending. Original centroid selection.",
+      "parameter_line": "high_pass_cutoff=30, min_period=10, max_period=48, decibels_threshold=6, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 77,
+      "first_available_sample": 13,
+      "parameter_first": 10.0,
+      "parameter_last": 48.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 10,
+        "max_period": 48,
+        "decibels_threshold": 3.0
+      },
+      "suffix": "H30_PMIN10_PMAX48_DB3",
+      "purpose": "Extended cycle search beyond the original30-bar range. Article detrending. Tighter centroid selection and centroid holds.",
+      "parameter_line": "high_pass_cutoff=30, min_period=10, max_period=48, decibels_threshold=3, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 77,
+      "first_available_sample": 13,
+      "parameter_first": 10.0,
+      "parameter_last": 48.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 6,
+        "max_period": 30,
+        "decibels_threshold": 6.0
+      },
+      "suffix": "H48_PMIN6_PMAX30_DB6",
+      "purpose": "Original Corona period range and half-bar spectral channels. Changed detrending independent of bank bounds. Original centroid selection.",
+      "parameter_line": "high_pass_cutoff=48, min_period=6, max_period=30, decibels_threshold=6, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 49,
+      "first_available_sample": 13,
+      "parameter_first": 6.0,
+      "parameter_last": 30.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 6,
+        "max_period": 30,
+        "decibels_threshold": 3.0
+      },
+      "suffix": "H48_PMIN6_PMAX30_DB3",
+      "purpose": "Original Corona period range and half-bar spectral channels. Changed detrending independent of bank bounds. Tighter centroid selection and centroid holds.",
+      "parameter_line": "high_pass_cutoff=48, min_period=6, max_period=30, decibels_threshold=3, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 49,
+      "first_available_sample": 13,
+      "parameter_first": 6.0,
+      "parameter_last": 30.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 6,
+        "max_period": 20,
+        "decibels_threshold": 6.0
+      },
+      "suffix": "H48_PMIN6_PMAX20_DB6",
+      "purpose": "Reduced upper bound and faster-cycle selection. Changed detrending independent of bank bounds. Original centroid selection.",
+      "parameter_line": "high_pass_cutoff=48, min_period=6, max_period=20, decibels_threshold=6, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 29,
+      "first_available_sample": 13,
+      "parameter_first": 6.0,
+      "parameter_last": 20.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 6,
+        "max_period": 20,
+        "decibels_threshold": 3.0
+      },
+      "suffix": "H48_PMIN6_PMAX20_DB3",
+      "purpose": "Reduced upper bound and faster-cycle selection. Changed detrending independent of bank bounds. Tighter centroid selection and centroid holds.",
+      "parameter_line": "high_pass_cutoff=48, min_period=6, max_period=20, decibels_threshold=3, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 29,
+      "first_available_sample": 13,
+      "parameter_first": 6.0,
+      "parameter_last": 20.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 10,
+        "max_period": 30,
+        "decibels_threshold": 6.0
+      },
+      "suffix": "H48_PMIN10_PMAX30_DB6",
+      "purpose": "Suppression of short-cycle candidates. Changed detrending independent of bank bounds. Original centroid selection.",
+      "parameter_line": "high_pass_cutoff=48, min_period=10, max_period=30, decibels_threshold=6, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 41,
+      "first_available_sample": 13,
+      "parameter_first": 10.0,
+      "parameter_last": 30.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 10,
+        "max_period": 30,
+        "decibels_threshold": 3.0
+      },
+      "suffix": "H48_PMIN10_PMAX30_DB3",
+      "purpose": "Suppression of short-cycle candidates. Changed detrending independent of bank bounds. Tighter centroid selection and centroid holds.",
+      "parameter_line": "high_pass_cutoff=48, min_period=10, max_period=30, decibels_threshold=3, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 41,
+      "first_available_sample": 13,
+      "parameter_first": 10.0,
+      "parameter_last": 30.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 10,
+        "max_period": 48,
+        "decibels_threshold": 6.0
+      },
+      "suffix": "H48_PMIN10_PMAX48_DB6",
+      "purpose": "Extended cycle search beyond the original30-bar range. Changed detrending independent of bank bounds. Original centroid selection.",
+      "parameter_line": "high_pass_cutoff=48, min_period=10, max_period=48, decibels_threshold=6, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 77,
+      "first_available_sample": 13,
+      "parameter_first": 10.0,
+      "parameter_last": 48.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 10,
+        "max_period": 48,
+        "decibels_threshold": 3.0
+      },
+      "suffix": "H48_PMIN10_PMAX48_DB3",
+      "purpose": "Extended cycle search beyond the original30-bar range. Changed detrending independent of bank bounds. Tighter centroid selection and centroid holds.",
+      "parameter_line": "high_pass_cutoff=48, min_period=10, max_period=48, decibels_threshold=3, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13",
+      "cells": 77,
+      "first_available_sample": 13,
+      "parameter_first": 10.0,
+      "parameter_last": 48.0,
+      "parameter_resolution": 0.5,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "MAXIMUM_POWER",
+        "NORMALIZATION_POWER",
+        "SELECTED_BINS",
+        "HAS_CYCLE_ESTIMATE",
+        "POWER",
+        "RELATIVE_POWER"
+      ]
+    }
+  ],
+  "array_count": 176,
+  "files": {
+    "test_testdata.py": "1e049c2bb82add546b3c52a6d7547f86367eed2f375168b4511971a5431fdf0e",
+    "testdata_test.go": "ae9509a30e5136f4b635853d7cb77107c96714793f9273f0c26ee2b436239c12",
+    "testdata.ts": "cc4a848082d3dbaff1ef0d0bde5264da6e2bf0f1bce09b277e3f7b7b7a52d796",
+    "testdata.rs": "cda007a9f180eda6820b0ffc995d586d697818f6095feab4493cf0b852b62e91",
+    "testdata.zig": "fc548eb54d7d886e0ad5bf4f47007c797d3cc69d1540168943119daffd5df991"
+  }
+}

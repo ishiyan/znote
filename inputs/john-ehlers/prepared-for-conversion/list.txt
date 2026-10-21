@@ -1,3 +1,9 @@
+corona | 2008-11-corona-charts
+corona-trend-vigor | 2008-11-corona-charts
+corona-swing-position | 2008-11-corona-charts
+corona-spectrum | 2008-11-corona-charts
+corona-signal-to-noise-ratio | 2008-11-corona-charts
+
 super-smoother | 2014-01-predictive-and-successful-indicators
 roofing-filter | 2014-01-predictive-and-successful-indicators
 mesa-stochastic | 2014-01-predictive-and-successful-indicators
@@ -5,9 +11,8 @@ quotient-transform | 2014-08-the-quotient-transform
 universal-oscillator | 2015-01-whiter-is-brighter
 
 super-passband-filter | 2016-07-the-super-passband-filter
-
+auto_correlation_periodogram | 2016-09-measuring-market-cycles
 reverse-ema | 2017-09-the-reverse-ema-indicator
-
 recursive-median-filter | 2018-03-recursive-median-filters
 my-rsi | 2018-05-rocket-rsi-a-solid-propellant-for-your-rocket-science-trading
 rocket-rsi | 2018-05-rocket-rsi-a-solid-propellant-for-your-rocket-science-trading
@@ -108,7 +113,6 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2007-03-trading-in-your-ira
 2007-04-when-to-trade-with-cycles
 2008-03-measuring-cycle-periods
-2008-11-corona-charts
 2010-03-empirical-mode-decomposition
 2010-06-fractal-dimension-as-a-market-mode-sensor
 2010-11-zero-lag-(well-almost)
@@ -122,7 +126,6 @@ autocorrelation-spectrum (autocorrelation heatmap?)
 2015-05-schrödingers-cat
 2015-09-decyclers
 2016-01-aliasing
-2016-09-measuring-market-cycles (done: auto_correlation_periodogram)
 2017-01-be-your-own-hedge-fund
 2021-06-creating-more-robust-trading-strategies-with-the-fm-demodulator
 2021-09-windowing

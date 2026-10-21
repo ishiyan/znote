@@ -1,0 +1,473 @@
+{
+  "scope": "Calculations unchanged; framework imports stubbed.",
+  "fixture_input": {
+    "corona_spectrum": {
+      "count": 252,
+      "max_difference_from_close": 3.8149999999999977,
+      "max_difference_from_high_low_median": 0.0
+    },
+    "corona_swing_position": {
+      "count": 252,
+      "max_difference_from_close": 3.8149999999999977,
+      "max_difference_from_high_low_median": 0.0
+    },
+    "corona_trend_vigor": {
+      "count": 252,
+      "max_difference_from_close": 3.8149999999999977,
+      "max_difference_from_high_low_median": 0.0
+    },
+    "corona_signal_to_noise_ratio": {
+      "count": 252,
+      "max_difference_from_close": 3.8149999999999977,
+      "max_difference_from_high_low_median": 0.0
+    }
+  },
+  "snapshot_checks": {
+    "corona_spectrum": {
+      "tests_run": 3,
+      "failures": [],
+      "errors": []
+    },
+    "corona_swing_position": {
+      "tests_run": 3,
+      "failures": [],
+      "errors": []
+    },
+    "corona_trend_vigor": {
+      "tests_run": 3,
+      "failures": [],
+      "errors": []
+    },
+    "corona_signal_to_noise_ratio": {
+      "tests_run": 3,
+      "failures": [],
+      "errors": []
+    }
+  },
+  "edge_cases": {
+    "corona_spectrum": {
+      "constant_positive": {
+        "last_scalar": [
+          18.0,
+          18.0
+        ],
+        "last_heatmap_min": 0.0,
+        "last_heatmap_max": 0.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "zero": {
+        "last_scalar": [
+          18.0,
+          18.0
+        ],
+        "last_heatmap_min": 0.0,
+        "last_heatmap_max": 0.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "close_with_actual_bar_ranges": {
+        "last_scalar": [
+          6.0,
+          6.0
+        ],
+        "last_heatmap_min": 8.218527999228302,
+        "last_heatmap_max": 19.940570142883413,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "close_with_zero_ranges": {
+        "last_scalar": [
+          6.0,
+          6.0
+        ],
+        "last_heatmap_min": 8.218527999228302,
+        "last_heatmap_max": 19.940570142883413,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "infinite_sample": {
+        "last_scalar": [
+          18.0,
+          18.0
+        ],
+        "last_heatmap_min": 1.9347696702621674e-38,
+        "last_heatmap_max": 4.774798736627678e-38,
+        "nonfinite_post_warmup_scalar_count": 0
+      }
+    },
+    "corona_swing_position": {
+      "constant_positive": {
+        "last_scalar": [
+          -5.0
+        ],
+        "last_heatmap_min": 0.0,
+        "last_heatmap_max": 0.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "zero": {
+        "last_scalar": [
+          -5.0
+        ],
+        "last_heatmap_min": 0.0,
+        "last_heatmap_max": 0.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "close_with_actual_bar_ranges": {
+        "last_scalar": [
+          -1.947542979982217
+        ],
+        "last_heatmap_min": 2.5324999615454074,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "close_with_zero_ranges": {
+        "last_scalar": [
+          -1.947542979982217
+        ],
+        "last_heatmap_min": 2.5324999615454074,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "infinite_sample": {
+        "exception": "ValueError: cannot convert float NaN to integer"
+      }
+    },
+    "corona_trend_vigor": {
+      "constant_positive": {
+        "last_scalar": [
+          0.0
+        ],
+        "last_heatmap_min": 0.0,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "zero": {
+        "last_scalar": [
+          0.0
+        ],
+        "last_heatmap_min": 0.0,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "close_with_actual_bar_ranges": {
+        "last_scalar": [
+          -0.4625114325692703
+        ],
+        "last_heatmap_min": 1.333113548423948,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "close_with_zero_ranges": {
+        "last_scalar": [
+          -0.4625114325692703
+        ],
+        "last_heatmap_min": 1.333113548423948,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "infinite_sample": {
+        "exception": "ValueError: cannot convert float NaN to integer"
+      }
+    },
+    "corona_signal_to_noise_ratio": {
+      "constant_positive": {
+        "exception": "ValueError: expected a positive input, got 0.0"
+      },
+      "zero": {
+        "last_scalar": [
+          1.0
+        ],
+        "last_heatmap_min": 0.0,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "close_with_actual_bar_ranges": {
+        "last_scalar": [
+          7.265579045611009
+        ],
+        "last_heatmap_min": 20.0,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "close_with_zero_ranges": {
+        "last_scalar": [
+          1.0
+        ],
+        "last_heatmap_min": 0.0,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "infinite_sample": {
+        "last_scalar": [
+          11.0
+        ],
+        "last_heatmap_min": 20.0,
+        "last_heatmap_max": 20.0,
+        "nonfinite_post_warmup_scalar_count": 0
+      },
+      "one_nan_high": {
+        "last_scalar": 1.0,
+        "signal": 3.887711921723555,
+        "noise": "NaN"
+      },
+      "reversed_ranges": {
+        "exception": "ValueError('expected a positive input, got -0.4590915561173169')"
+      }
+    }
+  },
+  "controlled_changes": {
+    "swing_current_bandpass_in_lead_only": {
+      "input": "copied 252 high-low median prices",
+      "max_post_warmup_scalar_difference": 2.472359524629018,
+      "count_difference_over_1e-10": 224,
+      "original_final_scalar": -0.85248120609032,
+      "modified_final_scalar": -1.4777320533139071
+    },
+    "swing_full_precision_phase_constant_only": {
+      "input": "copied 252 high-low median prices",
+      "max_post_warmup_scalar_difference": 0.00013754597980142336,
+      "count_difference_over_1e-10": 218,
+      "original_final_scalar": -0.85248120609032,
+      "modified_final_scalar": -0.8525102902520585
+    },
+    "swing_inclusive_source_windows_only": {
+      "input": "copied 252 high-low median prices",
+      "max_post_warmup_scalar_difference": 1.1381384420699208,
+      "count_difference_over_1e-10": 12,
+      "original_final_scalar": -0.85248120609032,
+      "modified_final_scalar": -0.85248120609032
+    },
+    "trend_fix_extra_ring_buffer_off_by_one_only": {
+      "input": "copied 252 high-low median prices",
+      "max_post_warmup_scalar_difference": 4.348779924478883,
+      "count_difference_over_1e-10": 198,
+      "original_final_scalar": -0.18949899541388504,
+      "modified_final_scalar": -0.2236617064111286
+    },
+    "estimator_hold_previous_cycle_only": {
+      "input": "copied 252 high-low median prices",
+      "max_post_warmup_dc_difference": 24.0,
+      "count_difference_over_1e-10": 49,
+      "copied_bars_with_no_qualifying_bins": 49,
+      "original_final_dc": 6.0,
+      "modified_final_dc": 11.999999999999998
+    }
+  },
+  "spectrum_source_startup_comparison": {
+    "close": {
+      "source": "2012 local Corona Chart Swing Position.eqi; full pi",
+      "max_dc_difference_from_index_12": 24.0,
+      "max_dcm_difference_from_index_12": 24.0,
+      "snapshots": [
+        {
+          "index": 11,
+          "copied": [
+            17.996217442402823,
+            16.998775315229516,
+            1.1087474984226593
+          ],
+          "source": [
+            18.0,
+            18.0,
+            0.01
+          ]
+        },
+        {
+          "index": 12,
+          "copied": [
+            6.0,
+            15.253383545927539,
+            1.4457809115216806
+          ],
+          "source": [
+            17.80642660766234,
+            18.0,
+            0.1776304780012426
+          ]
+        },
+        {
+          "index": 50,
+          "copied": [
+            16.761810672476354,
+            16.761810672476354,
+            1.4635430857075686
+          ],
+          "source": [
+            17.99539341505811,
+            17.99539341505811,
+            1.7283042870946936
+          ]
+        },
+        {
+          "index": 100,
+          "copied": [
+            14.744624198957917,
+            14.5,
+            10.813631678597808
+          ],
+          "source": [
+            14.742861700276338,
+            14.742861700276338,
+            10.7270556400148
+          ]
+        },
+        {
+          "index": 150,
+          "copied": [
+            17.234396999177353,
+            17.227820893983278,
+            2.4700781689154705
+          ],
+          "source": [
+            17.23073492199735,
+            17.223766210122456,
+            2.4630446601977294
+          ]
+        },
+        {
+          "index": 200,
+          "copied": [
+            19.740043431588365,
+            19.740043431588365,
+            3.024982520354248
+          ],
+          "source": [
+            19.741942738187422,
+            19.741942738187422,
+            3.0272364818698323
+          ]
+        },
+        {
+          "index": 251,
+          "copied": [
+            6.0,
+            6.0,
+            2.1852401687692917
+          ],
+          "source": [
+            11.5,
+            11.5,
+            2.1852386498791523
+          ]
+        }
+      ]
+    },
+    "median": {
+      "source": "2012 local Corona Chart Swing Position.eqi; full pi",
+      "max_dc_difference_from_index_12": 24.000000000000004,
+      "max_dcm_difference_from_index_12": 24.0,
+      "snapshots": [
+        {
+          "index": 11,
+          "copied": [
+            17.760467256498405,
+            17.760467256498405,
+            1.2065594806650886
+          ],
+          "source": [
+            18.0,
+            18.0,
+            0.01
+          ]
+        },
+        {
+          "index": 12,
+          "copied": [
+            6.0,
+            6.0,
+            1.2521968891850914
+          ],
+          "source": [
+            18.183817437103997,
+            18.0,
+            0.10485013124358905
+          ]
+        },
+        {
+          "index": 50,
+          "copied": [
+            15.99890787115221,
+            15.99890787115221,
+            1.3542111322255184
+          ],
+          "source": [
+            17.753045254591218,
+            17.747405322955437,
+            1.4088032476873527
+          ]
+        },
+        {
+          "index": 100,
+          "copied": [
+            14.74554975467563,
+            14.74554975467563,
+            10.408371998248459
+          ],
+          "source": [
+            14.742439731700403,
+            15.75338690982981,
+            10.31176044585645
+          ]
+        },
+        {
+          "index": 150,
+          "copied": [
+            17.5,
+            17.282603606887655,
+            2.654489159556275
+          ],
+          "source": [
+            17.289601362086888,
+            17.279726619297925,
+            2.6593433353301985
+          ]
+        },
+        {
+          "index": 200,
+          "copied": [
+            19.75573385116856,
+            20.0,
+            3.4571153066989493
+          ],
+          "source": [
+            19.757907212441342,
+            20.0,
+            3.463664686233431
+          ]
+        },
+        {
+          "index": 251,
+          "copied": [
+            6.0,
+            6.0,
+            2.7524355969205554
+          ],
+          "source": [
+            12.0,
+            12.0,
+            2.752433815723893
+          ]
+        }
+      ]
+    }
+  },
+  "parameter_boundaries": {
+    "2": {
+      "max_amplitude_squared": 704068508382310.6,
+      "dc": 2.0
+    },
+    "3": {
+      "max_amplitude_squared": 0.4822383033832266,
+      "dc": 20.239804985051506
+    },
+    "4": {
+      "max_amplitude_squared": 0.4822383033832266,
+      "dc": 20.239804985051506
+    },
+    "6": {
+      "max_amplitude_squared": 0.4822383033832266,
+      "dc": 20.239804985051506
+    }
+  },
+  "raster_direction_check": {
+    "grid_values": 10001,
+    "negative_arguments": 0
+  }
+}

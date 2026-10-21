@@ -1,0 +1,532 @@
+{
+  "indicator": "corona-swing-position",
+  "confirmed_cases": 16,
+  "input_count": 252,
+  "formatting": "15 significant decimal digits, binary64 calculations",
+  "tolerance": {
+    "relative": 5e-12,
+    "absolute": 5e-12
+  },
+  "cases": [
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 6,
+        "max_period": 30,
+        "raster_length": 50
+      },
+      "suffix": "H30_PMIN6_PMAX30_R50",
+      "purpose": "Original Corona period range and half-bar spectral channels. Article detrending. Original raster density.",
+      "parameter_line": "high_pass_cutoff=30, min_period=6, max_period=30, raster_length=50, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 50,
+      "first_available_sample": 13,
+      "parameter_first": -4.8,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.2,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 6,
+        "max_period": 30,
+        "raster_length": 25
+      },
+      "suffix": "H30_PMIN6_PMAX30_R25",
+      "purpose": "Original Corona period range and half-bar spectral channels. Article detrending. Coarser raster with consistent source coordinates.",
+      "parameter_line": "high_pass_cutoff=30, min_period=6, max_period=30, raster_length=25, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 25,
+      "first_available_sample": 13,
+      "parameter_first": -4.6,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.4,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 6,
+        "max_period": 20,
+        "raster_length": 50
+      },
+      "suffix": "H30_PMIN6_PMAX20_R50",
+      "purpose": "Reduced upper bound and faster-cycle selection. Article detrending. Original raster density.",
+      "parameter_line": "high_pass_cutoff=30, min_period=6, max_period=20, raster_length=50, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 50,
+      "first_available_sample": 13,
+      "parameter_first": -4.8,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.2,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 6,
+        "max_period": 20,
+        "raster_length": 25
+      },
+      "suffix": "H30_PMIN6_PMAX20_R25",
+      "purpose": "Reduced upper bound and faster-cycle selection. Article detrending. Coarser raster with consistent source coordinates.",
+      "parameter_line": "high_pass_cutoff=30, min_period=6, max_period=20, raster_length=25, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 25,
+      "first_available_sample": 13,
+      "parameter_first": -4.6,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.4,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 10,
+        "max_period": 30,
+        "raster_length": 50
+      },
+      "suffix": "H30_PMIN10_PMAX30_R50",
+      "purpose": "Suppression of short-cycle candidates. Article detrending. Original raster density.",
+      "parameter_line": "high_pass_cutoff=30, min_period=10, max_period=30, raster_length=50, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 50,
+      "first_available_sample": 13,
+      "parameter_first": -4.8,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.2,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 10,
+        "max_period": 30,
+        "raster_length": 25
+      },
+      "suffix": "H30_PMIN10_PMAX30_R25",
+      "purpose": "Suppression of short-cycle candidates. Article detrending. Coarser raster with consistent source coordinates.",
+      "parameter_line": "high_pass_cutoff=30, min_period=10, max_period=30, raster_length=25, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 25,
+      "first_available_sample": 13,
+      "parameter_first": -4.6,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.4,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 10,
+        "max_period": 48,
+        "raster_length": 50
+      },
+      "suffix": "H30_PMIN10_PMAX48_R50",
+      "purpose": "Extended cycle search beyond the original30-bar range. Article detrending. Original raster density.",
+      "parameter_line": "high_pass_cutoff=30, min_period=10, max_period=48, raster_length=50, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 50,
+      "first_available_sample": 13,
+      "parameter_first": -4.8,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.2,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 30,
+        "min_period": 10,
+        "max_period": 48,
+        "raster_length": 25
+      },
+      "suffix": "H30_PMIN10_PMAX48_R25",
+      "purpose": "Extended cycle search beyond the original30-bar range. Article detrending. Coarser raster with consistent source coordinates.",
+      "parameter_line": "high_pass_cutoff=30, min_period=10, max_period=48, raster_length=25, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 25,
+      "first_available_sample": 13,
+      "parameter_first": -4.6,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.4,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 6,
+        "max_period": 30,
+        "raster_length": 50
+      },
+      "suffix": "H48_PMIN6_PMAX30_R50",
+      "purpose": "Original Corona period range and half-bar spectral channels. Changed detrending independent of bank bounds. Original raster density.",
+      "parameter_line": "high_pass_cutoff=48, min_period=6, max_period=30, raster_length=50, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 50,
+      "first_available_sample": 13,
+      "parameter_first": -4.8,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.2,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 6,
+        "max_period": 30,
+        "raster_length": 25
+      },
+      "suffix": "H48_PMIN6_PMAX30_R25",
+      "purpose": "Original Corona period range and half-bar spectral channels. Changed detrending independent of bank bounds. Coarser raster with consistent source coordinates.",
+      "parameter_line": "high_pass_cutoff=48, min_period=6, max_period=30, raster_length=25, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 25,
+      "first_available_sample": 13,
+      "parameter_first": -4.6,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.4,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 6,
+        "max_period": 20,
+        "raster_length": 50
+      },
+      "suffix": "H48_PMIN6_PMAX20_R50",
+      "purpose": "Reduced upper bound and faster-cycle selection. Changed detrending independent of bank bounds. Original raster density.",
+      "parameter_line": "high_pass_cutoff=48, min_period=6, max_period=20, raster_length=50, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 50,
+      "first_available_sample": 13,
+      "parameter_first": -4.8,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.2,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 6,
+        "max_period": 20,
+        "raster_length": 25
+      },
+      "suffix": "H48_PMIN6_PMAX20_R25",
+      "purpose": "Reduced upper bound and faster-cycle selection. Changed detrending independent of bank bounds. Coarser raster with consistent source coordinates.",
+      "parameter_line": "high_pass_cutoff=48, min_period=6, max_period=20, raster_length=25, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 25,
+      "first_available_sample": 13,
+      "parameter_first": -4.6,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.4,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 10,
+        "max_period": 30,
+        "raster_length": 50
+      },
+      "suffix": "H48_PMIN10_PMAX30_R50",
+      "purpose": "Suppression of short-cycle candidates. Changed detrending independent of bank bounds. Original raster density.",
+      "parameter_line": "high_pass_cutoff=48, min_period=10, max_period=30, raster_length=50, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 50,
+      "first_available_sample": 13,
+      "parameter_first": -4.8,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.2,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 10,
+        "max_period": 30,
+        "raster_length": 25
+      },
+      "suffix": "H48_PMIN10_PMAX30_R25",
+      "purpose": "Suppression of short-cycle candidates. Changed detrending independent of bank bounds. Coarser raster with consistent source coordinates.",
+      "parameter_line": "high_pass_cutoff=48, min_period=10, max_period=30, raster_length=25, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 25,
+      "first_available_sample": 13,
+      "parameter_first": -4.6,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.4,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 10,
+        "max_period": 48,
+        "raster_length": 50
+      },
+      "suffix": "H48_PMIN10_PMAX48_R50",
+      "purpose": "Extended cycle search beyond the original30-bar range. Changed detrending independent of bank bounds. Original raster density.",
+      "parameter_line": "high_pass_cutoff=48, min_period=10, max_period=48, raster_length=50, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 50,
+      "first_available_sample": 13,
+      "parameter_first": -4.8,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.2,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    },
+    {
+      "parameters": {
+        "high_pass_cutoff": 48,
+        "min_period": 10,
+        "max_period": 48,
+        "raster_length": 25
+      },
+      "suffix": "H48_PMIN10_PMAX48_R25",
+      "purpose": "Extended cycle search beyond the original30-bar range. Changed detrending independent of bank bounds. Coarser raster with consistent source coordinates.",
+      "parameter_line": "high_pass_cutoff=48, min_period=10, max_period=48, raster_length=25, max_raster_value=20, period_step=0.5, median_window=5, first_bank_sample=13, display_min=-5, display_max=5, lead_window=51, position_window=21, lead_degrees=60",
+      "cells": 25,
+      "first_available_sample": 13,
+      "parameter_first": -4.6,
+      "parameter_last": 5.0,
+      "parameter_resolution": 0.4,
+      "outputs": [
+        "HEATMAP",
+        "HEATMAP_MIN",
+        "HEATMAP_MAX",
+        "SWING_POSITION",
+        "NORMALIZED_POSITION",
+        "DOMINANT_CYCLE",
+        "DOMINANT_CYCLE_MEDIAN",
+        "BAND_PASS",
+        "QUADRATURE",
+        "CYCLE_AMPLITUDE",
+        "LEAD60",
+        "POSITION_SPAN",
+        "WIDTH",
+        "HAS_CYCLE_ESTIMATE"
+      ]
+    }
+  ],
+  "array_count": 224,
+  "files": {
+    "test_testdata.py": "de61e041465cb7cae686e272186403b821c6979a3484fdedc02a887ee7575541",
+    "testdata_test.go": "63121f4416a4541f6c269fdb4fbee59a18432fc6b45cd2a4524359ccd82bb5fe",
+    "testdata.ts": "b5dd2a374e1b28b3542483b4c28068fe6796e95006f1e7c45829b1fd92f90afa",
+    "testdata.rs": "c98c91aa679b66862a696c1050df6ba720bd95b6aef1b80b5a66e99ad49cf311",
+    "testdata.zig": "1abb194bfca283427d64a6692dee8c6275085e34750411382791bbd781d0c17f"
+  }
+}
