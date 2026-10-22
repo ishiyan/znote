@@ -11,6 +11,19 @@ swami-aroon | 2012-03-introducing-swami-charts
 swami-commodity-channel-index | 2012-03-introducing-swami-charts
 swami-swing-wave | 2012-03-introducing-swami-charts
 swami-market-mode | 2012-03-introducing-swami-charts
+
+decycler | 2013-cycle-analytics-for-traders/ch4.md (lst 4-1)
+decycler-oscillator | 2013-cycle-analytics-for-traders/ch4.md (lst 4-2)
+band-pass-indicator | 2013-cycle-analytics-for-traders/ch5.md (lst 5-1)
+hurst-coefficient | 2013-cycle-analytics-for-traders/ch6.md (lst 6-1)
+roofed-autocorrelation-heatmap | 2013-cycle-analytics-for-traders/ch8.md (lst 8-2) == auto_correlation_indicator
+discrete-fourier-transform-spectrum | 2013-cycle-analytics-for-traders/ch9.md (lst 9-1) == discrete_fourier_transform_spectrum
+comb-band-pass-spectrum | 2013-cycle-analytics-for-traders/ch10.md (lst 10-1) == comb_band_pass_spectrum
+adaptive-relative-strength-index | 2013-cycle-analytics-for-traders/ch11.md (lst 11-1)
+adaptive-stochastic | 2013-cycle-analytics-for-traders/ch11.md (lst 11-2)
+adaptive-commodity-channel-index | 2013-cycle-analytics-for-traders/ch11.md (lst 11-3)
+adaptive-band-pass-indicator | 2013-cycle-analytics-for-traders/ch11.md (lst 11-4)
+
 super-smoother | 2014-01-predictive-and-successful-indicators
 roofing-filter | 2014-01-predictive-and-successful-indicators
 mesa-stochastic | 2014-01-predictive-and-successful-indicators
@@ -160,10 +173,10 @@ I recommend these 17 new master folders under that directory:
 
 | Folder | Book source | Reason to include |
 |---|---|---|
-| decycler | Chapter 4, listing 4-1 | Simple cycle-cancellation trend filter; differs from zpano’s Instantaneous Trend Line. |
-| decycler-oscillator | Chapter 4, listing 4-2 | Difference of two high-pass outputs. The later Ultimate Oscillator uses different filter coefficients and normalization. |
-| band-pass-indicator | Chapter 5, listing 5-1 | Complete high-pass → band-pass → peak normalization → trigger calculation. Existing raw band-pass components cover only part of it. |
-| hurst-coefficient | Chapter 6, listing 6-1 | Range-based market-structure measurement with smoothing. Shares ideas with FRAMA but produces a different indicator. |
+| **DONE** decycler | Chapter 4, listing 4-1 | Simple cycle-cancellation trend filter; differs from zpano’s Instantaneous Trend Line. |
+| **DONE** decycler-oscillator | Chapter 4, listing 4-2 | Difference of two high-pass outputs. The later Ultimate Oscillator uses different filter coefficients and normalization. |
+| **DONE** band-pass-indicator | Chapter 5, listing 5-1 | Complete high-pass → band-pass → peak normalization → trigger calculation. Existing raw band-pass components cover only part of it. |
+| **DONE** hurst-coefficient | Chapter 6, listing 6-1 | Range-based market-structure measurement with smoothing. Shares ideas with FRAMA but produces a different indicator. |
 | modified-relative-strength-index | Chapter 7, listing 7-5 | Roofing-based scalar RSI; differs from both the 2018 MyRSI and the clipped Swami RSI. |
 | **DONE** roofed-autocorrelation-heatmap | Chapter 8, listing 8-2 | Already represented in zpano’s auto_correlation_indicator; needs a standalone master. |
 | autocorrelation-reversals | Chapter 8, listing 8-4 | Counts simultaneous correlation sign changes across lags to identify reversal events. |
