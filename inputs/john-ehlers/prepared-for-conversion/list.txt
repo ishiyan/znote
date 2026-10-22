@@ -155,3 +155,67 @@ adaptive-super-smoother | 2026-09-adaptive-super-smoother
 20xx-time-warp-without-space-travel
 20xx-using-the-fisher-transform
 20xx-walk-forward-optimization
+-----
+I recommend these 17 new master folders under that directory:
+
+| Folder | Book source | Reason to include |
+|---|---|---|
+| decycler | Chapter 4, listing 4-1 | Simple cycle-cancellation trend filter; differs from zpano’s Instantaneous Trend Line. |
+| decycler-oscillator | Chapter 4, listing 4-2 | Difference of two high-pass outputs. The later Ultimate Oscillator uses different filter coefficients and normalization. |
+| band-pass-indicator | Chapter 5, listing 5-1 | Complete high-pass → band-pass → peak normalization → trigger calculation. Existing raw band-pass components cover only part of it. |
+| hurst-coefficient | Chapter 6, listing 6-1 | Range-based market-structure measurement with smoothing. Shares ideas with FRAMA but produces a different indicator. |
+| modified-relative-strength-index | Chapter 7, listing 7-5 | Roofing-based scalar RSI; differs from both the 2018 MyRSI and the clipped Swami RSI. |
+| **DONE** roofed-autocorrelation-heatmap | Chapter 8, listing 8-2 | Already represented in zpano’s auto_correlation_indicator; needs a standalone master. |
+| autocorrelation-reversals | Chapter 8, listing 8-4 | Counts simultaneous correlation sign changes across lags to identify reversal events. |
+| **DONE** discrete-fourier-transform-spectrum | Chapter 9, listing 9-1 | Spectrum heatmap and dominant period; zpano has a related but numerically different implementation. |
+| **DONE** comb-band-pass-spectrum | Chapter 10, listing 10-1 | Band-pass filter bank producing a spectrum and dominant period; already represented in zpano. |
+| adaptive-relative-strength-index | Chapter 11, listing 11-1 | Tunes the gain/loss window to half the measured dominant cycle. |
+| adaptive-stochastic | Chapter 11, listing 11-2 | Tunes range normalization to the measured dominant cycle. |
+| adaptive-commodity-channel-index | Chapter 11, listing 11-3 | Roofed, cycle-adaptive CCI with the book’s particular residual calculation. |
+| adaptive-band-pass-indicator | Chapter 11, listing 11-4 | Dynamically tunes a normalized band-pass filter to the measured cycle. |
+| even-better-sinewave | Chapter 12, listing 12-1 | High-pass, SuperSmoother and three-bar RMS normalization; differs substantially from zpano’s sine_wave. |
+| hilbert-transformer-indicator | Chapter 14, listings 14-2–14-3 | Normalized real signal and normalized difference quadrature, optionally smoothed. |
+| fisher-adaptive-relative-strength-index | Chapter 15, listing 15-1 | Published Fisher-transformed adaptive RSI; existing Fisher masters use different base signals. |
+| inverse-fisher-adaptive-stochastic | Chapter 15, listing 15-2 | Published inverse-Fisher adaptive Stochastic, including its delayed trigger. |
+
+A few distinctions matter when preparing these masters:
+
+- Autocorrelation: the existing autocorrelation-heatmap master (inputs/john-ehlers/prepared-for-conversion/autocorrelation-heatmap/description.md) implements February 2025 correlations of Ultimate-Smoothed prices. The book correlates Roofing Filter output. roofed-autocorrelation-heatmap makes that distinction explicit.
+- DFT: zpano’s implementation (external/zpano/py/indicators/john_ehlers/discrete_fourier_transform_spectrum/discrete_fourier_transform_spectrum.py) subtracts a rolling mean and divides squared magnitude by period. The book uses roofed data and divides the sine/cosine sums by period before squaring, giving compensation proportional to period squared. The new master should make the book calculation authoritative.
+- Comb spectrum: zpano supplies useful structure, but its default normalization and startup differ from the listing. Those differences need explicit documentation.
+- Modified RSI: the Swami version clips its recursive output to [0,1] and retains the ratio on flat windows. Listing 7-5 leaves the output unclipped and skips its smoothing update when either denominator is zero.
+- Hilbert: zpano uses seven-tap FIR estimators with period-dependent amplitude correction. Chapter 14’s revised construction uses a normalized one-bar difference. They deserve distinct references.
+
+For broader book coverage, these eight additional folders are reasonable, with lower priority:
+
+| Optional folder | Source and purpose |
+|---|---|
+| band-pass-zero-crossing-dominant-cycle | Listing 5-2; compare zero-crossing cycle estimates with the periodogram. |
+| classic-hilbert-transformer | Listing 14-1; 23-tap FIR comparison baseline. Preserve its calculation-time output and document the plotted displacement. |
+| hilbert-dual-differentiator-dominant-cycle | Listing 14-4; derivative-based period estimate. |
+| hilbert-phase-accumulation-dominant-cycle | Listing 14-5; estimates period by accumulating phase changes. |
+| hilbert-homodyne-dominant-cycle | Listing 14-6; estimates period from successive complex-signal products. |
+| modified-simple-moving-average | Chapter 3; symmetric FIR family with halved endpoint weights. |
+| modified-least-squares-quadratic-filter | Chapter 3; the four published coefficient sets belong in one parameterized master. |
+| modified-butterworth-filter | Equations 3-1–3-2; two-/three-pole research variants, after resolving printed equation inconsistencies. |
+
+Ehlers explicitly treats the three Chapter 14 cycle estimators as research material and recommends the autocorrelation periodogram instead. That supports keeping them in this optional group. Hurst also deserves careful interpretation: its finite-window value depends strongly on the chosen length.
+
+Your zpano inventory reveals a separate backlog of algorithms outside this book’s indicator definitions. These also lack prepared masters:
+
+- fractal-adaptive-moving-average
+- mesa-adaptive-moving-average — return MAMA and FAMA together
+- center-of-gravity-oscillator
+- cyber-cycle
+- instantaneous-trend-line
+- hilbert-transformer-cycle-estimator — zpano’s older estimator family
+- hilbert-transformer-dominant-cycle
+- hilbert-transformer-instantaneous-trend-line
+- sine-wave
+- trend-cycle-mode
+- zero-lag-exponential-moving-average
+- zero-lag-error-correcting-exponential-moving-average
+
+Those should use their appropriate earlier articles or books as numerical authorities.
+
+For implementation order, I would start with the three missing heatmap masters, then the Chapter 11 adaptive family, followed by the remaining scalar indicators. Spectrum heatmap and dominant period should share a folder; oscillator and trigger should likewise share a named output. Generic moving averages, the random-price generator, cube-transform helper and Chapter 17 trading strategies do not need separate indicator masters.
