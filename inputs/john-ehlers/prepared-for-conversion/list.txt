@@ -16,13 +16,17 @@ decycler | 2013-cycle-analytics-for-traders/ch4.md (lst 4-1)
 decycler-oscillator | 2013-cycle-analytics-for-traders/ch4.md (lst 4-2)
 band-pass-indicator | 2013-cycle-analytics-for-traders/ch5.md (lst 5-1)
 hurst-coefficient | 2013-cycle-analytics-for-traders/ch6.md (lst 6-1)
+modified-relative-strength-index | 2013-cycle-analytics-for-traders/ch7.md (lst 7-5)
 roofed-autocorrelation-heatmap | 2013-cycle-analytics-for-traders/ch8.md (lst 8-2) == auto_correlation_indicator
+autocorrelation-reversals | 2013-cycle-analytics-for-traders/ch8.md (lst 8-4)
 discrete-fourier-transform-spectrum | 2013-cycle-analytics-for-traders/ch9.md (lst 9-1) == discrete_fourier_transform_spectrum
 comb-band-pass-spectrum | 2013-cycle-analytics-for-traders/ch10.md (lst 10-1) == comb_band_pass_spectrum
 adaptive-relative-strength-index | 2013-cycle-analytics-for-traders/ch11.md (lst 11-1)
 adaptive-stochastic | 2013-cycle-analytics-for-traders/ch11.md (lst 11-2)
 adaptive-commodity-channel-index | 2013-cycle-analytics-for-traders/ch11.md (lst 11-3)
 adaptive-band-pass-indicator | 2013-cycle-analytics-for-traders/ch11.md (lst 11-4)
+
+even-better-sinewave | 2013-cycle-analytics-for-traders/ch12.md (lst 12-1)
 
 super-smoother | 2014-01-predictive-and-successful-indicators
 roofing-filter | 2014-01-predictive-and-successful-indicators
@@ -177,16 +181,16 @@ I recommend these 17 new master folders under that directory:
 | **DONE** decycler-oscillator | Chapter 4, listing 4-2 | Difference of two high-pass outputs. The later Ultimate Oscillator uses different filter coefficients and normalization. |
 | **DONE** band-pass-indicator | Chapter 5, listing 5-1 | Complete high-pass → band-pass → peak normalization → trigger calculation. Existing raw band-pass components cover only part of it. |
 | **DONE** hurst-coefficient | Chapter 6, listing 6-1 | Range-based market-structure measurement with smoothing. Shares ideas with FRAMA but produces a different indicator. |
-| modified-relative-strength-index | Chapter 7, listing 7-5 | Roofing-based scalar RSI; differs from both the 2018 MyRSI and the clipped Swami RSI. |
+| **DONE** modified-relative-strength-index | Chapter 7, listing 7-5 | Roofing-based scalar RSI; differs from both the 2018 MyRSI and the clipped Swami RSI. |
 | **DONE** roofed-autocorrelation-heatmap | Chapter 8, listing 8-2 | Already represented in zpano’s auto_correlation_indicator; needs a standalone master. |
-| autocorrelation-reversals | Chapter 8, listing 8-4 | Counts simultaneous correlation sign changes across lags to identify reversal events. |
+| **DONE** autocorrelation-reversals | Chapter 8, listing 8-4 | Counts simultaneous correlation sign changes across lags to identify reversal events. |
 | **DONE** discrete-fourier-transform-spectrum | Chapter 9, listing 9-1 | Spectrum heatmap and dominant period; zpano has a related but numerically different implementation. |
 | **DONE** comb-band-pass-spectrum | Chapter 10, listing 10-1 | Band-pass filter bank producing a spectrum and dominant period; already represented in zpano. |
 | **DONE** adaptive-relative-strength-index | Chapter 11, listing 11-1 | Tunes the gain/loss window to half the measured dominant cycle. |
 | **DONE** adaptive-stochastic | Chapter 11, listing 11-2 | Tunes range normalization to the measured dominant cycle. |
 | **DONE** adaptive-commodity-channel-index | Chapter 11, listing 11-3 | Roofed, cycle-adaptive CCI with the book’s particular residual calculation. |
 | **DONE** adaptive-band-pass-indicator | Chapter 11, listing 11-4 | Dynamically tunes a normalized band-pass filter to the measured cycle. |
-| even-better-sinewave | Chapter 12, listing 12-1 | High-pass, SuperSmoother and three-bar RMS normalization; differs substantially from zpano’s sine_wave. |
+| **DONE** even-better-sinewave | Chapter 12, listing 12-1 | High-pass, SuperSmoother and three-bar RMS normalization; differs substantially from zpano’s sine_wave. |
 | hilbert-transformer-indicator | Chapter 14, listings 14-2–14-3 | Normalized real signal and normalized difference quadrature, optionally smoothed. |
 | fisher-adaptive-relative-strength-index | Chapter 15, listing 15-1 | Published Fisher-transformed adaptive RSI; existing Fisher masters use different base signals. |
 | inverse-fisher-adaptive-stochastic | Chapter 15, listing 15-2 | Published inverse-Fisher adaptive Stochastic, including its delayed trigger. |
