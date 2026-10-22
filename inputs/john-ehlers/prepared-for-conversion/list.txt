@@ -169,10 +169,10 @@ I recommend these 17 new master folders under that directory:
 | autocorrelation-reversals | Chapter 8, listing 8-4 | Counts simultaneous correlation sign changes across lags to identify reversal events. |
 | **DONE** discrete-fourier-transform-spectrum | Chapter 9, listing 9-1 | Spectrum heatmap and dominant period; zpano has a related but numerically different implementation. |
 | **DONE** comb-band-pass-spectrum | Chapter 10, listing 10-1 | Band-pass filter bank producing a spectrum and dominant period; already represented in zpano. |
-| adaptive-relative-strength-index | Chapter 11, listing 11-1 | Tunes the gain/loss window to half the measured dominant cycle. |
-| adaptive-stochastic | Chapter 11, listing 11-2 | Tunes range normalization to the measured dominant cycle. |
-| adaptive-commodity-channel-index | Chapter 11, listing 11-3 | Roofed, cycle-adaptive CCI with the book’s particular residual calculation. |
-| adaptive-band-pass-indicator | Chapter 11, listing 11-4 | Dynamically tunes a normalized band-pass filter to the measured cycle. |
+| **DONE** adaptive-relative-strength-index | Chapter 11, listing 11-1 | Tunes the gain/loss window to half the measured dominant cycle. |
+| **DONE** adaptive-stochastic | Chapter 11, listing 11-2 | Tunes range normalization to the measured dominant cycle. |
+| **DONE** adaptive-commodity-channel-index | Chapter 11, listing 11-3 | Roofed, cycle-adaptive CCI with the book’s particular residual calculation. |
+| **DONE** adaptive-band-pass-indicator | Chapter 11, listing 11-4 | Dynamically tunes a normalized band-pass filter to the measured cycle. |
 | even-better-sinewave | Chapter 12, listing 12-1 | High-pass, SuperSmoother and three-bar RMS normalization; differs substantially from zpano’s sine_wave. |
 | hilbert-transformer-indicator | Chapter 14, listings 14-2–14-3 | Normalized real signal and normalized difference quadrature, optionally smoothed. |
 | fisher-adaptive-relative-strength-index | Chapter 15, listing 15-1 | Published Fisher-transformed adaptive RSI; existing Fisher masters use different base signals. |
