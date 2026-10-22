@@ -25,8 +25,10 @@ adaptive-relative-strength-index | 2013-cycle-analytics-for-traders/ch11.md (lst
 adaptive-stochastic | 2013-cycle-analytics-for-traders/ch11.md (lst 11-2)
 adaptive-commodity-channel-index | 2013-cycle-analytics-for-traders/ch11.md (lst 11-3)
 adaptive-band-pass-indicator | 2013-cycle-analytics-for-traders/ch11.md (lst 11-4)
-
 even-better-sinewave | 2013-cycle-analytics-for-traders/ch12.md (lst 12-1)
+hilbert-transformer-indicator | 2013-cycle-analytics-for-traders/ch14.md (lst 14-2, 14-3)
+fisher-adaptive-relative-strength-index | 2013-cycle-analytics-for-traders/ch15.md (lst 15-1 with 11-1)
+inverse-fisher-adaptive-stochastic | 2013-cycle-analytics-for-traders/ch15.md (lst 15-2 with 11-2)
 
 super-smoother | 2014-01-predictive-and-successful-indicators
 roofing-filter | 2014-01-predictive-and-successful-indicators
@@ -191,9 +193,9 @@ I recommend these 17 new master folders under that directory:
 | **DONE** adaptive-commodity-channel-index | Chapter 11, listing 11-3 | Roofed, cycle-adaptive CCI with the book’s particular residual calculation. |
 | **DONE** adaptive-band-pass-indicator | Chapter 11, listing 11-4 | Dynamically tunes a normalized band-pass filter to the measured cycle. |
 | **DONE** even-better-sinewave | Chapter 12, listing 12-1 | High-pass, SuperSmoother and three-bar RMS normalization; differs substantially from zpano’s sine_wave. |
-| hilbert-transformer-indicator | Chapter 14, listings 14-2–14-3 | Normalized real signal and normalized difference quadrature, optionally smoothed. |
-| fisher-adaptive-relative-strength-index | Chapter 15, listing 15-1 | Published Fisher-transformed adaptive RSI; existing Fisher masters use different base signals. |
-| inverse-fisher-adaptive-stochastic | Chapter 15, listing 15-2 | Published inverse-Fisher adaptive Stochastic, including its delayed trigger. |
+| **DONE** hilbert-transformer-indicator | Chapter 14, listings 14-2–14-3 | Normalized real signal and normalized difference quadrature, optionally smoothed. |
+| **DONE** fisher-adaptive-relative-strength-index | Chapter 15, listing 15-1 | Published Fisher-transformed adaptive RSI; existing Fisher masters use different base signals. |
+| **DONE** inverse-fisher-adaptive-stochastic | Chapter 15, listing 15-2 | Published inverse-Fisher adaptive Stochastic, including its delayed trigger. |
 
 A few distinctions matter when preparing these masters:
 
