@@ -1,5 +1,6 @@
 fractal-adaptive-moving-average | 2005-10-fractal-adaptive-moving-averages, 2010-06-fractal-dimension-as-a-market-mode-sensor
 
+transformed-discrete-fourier-transform-spectrum | 2007-01-fourier-transform-for-traders
 filter-bank-spectrum | 2008-03-measuring-cycle-periods
 corona | 2008-11-corona-charts
 corona-trend-vigor | 2008-11-corona-charts
@@ -136,7 +137,6 @@ adaptive-super-smoother | 2026-09-adaptive-super-smoother
 
 2006-01-swiss-army-knife-indicator
 2006-08-modeling-the-market-building-trading-strategies
-2007-01-fourier-transform-for-traders
 
 2007-03-trading-in-your-ira
 2007-04-when-to-trade-with-cycles
