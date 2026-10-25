@@ -133,8 +133,8 @@ adaptive-super-smoother | 2026-09-adaptive-super-smoother
 2002-05-the-center-of-gravity-oscillator
 2002-07-zero-lag-data-smoothers
 2002-10-the-rsi-smoothed
-2003-12-moving-average-computations-made-easier
 
+2003-12-moving-average-computations-made-easier
 2006-08-modeling-the-market-building-trading-strategies
 2007-03-trading-in-your-ira
 2007-04-when-to-trade-with-cycles
