@@ -3,6 +3,7 @@ corona-trend-vigor | 2008-11-corona-charts
 corona-swing-position | 2008-11-corona-charts
 corona-spectrum | 2008-11-corona-charts
 corona-signal-to-noise-ratio | 2008-11-corona-charts
+empirical-mode-decomposition | 2010-03-empirical-mode-decomposition
 
 swami-stochastic | 2012-03-introducing-swami-charts
 swami-relative-strength-index | 2012-03-introducing-swami-charts
@@ -135,7 +136,7 @@ adaptive-super-smoother | 2026-09-adaptive-super-smoother
 2007-03-trading-in-your-ira
 2007-04-when-to-trade-with-cycles
 2008-03-measuring-cycle-periods
-2010-03-empirical-mode-decomposition
+
 2010-06-fractal-dimension-as-a-market-mode-sensor
 2010-11-zero-lag-(well-almost)
 
