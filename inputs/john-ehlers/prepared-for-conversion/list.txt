@@ -13,7 +13,6 @@ corona-spectrum | 2008-11-corona-charts
 corona-signal-to-noise-ratio | 2008-11-corona-charts
 empirical-mode-decomposition | 2010-03-empirical-mode-decomposition
 zero_lag_error_correcting_exponential_moving_average | 2010-11-zero-lag-(well-almost)
-
 swami-stochastic | 2012-03-introducing-swami-charts
 swami-relative-strength-index | 2012-03-introducing-swami-charts
 swami-convolution | 2012-03-introducing-swami-charts
@@ -21,7 +20,6 @@ swami-aroon | 2012-03-introducing-swami-charts
 swami-commodity-channel-index | 2012-03-introducing-swami-charts
 swami-swing-wave | 2012-03-introducing-swami-charts
 swami-market-mode | 2012-03-introducing-swami-charts
-
 decycler | 2013-cycle-analytics-for-traders/ch4.md (lst 4-1)
 decycler-oscillator | 2013-cycle-analytics-for-traders/ch4.md (lst 4-2)
 band-pass-indicator | 2013-cycle-analytics-for-traders/ch5.md (lst 5-1)
@@ -39,13 +37,11 @@ even-better-sinewave | 2013-cycle-analytics-for-traders/ch12.md (lst 12-1)
 hilbert-transformer-indicator | 2013-cycle-analytics-for-traders/ch14.md (lst 14-2, 14-3)
 fisher-adaptive-relative-strength-index | 2013-cycle-analytics-for-traders/ch15.md (lst 15-1 with 11-1)
 inverse-fisher-adaptive-stochastic | 2013-cycle-analytics-for-traders/ch15.md (lst 15-2 with 11-2)
-
 super-smoother | 2014-01-predictive-and-successful-indicators
 roofing-filter | 2014-01-predictive-and-successful-indicators
 mesa-stochastic | 2014-01-predictive-and-successful-indicators
 quotient-transform | 2014-08-the-quotient-transform
 universal-oscillator | 2015-01-whiter-is-brighter
-
 super-passband-filter | 2016-07-the-super-passband-filter
 auto_correlation_periodogram | 2016-09-measuring-market-cycles
 reverse-ema | 2017-09-the-reverse-ema-indicator
@@ -129,9 +125,7 @@ adaptive-super-smoother | 2026-09-adaptive-super-smoother
 2000-12-phasor-displays
 2001-04-nonlinear-ehlers-filters
 2001-09-mesa-adaptive-moving-averages
-
 2002-02-the-instantaneous-trendline
-
 2002-03-determining-equity-growth-performance
 2002-07-zero-lag-data-smoothers
 2002-10-the-rsi-smoothed
