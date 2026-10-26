@@ -1,3 +1,5 @@
+ relative-vigor-index| 2002-01-relative-vigor-index
+center-of-gravity-oscillator | 2002-05-the-center-of-gravity-oscillator
 inverse-fisher-cyber-cycle } 2004-05-the-inverse-fisher-transform
 median-average-adaptive-filter | 2005-03-whats-the-difference
 fractal-adaptive-moving-average | 2005-10-fractal-adaptive-moving-averages, 2010-06-fractal-dimension-as-a-market-mode-sensor
@@ -127,13 +129,12 @@ adaptive-super-smoother | 2026-09-adaptive-super-smoother
 2000-12-phasor-displays
 2001-04-nonlinear-ehlers-filters
 2001-09-mesa-adaptive-moving-averages
-2002-01-relative-vigor-index
+
 2002-02-the-instantaneous-trendline
+
 2002-03-determining-equity-growth-performance
-2002-05-the-center-of-gravity-oscillator
 2002-07-zero-lag-data-smoothers
 2002-10-the-rsi-smoothed
-
 2003-12-moving-average-computations-made-easier
 2006-08-modeling-the-market-building-trading-strategies
 2007-03-trading-in-your-ira
